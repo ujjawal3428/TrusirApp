@@ -11,7 +11,7 @@ import 'package:trusir/studentdoubt.dart';
 import 'package:trusir/teacherprofile.dart';
 
 class Studentfacilities extends StatefulWidget {
-  Studentfacilities({super.key});
+  const Studentfacilities({super.key});
 
   @override
   State<Studentfacilities> createState() => _StudentfacilitiesState();
@@ -45,7 +45,6 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // Base tile dimensions, scaling up on larger screens
     double tileWidth = 116;
     double tileHeight = 140;
     if (screenWidth > 600) {
@@ -55,7 +54,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
 
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.grey[50],
+        backgroundColor: Colors.grey[100],
         body: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
@@ -63,15 +62,21 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Student Facilities',
-                        style: TextStyle(
-                          color: Color(0xFF48116A),
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Student Facilities',
+                            style: TextStyle(
+                              color: Color(0xFF48116A),
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                        
+                      ],
                     ),
                     const SizedBox(height: 20),
                     Container(
@@ -87,9 +92,10 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(22),
+                        border: Border.all(width: 1),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFC22054).withOpacity(0.2),
+                            color: const Color(0xFFC22054).withOpacity(0.3),
                             spreadRadius: 3,
                             blurRadius: 15,
                             offset: const Offset(0, 10),
