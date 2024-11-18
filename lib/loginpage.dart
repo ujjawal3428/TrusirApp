@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/Enquiry.dart';
 import 'package:trusir/menu.dart';
+import 'package:trusir/student_homepage.dart';
 
 // Custom class to handle responsive dimensions
 class ResponsiveDimensions {
@@ -85,7 +86,7 @@ class _TrusirLoginPageState extends State<TrusirLoginPage> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -310,7 +311,12 @@ class _TrusirLoginPageState extends State<TrusirLoginPage> {
   Widget _buildSendOTPButton(ResponsiveDimensions responsive) {
     return Center(
       child: GestureDetector(
-        onTap: _onPost,
+        onTap: (){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) =>const StudentHomepage()),
+          );
+        },
         child: Image.asset(
           'assets/send_otp.png',
           width: responsive.screenWidth * 0.8,
