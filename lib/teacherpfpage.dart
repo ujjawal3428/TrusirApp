@@ -7,10 +7,10 @@ class Teacherpfpage extends StatefulWidget {
   const Teacherpfpage({super.key});
 
   @override
-  _MyProfileScreenState createState() => _MyProfileScreenState();
+  MyProfileScreenState createState() => MyProfileScreenState();
 }
 
-class _MyProfileScreenState extends State<Teacherpfpage> {
+class MyProfileScreenState extends State<Teacherpfpage> {
   String age = '';
   String gender = '';
   String address = '';
@@ -125,12 +125,14 @@ class _MyProfileScreenState extends State<Teacherpfpage> {
               ),
               const SizedBox(height: 10),
               // Combining age and gender in one row
-              buildInfoRow('assets/person.png', 'Age & Gender', '$age, $gender'),
+              buildInfoRow(
+                  'assets/person.png', 'Age & Gender', '$age, $gender'),
               const SizedBox(height: 10),
               // Adding new rows for address, graduation, experience, subjects, language, and phone number
               buildInfoRow('assets/home.png', 'Address', address),
               const SizedBox(height: 10),
-              buildInfoRow('assets/graduation@3x.png', 'Graduation', graduation),
+              buildInfoRow(
+                  'assets/graduation@3x.png', 'Graduation', graduation),
               const SizedBox(height: 10),
               buildInfoRow('assets/experience.png', 'Experience', experience),
               const SizedBox(height: 10),
@@ -177,8 +179,8 @@ class _MyProfileScreenState extends State<Teacherpfpage> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.only(left: 20, top: 10, bottom: 10, right: 20),
+                padding: const EdgeInsets.only(
+                    left: 20, top: 10, bottom: 10, right: 20),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
