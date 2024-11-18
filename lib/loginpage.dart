@@ -129,10 +129,9 @@ class _TrusirLoginPageState extends State<TrusirLoginPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const MenuPage()),
-          ),
+          onTap: (){
+             showPopupDialog(context);
+          },
           child: Image.asset(
             'assets/skipbutton.png',
             width: responsive.screenWidth * 0.15,

@@ -76,7 +76,10 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               fontWeight: FontWeight.w700),
                           ),
                         ),
+                      
                       ],
+                    
+                      
                     ),
                     const SizedBox(height: 20),
                     Container(
@@ -205,7 +208,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   ),
                                 );
                               }),
-                              buildTile(context, const Color(0xFF00E533), 'assets/pencil and ruller.png', 'Test Series', tileWidth, tileHeight, () {
+                              buildTile(context, const Color.fromARGB(255, 242, 255, 186), 'assets/pencil and ruller.png', 'Test Series', tileWidth, tileHeight, () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -221,7 +224,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   ),
                                 );
                               }),
-                              buildTile(context, const Color(0xFFB3E5FC), 'assets/qna.png', 'Student Doubt', tileWidth, tileHeight, () {
+                              buildTile(context, const Color.fromARGB(255, 255, 198, 247), 'assets/qna.png', 'Student Doubt', tileWidth, tileHeight, () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -229,7 +232,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   ),
                                 );
                               }),
-                              buildTile(context, const Color(0xFFB3E5FC), 'assets/sir.png', 'Parents Doubt', tileWidth, tileHeight, () {
+                              buildTile(context, const Color.fromARGB(255, 198, 255, 185), 'assets/sir.png', 'Parents Doubt', tileWidth, tileHeight, () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -237,7 +240,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   ),
                                 );
                               }),
-                              buildTile(context, const Color(0xFFB3E5FC), 'assets/knowledge.png', 'Extra Knowledge', tileWidth, tileHeight, () {
+                              buildTile(context, const Color.fromARGB(255, 248, 180, 180), 'assets/knowledge.png', 'Extra Knowledge', tileWidth, tileHeight, () {
                                 // Navigator.push(
                                 //   context,
                                 //   MaterialPageRoute(
@@ -245,7 +248,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                 //   ),
                                 // );
                               }),
-                              buildTile(context, const Color(0xFFB3E5FC), 'assets/notice.png', 'Notice', tileWidth, tileHeight, () {
+                              buildTile(context, const Color.fromARGB(255, 187, 231, 251), 'assets/notice.png', 'Notice', tileWidth, tileHeight, () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -253,7 +256,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   ),
                                 );
                               }),
-                              buildTile(context, const Color(0xFFB3E5FC), 'assets/setting.png', 'Settings', tileWidth, tileHeight, () {
+                              buildTile(context, const Color.fromARGB(255, 253, 194, 246), 'assets/setting.png', 'Settings', tileWidth, tileHeight, () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -261,7 +264,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   ),
                                 );
                               }),
-                              buildTile(context, const Color(0xFFB3E5FC), 'assets/video knowledge.png', 'Video Knowledge', tileWidth, tileHeight, () {
+                              buildTile(context, const Color.fromARGB(255, 246, 238, 189), 'assets/video knowledge.png', 'Video Knowledge', tileWidth, tileHeight, () {
                                 // Navigator.push(
                                 //   context,
                                 //   MaterialPageRoute(
