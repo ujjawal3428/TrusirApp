@@ -46,52 +46,101 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isLargeScreen = screenWidth > 600;
+
+    const rowColors = [
+      Color.fromARGB(255, 255, 199, 221),
+      Color.fromARGB(255, 199, 236, 255),
+      Color.fromARGB(255, 255, 185, 185),
+      Color.fromARGB(255, 191, 184, 255),
+    ];
+
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey[50],
         body: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(
-                width: 428,
-                height: 389,
-                child: Stack(
+              // Profile header
+              Container(
+                width: screenWidth,
+                child: Column(
                   children: [
-                    Positioned(
-                      top: 40,
-                      left: 10,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Image.asset(
-                          'assets/dikshaback@2x.png',
-                          width: 58,
-                          height: 58,
-                        ),
+                    // Top row with back button, title and edit button
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: isLargeScreen ? 60 : 40,
+                        bottom: 20, // Space between top row and profile section
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          // Back Button
+                          Padding(
+                            padding: EdgeInsets.only(left: isLargeScreen ? 30 : 10),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: Image.asset(
+                                'assets/dikshaback@2x.png',
+                                width: isLargeScreen ? 70 : 58,
+                                height: isLargeScreen ? 70 : 58,
+                              ),
+                            ),
+                          ),
+                          // Profile Title
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              'My Profile',
+                              style: TextStyle(
+                                fontSize: isLargeScreen ? 28 : 22,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF48116A),
+                              ),
+                            ),
+                          ),
+                          // Edit Profile Button
+                          Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(right: isLargeScreen ? 30 : 10),
+                            child: GestureDetector(
+                              onTap: () {
+                                print("Edit Profile tapped!");
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10, vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                      color: const Color(0xFF48116A), width: 1),
+                                ),
+                                child: Text(
+                                  'Edit Profile',
+                                  style: TextStyle(
+                                    fontSize: isLargeScreen ? 16 : 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF48116A),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const Positioned(
-                      top: 51,
-                      left: 100,
-                      child: Text(
-                        'My Profile',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF48116A),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 40,
-                      left: 0,
-                      right: 0,
+                    // Profile picture and name section
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0), // Consistent 20px padding
                       child: Column(
                         children: [
                           Container(
-                            width: 175,
-                            height: 175,
+                            width: isLargeScreen ? 250 : 175,
+                            height: isLargeScreen ? 250 : 175,
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
@@ -101,28 +150,54 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          const Text(
+                          Text(
                             'Asmit Kumar',
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: isLargeScreen ? 36 : 30,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF48116A),
+                              color: const Color(0xFF48116A),
                             ),
                           ),
+                          const SizedBox(height: 20), // Bottom spacing
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
+              // Info rows
               const SizedBox(height: 10),
-              buildInfoRow('assets/pastry@3x.png', 'Date of Birth', dob),
+              buildInfoRow(
+                'assets/pastry@3x.png',
+                'Date of Birth',
+                dob,
+                isLargeScreen,
+                rowColors[0],
+              ),
               const SizedBox(height: 10),
-              buildInfoRow('assets/house@3x.png', 'School', school),
+              buildInfoRow(
+                'assets/house@3x.png',
+                'School',
+                school,
+                isLargeScreen,
+                rowColors[1],
+              ),
               const SizedBox(height: 10),
-              buildInfoRow('assets/graduation@3x.png', 'Class', studentClass),
+              buildInfoRow(
+                'assets/graduation@3x.png',
+                'Class',
+                studentClass,
+                isLargeScreen,
+                rowColors[2],
+              ),
               const SizedBox(height: 10),
-              buildInfoRow('assets/pensp@3x.png', 'Subjects', subject),
+              buildInfoRow(
+                'assets/pensp@3x.png',
+                'Subjects',
+                subject,
+                isLargeScreen,
+                rowColors[3],
+              ),
             ],
           ),
         ),
@@ -130,17 +205,24 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     );
   }
 
-  Widget buildInfoRow(String iconPath, String title, String value) {
+  Widget buildInfoRow(
+    String iconPath,
+    String title,
+    String value,
+    bool isLargeScreen,
+    Color backgroundColor,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(left: 10.0, right: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Icon container
           Container(
-            width: 75,
-            height: 75,
+            width: isLargeScreen ? 100 : 75,
+            height: isLargeScreen ? 100 : 75,
             decoration: BoxDecoration(
-              color: Colors.pink.shade100,
+              color: backgroundColor,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
@@ -152,24 +234,25 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
             ),
           ),
           const SizedBox(width: 15),
+          // Text container
           Flexible(
             child: Container(
-              height: 75,
-              width: 306,
+              height: isLargeScreen ? 100 : 75,
+              width: isLargeScreen ? 400 : 306,
               decoration: BoxDecoration(
-                color: const Color.fromARGB(65, 255, 46, 46),
+                color: backgroundColor,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Padding(
-                padding:
-                    const EdgeInsets.only(left: 20, top: 10, bottom: 10, right: 20),
+                padding: const EdgeInsets.only(
+                    left: 20, top: 10, bottom: 10, right: 20),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     value.isNotEmpty ? value : 'Loading...',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: isLargeScreen ? 22 : 18,
                     ),
                   ),
                 ),
