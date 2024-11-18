@@ -421,7 +421,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                       );
                     }).toList(),
                   ),
-            ElevatedButton(
+            TextButton(
                 onPressed: () {
                   fetchTestSeries();
                 },
