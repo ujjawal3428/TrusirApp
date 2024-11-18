@@ -62,20 +62,20 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                 padding: const EdgeInsets.all(20.0),
                 child: Column(
                   children: [
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Align(
+                       Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
                             'Student Facilities',
                             style: TextStyle(
                               color: Color(0xFF48116A),
                               fontSize: 24,
+                              fontFamily: 'Poppins',
                               fontWeight: FontWeight.w700),
                           ),
                         ),
-                        
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -92,7 +92,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(22),
-                        border: Border.all(width: 1),
+                        
                         boxShadow: [
                           BoxShadow(
                             color: const Color(0xFFC22054).withOpacity(0.3),
@@ -116,6 +116,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 22,
+                                      fontFamily: 'Poppins',
                                       fontWeight: FontWeight.w700
                                     ),
                                   ),
@@ -126,6 +127,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
+                                        fontFamily: 'Poppins',
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -136,6 +138,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                       '980-456-7890',
                                       style: TextStyle(
                                         color: Colors.white,
+                                        fontFamily: 'Poppins',
                                         fontSize: 11,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -278,9 +281,9 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
           },
         ),
         bottomNavigationBar: CustomBottomNavigationBar(
-          currentIndex : _selectedIndex,
-          onTap : _onItemTapped,
-        ), // Add the BottomNavigationBar at the bottom
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
@@ -289,6 +292,9 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     final imageSize = imageSizes[imagePath] ?? {'width': 40.0, 'height': 40.0};
     final screenWidth = MediaQuery.of(context).size.width;
     final scaleFactor = screenWidth < 360 ? 0.7 : 1.0;
+
+    // Create a lighter version of the background color for the border
+    final borderColor = HSLColor.fromColor(color).withLightness(0.9).toColor();
 
     return GestureDetector(
       onTap: onTap,
@@ -299,8 +305,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
           color: color,
           borderRadius: BorderRadius.circular(22),
           border: Border.all(
-            color: Colors.black,
-            width: 1,
+            color: borderColor,
+            width: 2,
           ),
         ),
         child: Column(

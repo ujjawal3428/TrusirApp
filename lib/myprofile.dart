@@ -116,8 +116,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                      color: const Color(0xFF48116A), width: 1),
                                 ),
                                 child: Text(
                                   'Edit Profile',
