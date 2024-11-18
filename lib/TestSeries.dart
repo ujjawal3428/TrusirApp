@@ -4,7 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:photo_view/photo_view.dart';
 import 'dart:io';
+
+import 'package:photo_view/photo_view_gallery.dart';
 
 class TestSeriesScreen extends StatefulWidget {
   const TestSeriesScreen({super.key});
@@ -18,6 +21,11 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
   bool _isDownloading = false;
   String _downloadProgress = '';
+  final url =
+      "https://balvikasyojana.com:8899/test-series/testID?page=2&data_per_page=10";
+
+  // Map to store downloaded file paths for questions and answers
+  Map<String, String> downloadedFiles = {};
 
   @override
   void initState() {
@@ -34,8 +42,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   }
 
   Future<void> fetchTestSeries() async {
-    const url =
-        "https://balvikasyojana.com:8899/test-series/testID"; // Change to your actual API URL
     try {
       final response =
           await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
@@ -54,25 +60,21 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
   Future<String> _getDownloadPath(String filename) async {
     Directory? directory;
-    try {
-      if (Platform.isAndroid) {
-        // Get the download directory path
-        directory = Directory('/storage/emulated/0/Download');
-        // Create directory if it doesn't exist
-        if (!await directory.exists()) {
-          directory = await getExternalStorageDirectory();
+
+    if (Platform.isAndroid) {
+      try {
+        directory =
+            await getExternalStorageDirectory(); // App-specific directory
+        if (directory == null) {
+          throw Exception('Could not access external storage directory');
         }
-      } else {
-        directory = await getApplicationDocumentsDirectory();
+        return '${directory.path}/$filename';
+      } catch (e) {
+        throw Exception('Error getting download path: $e');
       }
-
-      if (directory == null) {
-        throw Exception('Could not access storage directory');
-      }
-
+    } else {
+      directory = await getApplicationDocumentsDirectory();
       return '${directory.path}/$filename';
-    } catch (e) {
-      throw Exception('Error getting download path: $e');
     }
   }
 
@@ -112,7 +114,9 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         },
       );
 
+      // Save the path to the downloaded file
       setState(() {
+        downloadedFiles[filename] = filePath;
         _isDownloading = false;
         _downloadProgress = '';
       });
@@ -138,6 +142,51 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     }
   }
 
+  Future<void> _openFile(String filename) async {
+    final filePath = downloadedFiles[filename];
+    if (filePath != null) {
+      // Show the image in PhotoView
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: PhotoViewGallery.builder(
+              itemCount: 1,
+              builder: (context, index) {
+                return PhotoViewGalleryPageOptions(
+                  imageProvider: FileImage(File(filePath)),
+                  minScale: PhotoViewComputedScale.contained,
+                  maxScale: PhotoViewComputedScale.covered,
+                );
+              },
+              scrollPhysics: const BouncingScrollPhysics(),
+              backgroundDecoration: const BoxDecoration(
+                color: Colors.black,
+              ),
+              pageController: PageController(),
+            ),
+          );
+        },
+      );
+
+      // Show a SnackBar for debugging purposes
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Opening file: $filePath'),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    } else {
+      // Handle the case when the file is not found
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('File not found'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Color> containerColors = [
@@ -155,7 +204,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header Section
             Padding(
               padding: const EdgeInsets.only(left: 20.0, top: 30),
               child: Row(
@@ -183,8 +231,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
               ),
             ),
             const SizedBox(height: 20),
-
-            // Download Progress
             if (_isDownloading)
               Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -199,8 +245,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                   ],
                 ),
               ),
-
-            // FutureBuilder to load the data
             testSeriesList.isEmpty
                 ? const Center(
                     child: CircularProgressIndicator(),
@@ -224,7 +268,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                             padding: const EdgeInsets.all(10.0),
                             child: Column(
                               children: [
-                                // Test Information
                                 Row(
                                   children: [
                                     Expanded(
@@ -281,114 +324,91 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                   ],
                                 ),
                                 const SizedBox(height: 10),
-
-                                // Action Buttons
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    // Questions Button
                                     InkWell(
                                       onTap: () {
-                                        if (test['questions'] != null) {
-                                          _downloadFile(test['questions'],
-                                              'questions_${test['name']}.jpg');
+                                        String filename =
+                                            'questions_${test['name']}.jpg';
+                                        if (downloadedFiles
+                                            .containsKey(filename)) {
+                                          // Open the file if it already exists
+                                          _openFile(filename);
                                         } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'Questions URL not available'),
-                                              duration: Duration(seconds: 2),
-                                            ),
-                                          );
+                                          // Download the file if it doesn't exist
+                                          if (test['questions'] != null) {
+                                            _downloadFile(
+                                              test['questions'],
+                                              filename,
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Questions URL not available'),
+                                                duration: Duration(seconds: 2),
+                                              ),
+                                            );
+                                          }
                                         }
                                       },
                                       child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
-                                        height: 37,
+                                        padding: const EdgeInsets.all(10),
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                            color: Colors.indigo.shade900,
-                                            width: 1.2,
-                                          ),
+                                          color: Colors.green,
                                           borderRadius:
-                                              BorderRadius.circular(32),
+                                              BorderRadius.circular(10),
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              'Questions',
-                                              style: TextStyle(
-                                                color: Colors.indigo.shade900,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Icon(
-                                              Icons.file_download_rounded,
-                                              color: Colors.indigo.shade900,
-                                              size: 16,
-                                            ),
-                                          ],
+                                        child: const Text(
+                                          'Download Questions',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(width: 5),
-
-                                    // Answers Button
+                                    const SizedBox(width: 20),
                                     InkWell(
                                       onTap: () {
-                                        if (test['answers'] != null) {
-                                          _downloadFile(test['answers'],
-                                              'answers_${test['name']}.jpg');
+                                        String filename =
+                                            'answers_${test['name']}.jpg';
+                                        if (downloadedFiles
+                                            .containsKey(filename)) {
+                                          // Open the file if it already exists
+                                          _openFile(filename);
                                         } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'Answers URL not available'),
-                                              duration: Duration(seconds: 2),
-                                            ),
-                                          );
+                                          // Download the file if it doesn't exist
+                                          if (test['answers'] != null) {
+                                            _downloadFile(
+                                              test['answers'],
+                                              filename,
+                                            );
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Answers URL not available'),
+                                                duration: Duration(seconds: 2),
+                                              ),
+                                            );
+                                          }
                                         }
                                       },
                                       child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.4,
-                                        height: 37,
+                                        padding: const EdgeInsets.all(10),
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                            color: Colors.blue.shade900,
-                                            width: 1.2,
-                                          ),
+                                          color: Colors.blue,
                                           borderRadius:
-                                              BorderRadius.circular(32),
+                                              BorderRadius.circular(10),
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              'Answers',
-                                              style: TextStyle(
-                                                color: Colors.indigo.shade900,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Icon(
-                                              Icons.file_download_rounded,
-                                              color: Colors.indigo.shade900,
-                                              size: 16,
-                                            ),
-                                          ],
+                                        child: const Text(
+                                          'Download Answers',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -401,7 +421,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                       );
                     }).toList(),
                   ),
-
             ElevatedButton(
                 onPressed: () {
                   fetchTestSeries();
