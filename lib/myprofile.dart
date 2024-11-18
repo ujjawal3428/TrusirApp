@@ -58,7 +58,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
 
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.grey[50],
+        backgroundColor: Colors.grey[100],
         body: SingleChildScrollView(
           child: Column(
             children: [
