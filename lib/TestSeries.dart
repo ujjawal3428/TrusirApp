@@ -14,8 +14,7 @@ class TestSeriesScreen extends StatefulWidget {
 }
 
 class _TestSeriesScreenState extends State<TestSeriesScreen> {
-  late Future<List<dynamic>> _testSeriesFuture;
-  List<dynamic> _testSeriesList = [];
+  List<dynamic> testSeriesList = [];
 
   bool _isDownloading = false;
   String _downloadProgress = '';
@@ -43,7 +42,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
       if (response.statusCode == 200) {
         final newData = json.decode(response.body);
         setState(() {
-          _testSeriesList.addAll(newData);
+          testSeriesList.addAll(newData);
         });
       } else {
         throw Exception('Failed to load test series');
@@ -202,13 +201,13 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
               ),
 
             // FutureBuilder to load the data
-            _testSeriesList.isEmpty
+            testSeriesList.isEmpty
                 ? const Center(
                     child: CircularProgressIndicator(),
                   )
                 : Column(
                     children:
-                        _testSeriesList.asMap().entries.map<Widget>((entry) {
+                        testSeriesList.asMap().entries.map<Widget>((entry) {
                       int index = entry.key;
                       var test = entry.value;
 
