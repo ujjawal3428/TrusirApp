@@ -48,7 +48,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-    <key>NSDocumentsDirectoryUsageDescription</key>
-    <string>This app needs access to documents directory to save images</string>
+    <!-- <key>NSDocumentsDirectoryUsageDescription</key>
+    <string>This app needs access to documents directory to save images</string> -->
 
 </manifest>
