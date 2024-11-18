@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'constants.dart';
 
 class Teacherpfpage extends StatefulWidget {
   const Teacherpfpage({super.key});
@@ -19,6 +18,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
   String subjects = '';
   String language = '';
   String phoneNumber = '';
+  String profilePhoto = '';
 
   @override
   void initState() {
@@ -29,20 +29,26 @@ class MyProfileScreenState extends State<Teacherpfpage> {
   Future<void> fetchProfileData() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/my-profile/testid'),
+        Uri.parse('https://balvikasyojana.com:8899/teacher-profile/testID'),
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          age = data['age'] ?? '';
-          gender = data['gender'] ?? '';
-          address = data['address'] ?? '';
-          graduation = data['graduation'] ?? '';
-          experience = data['experience'] ?? '';
-          subjects = data['subjects'] ?? '';
-          language = data['language'] ?? '';
-          phoneNumber = data['phoneNumber'] ?? '';
+          age = data['age']?.toString() ?? 'N/A';
+          gender = data['gender'] ?? 'N/A';
+          address = data['address'] ?? 'N/A';
+          graduation = data['graduation'] ?? 'N/A';
+          experience = data['experience'] ?? 'N/A';
+          subjects = data['subjects'] != null
+              ? (data['subjects'] as List<dynamic>).join(', ')
+              : 'N/A';
+          language = data['language'] != null
+              ? (data['language'] as List<dynamic>).join(', ')
+              : 'N/A';
+          phoneNumber = data['phoneNumber'] ?? 'N/A';
+          profilePhoto = data['profile_photo'] ??
+              'https://via.placeholder.com/150'; // Fallback image URL
         });
       } else {
         throw Exception('Failed to load profile data');
@@ -100,10 +106,10 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                           Container(
                             width: 175,
                             height: 175,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                image: AssetImage('assets/asmitcircle.png'),
+                                image: NetworkImage(profilePhoto),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -124,11 +130,9 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                 ),
               ),
               const SizedBox(height: 10),
-              // Combining age and gender in one row
               buildInfoRow(
                   'assets/person.png', 'Age & Gender', '$age, $gender'),
               const SizedBox(height: 10),
-              // Adding new rows for address, graduation, experience, subjects, language, and phone number
               buildInfoRow('assets/home.png', 'Address', address),
               const SizedBox(height: 10),
               buildInfoRow(
