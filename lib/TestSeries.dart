@@ -15,13 +15,15 @@ class TestSeriesScreen extends StatefulWidget {
 
 class _TestSeriesScreenState extends State<TestSeriesScreen> {
   late Future<List<dynamic>> _testSeriesFuture;
+  List<dynamic> _testSeriesList = [];
+
   bool _isDownloading = false;
   String _downloadProgress = '';
 
   @override
   void initState() {
     super.initState();
-    _testSeriesFuture = fetchTestSeries();
+    fetchTestSeries();
     _requestPermissions();
   }
 
@@ -32,12 +34,17 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     }
   }
 
-  Future<List<dynamic>> fetchTestSeries() async {
-    const url = "https://balvikasyojana.com:8899/test-series/testID"; // Change to your actual API URL
+  Future<void> fetchTestSeries() async {
+    const url =
+        "https://balvikasyojana.com:8899/test-series/testID"; // Change to your actual API URL
     try {
-      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
+      final response =
+          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        final newData = json.decode(response.body);
+        setState(() {
+          _testSeriesList.addAll(newData);
+        });
       } else {
         throw Exception('Failed to load test series');
       }
@@ -91,7 +98,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
     try {
       final filePath = await _getDownloadPath(filename);
-      
+
       final dio = Dio();
       await dio.download(
         url,
@@ -99,7 +106,8 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         onReceiveProgress: (received, total) {
           if (total != -1) {
             setState(() {
-              _downloadProgress = '${(received / total * 100).toStringAsFixed(0)}%';
+              _downloadProgress =
+                  '${(received / total * 100).toStringAsFixed(0)}%';
             });
           }
         },
@@ -194,221 +202,212 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
               ),
 
             // FutureBuilder to load the data
-            FutureBuilder<List<dynamic>>(
-              future: _testSeriesFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
+            _testSeriesList.isEmpty
+                ? const Center(
                     child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Center(
-                      child: Text(
-                        'Error loading data: ${snapshot.error}',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 18, color: Colors.red),
-                      ),
-                    ),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Center(
-                      child: Text(
-                        'No data available',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 18, color: Colors.grey),
-                      ),
-                    ),
-                  );
-                }
+                  )
+                : Column(
+                    children:
+                        _testSeriesList.asMap().entries.map<Widget>((entry) {
+                      int index = entry.key;
+                      var test = entry.value;
 
-                // Display the test series list
-                final testSeries = snapshot.data!;
-                return Column(
-                  children: testSeries.asMap().entries.map<Widget>((entry) {
-                    int index = entry.key;
-                    var test = entry.value;
-
-                    return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 1,
-                        decoration: BoxDecoration(
-                          color: containerColors[index % containerColors.length],
-                          borderRadius: BorderRadius.circular(32),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            children: [
-                              // Test Information
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(left: 5.0, top: 10),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            test['name'],
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
+                      return Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 1,
+                          decoration: BoxDecoration(
+                            color:
+                                containerColors[index % containerColors.length],
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              children: [
+                                // Test Information
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 5.0, top: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              test['name'],
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                          ),
-                                          Text(
-                                            test['subject'],
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.black,
+                                            Text(
+                                              test['subject'],
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Text(
-                                            test['date'],
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black,
+                                            const SizedBox(height: 10),
+                                            Text(
+                                              test['date'],
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 10.0),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            test['time'],
-                                            style: const TextStyle(fontSize: 14),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 10),
-
-                              // Action Buttons
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Questions Button
-                                  InkWell(
-                                    onTap: () {
-                                      if (test['questions'] != null) {
-                                        _downloadFile(test['questions'],
-                                            'questions_${test['name']}.jpg');
-                                      } else {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content:
-                                                Text('Questions URL not available'),
-                                            duration: Duration(seconds: 2),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width * 0.4,
-                                      height: 37,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                          color: Colors.indigo.shade900,
-                                          width: 1.2,
+                                          ],
                                         ),
-                                        borderRadius: BorderRadius.circular(32),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Questions',
-                                            style: TextStyle(
-                                              color: Colors.indigo.shade900,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Icon(
-                                            Icons.file_download_rounded,
-                                            color: Colors.indigo.shade900,
-                                            size: 16,
-                                          ),
-                                        ],
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 5),
-
-                                  // Answers Button
-                                  InkWell(
-                                    onTap: () {
-                                      if (test['answers'] != null) {
-                                        _downloadFile(test['answers'],
-                                            'answers_${test['name']}.jpg');
-                                      } else {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content:
-                                                Text('Answers URL not available'),
-                                            duration: Duration(seconds: 2),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width * 0.4,
-                                      height: 37,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                          color: Colors.blue.shade900,
-                                          width: 1.2,
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(top: 10.0),
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              test['time'],
+                                              style:
+                                                  const TextStyle(fontSize: 14),
+                                            ),
+                                          ],
                                         ),
-                                        borderRadius: BorderRadius.circular(32),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Answers',
-                                            style: TextStyle(
-                                              color: Colors.indigo.shade900,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Icon(
-                                            Icons.file_download_rounded,
-                                            color: Colors.indigo.shade900,
-                                            size: 16,
-                                          ),
-                                        ],
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+
+                                // Action Buttons
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Questions Button
+                                    InkWell(
+                                      onTap: () {
+                                        if (test['questions'] != null) {
+                                          _downloadFile(test['questions'],
+                                              'questions_${test['name']}.jpg');
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Questions URL not available'),
+                                              duration: Duration(seconds: 2),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        height: 37,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                            color: Colors.indigo.shade900,
+                                            width: 1.2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(32),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Questions',
+                                              style: TextStyle(
+                                                color: Colors.indigo.shade900,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Icon(
+                                              Icons.file_download_rounded,
+                                              color: Colors.indigo.shade900,
+                                              size: 16,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+
+                                    // Answers Button
+                                    InkWell(
+                                      onTap: () {
+                                        if (test['answers'] != null) {
+                                          _downloadFile(test['answers'],
+                                              'answers_${test['name']}.jpg');
+                                        } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Answers URL not available'),
+                                              duration: Duration(seconds: 2),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        height: 37,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                            color: Colors.blue.shade900,
+                                            width: 1.2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(32),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Answers',
+                                              style: TextStyle(
+                                                color: Colors.indigo.shade900,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Icon(
+                                              Icons.file_download_rounded,
+                                              color: Colors.indigo.shade900,
+                                              size: 16,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }).toList(),
-                );
-              },
-            ),
+                      );
+                    }).toList(),
+                  ),
+
+            ElevatedButton(
+                onPressed: () {
+                  fetchTestSeries();
+                },
+                child: const Text('Load More')),
           ],
         ),
       ),
