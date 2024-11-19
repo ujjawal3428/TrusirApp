@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/bottom_navigation_bar.dart';
-import 'package:trusir/TeacherProfile.dart';
+import 'package:trusir/teacher_profile.dart';
 import 'package:trusir/notice.dart';
 import 'package:trusir/setting.dart';
 import 'package:trusir/teacher_pf_page.dart';

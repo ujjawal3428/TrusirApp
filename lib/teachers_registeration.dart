@@ -5,11 +5,10 @@ class TeacherRegistrationPage extends StatefulWidget {
   const TeacherRegistrationPage({super.key});
 
   @override
-  _TeacherRegistrationPageState createState() =>
-      _TeacherRegistrationPageState();
+  TeacherRegistrationPageState createState() => TeacherRegistrationPageState();
 }
 
-class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
+class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   String? gender;
   String? city;
   String? medium;

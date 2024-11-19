@@ -8,10 +8,10 @@ class TeacherProfileScreen extends StatefulWidget {
   const TeacherProfileScreen({super.key});
 
   @override
-  _TeacherProfileScreenState createState() => _TeacherProfileScreenState();
+  TeacherProfileScreenState createState() => TeacherProfileScreenState();
 }
 
-class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
+class TeacherProfileScreenState extends State<TeacherProfileScreen> {
   List<Teacher> teachers = [];
   bool isLoading = true;
 
@@ -23,7 +23,7 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
 
   Future<void> fetchTeachers() async {
     final response = await http.get(Uri.parse('$baseUrl/my-teacher/testid'));
-    
+
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       setState(() {
@@ -38,13 +38,12 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey[200],
-        body: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Column(
-                  children: [
+        home: Scaffold(
+            backgroundColor: Colors.grey[200],
+            body: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                    child: Column(children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 10.0, top: 30),
                       child: Row(
@@ -75,11 +74,13 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
 
                     // Display the teacher profiles in a grid view
                     Padding(
-                      padding: const EdgeInsets.only(left: 20, right: 8, top: 8, bottom: 8),
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 8, top: 8, bottom: 8),
                       child: GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 14,
                           mainAxisSpacing: 12,
@@ -98,7 +99,8 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
                                 decoration: BoxDecoration(
                                   color: Colors.grey[200],
                                   borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Colors.grey, width: 1),
+                                  border:
+                                      Border.all(color: Colors.grey, width: 1),
                                 ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -144,10 +146,12 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
                                 child: Transform.rotate(
                                   angle: -0.785398,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top: 0, left: 0, right: 0),
+                                    padding: const EdgeInsets.only(
+                                        top: 0, left: 0, right: 0),
                                     child: Container(
                                       width: 150,
-                                      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 2),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 25, vertical: 2),
                                       decoration: BoxDecoration(
                                         color: Colors.purple.shade100,
                                         borderRadius: BorderRadius.circular(4),
@@ -168,12 +172,12 @@ class _TeacherProfileScreenState extends State<TeacherProfileScreen> {
                           );
                         },
                       ),
-                    )]))));
-     
-  }}
+                    )
+                  ]))));
+  }
+}
 
-
-  class Teacher {
+class Teacher {
   final String name;
   final String subject;
   final String mobile;

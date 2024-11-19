@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:trusir/student_facilities.dart';
 
 class StudentRegistrationPage extends StatefulWidget {
-  const StudentRegistrationPage({Key? key}) : super(key: key);
+  const StudentRegistrationPage({super.key});
 
   @override
-  _StudentRegistrationPageState createState() =>
-      _StudentRegistrationPageState();
+  StudentRegistrationPageState createState() => StudentRegistrationPageState();
 }
 
-class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
+class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   String? gender;
   String? numberOfStudents;
   String? city;

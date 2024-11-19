@@ -37,10 +37,10 @@ class TrusirLoginPage extends StatefulWidget {
   });
 
   @override
-  _TrusirLoginPageState createState() => _TrusirLoginPageState();
+  TrusirLoginPageState createState() => TrusirLoginPageState();
 }
 
-class _TrusirLoginPageState extends State<TrusirLoginPage> {
+class TrusirLoginPageState extends State<TrusirLoginPage> {
   String? _selectedLanguage;
   final PageController _pageController = PageController();
   int _currentPage = 0;
@@ -326,7 +326,7 @@ class _TrusirLoginPageState extends State<TrusirLoginPage> {
     );
   }
 
-  void _onPost() {
+  void onPost() {
     print("OTP sent");
   }
 }

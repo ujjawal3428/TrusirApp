@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   const CustomBottomNavigationBar(
-      {super.key, required int currentIndex, required void Function(int index) onTap});
+      {super.key,
+      required int currentIndex,
+      required void Function(int index) onTap});
 
   @override
-  _CustomBottomNavigationBarState createState() =>
-      _CustomBottomNavigationBarState();
+  CustomBottomNavigationBarState createState() =>
+      CustomBottomNavigationBarState();
 }
 
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
+class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   int selectedIndex = 0;
 
   @override
@@ -19,10 +21,10 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
       width: 428,
       decoration: BoxDecoration(
         image: DecorationImage(
-          image:const AssetImage('assets/bnbbg@4x.png'),
+          image: const AssetImage('assets/bnbbg@4x.png'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
-            Colors.black.withOpacity(0.1), 
+            Colors.black.withOpacity(0.1),
             BlendMode.darken,
           ),
         ),
@@ -103,9 +105,8 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           Text(
             title,
             style: TextStyle(
-              color: isSelected
-                  ? const Color(0xFF48116A)
-                  : Colors.grey.shade700,
+              color:
+                  isSelected ? const Color(0xFF48116A) : Colors.grey.shade700,
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
             ),
