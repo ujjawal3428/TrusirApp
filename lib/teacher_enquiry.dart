@@ -46,7 +46,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
           'Teacher Enquiry',
           style: TextStyle(
             color: Color(0xFF48116A),
-            fontSize: 24,
+            fontSize: 22,
             fontFamily: 'Poppins',
             fontWeight: FontWeight.w700,
           ),

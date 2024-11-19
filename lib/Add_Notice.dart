@@ -6,7 +6,41 @@ class AddNoticePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 0.0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 5),
+              const Text(
+                'Add Notice',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 22,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+        toolbarHeight: 70,
+      ),
+
 
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
@@ -27,7 +61,7 @@ class AddNoticePage extends StatelessWidget {
                     height: 40,
                   ),
                 ),
-                const SizedBox(width: 10), // Space between back button and title
+                const SizedBox(width: 10), 
 
                 // Title Text
                 const Text(
@@ -35,8 +69,8 @@ class AddNoticePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF4A148C), // Purple color for title
-                    fontFamily: 'Poppins', // Ensure Poppins font is added to pubspec.yaml
+                    color: Color(0xFF4A148C), 
+                    fontFamily: 'Poppins', 
                   ),
                 ),
               ],

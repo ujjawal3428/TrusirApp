@@ -64,7 +64,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
           'Student Doubt',
           style: TextStyle(
             color: Color(0xFF48116A),
-            fontSize: 24,
+            fontSize: 22,
             fontFamily: 'Poppins',
             fontWeight: FontWeight.w700,
           ),
