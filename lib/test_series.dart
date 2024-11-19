@@ -8,6 +8,7 @@ import 'package:photo_view/photo_view.dart';
 import 'dart:io';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:trusir/api.dart';
 
 class TestSeriesScreen extends StatefulWidget {
   const TestSeriesScreen({super.key});
@@ -21,8 +22,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
   bool _isDownloading = false;
   String _downloadProgress = '';
-  final url =
-      "https://balvikasyojana.com:8899/test-series/testID?page=2&data_per_page=10";
+  final url = "$baseUrl/test-series/testID?page=2&data_per_page=10";
 
   // Map to store downloaded file paths for questions and answers
   Map<String, String> downloadedFiles = {};
@@ -470,45 +470,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                     },
                     child: const Text('Load More')),
               ],
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              color: Colors.white,
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF045C19),
-                          Color(0xFF77D317),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Create Test',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontFamily: 'Poppins'),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ),
           ),
         ],

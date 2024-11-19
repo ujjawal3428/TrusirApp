@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:trusir/api.dart';
 
 class ProgressReportScreen extends StatelessWidget {
   const ProgressReportScreen({super.key});
@@ -77,8 +78,8 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   }
 
   Future<List<dynamic>> fetchProgressReports() async {
-    final response = await http.get(
-        Uri.parse('https://balvikasyojana.com:8899/progress-report/testID'));
+    final response =
+        await http.get(Uri.parse('$baseUrl/progress-report/testID'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);

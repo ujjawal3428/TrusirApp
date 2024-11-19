@@ -11,22 +11,24 @@ class Fees {
   final String amount;
   final String time;
 
-  Fees(
-      {required this.paymenttype,
-      required this.paymentmethod,
-      required this.transactionid,
-      required this.date,
-      required this.time,
-      required this.amount});
+  Fees({
+    required this.paymenttype,
+    required this.paymentmethod,
+    required this.transactionid,
+    required this.date,
+    required this.time,
+    required this.amount,
+  });
 
   factory Fees.fromJson(Map<String, dynamic> json) {
     return Fees(
-        paymenttype: json['payment_type'],
-        paymentmethod: json['payment_method'],
-        date: json['date'],
-        time: json['time'],
-        amount: json['amount'],
-        transactionid: json['transaction_id']);
+      paymenttype: json['payment_type'],
+      paymentmethod: json['payment_method'],
+      date: json['date'],
+      time: json['time'],
+      amount: json['amount'],
+      transactionid: json['transaction_id'],
+    );
   }
 }
 
@@ -40,20 +42,42 @@ class FeePaymentScreen extends StatefulWidget {
 class _FeePaymentScreenState extends State<FeePaymentScreen> {
   List<Fees> feepayment = [];
   bool isLoading = true;
+  bool isLoadingMore = false;
+  int currentPage = 1;
+  bool hasMore = true;
 
-  final api = '$baseUrl/fee-report/testID?page=2&data_per_page=10';
+  final apiBase = '$baseUrl/fee-report/testID';
 
-  Future<void> fetchFeeDetails() async {
-    final response = await http.get(Uri.parse(api));
+  Future<void> fetchFeeDetails({int page = 1}) async {
+    final url = '$apiBase?page=$page&data_per_page=10';
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
+
       setState(() {
-        feepayment = data.map((json) => Fees.fromJson(json)).toList();
+        if (page == 1) {
+          // Initial fetch
+          feepayment = data.map((json) => Fees.fromJson(json)).toList();
+        } else {
+          // Append new data
+          feepayment.addAll(data.map((json) => Fees.fromJson(json)));
+        }
+
         isLoading = false;
+        isLoadingMore = false;
+
+        // Check if more data is available
+        if (data.isEmpty) {
+          hasMore = false;
+        }
       });
     } else {
-      throw Exception('Failed to load teachers');
+      setState(() {
+        isLoading = false;
+        isLoadingMore = false;
+      });
+      throw Exception('Failed to load fees');
     }
   }
 
@@ -312,47 +336,23 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                             ),
                           );
                         }),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.all(16.0),
-                      child: Center(
-                        child: InkWell(
-                          onTap: () {},
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFF045C19),
-                                  Color(0xFF77D317),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                'Create Test',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 22,
-                                  fontFamily: 'Poppins',
-                                ),
-                              ),
-                            ),
+                        if (hasMore)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 20),
+                            child: isLoadingMore
+                                ? const CircularProgressIndicator()
+                                : TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        isLoadingMore = true;
+                                        currentPage++;
+                                      });
+                                      fetchFeeDetails(page: currentPage);
+                                    },
+                                    child: const Text('Load More....'),
+                                  ),
                           ),
-                        ),
-                      ),
+                      ],
                     ),
                   ),
                 ],
