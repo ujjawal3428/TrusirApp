@@ -74,21 +74,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     }
   }
 
-  // Future<String> _getDownloadPath(String filename) async {
-  //   Directory? directory;
-
-  //   if (Platform.isAndroid) {
-  //     directory = await getExternalStorageDirectory();
-  //     if (directory == null) {
-  //       throw Exception('Could not access external storage directory');
-  //     }
-  //     return '${directory.path}/$filename';
-  //   } else {
-  //     directory = await getApplicationDocumentsDirectory();
-  //     return '${directory.path}/$filename';
-  //   }
-  // }
-
   Future<String> _getAppSpecificDownloadPath(String filename) async {
     final directory = await getApplicationDocumentsDirectory();
     return '${directory.path}/$filename';
@@ -360,17 +345,39 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                             }
                                           },
                                           child: Container(
-                                            padding: const EdgeInsets.all(10),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.4,
+                                            height: 37,
                                             decoration: BoxDecoration(
-                                              color: Colors.green,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: const Text(
-                                              'Download Questions',
-                                              style: TextStyle(
-                                                color: Colors.white,
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                color: Colors.indigo.shade900,
+                                                width: 1.2,
                                               ),
+                                              borderRadius:
+                                                  BorderRadius.circular(32),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'Questions',
+                                                  style: TextStyle(
+                                                    color:
+                                                        Colors.indigo.shade900,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Icon(
+                                                  Icons.file_download_rounded,
+                                                  color: Colors.indigo.shade900,
+                                                  size: 16,
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
@@ -404,17 +411,39 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                             }
                                           },
                                           child: Container(
-                                            padding: const EdgeInsets.all(10),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.4,
+                                            height: 37,
                                             decoration: BoxDecoration(
-                                              color: Colors.blue,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: const Text(
-                                              'Download Answers',
-                                              style: TextStyle(
-                                                color: Colors.white,
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                color: Colors.blue.shade900,
+                                                width: 1.2,
                                               ),
+                                              borderRadius:
+                                                  BorderRadius.circular(32),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  'Answers',
+                                                  style: TextStyle(
+                                                    color:
+                                                        Colors.indigo.shade900,
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Icon(
+                                                  Icons.file_download_rounded,
+                                                  color: Colors.indigo.shade900,
+                                                  size: 16,
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
