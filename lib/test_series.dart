@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'dart:io';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 class TestSeriesScreen extends StatefulWidget {
   const TestSeriesScreen({super.key});
@@ -39,6 +40,13 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     }
 
     if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
+
+      // Skip permissions for Android versions below API 30
+      if (androidInfo.version.sdkInt < 30) {
+        return;
+      }
+
       if (await Permission.photos.isGranted ||
           await Permission.videos.isGranted ||
           await Permission.audio.isGranted) {
