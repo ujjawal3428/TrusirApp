@@ -7,10 +7,10 @@ class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({super.key});
 
   @override
-  _MyProfileScreenState createState() => _MyProfileScreenState();
+  MyProfileScreenState createState() => MyProfileScreenState();
 }
 
-class _MyProfileScreenState extends State<MyProfileScreen> {
+class MyProfileScreenState extends State<MyProfileScreen> {
   String dob = '';
   String school = '';
   String studentClass = '';
@@ -63,7 +63,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           child: Column(
             children: [
               // Profile header
-              Container(
+              SizedBox(
                 width: screenWidth,
                 child: Column(
                   children: [
@@ -78,7 +78,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         children: [
                           // Back Button
                           Padding(
-                            padding: EdgeInsets.only(left: isLargeScreen ? 30 : 10),
+                            padding:
+                                EdgeInsets.only(left: isLargeScreen ? 30 : 10),
                             child: InkWell(
                               onTap: () {
                                 Navigator.pop(context);
@@ -92,7 +93,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           ),
                           // Profile Title
                           Padding(
-                            padding: EdgeInsets.only(left: 20),
+                            padding: const EdgeInsets.only(left: 20),
                             child: Text(
                               'My Profile',
                               style: TextStyle(
@@ -103,9 +104,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             ),
                           ),
                           // Edit Profile Button
-                          Spacer(),
+                          const Spacer(),
                           Padding(
-                            padding: EdgeInsets.only(right: isLargeScreen ? 30 : 10),
+                            padding:
+                                EdgeInsets.only(right: isLargeScreen ? 30 : 10),
                             child: GestureDetector(
                               onTap: () {
                                 print("Edit Profile tapped!");
@@ -133,7 +135,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     ),
                     // Profile picture and name section
                     Padding(
-                      padding: const EdgeInsets.only(top: 20.0), // Consistent 20px padding
+                      padding: const EdgeInsets.only(
+                          top: 20.0), // Consistent 20px padding
                       child: Column(
                         children: [
                           Container(
