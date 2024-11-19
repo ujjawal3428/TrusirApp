@@ -87,7 +87,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
               ),
               const SizedBox(width: 20),
               const Text(
-                'Enquiry',
+                'Fee Payment',
                 style: TextStyle(
                   color: Color(0xFF48116A),
                   fontSize: 24,
@@ -95,7 +95,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(width: 30),
+              const SizedBox(width: 60),
               const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
