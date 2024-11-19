@@ -24,57 +24,44 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
         appBar: AppBar(
-          backgroundColor: Colors.grey[50],
-          elevation: 0,
-          automaticallyImplyLeading: false,
-
-          actions: [
-            GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Image.asset(
-                      'assets/dikshaback@2x.png',
-                      width: 58,
-                      height: 58,
-                    ),
-                  ),
-          ],
-          title:const Padding(
-            padding:  EdgeInsets.only(top: 20.0),
-            child: Text(
-              'Teacher Enquiry',
-              style: TextStyle(
-                color: Color(0xFF48116A),
-                fontSize: 24,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w700,
-              ),
-            ),
+  backgroundColor: Colors.grey[50],
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  title: Padding(
+    padding: const EdgeInsets.only(left: 10.0), 
+    child: Row(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+           color: Color(0xFF48116A), 
+            size: 30, 
           ),
-          toolbarHeight: 90,
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
+       const SizedBox(width: 20), 
+        const Text(
+          'Teacher Enquiry',
+          style: TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 24,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    ),
+  ),
+  toolbarHeight: 70,
+),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: screenHeight * 0.05),
-
-              // Back Button
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Image.asset(
-                  "assets/back_button.png",
-                  width: 58,
-                  height: 58,
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.02),
-
               // Teacher Enquiry Image
               Center(
                 child: Image.asset(

@@ -16,9 +16,7 @@ class AboutUsPage extends StatelessWidget {
                          child: Image.asset(
               "back_button.png", 
               width: 100,
-              height: 100,// Ensure this path is correct
-              
-              
+              height: 100,
             ),
           ),
         ),

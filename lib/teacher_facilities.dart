@@ -64,6 +64,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
               ),
             ),
           ],
+          toolbarHeight: 70,
         ),
         body: LayoutBuilder(
           builder: (context, constraints) {

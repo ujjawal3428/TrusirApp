@@ -68,6 +68,57 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey.shade100,
+        appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: Row(children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 20),
+              const Text(
+                'Enquiry',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 24,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: 30),
+              const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.wallet_rounded,
+                    size: 20,
+                    color: Color.fromARGB(255, 28, 37, 136),
+                  ),
+                  SizedBox(width: 1),
+                  Text(
+                    '₹ 10,000.00',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ]),
+          ),
+          toolbarHeight: 70,
+        ),
         body: isLoading
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -77,56 +128,11 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                   SingleChildScrollView(
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10.0, top: 30),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 10.0, top: 30),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Image.asset(
-                                  'assets/dikshaback@2x.png',
-                                  width: 58,
-                                  height: 58,
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Fee Payments',
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(width: 30),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.wallet_rounded,
-                                        size: 20,
-                                        color: Color.fromARGB(255, 28, 37, 136),
-                                      ),
-                                      SizedBox(width: 1),
-                                      Text(
-                                        '₹ 10,000.00',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
+                            children: [],
                           ),
                         ),
                         const SizedBox(height: 20),

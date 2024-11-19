@@ -67,6 +67,39 @@ class MyProfileScreenState extends State<Teacherpfpage> {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey[50],
+          appBar: AppBar(
+  backgroundColor: Colors.grey[50],
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  title: Padding(
+    padding: const EdgeInsets.only(left: 10.0), 
+    child: Row(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+           color: Color(0xFF48116A), 
+            size: 30, 
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+       const SizedBox(width: 20), 
+        const Text(
+          'My Profile',
+          style: TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 24,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    ),
+  ),
+  toolbarHeight: 70,
+),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -75,32 +108,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                 height: 389,
                 child: Stack(
                   children: [
-                    Positioned(
-                      top: 40,
-                      left: 10,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Image.asset(
-                          'assets/dikshaback@2x.png',
-                          width: 58,
-                          height: 58,
-                        ),
-                      ),
-                    ),
-                    const Positioned(
-                      top: 51,
-                      left: 100,
-                      child: Text(
-                        'My Profile',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF48116A),
-                        ),
-                      ),
-                    ),
+                
                     Positioned(
                       bottom: 40,
                       left: 0,

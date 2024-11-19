@@ -24,20 +24,20 @@ class EnquiryPage extends StatelessWidget {
   elevation: 0,
   automaticallyImplyLeading: false,
   title: Padding(
-    padding: const EdgeInsets.only(left: 20.0), // Padding to the left
+    padding: const EdgeInsets.only(left: 10.0), 
     child: Row(
       children: [
-        GestureDetector(
-          onTap: () {
+        IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+           color: Color(0xFF48116A), 
+            size: 30, 
+          ),
+          onPressed: () {
             Navigator.pop(context);
           },
-          child: Image.asset(
-            'assets/dikshaback@2x.png',
-            width: 58,
-            height: 58,
-          ),
         ),
-        SizedBox(width: 20), // Space between the button and the text
+       const SizedBox(width: 20), 
         const Text(
           'Enquiry',
           style: TextStyle(
@@ -50,7 +50,7 @@ class EnquiryPage extends StatelessWidget {
       ],
     ),
   ),
-  toolbarHeight: 90,
+  toolbarHeight: 70,
 ),
 
       body: SingleChildScrollView(
@@ -76,7 +76,7 @@ class EnquiryPage extends StatelessWidget {
                     height: 250,
                   ),
                 ),
-                const SizedBox(height: 20),
+                
 
                 // Teacher Enquiry Image
                 GestureDetector(
@@ -94,7 +94,7 @@ class EnquiryPage extends StatelessWidget {
                     height: 250,
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
 
                 // "Or Enquire On" Text
                 const Text(
@@ -108,7 +108,7 @@ class EnquiryPage extends StatelessWidget {
                         'Poppins', // Ensure Poppins font is added in pubspec.yaml
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
 
                 // WhatsApp and Call Buttons
                 Row(

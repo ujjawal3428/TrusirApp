@@ -6,33 +6,39 @@ class TermsAndConditionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        
-        elevation: 0,
-        leading: GestureDetector(
-          onTap: () => _goBack(context),
-          child: Container( 
-            margin: const EdgeInsets.only(left: 20.0, top: 20.0),
-            child: Image.asset(
-              "back_button.png", 
-              width: 40,  
-              height: 40,
-            ),
+       appBar: AppBar(
+  backgroundColor: Colors.grey[50],
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  title: Padding(
+    padding: const EdgeInsets.only(left: 10.0), 
+    child: Row(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+           color: Color(0xFF48116A), 
+            size: 30, 
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+       const SizedBox(width: 20), 
+        const Text(
+          'Terms & Conditions',
+          style: TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 24,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
           ),
         ),
-        title: const Padding(
-          padding: EdgeInsets.only(left: 20.0),
-          child: Text(
-            "Terms & Conditions",
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.w900, 
-              color: Colors.deepPurple,
-            ),
-          ),
-        ),
-        centerTitle: true, // Center title in the AppBar
-      ),
+      ],
+    ),
+  ),
+  toolbarHeight: 70,
+),
       body: const Padding(
         padding: EdgeInsets.all(20.0),
         child: SingleChildScrollView(
