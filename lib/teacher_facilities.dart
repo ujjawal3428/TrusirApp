@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:trusir/api.dart';
 import 'package:trusir/bottom_navigation_bar.dart';
 import 'package:trusir/teacher_profile.dart';
 import 'package:trusir/notice.dart';
@@ -14,6 +17,10 @@ class TeacherFacilities extends StatefulWidget {
 
 class _TeacherFacilitiesState extends State<TeacherFacilities> {
   int _selectedIndex = 0;
+  String name = '';
+  String address = '';
+  String phoneNumber = '';
+  String profilePhoto = '';
 
   final Map<String, Map<String, double>> imageSizes = {
     'assets/myprofile.png': {'width': 50, 'height': 50},
@@ -34,6 +41,35 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchProfileData();
+  }
+
+  Future<void> fetchProfileData() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/teacher-profile/testID'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          name = data['name'] ?? 'N/A';
+          phoneNumber = data['phoneNumber'] ?? 'N/A';
+          address = data['address'] ?? 'N/A';
+          profilePhoto = data['profile_photo'] ??
+              'https://via.placeholder.com/150'; // Fallback image URL
+        });
+      } else {
+        throw Exception('Failed to load profile data');
+      }
+    } catch (e) {
+      print('Error fetching profile data: $e');
+    }
   }
 
   @override
@@ -70,11 +106,12 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
           builder: (context, constraints) {
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: Column(
                   children: [
                     Container(
-                      height: 116,
+                      height: 130,
                       width: constraints.maxWidth > 388
                           ? 388
                           : constraints.maxWidth - 40,
@@ -100,15 +137,16 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Expanded(
+                          Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(left: 25.0, top: 20),
+                              padding:
+                                  const EdgeInsets.only(left: 25.0, top: 20),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Asmit Kumar',
-                                    style: TextStyle(
+                                    name,
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 22,
                                       fontFamily: 'Poppins',
@@ -116,10 +154,10 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(top: 5.0),
+                                    padding: const EdgeInsets.only(top: 5.0),
                                     child: Text(
-                                      'Motihari, Bihar',
-                                      style: TextStyle(
+                                      address,
+                                      style: const TextStyle(
                                         fontFamily: 'Poppins',
                                         color: Colors.white,
                                         fontSize: 16,
@@ -128,10 +166,10 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(top: 2.0),
+                                    padding: const EdgeInsets.only(top: 2.0),
                                     child: Text(
-                                      '980-456-7890',
-                                      style: TextStyle(
+                                      phoneNumber,
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 11,
                                         fontFamily: 'Poppins',
@@ -145,8 +183,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(right: 12.0),
-                            child: Image.asset(
-                              'assets/diksha@4x.png',
+                            child: Image.network(
+                              profilePhoto,
                               width: 92,
                               height: 92,
                               fit: BoxFit.contain,
@@ -209,7 +247,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const SettingsScreen(),
+                                    builder: (context) =>
+                                        const SettingsScreen(),
                                   ),
                                 );
                               }),
@@ -250,7 +289,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const TeacherProfileScreen(),
+                                builder: (context) =>
+                                    const TeacherProfileScreen(),
                               ),
                             );
                           }),

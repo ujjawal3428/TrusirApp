@@ -61,7 +61,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
         final data = json.decode(response.body);
         setState(() {
           name = data['name'] ?? '';
-          profile = data['profile_photo'] ?? '';
+          profile = data['profile_photo'] ?? 'https://via.placeholder.com/150';
         });
       } else {
         throw Exception('Failed to load profile data');
