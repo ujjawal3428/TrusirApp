@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class OtpScreen  extends StatelessWidget {
+  const OtpScreen ({super.key});
 
   @override
   Widget build(BuildContext context) {
