@@ -18,7 +18,41 @@ class EnquiryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
+       appBar: AppBar(
+  backgroundColor: Colors.grey[50],
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  title: Padding(
+    padding: const EdgeInsets.only(left: 20.0), // Padding to the left
+    child: Row(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Image.asset(
+            'assets/dikshaback@2x.png',
+            width: 58,
+            height: 58,
+          ),
+        ),
+        SizedBox(width: 20), // Space between the button and the text
+        const Text(
+          'Enquiry',
+          style: TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 24,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    ),
+  ),
+  toolbarHeight: 90,
+),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -84,7 +118,7 @@ class EnquiryPage extends StatelessWidget {
                     GestureDetector(
                       onTap: _openWhatsApp,
                       child: Image.asset(
-                        'assets/whatsapp.png', // Ensure asset path is correct
+                        'assets/whatsapp@3x.png', // Ensure asset path is correct
                         width: 100, // Adjust dimensions as needed
                         height: 100,
                       ),

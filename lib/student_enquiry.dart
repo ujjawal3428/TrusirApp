@@ -9,22 +9,17 @@ class StudentEnquiryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: screenHeight * 0.05),
+      backgroundColor: Colors.grey.shade100,
+       appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
 
-  
-              Row(
-                children: [
-                  GestureDetector(
+          actions: [
+            GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -34,19 +29,28 @@ class StudentEnquiryPage extends StatelessWidget {
                       height: 58,
                     ),
                   ),
-                  const SizedBox(width: 22),
-                  const Text(
-                    'Test Series',
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+          ],
+          title:const Padding(
+            padding:  EdgeInsets.only(top: 20.0),
+            child: Text(
+              'Student Enquiry',
+              style: TextStyle(
+                color: Color(0xFF48116A),
+                fontSize: 24,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
               ),
-              SizedBox(height: screenHeight * 0.05),
+            ),
+          ),
+          toolbarHeight: 90,
+        ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
 
-              // Student Enquiry Image
               Center(
                 child: Image.asset(
                   'assets/studentenquiry2.png',

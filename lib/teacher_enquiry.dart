@@ -22,6 +22,38 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
+        appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
+
+          actions: [
+            GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Image.asset(
+                      'assets/dikshaback@2x.png',
+                      width: 58,
+                      height: 58,
+                    ),
+                  ),
+          ],
+          title:const Padding(
+            padding:  EdgeInsets.only(top: 20.0),
+            child: Text(
+              'Teacher Enquiry',
+              style: TextStyle(
+                color: Color(0xFF48116A),
+                fontSize: 24,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          toolbarHeight: 90,
+        ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),

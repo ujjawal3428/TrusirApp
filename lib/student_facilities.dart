@@ -83,12 +83,13 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
           ],
           toolbarHeight: 90,
         ),
+        
         body: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
                 child: Padding(
               padding: const EdgeInsets.only(
-                  left: 20.0, right: 20, bottom: 20, top: 10),
+                  left: 20.0, right: 20, bottom: 20, top: 18),
               child: Column(children: [
             
                 Container(
