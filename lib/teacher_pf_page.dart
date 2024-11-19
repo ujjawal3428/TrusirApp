@@ -109,11 +109,11 @@ class MyProfileScreenState extends State<Teacherpfpage> {
             children: [
               SizedBox(
                 width: 428,
-                height: 389,
+                height: 260,
                 child: Stack(
                   children: [
                     Positioned(
-                      bottom: 40,
+                      bottom: 20,
                       left: 0,
                       right: 0,
                       child: Column(
@@ -129,7 +129,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 15),
+                          const SizedBox(height: 7),
                           Text(
                             name,
                             style: const TextStyle(
@@ -144,22 +144,22 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                   ],
                 ),
               ),
+              buildInfoRow(
+                  'assets/male@2x.png', 'Age & Gender', '$age, $gender'),
+              const SizedBox(height: 10),
+              buildInfoRow('assets/location@2x.png', 'Address', address),
               const SizedBox(height: 10),
               buildInfoRow(
-                  'assets/person.png', 'Age & Gender', '$age, $gender'),
+                  'assets/degree@2x.png', 'Graduation', graduation),
               const SizedBox(height: 10),
-              buildInfoRow('assets/home.png', 'Address', address),
-              const SizedBox(height: 10),
-              buildInfoRow(
-                  'assets/graduation@3x.png', 'Graduation', graduation),
-              const SizedBox(height: 10),
-              buildInfoRow('assets/experience.png', 'Experience', experience),
+              buildInfoRow('assets/medal@2x.png', 'Experience', experience),
               const SizedBox(height: 10),
               buildInfoRow('assets/pensp@3x.png', 'Subjects', subjects),
               const SizedBox(height: 10),
-              buildInfoRow('assets/language.png', 'Language', language),
+              buildInfoRow('assets/ab@2x.png', 'Language', language),
               const SizedBox(height: 10),
-              buildInfoRow('assets/phone.png', 'Phone Number', phoneNumber),
+              buildInfoRow('assets/phone@2x.png', 'Phone Number', phoneNumber),
+              const SizedBox(height: 10),
             ],
           ),
         ),
@@ -169,19 +169,19 @@ class MyProfileScreenState extends State<Teacherpfpage> {
 
   Widget buildInfoRow(String iconPath, String title, String value) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0, right: 10),
+      padding: const EdgeInsets.only(left: 12.0, right: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 75,
-            height: 75,
+            width: 65,
+            height: 65,
             decoration: BoxDecoration(
               color: Colors.pink.shade100,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding: const EdgeInsets.all(10.0),
               child: Image.asset(
                 iconPath,
                 fit: BoxFit.contain,
@@ -191,7 +191,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
           const SizedBox(width: 15),
           Flexible(
             child: Container(
-              height: 75,
+              height: 65,
               width: 306,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(65, 255, 46, 46),

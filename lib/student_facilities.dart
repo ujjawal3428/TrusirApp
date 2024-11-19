@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trusir/login_page.dart';
 import 'package:trusir/test_series.dart';
 import 'package:trusir/bottom_navigation_bar.dart';
 import 'package:trusir/fee_payment.dart';
@@ -10,7 +9,7 @@ import 'package:trusir/parents_doubt.dart';
 import 'package:trusir/progress_report.dart';
 import 'package:trusir/setting.dart';
 import 'package:trusir/student_doubt.dart';
-import 'package:trusir/teacher_profile.dart';
+import 'package:trusir/teacher_myprofile.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'api.dart';
@@ -56,7 +55,6 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
   Future<void> fetchProfileData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userID = prefs.getString('userID');
-
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/my-profile/$userID'),
@@ -74,27 +72,6 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     } catch (e) {
       print('Error fetching profile data: $e');
     }
-  }
-
-  // Clear specific user data from cache
-  Future<void> _logout() async {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const TrusirLoginPage()),
-    );
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Remove specific keys
-    await prefs.remove('userID');
-    await prefs.remove('phone');
-    // await prefs.remove('role');
-    // await prefs.remove('new_user');
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Logged Out Successfully'),
-        duration: Duration(seconds: 1),
-      ),
-    );
   }
 
   @override
@@ -121,24 +98,19 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
               'Student Facilities',
               style: TextStyle(
                 color: Color(0xFF48116A),
-                fontSize: 24,
+                fontSize: 22,
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.w700,
               ),
             ),
           ),
           actions: [
-            InkWell(
-              onTap: () {
-                _logout();
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20, right: 20.0),
-                child: Image.asset(
-                  'assets/logout@3x.png',
-                  width: 103,
-                  height: 24,
-                ),
+            Padding(
+              padding: const EdgeInsets.only(top: 20, right: 20.0),
+              child: Image.asset(
+                'assets/logout@3x.png',
+                width: 103,
+                height: 24,
               ),
             ),
           ],
