@@ -11,7 +11,7 @@ class TermsAndConditionsPage extends StatelessWidget {
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Padding(
-          padding: const EdgeInsets.only(left: 10.0),
+          padding: const EdgeInsets.only(left: 1.0),
           child: Row(
             children: [
               IconButton(
@@ -24,7 +24,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 5),
               const Text(
                 'Terms & Conditions',
                 style: TextStyle(

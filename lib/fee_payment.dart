@@ -100,7 +100,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
           elevation: 0,
           automaticallyImplyLeading: false,
           title: Padding(
-            padding: const EdgeInsets.only(left: 10.0),
+            padding: const EdgeInsets.only(left: 1.0),
             child: Row(children: [
               IconButton(
                 icon: const Icon(
@@ -112,7 +112,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                   Navigator.pop(context);
                 },
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 5),
               const Text(
                 'Fee Payment',
                 style: TextStyle(
@@ -156,7 +156,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                     child: Column(
                       children: [
                         const Padding(
-                          padding: EdgeInsets.only(left: 10.0, top: 30),
+                          padding: EdgeInsets.only(left: 10.0, top: 12),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [],

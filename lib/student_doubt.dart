@@ -46,7 +46,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   elevation: 0,
   automaticallyImplyLeading: false,
   title: Padding(
-    padding: const EdgeInsets.only(left: 10.0), 
+    padding: const EdgeInsets.only(left: 1.0), 
     child: Row(
       children: [
         IconButton(
@@ -59,7 +59,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
             Navigator.pop(context);
           },
         ),
-       const SizedBox(width: 20), 
+       const SizedBox(width: 5), 
         const Text(
           'Student Doubt',
           style: TextStyle(

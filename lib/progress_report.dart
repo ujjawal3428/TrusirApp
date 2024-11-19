@@ -22,7 +22,7 @@ class ProgressReportScreen extends StatelessWidget {
   elevation: 0,
   automaticallyImplyLeading: false,
   title: Padding(
-    padding: const EdgeInsets.only(left: 10.0), 
+    padding: const EdgeInsets.only(left: 1.0), 
     child: Row(
       children: [
         IconButton(
@@ -35,7 +35,7 @@ class ProgressReportScreen extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-       const SizedBox(width: 20), 
+       const SizedBox(width: 5), 
         const Text(
           'Progress Report',
           style: TextStyle(
@@ -293,7 +293,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   Widget _buildBackButton(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.only(left: 10.0, ),
+      padding: EdgeInsets.only(left: 1.0, ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
