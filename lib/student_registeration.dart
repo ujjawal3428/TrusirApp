@@ -66,13 +66,45 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   final StudentRegistrationData formData = StudentRegistrationData();
 
   Future<void> submitForm() async {
+    // Initialize SharedPreferences
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    // Get the role from SharedPreferences
     final role = prefs.getString('role');
+
+    // Define the base URL and form submission endpoint
     final url = Uri.parse('$baseUrl/register/$role');
-    final headers = {'Content-Type': 'application/json'};
-    final body = json.encode(formData.toJson());
 
     try {
+      // Step 1: Fetch the CSRF token
+      final csrfUrl =
+          Uri.parse('$baseUrl/csrf-token'); // URL to fetch the CSRF token
+      final csrfResponse = await http.get(csrfUrl);
+
+      if (csrfResponse.statusCode != 200) {
+        print('Failed to fetch CSRF token');
+        return;
+      }
+
+      // Parse the CSRF token from the JSON response
+      final csrfToken = parseCsrfToken(csrfResponse.body);
+
+      if (csrfToken.isEmpty) {
+        print('Failed to extract CSRF token');
+        return;
+      }
+
+      // Step 2: Prepare headers with CSRF token
+      final headers = {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken, // Add the CSRF token to headers
+        'Accept': 'application/json', // Optional for Laravel APIs
+      };
+
+      // Step 3: Convert form data to JSON
+      final body = json.encode(formData.toJson());
+
+      // Step 4: Make the POST request
       final response = await http.post(url, headers: headers, body: body);
 
       if (response.statusCode == 200) {
@@ -82,11 +114,22 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           MaterialPageRoute(builder: (context) => const Studentfacilities()),
         );
       } else {
-        // Handle error
+        // Handle error response
         print('Failed to submit form: ${response.body}');
       }
     } catch (e) {
+      // Handle exceptions
       print('Error occurred: $e');
+    }
+  }
+
+  String parseCsrfToken(String jsonResponse) {
+    try {
+      final data = jsonDecode(jsonResponse);
+      return data['csrf_token'] ?? '';
+    } catch (e) {
+      print('Error parsing CSRF token: $e');
+      return '';
     }
   }
 
