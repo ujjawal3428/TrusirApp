@@ -59,25 +59,32 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
           builder: (context, constraints) {
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 20, top: 50),
                 child: Column(
                   children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Student Facilities',
-                            style: TextStyle(
-                                color: Color(0xFF48116A),
-                                fontSize: 24,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w700),
+                     Align(
+                      alignment: Alignment.centerLeft,
+                       child: Row(
+                            children: [
+                              const Text(
+                                'Teacher Facilities',
+                                style: TextStyle(
+                                  color: Color(0xFF48116A),
+                                  fontSize: 24,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const Spacer(),
+                              Image.asset(
+                                'assets/logout@3x.png',
+                                width: 103,
+                                height: 24,
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
+                     ),
+
                     const SizedBox(height: 20),
                     Container(
                       height: 116,
@@ -160,15 +167,15 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 35),
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(5.0),
                       child: LayoutBuilder(builder: (context, constraints) {
                         return GridView.count(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           crossAxisCount: constraints.maxWidth > 600 ? 4 : 3,
-                          crossAxisSpacing: 10,
+                          crossAxisSpacing: 17,
                           mainAxisSpacing: 10,
                           childAspectRatio: tileWidth / tileHeight,
                           children: [
@@ -350,10 +357,9 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         );
                       }),
                     ),
-                  ],
-                ),
-              ),
-            );
+                ]), 
+            ));
+          
           },
         ),
         bottomNavigationBar: CustomBottomNavigationBar(
@@ -405,6 +411,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 12 * scaleFactor,
+                  fontFamily: 'Poppins',
                   fontWeight: FontWeight.w500,
                 ),
               ),

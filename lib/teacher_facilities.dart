@@ -38,7 +38,6 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
 
     return MaterialApp(
       home: Scaffold(
@@ -48,23 +47,33 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.only(
-                    left: 20.0, right: 20, bottom: 20, top: 35),
+                    left: 20.0, right: 20, bottom: 20, top: 50),
                 child: Column(
                   children: [
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Teacher Facilities',
-                        style: TextStyle(
-                          color: Color(0xFF48116A),
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Teacher Facilities',
+                              style: TextStyle(
+                                color: Color(0xFF48116A),
+                                fontSize: 24,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const Spacer(),
+                            Image.asset(
+                              'assets/logout@3x.png',
+                              width: 103,
+                              height: 24,
+                            ),
+                          ],
+                        )),
                     const SizedBox(height: 20),
                     Container(
-                      height: screenHeight * 0.15,
+                      height: 116,
                       width: constraints.maxWidth > 388
                           ? 388
                           : constraints.maxWidth - 40,
@@ -101,6 +110,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 22,
+                                      fontFamily: 'Poppins',
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
@@ -109,6 +119,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     child: Text(
                                       'Motihari, Bihar',
                                       style: TextStyle(
+                                        fontFamily: 'Poppins',
                                         color: Colors.white,
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
@@ -122,6 +133,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 11,
+                                        fontFamily: 'Poppins',
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -134,24 +146,24 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             padding: const EdgeInsets.only(right: 12.0),
                             child: Image.asset(
                               'assets/diksha@4x.png',
-                              width: screenHeight * 0.1,
-                              height: screenHeight * 0.1,
+                              width: 92,
+                              height: 92,
                               fit: BoxFit.contain,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 35),
                     Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(5.0),
                       child: LayoutBuilder(
                         builder: (context, constraints) {
                           return GridView.count(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             crossAxisCount: constraints.maxWidth > 600 ? 4 : 3,
-                            crossAxisSpacing: 10,
+                            crossAxisSpacing: 17,
                             mainAxisSpacing: 10,
                             childAspectRatio: 116 / 140,
                             children: [
@@ -221,7 +233,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 10),
+                            horizontal: 25, vertical: 10),
                         children: [
                           buildHorizontalTile(context, const Color(0xFFB3E5FC),
                               'assets/sir.png', 'Rakesh Tripathi', () {
@@ -232,7 +244,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               ),
                             );
                           }),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 17),
                           buildHorizontalTile(context, const Color(0xFFF59D80),
                               'assets/sir.png', 'Rakesh Tripathi', () {
                             Navigator.push(
@@ -243,7 +255,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               ),
                             );
                           }),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 17),
                           buildHorizontalTile(context, const Color(0xFFF8BBD0),
                               'assets/sir.png', 'Rakesh Tripathi', () {
                             // Navigator.push(
@@ -253,7 +265,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             //   ),
                             // );
                           }),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 17),
                           buildHorizontalTile(context, const Color(0xFFFFCDD2),
                               'assets/sir.png', 'Rakesh Tripathi', () {
                             // Navigator.push(
@@ -263,7 +275,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             //   ),
                             // );
                           }),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 17),
                           buildHorizontalTile(context, const Color(0xFF00E533),
                               'assets/sir.png', 'Rakesh Tripathi', () {
                             Navigator.push(
@@ -308,7 +320,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
             color: color,
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
-              color: Colors.black,
+              color: color, // Changed from Colors.black to color
               width: 1,
             ),
           ),
@@ -330,6 +342,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
+                    fontFamily: 'Poppins',
                     fontSize: 12 * scaleFactor,
                     fontWeight: FontWeight.w500,
                   ),
@@ -355,7 +368,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
           color: color,
           borderRadius: BorderRadius.circular(22),
           border: Border.all(
-            color: Colors.black,
+            color: color, // Changed from Colors.black to color
             width: 1,
           ),
         ),
