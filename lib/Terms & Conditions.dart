@@ -14,8 +14,8 @@ class TermsAndConditionsPage extends StatelessWidget {
           child: Container( 
             margin: const EdgeInsets.only(left: 20.0, top: 20.0),
             child: Image.asset(
-              "back_button.png", // Ensure this path is correct
-              width: 40,  // Set to a smaller size for a standard back button
+              "back_button.png", 
+              width: 40,  
               height: 40,
             ),
           ),

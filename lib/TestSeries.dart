@@ -258,7 +258,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                             testSeriesList.asMap().entries.map<Widget>((entry) {
                           int index = entry.key;
                           var test = entry.value;
-
                           return Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Container(
