@@ -119,7 +119,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const SizedBox(width: 60),
+              const SizedBox(width: 40),
               const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
