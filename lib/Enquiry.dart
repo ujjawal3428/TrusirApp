@@ -19,40 +19,39 @@ class EnquiryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-       appBar: AppBar(
-  backgroundColor: Colors.grey[50],
-  elevation: 0,
-  automaticallyImplyLeading: false,
-  title: Padding(
-    padding: const EdgeInsets.only(left: 10.0), 
-    child: Row(
-      children: [
-        IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-           color: Color(0xFF48116A), 
-            size: 30, 
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 20),
+              const Text(
+                'Enquiry',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 24,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
-       const SizedBox(width: 20), 
-        const Text(
-          'Enquiry',
-          style: TextStyle(
-            color: Color(0xFF48116A),
-            fontSize: 24,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    ),
-  ),
-  toolbarHeight: 70,
-),
-
+        toolbarHeight: 70,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -76,7 +75,6 @@ class EnquiryPage extends StatelessWidget {
                     height: 250,
                   ),
                 ),
-                
 
                 // Teacher Enquiry Image
                 GestureDetector(
