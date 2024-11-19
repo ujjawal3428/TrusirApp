@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/bottom_navigation_bar.dart';
 import 'package:trusir/teacher_profile.dart';
@@ -50,9 +51,11 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
   }
 
   Future<void> fetchProfileData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/teacher-profile/testID'),
+        Uri.parse('$baseUrl/teacher-profile/$userID'),
       );
 
       if (response.statusCode == 200) {

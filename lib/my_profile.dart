@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'api.dart';
 
@@ -25,9 +26,11 @@ class MyProfileScreenState extends State<MyProfileScreen> {
   }
 
   Future<void> fetchProfileData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/my-profile/testid'),
+        Uri.parse('$baseUrl/my-profile/$userID'),
       );
 
       if (response.statusCode == 200) {

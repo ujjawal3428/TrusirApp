@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -46,10 +47,12 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
   int currentPage = 1;
   bool hasMore = true;
 
-  final apiBase = '$baseUrl/fee-report/testID';
+  final apiBase = '$baseUrl/fee-report/';
 
   Future<void> fetchFeeDetails({int page = 1}) async {
-    final url = '$apiBase?page=$page&data_per_page=10';
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
+    final url = '$apiBase/$userID?page=$page&data_per_page=10';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
