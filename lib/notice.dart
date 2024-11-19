@@ -12,7 +12,7 @@ class NoticeScreen extends StatelessWidget {
   elevation: 0,
   automaticallyImplyLeading: false,
   title: Padding(
-    padding: const EdgeInsets.only(left: 10.0), 
+    padding: const EdgeInsets.only(left: 1.0), 
     child: Row(
       children: [
         IconButton(
@@ -25,7 +25,7 @@ class NoticeScreen extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-       const SizedBox(width: 20), 
+       const SizedBox(width: 5), 
         const Text(
           'Notice',
           style: TextStyle(
@@ -40,50 +40,41 @@ class NoticeScreen extends StatelessWidget {
   ),
   toolbarHeight: 70,
 ),
+  floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 16.0, right: 16.0), 
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: LinearGradient(
+            colors: [Colors.grey[300]!, Colors.white], 
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: FloatingActionButton(
+          onPressed: () {
+            // Your onPressed action
+          },
+          elevation: 0, // To match the gradient
+          backgroundColor:const Color(0xFF48116A), // Transparent for gradient to show
+          child: const Icon(
+            Icons.add, // Plus icon
+          color: Colors.white,
+            size: 50, // Icon size
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Stack(
         children: [
           SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.only(left:15, right: 15, bottom: 15, top : 0),
               child: Column(
                 children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 30),
-                      child: Flexible(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Image.asset(
-                              'assets/dikshaback@2x.png',
-                              width: 58,
-                              height: 58,
-                            ),
-                            const SizedBox(
-                              width: 135,
-                            ),
-                            const Text(
-                              'Notice',
-                              style: TextStyle(
-                                color: Color(0xFF48116A),
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
+  
                   Padding(
                     padding:
-                        const EdgeInsets.only(left: 10, top: 20, right: 10),
+                        const EdgeInsets.only(left: 10, top: 10, right: 10),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
@@ -261,49 +252,7 @@ class NoticeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 40,
-                  ),
                 ],
-              ),
-            ),
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              color: Colors.white,
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: InkWell(
-                  onTap: () {},
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF045C19),
-                          Color(0xFF77D317),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Add Notice',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontFamily: 'Poppins'),
-                      ),
-                    ),
-                  ),
-                ),
               ),
             ),
           ),

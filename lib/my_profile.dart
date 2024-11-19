@@ -70,7 +70,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
           elevation: 0,
           automaticallyImplyLeading: false,
           title: Padding(
-            padding: const EdgeInsets.only(left: 10.0),
+            padding: const EdgeInsets.only(left: 1.0),
             child: Row(
               children: [
                 IconButton(
@@ -83,7 +83,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                     Navigator.pop(context);
                   },
                 ),
-                const SizedBox(width: 20),
+                const SizedBox(width: 5),
                 const Text(
                   'My Profile',
                   style: TextStyle(
@@ -126,54 +126,50 @@ class MyProfileScreenState extends State<MyProfileScreen> {
         body: SingleChildScrollView(
             child: Column(children: [
           // Profile header
-          SizedBox(
-            width: screenWidth,
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: isLargeScreen ? 60 : 40,
-                    bottom: 20,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 20.0), // Consistent 20px padding
-                        child: Column(
-                          children: [
-                            Center(
-                              child: Container(
-                                width: isLargeScreen ? 250 : 175,
-                                height: isLargeScreen ? 250 : 175,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: NetworkImage(profile),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            Center(
-                              child: Text(
-                                name,
-                                style: TextStyle(
-                                  fontSize: isLargeScreen ? 36 : 30,
-                                  fontWeight: FontWeight.w700,
-                                  color: const Color(0xFF48116A),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 20), // Bottom spacing
-                          ],
-                        ),
-                      ),
-                    ],
+         SizedBox(
+  width: screenWidth,
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center, // Center children vertically
+    crossAxisAlignment: CrossAxisAlignment.center, // Center children horizontally
+    children: [
+      Padding(
+        padding: EdgeInsets.only(
+          top: isLargeScreen ? 60 : 40,
+          bottom: 20,
+        ),
+        child: Column(
+          children: [
+            Center(
+              child: Container(
+                width: isLargeScreen ? 250 : 175,
+                height: isLargeScreen ? 250 : 175,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: NetworkImage(profile),
+                    fit: BoxFit.cover,
                   ),
                 ),
+              ),
+            ),
+            const SizedBox(height: 15),
+            Center(
+              child: Text(
+                name,
+                style: TextStyle(
+                  fontSize: isLargeScreen ? 36 : 30,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF48116A),
+                ),
+              ),
+            ),
+            const SizedBox(height: 5), // Bottom spacing
+          ],
+        ),
+      ),
+    ],
+  )
+            ),
                 // Info rows
                 const SizedBox(height: 10),
                 buildInfoRow(
@@ -207,10 +203,10 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                   isLargeScreen,
                   rowColors[3],
                 ),
-              ],
-            ),
-          ),
-        ])));
+            ]),
+          )
+          );
+        
   }
 
   Widget buildInfoRow(

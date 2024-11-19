@@ -24,7 +24,7 @@ class EnquiryPage extends StatelessWidget {
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Padding(
-          padding: const EdgeInsets.only(left: 10.0),
+          padding: const EdgeInsets.only(left: 0.0),
           child: Row(
             children: [
               IconButton(
@@ -37,7 +37,7 @@ class EnquiryPage extends StatelessWidget {
                   Navigator.pop(context);
                 },
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 5),
               const Text(
                 'Enquiry',
                 style: TextStyle(
