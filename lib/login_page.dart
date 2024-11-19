@@ -142,14 +142,6 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
 
   Future<Map<String, dynamic>?> fetchUserData(String phoneNumber) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final cacheKey = 'user_data_$phoneNumber';
-
-    // Check cache
-    if (prefs.containsKey(cacheKey)) {
-      print('Fetching data from cache...');
-      final cachedData = prefs.getString(cacheKey);
-      return jsonDecode(cachedData!);
-    }
 
     // Fetch from API
     try {
@@ -165,8 +157,10 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
             responseData.containsKey('role') &&
             responseData.containsKey('new_user')) {
           // Save response to cache
-          await prefs.setString(cacheKey, jsonEncode(responseData));
           await prefs.setString('userID', responseData['uerID']);
+          await prefs.setString('phone', responseData['phone_number']);
+          // await prefs.setString('role', responseData['role']);
+          // await prefs.setString('new_user', responseData['new_user']);
           print('Data fetched from API and cached.');
           return responseData;
         } else {
@@ -180,16 +174,6 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     } catch (e) {
       print('Error fetching data: $e');
       return null;
-    }
-  }
-
-  // Clear specific user data from cache
-  Future<void> clearUserCache(String phoneNumber) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final cacheKey = 'user_data_$phoneNumber';
-    if (prefs.containsKey(cacheKey)) {
-      await prefs.remove(cacheKey);
-      print('Cache cleared for phone number: $phoneNumber');
     }
   }
 

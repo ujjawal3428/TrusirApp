@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/bottom_navigation_bar.dart';
+import 'package:trusir/login_page.dart';
 import 'package:trusir/teacher_profile.dart';
 import 'package:trusir/notice.dart';
 import 'package:trusir/setting.dart';
@@ -50,6 +51,26 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
     fetchProfileData();
   }
 
+  Future<void> _logout() async {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const TrusirLoginPage()),
+    );
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // Remove specific keys
+    await prefs.remove('userID');
+    await prefs.remove('phone');
+    // await prefs.remove('role');
+    // await prefs.remove('new_user');
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Logged Out Successfully'),
+        duration: Duration(seconds: 1),
+      ),
+    );
+  }
+
   Future<void> fetchProfileData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userID = prefs.getString('userID');
@@ -94,12 +115,17 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
             ),
           ),
           actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: Image.asset(
-                'assets/logout@3x.png',
-                width: 103,
-                height: 24,
+            InkWell(
+              onTap: () {
+                _logout();
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20.0),
+                child: Image.asset(
+                  'assets/logout@3x.png',
+                  width: 103,
+                  height: 24,
+                ),
               ),
             ),
           ],
