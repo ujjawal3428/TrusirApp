@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'constants.dart'; // Assuming you've added your base URL here
+import 'api.dart'; // Assuming you've added your base URL here
 
 class TeacherProfileScreen extends StatefulWidget {
   const TeacherProfileScreen({super.key});

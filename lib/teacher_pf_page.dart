@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:trusir/api.dart';
+
 class Teacherpfpage extends StatefulWidget {
   const Teacherpfpage({super.key});
 
@@ -29,7 +31,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
   Future<void> fetchProfileData() async {
     try {
       final response = await http.get(
-        Uri.parse('https://balvikasyojana.com:8899/teacher-profile/testID'),
+        Uri.parse('$baseUrl/teacher-profile/testID'),
       );
 
       if (response.statusCode == 200) {
