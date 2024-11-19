@@ -97,7 +97,7 @@ class Teacherhomepage extends StatelessWidget {
                 const Text(
                   'Our Services',
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Poppins',
                   ),
