@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/editprofilescreen.dart';
 import 'dart:convert';
 import 'api.dart';
 
@@ -98,7 +99,13 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                   padding: EdgeInsets.only(right: isLargeScreen ? 30 : 10),
                   child: GestureDetector(
                     onTap: () {
-                      print("Edit Profile tapped!");
+                          Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const EditProfileScreen(),
+                                      ),
+                                    );
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
