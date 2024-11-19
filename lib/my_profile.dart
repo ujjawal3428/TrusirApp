@@ -15,6 +15,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
   String school = '';
   String studentClass = '';
   String subject = '';
+  String profile_photo = '';
 
   @override
   void initState() {
@@ -35,6 +36,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
           school = data['school'] ?? '';
           studentClass = data['class'] ?? '';
           subject = data['subject'] ?? '';
+          profile_photo = data['profile_photo'];
         });
       } else {
         throw Exception('Failed to load profile data');
@@ -142,10 +144,10 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           Container(
                             width: isLargeScreen ? 250 : 175,
                             height: isLargeScreen ? 250 : 175,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                image: AssetImage('assets/asmitcircle.png'),
+                                image: NetworkImage(profile_photo),
                                 fit: BoxFit.cover,
                               ),
                             ),
