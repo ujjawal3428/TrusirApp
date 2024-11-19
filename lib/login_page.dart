@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/Enquiry.dart';
+import 'package:trusir/enquiry.dart';
 import 'package:trusir/menu.dart';
 import 'package:trusir/student_homepage.dart';
 
@@ -20,7 +20,7 @@ class ResponsiveDimensions {
   double get subtitleSize => screenWidth * 0.04;
   double get horizontalPadding => screenWidth * 0.05;
   double get verticalPadding => safeHeight * 0.02;
-  
+
   // Image dimensions - can be adjusted as needed
   double get carouselImageHeight => safeHeight * 0.4;
   double get carouselImageWidth => screenWidth * 0.8;
@@ -30,9 +30,9 @@ class ResponsiveDimensions {
 class TrusirLoginPage extends StatefulWidget {
   // Allow customization of carousel image size ratio
   final double carouselImageHeightRatio;
-  
+
   const TrusirLoginPage({
-    super.key, 
+    super.key,
     this.carouselImageHeightRatio = 0.4, // Default ratio can be adjusted
   });
 
@@ -130,8 +130,8 @@ class _TrusirLoginPageState extends State<TrusirLoginPage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         GestureDetector(
-          onTap: (){
-             showPopupDialog(context);
+          onTap: () {
+            showPopupDialog(context);
           },
           child: Image.asset(
             'assets/skipbutton.png',
@@ -143,7 +143,7 @@ class _TrusirLoginPageState extends State<TrusirLoginPage> {
         TextButton(
           onPressed: () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) =>const EnquiryPage()),
+            MaterialPageRoute(builder: (context) => const EnquiryPage()),
           ),
           child: const Text('go'),
         ),
@@ -240,7 +240,8 @@ class _TrusirLoginPageState extends State<TrusirLoginPage> {
       children: List.generate(pageContent.length, (index) {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          margin: EdgeInsets.symmetric(horizontal: responsive.screenWidth * 0.01),
+          margin:
+              EdgeInsets.symmetric(horizontal: responsive.screenWidth * 0.01),
           height: responsive.screenWidth * 0.03,
           width: responsive.screenWidth * 0.03,
           decoration: BoxDecoration(
@@ -307,14 +308,13 @@ class _TrusirLoginPageState extends State<TrusirLoginPage> {
     );
   }
 
-
   Widget _buildSendOTPButton(ResponsiveDimensions responsive) {
     return Center(
       child: GestureDetector(
-        onTap: (){
+        onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) =>const StudentHomepage()),
+            MaterialPageRoute(builder: (context) => const StudentHomepage()),
           );
         },
         child: Image.asset(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/loginpage.dart';
+import 'package:trusir/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (context) => const TrusirLoginPage(), 
+        '/': (context) => const TrusirLoginPage(),
       },
     );
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/studentfacilities.dart';
+import 'package:trusir/student_facilities.dart';
 
 class StudentHomepage extends StatelessWidget {
   const StudentHomepage({super.key});
@@ -16,13 +16,11 @@ class StudentHomepage extends StatelessWidget {
               left: 16.0,
               right: 16.0,
               top: 16.0,
-              
               bottom: 100.0,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-            
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -225,8 +223,8 @@ class StudentHomepage extends StatelessWidget {
                     'Class 10',
                   ].map((subject) {
                     return Container(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.purple),
                         borderRadius: BorderRadius.circular(20),
@@ -268,8 +266,8 @@ class StudentHomepage extends StatelessWidget {
                     'Social Science: History, Geography, Political Science, Economics'
                   ].map((subject) {
                     return Container(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.purple),
                         borderRadius: BorderRadius.circular(20),
@@ -288,7 +286,7 @@ class StudentHomepage extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Fixed Registration Button at bottom
           Positioned(
             left: 0,
@@ -325,11 +323,10 @@ class StudentHomepage extends StatelessWidget {
                       child: Text(
                         'Registeration',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontFamily: 'Poppins'
-                        ),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontFamily: 'Poppins'),
                       ),
                     ),
                   ),

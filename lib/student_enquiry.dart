@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class StudentEnquiryPage extends StatelessWidget {
-  const StudentEnquiryPage({Key? key}) : super(key: key);
+  const StudentEnquiryPage({super.key});
 
   void _onEnquire() {
     // Implement the Enquire action here
@@ -47,17 +47,17 @@ class StudentEnquiryPage extends StatelessWidget {
               _buildTextFieldWithBackground(
                 hintText: 'Student Name',
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               _buildTextFieldWithBackground(
                 hintText: 'Class',
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               _buildTextFieldWithBackground(
                 hintText: 'City / Town',
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               _buildTextFieldWithBackground(
                 hintText: 'Pincode',
@@ -95,7 +95,7 @@ class StudentEnquiryPage extends StatelessWidget {
             textAlign: TextAlign.start,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: TextStyle(
+              hintStyle: const TextStyle(
                 fontFamily: 'Poppins-SemiBold',
                 color: Color(0xFF7E7E7E),
               ),
@@ -103,7 +103,7 @@ class StudentEnquiryPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: EdgeInsets.symmetric(
+              contentPadding: const EdgeInsets.symmetric(
                 vertical: 18,
                 horizontal: 20,
               ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'Student%20Enquiry.dart';
-import 'Teacher%20Enquiry.dart';
+import 'student_enquiry.dart';
+import 'teacher_enquiry.dart';
 
 class EnquiryPage extends StatelessWidget {
-  const EnquiryPage({Key? key}) : super(key: key);
+  const EnquiryPage({super.key});
 
   void _openWhatsApp() {
     print("WhatsApp tapped");
@@ -70,7 +70,8 @@ class EnquiryPage extends StatelessWidget {
                     decoration: TextDecoration.underline,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF8C4C92),
-                    fontFamily: 'Poppins', // Ensure Poppins font is added in pubspec.yaml
+                    fontFamily:
+                        'Poppins', // Ensure Poppins font is added in pubspec.yaml
                   ),
                 ),
                 const SizedBox(height: 20),

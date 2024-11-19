@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/bottomnavigationbar.dart';
+import 'package:trusir/bottom_navigation_bar.dart';
 import 'package:trusir/TeacherProfile.dart';
 import 'package:trusir/notice.dart';
 import 'package:trusir/setting.dart';
-import 'package:trusir/teacherpfpage.dart'; 
+import 'package:trusir/teacher_pf_page.dart';
 
 class TeacherFacilities extends StatefulWidget {
   const TeacherFacilities({super.key});
@@ -47,7 +47,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
           builder: (context, constraints) {
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 20, top: 35),
+                padding: const EdgeInsets.only(
+                    left: 20.0, right: 20, bottom: 20, top: 35),
                 child: Column(
                   children: [
                     const Align(
@@ -64,7 +65,9 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                     const SizedBox(height: 20),
                     Container(
                       height: screenHeight * 0.15,
-                      width: constraints.maxWidth > 388 ? 388 : constraints.maxWidth - 40,
+                      width: constraints.maxWidth > 388
+                          ? 388
+                          : constraints.maxWidth - 40,
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [
@@ -152,7 +155,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             mainAxisSpacing: 10,
                             childAspectRatio: 116 / 140,
                             children: [
-                              buildTile(context, const Color(0xFFB3E5FC), 'assets/myprofile.png', 'My Profile', () {
+                              buildTile(context, const Color(0xFFB3E5FC),
+                                  'assets/myprofile.png', 'My Profile', () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -160,7 +164,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                   ),
                                 );
                               }),
-                              buildTile(context, const Color(0xFFF59D80), 'assets/noticesp@3x.png', 'Notice', () {
+                              buildTile(context, const Color(0xFFF59D80),
+                                  'assets/noticesp@3x.png', 'Notice', () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -168,7 +173,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                   ),
                                 );
                               }),
-                              buildTile(context, const Color(0xFFF8BBD0), 'assets/attendance.png', 'Attendance', () {
+                              buildTile(context, const Color(0xFFF8BBD0),
+                                  'assets/attendance.png', 'Attendance', () {
                                 // Navigator.push(
                                 //   context,
                                 //   MaterialPageRoute(
@@ -176,7 +182,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 //   ),
                                 // );
                               }),
-                              buildTile(context, const Color(0xFFFFCDD2), 'assets/pen@3x.png', 'Write to us', () {
+                              buildTile(context, const Color(0xFFFFCDD2),
+                                  'assets/pen@3x.png', 'Write to us', () {
                                 // Navigator.push(
                                 //   context,
                                 //   MaterialPageRoute(
@@ -184,11 +191,13 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 //   ),
                                 // );
                               }),
-                              buildTile(context, const Color(0xFF00E533), 'assets/setting.png', 'Setting', () {
+                              buildTile(context, const Color(0xFF00E533),
+                                  'assets/setting.png', 'Setting', () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const SettingsScreen(),
+                                    builder: (context) =>
+                                        const SettingsScreen(),
                                   ),
                                 );
                               }),
@@ -211,9 +220,11 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                       height: 129,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 10),
                         children: [
-                          buildHorizontalTile(context, const Color(0xFFB3E5FC), 'assets/sir.png', 'Rakesh Tripathi', () {
+                          buildHorizontalTile(context, const Color(0xFFB3E5FC),
+                              'assets/sir.png', 'Rakesh Tripathi', () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -222,16 +233,19 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             );
                           }),
                           const SizedBox(width: 10),
-                          buildHorizontalTile(context, const Color(0xFFF59D80), 'assets/sir.png', 'Rakesh Tripathi', () {
+                          buildHorizontalTile(context, const Color(0xFFF59D80),
+                              'assets/sir.png', 'Rakesh Tripathi', () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const TeacherProfileScreen(),
+                                builder: (context) =>
+                                    const TeacherProfileScreen(),
                               ),
                             );
                           }),
                           const SizedBox(width: 10),
-                          buildHorizontalTile(context, const Color(0xFFF8BBD0), 'assets/sir.png', 'Rakesh Tripathi', () {
+                          buildHorizontalTile(context, const Color(0xFFF8BBD0),
+                              'assets/sir.png', 'Rakesh Tripathi', () {
                             // Navigator.push(
                             //   context,
                             //   MaterialPageRoute(
@@ -240,7 +254,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             // );
                           }),
                           const SizedBox(width: 10),
-                          buildHorizontalTile(context, const Color(0xFFFFCDD2), 'assets/sir.png', 'Rakesh Tripathi', () {
+                          buildHorizontalTile(context, const Color(0xFFFFCDD2),
+                              'assets/sir.png', 'Rakesh Tripathi', () {
                             // Navigator.push(
                             //   context,
                             //   MaterialPageRoute(
@@ -249,7 +264,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             // );
                           }),
                           const SizedBox(width: 10),
-                          buildHorizontalTile(context, const Color(0xFF00E533), 'assets/sir.png', 'Rakesh Tripathi', () {
+                          buildHorizontalTile(context, const Color(0xFF00E533),
+                              'assets/sir.png', 'Rakesh Tripathi', () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -275,7 +291,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
     );
   }
 
-  Widget buildTile(BuildContext context, Color color, String imagePath, String title, VoidCallback onTap) {
+  Widget buildTile(BuildContext context, Color color, String imagePath,
+      String title, VoidCallback onTap) {
     final imageSize = imageSizes[imagePath] ?? {'width': 40.0, 'height': 40.0};
     final screenWidth = MediaQuery.of(context).size.width;
     final scaleFactor = screenWidth < 360 ? 0.85 : 1.0;
@@ -325,7 +342,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
     );
   }
 
-  Widget buildHorizontalTile(BuildContext context, Color color, String imagePath, String title, VoidCallback onTap) {
+  Widget buildHorizontalTile(BuildContext context, Color color,
+      String imagePath, String title, VoidCallback onTap) {
     final imageSize = imageSizes[imagePath] ?? {'width': 40.0, 'height': 40.0};
 
     return GestureDetector(

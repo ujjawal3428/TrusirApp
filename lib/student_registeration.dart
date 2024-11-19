@@ -1,26 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/teacherfacilities.dart';
+import 'package:trusir/student_facilities.dart';
 
-class TeacherRegistrationPage extends StatefulWidget {
-  const TeacherRegistrationPage({super.key});
+class StudentRegistrationPage extends StatefulWidget {
+  const StudentRegistrationPage({Key? key}) : super(key: key);
 
   @override
-  _TeacherRegistrationPageState createState() => _TeacherRegistrationPageState();
+  _StudentRegistrationPageState createState() =>
+      _StudentRegistrationPageState();
 }
 
-class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
+class _StudentRegistrationPageState extends State<StudentRegistrationPage> {
   String? gender;
+  String? numberOfStudents;
   String? city;
   String? medium;
-  String? preferredClass;
+  String? studentClass;
   String? subject;
   DateTime? selectedDOB;
 
   Future<void> _selectDOB(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime(1990),
-      firstDate: DateTime(1950),
+      initialDate: DateTime(2005),
+      firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
     if (picked != null && picked != selectedDOB) {
@@ -39,7 +41,7 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Back button at top left
+              // Back button at top left using image
               Padding(
                 padding: const EdgeInsets.only(top: 35, left: 0),
                 child: GestureDetector(
@@ -53,7 +55,9 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
               // Top image
               Center(
                 child: Image.asset(
@@ -62,8 +66,20 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                   height: 261,
                 ),
               ),
-              // Teacher's basic information
-              _buildTextField('Teacher Name', onChanged: (value) {}),
+              // No. of Students dropdown
+              _buildDropdownField(
+                'No. of Students',
+                selectedValue: numberOfStudents,
+                onChanged: (value) {
+                  setState(() {
+                    numberOfStudents = value;
+                  });
+                },
+                items: List.generate(20, (index) => (index + 1).toString()),
+              ),
+              const SizedBox(height: 10),
+              // Name fields
+              _buildTextField('Student Name', onChanged: (value) {}),
               const SizedBox(height: 10),
               _buildTextField("Father's Name", onChanged: (value) {}),
               const SizedBox(height: 10),
@@ -98,23 +114,10 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 ],
               ),
               const SizedBox(height: 10),
+              // Additional details
               _buildTextField('Phone Number', onChanged: (value) {}),
               const SizedBox(height: 10),
-              _buildTextField('Qualification', onChanged: (value) {}),
-              const SizedBox(height: 10),
-              _buildTextField('Experience', onChanged: (value) {}),
-              const SizedBox(height: 10),
-              // Dropdowns
-              _buildDropdownField(
-                'Preferred Class',
-                selectedValue: preferredClass,
-                onChanged: (value) {
-                  setState(() {
-                    preferredClass = value;
-                  });
-                },
-                items: ['10th', '11th', '12th'],
-              ),
+              _buildTextField('School Name', onChanged: (value) {}),
               const SizedBox(height: 10),
               _buildDropdownField(
                 'Medium',
@@ -125,6 +128,17 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                   });
                 },
                 items: ['English', 'Hindi'],
+              ),
+              const SizedBox(height: 10),
+              _buildDropdownField(
+                'Class',
+                selectedValue: studentClass,
+                onChanged: (value) {
+                  setState(() {
+                    studentClass = value;
+                  });
+                },
+                items: ['10th', '11th', '12th'],
               ),
               const SizedBox(height: 10),
               _buildDropdownField(
@@ -148,20 +162,25 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                     city = value;
                   });
                 },
-                items: ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'],
+                items: [
+                  'New York',
+                  'Los Angeles',
+                  'Chicago',
+                  'Houston',
+                  'Phoenix'
+                ],
               ),
               const SizedBox(height: 10),
               _buildTextField('Mohalla/Area', onChanged: (value) {}),
               const SizedBox(height: 10),
               _buildTextField('Pincode', onChanged: (value) {}),
               const SizedBox(height: 10),
-              // Address fields
-              _buildTextField('Current Full Address', height: 126, onChanged: (value) {}),
-              const SizedBox(height: 10),
-              _buildTextField('Permanent Full Address', height: 126, onChanged: (value) {}),
+              // Full address
+              _buildTextField('Full Address',
+                  height: 126, onChanged: (value) {}),
               const SizedBox(height: 20),
 
-              // Upload Sections
+              // Photo Upload Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -177,6 +196,7 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               ),
               const SizedBox(height: 10),
 
+              // Aadhar Card Upload Section
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -184,21 +204,6 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                     padding: EdgeInsets.only(right: 80.0),
                     child: Text(
                       'Aadhar Card',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ),
-                  _buildFileUploadField('Upload Image', width: 200),
-                ],
-              ),
-              const SizedBox(height: 10),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(right: 80.0),
-                    child: Text(
-                      'Signature',
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
@@ -251,12 +256,12 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                       Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const TeacherFacilities(),
-                                  ),
-                                );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Studentfacilities(),
+                        ),
+                      );
                     },
                     child: const Text(
                       'Register',
@@ -265,7 +270,6 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -273,7 +277,8 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     );
   }
 
-  Widget _buildTextField(String hintText, {double height = 58, required ValueChanged<String> onChanged}) {
+  Widget _buildTextField(String hintText,
+      {double height = 58, required ValueChanged<String> onChanged}) {
     return Container(
       height: height,
       width: 388,
@@ -282,16 +287,17 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         borderRadius: BorderRadius.circular(22),
         border: Border.all(color: Colors.grey),
         boxShadow: [
-          BoxShadow(color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+          BoxShadow(
+              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
         ],
       ),
       child: TextField(
         onChanged: onChanged,
-        maxLines: height > 58 ? null : 1,
         decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         ),
       ),
     );
@@ -311,7 +317,8 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         borderRadius: BorderRadius.circular(22),
         border: Border.all(color: Colors.grey),
         boxShadow: [
-          BoxShadow(color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+          BoxShadow(
+              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
         ],
       ),
       child: Padding(
@@ -344,7 +351,8 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         borderRadius: BorderRadius.circular(22),
         border: Border.all(color: Colors.grey),
         boxShadow: [
-          BoxShadow(color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+          BoxShadow(
+              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
         ],
       ),
       child: InkWell(
@@ -376,7 +384,8 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         borderRadius: BorderRadius.circular(22),
         border: Border.all(color: Colors.grey),
         boxShadow: [
-          BoxShadow(color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+          BoxShadow(
+              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
         ],
       ),
       child: Row(
@@ -384,7 +393,8 @@ class _TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(placeholder, style: const TextStyle(color: Colors.grey)),
+            child:
+                Text(placeholder, style: const TextStyle(color: Colors.grey)),
           ),
           IconButton(
             onPressed: () {

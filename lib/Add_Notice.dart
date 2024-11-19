@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AddNoticePage extends StatelessWidget {
+  const AddNoticePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,10 +27,10 @@ class AddNoticePage extends StatelessWidget {
                     height: 40,
                   ),
                 ),
-                SizedBox(width: 10), // Space between back button and title
+                const SizedBox(width: 10), // Space between back button and title
 
                 // Title Text
-                Text(
+                const Text(
                   'Add Notice',
                   style: TextStyle(
                     fontSize: 24,
@@ -39,7 +41,7 @@ class AddNoticePage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
 
             // Title Input Field with Background
             Stack(
@@ -50,8 +52,8 @@ class AddNoticePage extends StatelessWidget {
                   width: double.infinity,
                   height: 50,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: 'Title',
@@ -61,7 +63,7 @@ class AddNoticePage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Description Input Field with Background
             Stack(
@@ -72,8 +74,8 @@ class AddNoticePage extends StatelessWidget {
                   width: double.infinity,
                   height: 100,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                   child: TextField(
                     maxLines: 4,
                     decoration: InputDecoration(
@@ -84,10 +86,10 @@ class AddNoticePage extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 400),
+            const SizedBox(height: 400),
 
             // Visibility Notice
-            Center(
+            const Center(
               child: Text(
                 'This post will be only visible to the\nstudent you teach',
                 textAlign: TextAlign.center,
@@ -98,7 +100,7 @@ class AddNoticePage extends StatelessWidget {
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
 
             // Post Button
             Center(

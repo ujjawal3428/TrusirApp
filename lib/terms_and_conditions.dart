@@ -20,8 +20,8 @@ class TermsAndConditionsPage extends StatelessWidget {
             ),
           ),
         ),
-        title: Padding(
-          padding: const EdgeInsets.only(left: 20.0),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 20.0),
           child: Text(
             "Terms & Conditions",
             style: TextStyle(
@@ -33,8 +33,8 @@ class TermsAndConditionsPage extends StatelessWidget {
         ),
         centerTitle: true, // Center title in the AppBar
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
+      body: const Padding(
+        padding: EdgeInsets.all(20.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start, // Aligns all text to the left

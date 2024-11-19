@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/teacherfacilities.dart';
+import 'package:trusir/teacher_facilities.dart';
 
 class Teacherhomepage extends StatelessWidget {
   const Teacherhomepage({super.key});
@@ -58,7 +58,8 @@ class Teacherhomepage extends StatelessWidget {
                     fontFamily: 'Poppins',
                   ),
                 ),
-                const Divider(color: Colors.black, thickness: 1.5, endIndent: 200),
+                const Divider(
+                    color: Colors.black, thickness: 1.5, endIndent: 200),
                 const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping male and female teaching service.',
@@ -169,9 +170,19 @@ class Teacherhomepage extends StatelessWidget {
                   spacing: 10,
                   runSpacing: 10,
                   children: [
-                    'Nursery', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3',
-                    'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8',
-                    'Class 9', 'Class 10',
+                    'Nursery',
+                    'LKG',
+                    'UKG',
+                    'Class 1',
+                    'Class 2',
+                    'Class 3',
+                    'Class 4',
+                    'Class 5',
+                    'Class 6',
+                    'Class 7',
+                    'Class 8',
+                    'Class 9',
+                    'Class 10',
                   ].map((subject) {
                     return Container(
                       padding: const EdgeInsets.symmetric(
@@ -210,7 +221,9 @@ class Teacherhomepage extends StatelessWidget {
                   spacing: 10,
                   runSpacing: 10,
                   children: [
-                    'Hindi', 'English', 'Maths',
+                    'Hindi',
+                    'English',
+                    'Maths',
                     'Science: Physics, Chemistry, Biology',
                     'Social Science: History, Geography, Political Science, Economics'
                   ].map((subject) {
@@ -354,11 +367,10 @@ class Teacherhomepage extends StatelessWidget {
                       child: Text(
                         'Registeration',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontFamily: 'Poppins'
-                        ),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontFamily: 'Poppins'),
                       ),
                     ),
                   ),
@@ -407,7 +419,8 @@ class ContactInfoRow extends StatelessWidget {
   final String imagePath;
   final String info;
 
-  const ContactInfoRow({super.key, required this.imagePath, required this.info});
+  const ContactInfoRow(
+      {super.key, required this.imagePath, required this.info});
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AddGK extends StatelessWidget {
+  const AddGK({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,8 +25,8 @@ class AddGK extends StatelessWidget {
                     height: 40,
                   ),
                 ),
-                SizedBox(width: 10),
-                Text(
+                const SizedBox(width: 10),
+                const Text(
                   'Add General Knowledge',
                   style: TextStyle(
                     fontSize: 24,
@@ -35,7 +37,7 @@ class AddGK extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
 
             // Title Input Field with Background
             Stack(
@@ -46,8 +48,8 @@ class AddGK extends StatelessWidget {
                   width: double.infinity,
                   height: 50,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: TextField(
                     decoration: InputDecoration(
                       hintText: 'Title',
@@ -57,7 +59,7 @@ class AddGK extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Description Input Field with Background
             Stack(
@@ -68,8 +70,8 @@ class AddGK extends StatelessWidget {
                   width: double.infinity,
                   height: 100,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                   child: TextField(
                     maxLines: 4,
                     decoration: InputDecoration(
@@ -80,7 +82,7 @@ class AddGK extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Attach File Box
             Stack(
@@ -91,8 +93,8 @@ class AddGK extends StatelessWidget {
                   width: 160,
                   height: 50,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 14),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 14),
                   child: Row(
                     children: [
                       Icon(
@@ -113,22 +115,22 @@ class AddGK extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 5),
+            const SizedBox(height: 5),
 
             // File Format Text
            
-              Text(
+              const Text(
                 'Attach PDF, JPEG, PNG',
                 style: TextStyle(
                   fontSize: 12,
-                  color: const Color.fromARGB(255, 0, 0, 0),
+                  color: Color.fromARGB(255, 0, 0, 0),
                   fontFamily: 'Poppins',
                 ),
               ),
             
 
-            Spacer(),
-             Center(
+            const Spacer(),
+             const Center(
               child: Text(
                 'This post will be only visible to the\nstudent you teach',
                 textAlign: TextAlign.center,
@@ -139,7 +141,7 @@ class AddGK extends StatelessWidget {
                 ),
               ),
             ),
-SizedBox(height: 20),
+const SizedBox(height: 20),
 
             // Post Button
             Center(

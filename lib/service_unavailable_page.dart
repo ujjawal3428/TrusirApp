@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 
 class Page2 extends StatelessWidget {
+  const Page2({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: ServiceUnavailablePage(),
     );
   }
 }
 
 class ServiceUnavailablePage extends StatelessWidget {
+  const ServiceUnavailablePage({super.key});
+
   void _onButtonPressed() {
     print("Button Pressed");
   }
@@ -22,10 +26,10 @@ class ServiceUnavailablePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 50), // Optional padding at the top
+            const SizedBox(height: 50), // Optional padding at the top
 
             // Title Text
-            Text(
+            const Text(
               'Service Unavailable',
               style: TextStyle(
                 fontSize: 34,
@@ -34,19 +38,19 @@ class ServiceUnavailablePage extends StatelessWidget {
                 fontFamily: 'Poppins',
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Image
             Image.asset(
               'assets/sad_girl.png',
               errorBuilder: (context, error, stackTrace) {
-                return Text("Image not found");
+                return const Text("Image not found");
               },
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Description Text
-            Text(
+            const Text(
               'Our service is not available in \nyour area. We will notify you \nwhen we are available.',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -56,10 +60,10 @@ class ServiceUnavailablePage extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Thank You Text
-            Text(
+            const Text(
               'Thank you for your Enquiry',
               style: TextStyle(
                 fontSize: 24,
@@ -68,7 +72,7 @@ class ServiceUnavailablePage extends StatelessWidget {
                 fontFamily: 'Poppins',
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
 
             // Go Back Button as Image
             InkWell(
@@ -77,11 +81,11 @@ class ServiceUnavailablePage extends StatelessWidget {
                 'assets/back.png',
                 width: 200,
                 errorBuilder: (context, error, stackTrace) {
-                  return Text("Back image not found");
+                  return const Text("Back image not found");
                 },
               ),
             ),
-            SizedBox(height: 50), // Optional padding at the bottom
+            const SizedBox(height: 50), // Optional padding at the bottom
           ],
         ),
       ),

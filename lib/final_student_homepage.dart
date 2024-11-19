@@ -61,7 +61,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start, // Align text to the start (left)
                       decoration: InputDecoration(
                         hintText: 'No. of Students',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -69,7 +69,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20, // Add horizontal padding for left alignment
                         ),
@@ -78,7 +78,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // Repeat for other fields if needed...
               Stack(
@@ -94,7 +94,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'Student Name',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -102,7 +102,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -111,7 +111,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               Stack(
                 children: [
@@ -126,7 +126,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'Father’s Name',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -134,7 +134,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -143,7 +143,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               Stack(
                 children: [
@@ -158,7 +158,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'Mother’s Name',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -166,7 +166,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -175,7 +175,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               Stack(
                 children: [
@@ -190,7 +190,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'Phone Number',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -198,7 +198,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -207,7 +207,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               //
               
                   Stack(
@@ -223,7 +223,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'School Name',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -231,7 +231,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -240,7 +240,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               //
               
                   Stack(
@@ -256,7 +256,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'Medium',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -264,7 +264,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -273,7 +273,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               //
               
                   Stack(
@@ -289,7 +289,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'Class',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -297,7 +297,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -306,7 +306,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               //
               
                   Stack(
@@ -322,7 +322,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'Subject',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -330,7 +330,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -339,7 +339,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               //
               
                   Stack(
@@ -355,7 +355,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'State',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -363,7 +363,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -372,7 +372,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               //
               
                Stack(
@@ -388,7 +388,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'City / Town',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -396,7 +396,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -405,7 +405,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               
               Stack(
                 children: [
@@ -420,7 +420,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'Mohalla/Area',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -428,7 +428,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -437,7 +437,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
 
               Stack(
@@ -453,7 +453,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'Pincode',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -461,7 +461,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -470,7 +470,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
                Stack(
                 children: [
@@ -483,7 +483,7 @@ class FinalStudentHomepage extends StatelessWidget {
                       textAlign: TextAlign.start,
                       decoration: InputDecoration(
                         hintText: 'Full Address',
-                        hintStyle: TextStyle(
+                        hintStyle: const TextStyle(
                           fontFamily: 'Poppins-SemiBold',
                           color: Color(0xFF7E7E7E),
                         ),
@@ -491,7 +491,7 @@ class FinalStudentHomepage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: EdgeInsets.symmetric(
+                        contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
                           horizontal: 20,
                         ),
@@ -500,7 +500,7 @@ class FinalStudentHomepage extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               
               
 

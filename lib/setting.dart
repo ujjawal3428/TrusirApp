@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/Terms%20&%20Conditions.dart';
-import 'package:trusir/aboutus.dart';
-import 'package:trusir/parentsdoubt.dart';
-
-
+import 'package:trusir/terms_and_conditions.dart';
+import 'package:trusir/about_us.dart';
+import 'package:trusir/parents_doubt.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -63,7 +61,7 @@ class SettingsScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                     Container(
+                    Container(
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
@@ -126,7 +124,7 @@ class SettingsScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                     Container(
+                    Container(
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
@@ -169,13 +167,13 @@ class SettingsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: (){
-                                //     Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) =>  ChangePhoneNumber(),
-                                //   ),
-                                // );
+                                  onTap: () {
+                                    //     Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) =>  ChangePhoneNumber(),
+                                    //   ),
+                                    // );
                                   },
                                   child: IconButton(
                                     icon: const Icon(
@@ -199,7 +197,7 @@ class SettingsScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                     Container(
+                    Container(
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
@@ -242,13 +240,14 @@ class SettingsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const ParentsDoubtScreen(),
-                                  ),
-                                );
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ParentsDoubtScreen(),
+                                      ),
+                                    );
                                   },
                                   child: IconButton(
                                     icon: const Icon(
@@ -315,13 +314,14 @@ class SettingsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const AboutUsPage(),
-                                  ),
-                                );
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const AboutUsPage(),
+                                      ),
+                                    );
                                   },
                                   child: IconButton(
                                     icon: const Icon(
@@ -451,13 +451,14 @@ class SettingsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>  const TermsAndConditionsPage(),
-                                  ),
-                                );
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const TermsAndConditionsPage(),
+                                      ),
+                                    );
                                   },
                                   child: IconButton(
                                     icon: const Icon(

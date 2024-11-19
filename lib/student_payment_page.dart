@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class StudentPaymentPage extends StatelessWidget {
+  const StudentPaymentPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +34,7 @@ class StudentPaymentPage extends StatelessWidget {
                     height: 58,
                   ),
                 ),
-                SizedBox(height: 290),
+                const SizedBox(height: 290),
 
                 
 
@@ -49,7 +51,7 @@ class StudentPaymentPage extends StatelessWidget {
                   ),
                 ),
 
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
                 // Offline Payment Button
                 Center(

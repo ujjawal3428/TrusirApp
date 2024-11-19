@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TeacherPaymentPage extends StatelessWidget {
+  const TeacherPaymentPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +35,7 @@ class TeacherPaymentPage extends StatelessWidget {
                       height: 58,
                     ),
                   ),
-                  SizedBox(height: 290), // Adjust height as needed
+                  const SizedBox(height: 290), // Adjust height as needed
 
                   // Online Payment Button
                   Center(
@@ -46,7 +48,7 @@ class TeacherPaymentPage extends StatelessWidget {
                     ),
                   ),
 
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
                   // Offline Payment Button
                   Center(

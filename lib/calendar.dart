@@ -58,7 +58,7 @@ class _AttendancePageState extends State<AttendancePage> {
           child: Column(
             children: [
               // Month Selector
-              Container(
+              SizedBox(
                 height: 200,
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -101,7 +101,7 @@ class _AttendancePageState extends State<AttendancePage> {
               const Divider(),
               // Year Selector
               Expanded(
-                child: Container(
+                child: SizedBox(
                   height: 150,
                   child: ListView.builder(
                     itemCount: 50,

@@ -12,7 +12,7 @@ class AssignedTeacher extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -27,7 +27,7 @@ class AssignedTeacher extends StatelessWidget {
             // "Thanks for Registration!" text
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1), // Responsive horizontal padding
-              child: Text(
+              child: const Text(
                 'Thanks for \nRegistration!',
                 style: TextStyle(
                   fontSize: 32, // Responsive text size
@@ -42,7 +42,7 @@ class AssignedTeacher extends StatelessWidget {
             SizedBox(height: screenHeight * 0.05), // Space between text and image
 
             // 3D character image
-            Container(
+            SizedBox(
               width: 1000, // Responsive image width
               child: Image.asset(
                 'thanks_for_registration.png', // Corrected asset path
@@ -55,7 +55,7 @@ class AssignedTeacher extends StatelessWidget {
             // Subtext: "We will be assigning you a student shortly"
             Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.1), // Responsive horizontal padding
-              child: Text(
+              child: const Text(
                 'We will be assigning you a \nteacher shortly',
                 style: TextStyle(
                   fontSize: 20, // Responsive text size

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TeacherEnquiryPage extends StatefulWidget {
-  const TeacherEnquiryPage({Key? key}) : super(key: key);
+  const TeacherEnquiryPage({super.key});
 
   @override
   State<TeacherEnquiryPage> createState() => _TeacherEnquiryPageState();
@@ -55,7 +55,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
               _buildTextFieldWithBackground(
                 hintText: 'Teacher Name',
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
 
               // Gender Selection
               Row(
@@ -70,7 +70,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
                       });
                     },
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   _buildGenderCheckbox(
                     label: "Female",
                     value: isFemaleSelected,
@@ -83,25 +83,25 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
                   ),
                 ],
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
 
               // Qualification Field
               _buildTextFieldWithBackground(
                 hintText: 'Qualification',
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // City / Town Field
               _buildTextFieldWithBackground(
                 hintText: 'City / Town',
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // Pincode Field
               _buildTextFieldWithBackground(
                 hintText: 'Pincode',
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
 
               // Enquire Button
               Center(
@@ -134,7 +134,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
             textAlign: TextAlign.start,
             decoration: InputDecoration(
               hintText: hintText,
-              hintStyle: TextStyle(
+              hintStyle: const TextStyle(
                 fontFamily: 'Poppins-SemiBold',
                 color: Color(0xFF7E7E7E),
               ),
@@ -142,7 +142,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
                 borderRadius: BorderRadius.circular(20),
                 borderSide: BorderSide.none,
               ),
-              contentPadding: EdgeInsets.symmetric(
+              contentPadding: const EdgeInsets.symmetric(
                 vertical: 18,
                 horizontal: 20,
               ),
@@ -176,10 +176,10 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
             ),
           ],
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Poppins-SemiBold',
             color: Color(0xFF7E7E7E),
           ),

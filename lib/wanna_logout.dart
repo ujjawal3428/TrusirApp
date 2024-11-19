@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class WanaLogout extends StatelessWidget {
+  const WanaLogout({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +24,7 @@ class WanaLogout extends StatelessWidget {
                       height: 58,
                     ),
                   ),
-                  SizedBox(height: 160),
+                  const SizedBox(height: 160),
 
                   // Online Payment Button
                   Center(
@@ -32,10 +34,10 @@ class WanaLogout extends StatelessWidget {
                       height: 200,
                     ),
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
 
                   // Logout Confirmation Text
-                  Center(
+                  const Center(
                     child: Text(
                       'Are you sure you want to Logout?',
                       textAlign: TextAlign.center,
@@ -47,7 +49,7 @@ class WanaLogout extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 190),
+                  const SizedBox(height: 190),
 
                   // Cancel Button
                   Center(
@@ -59,7 +61,7 @@ class WanaLogout extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
 
                   // Logout Button
                   Center(
