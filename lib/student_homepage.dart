@@ -306,7 +306,7 @@ class StudentHomepage extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width ,
+                    width: MediaQuery.of(context).size.width,
                     height: 70,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(40),

@@ -9,6 +9,9 @@ import 'package:trusir/progress_report.dart';
 import 'package:trusir/setting.dart';
 import 'package:trusir/student_doubt.dart';
 import 'package:trusir/teacher_profile.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'api.dart';
 
 class Studentfacilities extends StatefulWidget {
   const Studentfacilities({super.key});
@@ -19,7 +22,8 @@ class Studentfacilities extends StatefulWidget {
 
 class _StudentfacilitiesState extends State<Studentfacilities> {
   int _selectedIndex = 0;
-
+  String name = '';
+  String profile = '';
   final Map<String, Map<String, double>> imageSizes = {
     'assets/myprofile.png': {'width': 50, 'height': 50},
     'assets/teacherprofile.png': {'width': 50, 'height': 49},
@@ -35,10 +39,36 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     'assets/video knowledge.png': {'width': 85, 'height': 74},
   };
 
+  @override
+  void initState() {
+    super.initState();
+    fetchProfileData();
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future<void> fetchProfileData() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/my-profile/testid'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          name = data['name'] ?? '';
+          profile = data['profile_photo'] ?? '';
+        });
+      } else {
+        throw Exception('Failed to load profile data');
+      }
+    } catch (e) {
+      print('Error fetching profile data: $e');
+    }
   }
 
   @override
@@ -59,8 +89,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
           backgroundColor: Colors.grey[50],
           elevation: 0,
           automaticallyImplyLeading: false,
-          title:const Padding(
-            padding:  EdgeInsets.only(top: 20.0),
+          title: const Padding(
+            padding: EdgeInsets.only(top: 20.0),
             child: Text(
               'Student Facilities',
               style: TextStyle(
@@ -83,7 +113,6 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
           ],
           toolbarHeight: 70,
         ),
-        
         body: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
@@ -91,7 +120,6 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
               padding: const EdgeInsets.only(
                   left: 20.0, right: 20, bottom: 20, top: 18),
               child: Column(children: [
-            
                 Container(
                   height: 116,
                   width: constraints.maxWidth > 388
@@ -119,21 +147,21 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Padding(
-                          padding: EdgeInsets.only(left: 25.0, top: 20),
+                          padding: const EdgeInsets.only(left: 25.0, top: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Asmit Kumar',
-                                style: TextStyle(
+                                name,
+                                style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 22,
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w700),
                               ),
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsets.only(top: 5.0),
                                 child: Text(
                                   'Motihari, Bihar',
@@ -145,7 +173,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   ),
                                 ),
                               ),
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsets.only(top: 2.0),
                                 child: Text(
                                   '980-456-7890',
@@ -163,8 +191,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 12.0),
-                        child: Image.asset(
-                          'assets/diksha@4x.png',
+                        child: Image.network(
+                          profile,
                           width: 72,
                           height: 72,
                           fit: BoxFit.contain,

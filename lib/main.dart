@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:trusir/login_page.dart';
 
 void main() {
-   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: [SystemUiOverlay.bottom]);
   runApp(const MyApp());
 }
 

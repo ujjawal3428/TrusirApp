@@ -33,7 +33,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          name = data['name'];
+          name = data['name'] ?? '';
           dob = data['dob'] ?? '';
           school = data['school'] ?? '';
           studentClass = data['class'] ?? '';
@@ -62,156 +62,152 @@ class MyProfileScreenState extends State<MyProfileScreen> {
 
     return Scaffold(
         backgroundColor: Colors.grey[100],
-           appBar: AppBar(
-  backgroundColor: Colors.grey[50],
-  elevation: 0,
-  automaticallyImplyLeading: false,
-  title: Padding(
-    padding: const EdgeInsets.only(left: 10.0), 
-    child: Row(
-      children: [
-        IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-           color: Color(0xFF48116A), 
-            size: 30, 
+        appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Color(0xFF48116A),
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(width: 20),
+                const Text(
+                  'My Profile',
+                  style: TextStyle(
+                    color: Color(0xFF48116A),
+                    fontSize: 24,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const Spacer(),
+                Padding(
+                  padding: EdgeInsets.only(right: isLargeScreen ? 30 : 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      print("Edit Profile tapped!");
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'Edit Profile',
+                        style: TextStyle(
+                          fontSize: isLargeScreen ? 16 : 12,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF48116A),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          toolbarHeight: 70,
         ),
-       const SizedBox(width: 20), 
-        const Text(
-          'My Profile',
-          style: TextStyle(
-            color: Color(0xFF48116A),
-            fontSize: 24,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        const Spacer(),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(right: isLargeScreen ? 30 : 10),
-                            child: GestureDetector(
-                              onTap: () {
-                                print("Edit Profile tapped!");
-                              },
+        body: SingleChildScrollView(
+            child: Column(children: [
+          // Profile header
+          SizedBox(
+            width: screenWidth,
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: isLargeScreen ? 60 : 40,
+                    bottom: 20,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 20.0), // Consistent 20px padding
+                        child: Column(
+                          children: [
+                            Center(
                               child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 5),
+                                width: isLargeScreen ? 250 : 175,
+                                height: isLargeScreen ? 250 : 175,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  'Edit Profile',
-                                  style: TextStyle(
-                                    fontSize: isLargeScreen ? 16 : 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color(0xFF48116A),
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: NetworkImage(profile),
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-      ],
-    ),
-  ),
-
-  toolbarHeight: 70,
-),
-        
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Profile header
-              SizedBox(
-                width: screenWidth,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: isLargeScreen ? 60 : 40,
-                        bottom: 20,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 20.0), // Consistent 20px padding
-                      child: Column(
-                        children: [
-                          Center(
-                            child: Container(
-                              width: isLargeScreen ? 250 : 175,
-                              height: isLargeScreen ? 250 : 175,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: NetworkImage(profile),
-                                  fit: BoxFit.cover,
+                            const SizedBox(height: 15),
+                            Center(
+                              child: Text(
+                                name,
+                                style: TextStyle(
+                                  fontSize: isLargeScreen ? 36 : 30,
+                                  fontWeight: FontWeight.w700,
+                                  color: const Color(0xFF48116A),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 15),
-                          Center(
-                            child: Text(
-                              name,
-                              style: TextStyle(
-                                fontSize: isLargeScreen ? 36 : 30,
-                                fontWeight: FontWeight.w700,
-                                color: const Color(0xFF48116A),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20), // Bottom spacing
-                        ],
+                            const SizedBox(height: 20), // Bottom spacing
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              // Info rows
-              const SizedBox(height: 10),
-              buildInfoRow(
-                'assets/pastry@3x.png',
-                'Date of Birth',
-                dob,
-                isLargeScreen,
-                rowColors[0],
-              ),
-              const SizedBox(height: 10),
-              buildInfoRow(
-                'assets/house@3x.png',
-                'School',
-                school,
-                isLargeScreen,
-                rowColors[1],
-              ),
-              const SizedBox(height: 10),
-              buildInfoRow(
-                'assets/graduation@3x.png',
-                'Class',
-                studentClass,
-                isLargeScreen,
-                rowColors[2],
-              ),
-              const SizedBox(height: 10),
-              buildInfoRow(
-                'assets/pensp@3x.png',
-                'Subjects',
-                subject,
-                isLargeScreen,
-                rowColors[3],
-              ),
-            ],
+                // Info rows
+                const SizedBox(height: 10),
+                buildInfoRow(
+                  'assets/pastry@3x.png',
+                  'Date of Birth',
+                  dob,
+                  isLargeScreen,
+                  rowColors[0],
+                ),
+                const SizedBox(height: 10),
+                buildInfoRow(
+                  'assets/house@3x.png',
+                  'School',
+                  school,
+                  isLargeScreen,
+                  rowColors[1],
+                ),
+                const SizedBox(height: 10),
+                buildInfoRow(
+                  'assets/graduation@3x.png',
+                  'Class',
+                  studentClass,
+                  isLargeScreen,
+                  rowColors[2],
+                ),
+                const SizedBox(height: 10),
+                buildInfoRow(
+                  'assets/pensp@3x.png',
+                  'Subjects',
+                  subject,
+                  isLargeScreen,
+                  rowColors[3],
+                ),
+              ],
+            ),
           ),
-        ),
-      ])));
+        ])));
   }
 
   Widget buildInfoRow(
@@ -273,7 +269,3 @@ class MyProfileScreenState extends State<MyProfileScreen> {
     );
   }
 }
-
-
-
- 

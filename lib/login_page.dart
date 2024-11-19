@@ -100,19 +100,21 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                     horizontal: responsive.horizontalPadding,
                     vertical: responsive.verticalPadding,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildHeader(responsive),
-                      SizedBox(height: responsive.safeHeight * 0.08),
-                      _buildCarousel(responsive),
-                      SizedBox(height: responsive.safeHeight * 0.08),
-                      _buildPageIndicators(responsive),
-                      SizedBox(height: responsive.safeHeight * 0.08),
-                      _buildPhoneInput(responsive),
-                      SizedBox(height: responsive.safeHeight * 0.08),
-                      _buildSendOTPButton(responsive),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildHeader(responsive),
+                        SizedBox(height: responsive.safeHeight * 0.08),
+                        _buildCarousel(responsive),
+                        SizedBox(height: responsive.safeHeight * 0.08),
+                        _buildPageIndicators(responsive),
+                        SizedBox(height: responsive.safeHeight * 0.08),
+                        _buildPhoneInput(responsive),
+                        SizedBox(height: responsive.safeHeight * 0.08),
+                        _buildSendOTPButton(responsive),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -319,7 +321,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
         },
         child: Image.asset(
           'assets/send_otp.png',
-          width: responsive.screenWidth ,
+          width: responsive.screenWidth,
           fit: BoxFit.contain,
         ),
       ),

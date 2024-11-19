@@ -18,7 +18,8 @@ class FinalStudentHomepage extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: SingleChildScrollView( // Add SingleChildScrollView here
+      body: SingleChildScrollView(
+        // Add SingleChildScrollView here
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
           child: Column(
@@ -53,12 +54,14 @@ class FinalStudentHomepage extends StatelessWidget {
                     'textfield.png', // Change this to your image file
                     fit: BoxFit.cover,
                     width: double.infinity,
-                    height: 60, // Adjust the height based on your image dimensions
+                    height:
+                        60, // Adjust the height based on your image dimensions
                   ),
                   // Text Field on top of the image
                   Positioned.fill(
                     child: TextField(
-                      textAlign: TextAlign.start, // Align text to the start (left)
+                      textAlign:
+                          TextAlign.start, // Align text to the start (left)
                       decoration: InputDecoration(
                         hintText: 'No. of Students',
                         hintStyle: const TextStyle(
@@ -71,7 +74,8 @@ class FinalStudentHomepage extends StatelessWidget {
                         ),
                         contentPadding: const EdgeInsets.symmetric(
                           vertical: 18,
-                          horizontal: 20, // Add horizontal padding for left alignment
+                          horizontal:
+                              20, // Add horizontal padding for left alignment
                         ),
                       ),
                     ),
@@ -84,7 +88,7 @@ class FinalStudentHomepage extends StatelessWidget {
               Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -116,7 +120,7 @@ class FinalStudentHomepage extends StatelessWidget {
               Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -148,7 +152,7 @@ class FinalStudentHomepage extends StatelessWidget {
               Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -180,7 +184,7 @@ class FinalStudentHomepage extends StatelessWidget {
               Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -209,11 +213,11 @@ class FinalStudentHomepage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               //
-              
-                  Stack(
+
+              Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -242,11 +246,11 @@ class FinalStudentHomepage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               //
-              
-                  Stack(
+
+              Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -275,11 +279,11 @@ class FinalStudentHomepage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               //
-              
-                  Stack(
+
+              Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -308,11 +312,11 @@ class FinalStudentHomepage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               //
-              
-                  Stack(
+
+              Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -341,11 +345,11 @@ class FinalStudentHomepage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               //
-              
-                  Stack(
+
+              Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -374,11 +378,11 @@ class FinalStudentHomepage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               //
-              
-               Stack(
+
+              Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -406,11 +410,11 @@ class FinalStudentHomepage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              
+
               Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -439,11 +443,10 @@ class FinalStudentHomepage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
 
-
               Stack(
                 children: [
                   Image.asset(
-                    'textfield.png', 
+                    'textfield.png',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 60,
@@ -472,10 +475,10 @@ class FinalStudentHomepage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
 
-               Stack(
+              Stack(
                 children: [
                   Image.asset(
-                    'textbox.png', 
+                    'textbox.png',
                     fit: BoxFit.cover,
                   ),
                   Positioned.fill(
@@ -501,8 +504,6 @@ class FinalStudentHomepage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              
-              
 
               // Enquire Button
               Center(
