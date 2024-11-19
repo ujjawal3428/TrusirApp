@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/teacher_facilities.dart';
+import 'package:trusir/teachers_registeration.dart';
 
 class Teacherhomepage extends StatelessWidget {
   const Teacherhomepage({super.key});
@@ -263,7 +263,7 @@ class Teacherhomepage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const TeacherFacilities(),
+                        builder: (context) => const TeacherRegistrationPage(),
                       ),
                     );
                   },
