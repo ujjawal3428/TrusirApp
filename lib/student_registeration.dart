@@ -1,5 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/api.dart';
 import 'package:trusir/student_facilities.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class StudentRegistrationData {
+  String? studentName;
+  String? fathersName;
+  String? mothersName;
+  String? gender;
+  DateTime? dob;
+  String? phoneNumber;
+  String? schoolName;
+  String? medium;
+  String? studentClass;
+  String? subject;
+  String? state;
+  String? city;
+  String? area;
+  String? pincode;
+  String? address;
+  String? photoPath;
+  String? aadharCardPath;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'studentName': studentName,
+      'fathersName': fathersName,
+      'mothersName': mothersName,
+      'gender': gender,
+      'dob': dob?.toIso8601String(),
+      'phoneNumber': phoneNumber,
+      'schoolName': schoolName,
+      'medium': medium,
+      'studentClass': studentClass,
+      'subject': subject,
+      'state': state,
+      'city': city,
+      'area': area,
+      'pincode': pincode,
+      'address': address,
+      'photoPath': photoPath,
+      'aadharCardPath': aadharCardPath,
+    };
+  }
+}
 
 class StudentRegistrationPage extends StatefulWidget {
   const StudentRegistrationPage({super.key});
@@ -16,6 +62,33 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   String? studentClass;
   String? subject;
   DateTime? selectedDOB;
+  bool agreeToTerms = false;
+  final StudentRegistrationData formData = StudentRegistrationData();
+
+  Future<void> submitForm() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('role');
+    final url = Uri.parse('$baseUrl/register/$role');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(formData.toJson());
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        // Successfully submitted
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Studentfacilities()),
+        );
+      } else {
+        // Handle error
+        print('Failed to submit form: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
 
   Future<void> _selectDOB(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -27,6 +100,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     if (picked != null && picked != selectedDOB) {
       setState(() {
         selectedDOB = picked;
+        formData.dob = selectedDOB;
       });
     }
   }
@@ -78,11 +152,17 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               ),
               const SizedBox(height: 10),
               // Name fields
-              _buildTextField('Student Name', onChanged: (value) {}),
+              _buildTextField('Student Name', onChanged: (value) {
+                formData.studentName = value;
+              }),
               const SizedBox(height: 10),
-              _buildTextField("Father's Name", onChanged: (value) {}),
+              _buildTextField("Father's Name", onChanged: (value) {
+                formData.fathersName = value;
+              }),
               const SizedBox(height: 10),
-              _buildTextField("Mother's Name", onChanged: (value) {}),
+              _buildTextField("Mother's Name", onChanged: (value) {
+                formData.mothersName = value;
+              }),
               const SizedBox(height: 10),
               // Gender and DOB Row
               Row(
@@ -94,6 +174,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       onChanged: (value) {
                         setState(() {
                           gender = value;
+                          formData.gender = gender;
                         });
                       },
                       items: ['Male', 'Female', 'Other'],
@@ -114,9 +195,13 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               ),
               const SizedBox(height: 10),
               // Additional details
-              _buildTextField('Phone Number', onChanged: (value) {}),
+              _buildTextField('Phone Number', onChanged: (value) {
+                formData.phoneNumber = value;
+              }),
               const SizedBox(height: 10),
-              _buildTextField('School Name', onChanged: (value) {}),
+              _buildTextField('School Name', onChanged: (value) {
+                formData.schoolName = value;
+              }),
               const SizedBox(height: 10),
               _buildDropdownField(
                 'Medium',
@@ -124,6 +209,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 onChanged: (value) {
                   setState(() {
                     medium = value;
+                    formData.medium = medium;
                   });
                 },
                 items: ['English', 'Hindi'],
@@ -135,6 +221,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 onChanged: (value) {
                   setState(() {
                     studentClass = value;
+                    formData.studentClass = studentClass;
                   });
                 },
                 items: ['10th', '11th', '12th'],
@@ -146,12 +233,15 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 onChanged: (value) {
                   setState(() {
                     subject = value;
+                    formData.subject = subject;
                   });
                 },
                 items: ['Science', 'Arts'],
               ),
               const SizedBox(height: 10),
-              _buildTextField('State', onChanged: (value) {}),
+              _buildTextField('State', onChanged: (value) {
+                formData.state = value;
+              }),
               const SizedBox(height: 10),
               _buildDropdownField(
                 'City/Town',
@@ -159,6 +249,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 onChanged: (value) {
                   setState(() {
                     city = value;
+                    formData.city = city;
                   });
                 },
                 items: [
@@ -170,13 +261,18 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 ],
               ),
               const SizedBox(height: 10),
-              _buildTextField('Mohalla/Area', onChanged: (value) {}),
+              _buildTextField('Mohalla/Area', onChanged: (value) {
+                formData.area = value;
+              }),
               const SizedBox(height: 10),
-              _buildTextField('Pincode', onChanged: (value) {}),
+              _buildTextField('Pincode', onChanged: (value) {
+                formData.pincode = value;
+              }),
               const SizedBox(height: 10),
               // Full address
-              _buildTextField('Full Address',
-                  height: 126, onChanged: (value) {}),
+              _buildTextField('Full Address', height: 126, onChanged: (value) {
+                formData.address = value;
+              }),
               const SizedBox(height: 20),
 
               // Photo Upload Section
@@ -215,8 +311,12 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               Row(
                 children: [
                   Checkbox(
-                    value: true,
-                    onChanged: (bool? value) {},
+                    value: agreeToTerms,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        agreeToTerms = value!;
+                      });
+                    },
                   ),
                   const Text('I agree with the '),
                   GestureDetector(
@@ -255,12 +355,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Studentfacilities(),
-                        ),
-                      );
+                      submitForm();
                     },
                     child: const Text(
                       'Register',
