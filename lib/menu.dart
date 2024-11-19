@@ -34,7 +34,7 @@ class PopupScreen extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const Studentfacilities(),
+                      builder: (context) => const StudentFacilities(),
                     ),
                   );
                 },

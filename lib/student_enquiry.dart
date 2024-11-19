@@ -4,7 +4,6 @@ class StudentEnquiryPage extends StatelessWidget {
   const StudentEnquiryPage({super.key});
 
   void _onEnquire() {
-    // Implement the Enquire action here
     print("Enquire button pressed");
   }
 
@@ -22,18 +21,30 @@ class StudentEnquiryPage extends StatelessWidget {
             children: [
               SizedBox(height: screenHeight * 0.05),
 
-              // Back Button
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Image.asset(
-                  "assets/back_button.png",
-                  width: 58, // Adjust based on your image dimensions
-                  height: 58,
-                ),
+  
+              Row(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Image.asset(
+                      'assets/dikshaback@2x.png',
+                      width: 58,
+                      height: 58,
+                    ),
+                  ),
+                  const SizedBox(width: 22),
+                  const Text(
+                    'Test Series',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.05),
 
               // Student Enquiry Image
               Center(
@@ -44,24 +55,13 @@ class StudentEnquiryPage extends StatelessWidget {
               SizedBox(height: screenHeight * 0.02),
 
               // Text Boxes with Background Images
-              _buildTextFieldWithBackground(
-                hintText: 'Student Name',
-              ),
+              _buildTextFieldWithBackground(hintText: 'Student Name'),
               const SizedBox(height: 10),
-
-              _buildTextFieldWithBackground(
-                hintText: 'Class',
-              ),
+              _buildTextFieldWithBackground(hintText: 'Class'),
               const SizedBox(height: 10),
-
-              _buildTextFieldWithBackground(
-                hintText: 'City / Town',
-              ),
+              _buildTextFieldWithBackground(hintText: 'City / Town'),
               const SizedBox(height: 10),
-
-              _buildTextFieldWithBackground(
-                hintText: 'Pincode',
-              ),
+              _buildTextFieldWithBackground(hintText: 'Pincode'),
               SizedBox(height: screenHeight * 0.05),
 
               // Enquire Button
@@ -91,21 +91,21 @@ class StudentEnquiryPage extends StatelessWidget {
           height: 60,
         ),
         Positioned.fill(
-          child: TextField(
-            textAlign: TextAlign.start,
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: const TextStyle(
-                fontFamily: 'Poppins-SemiBold',
-                color: Color(0xFF7E7E7E),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 18,
-                horizontal: 20,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: TextField(
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: const TextStyle(
+                  fontFamily: 'Poppins-SemiBold',
+                  color: Color(0xFF7E7E7E),
+                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 18,
+                  horizontal: 10,
+                ),
               ),
             ),
           ),

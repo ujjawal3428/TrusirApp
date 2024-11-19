@@ -10,14 +10,14 @@ import 'package:trusir/setting.dart';
 import 'package:trusir/student_doubt.dart';
 import 'package:trusir/teacher_profile.dart';
 
-class Studentfacilities extends StatefulWidget {
-  const Studentfacilities({super.key});
+class StudentFacilities extends StatefulWidget {
+  const StudentFacilities({super.key});
 
   @override
-  State<Studentfacilities> createState() => _StudentfacilitiesState();
+  State<StudentFacilities> createState() => _StudentFacilitiesState();
 }
 
-class _StudentfacilitiesState extends State<Studentfacilities> {
+class _StudentFacilitiesState extends State<StudentFacilities> {
   int _selectedIndex = 0;
 
   final Map<String, Map<String, double>> imageSizes = {
@@ -54,38 +54,34 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
 
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 2,
+          title: const Text(
+            'Student Facilities',
+            style: TextStyle(
+              color: Color(0xFF48116A),
+              fontSize: 20,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Color(0xFF48116A)),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
         backgroundColor: Colors.grey[100],
         body: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 20, top: 50),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: Column(
                   children: [
-                     Align(
-                      alignment: Alignment.centerLeft,
-                       child: Row(
-                            children: [
-                              const Text(
-                                'Teacher Facilities',
-                                style: TextStyle(
-                                  color: Color(0xFF48116A),
-                                  fontSize: 24,
-                                  fontFamily: 'Poppins',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const Spacer(),
-                              Image.asset(
-                                'assets/logout@3x.png',
-                                width: 103,
-                                height: 24,
-                              ),
-                            ],
-                          ),
-                     ),
-
-                    const SizedBox(height: 20),
                     Container(
                       height: 116,
                       width: constraints.maxWidth > 388
@@ -122,10 +118,11 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   Text(
                                     'Asmit Kumar',
                                     style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 22,
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w700),
+                                      color: Colors.white,
+                                      fontSize: 22,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(top: 5.0),
@@ -215,12 +212,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                 'Attendance',
                                 tileWidth,
                                 tileHeight, () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => const AttendanceScreen(),
-                              //   ),
-                              // );
+                              // Implement Navigation
                             }),
                             buildTile(
                                 context,
@@ -304,12 +296,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                 'Extra Knowledge',
                                 tileWidth,
                                 tileHeight, () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => const ExtraKnowledgeScreen(),
-                              //   ),
-                              // );
+                              // Implement Navigation
                             }),
                             buildTile(
                                 context,
@@ -346,20 +333,16 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                 'Video Knowledge',
                                 tileWidth,
                                 tileHeight, () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => const VideoKnowledgeScreen(),
-                              //   ),
-                              // );
+                              // Implement Navigation
                             }),
                           ],
                         );
                       }),
                     ),
-                ]), 
-            ));
-          
+                  ],
+                ),
+              ),
+            );
           },
         ),
         bottomNavigationBar: CustomBottomNavigationBar(

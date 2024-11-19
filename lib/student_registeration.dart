@@ -258,7 +258,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const Studentfacilities(),
+                          builder: (context) => const StudentFacilities(),
                         ),
                       );
                     },

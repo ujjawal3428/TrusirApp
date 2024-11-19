@@ -38,40 +38,40 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey[50],
+        appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: const Text(
+            'Teacher Facilities',
+            style: TextStyle(
+              color: Color(0xFF48116A),
+              fontSize: 24,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: Image.asset(
+                'assets/logout@3x.png',
+                width: 103,
+                height: 24,
+              ),
+            ),
+          ],
+        ),
         body: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 20.0, right: 20, bottom: 20, top: 50),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                 child: Column(
                   children: [
-                    Align(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Teacher Facilities',
-                              style: TextStyle(
-                                color: Color(0xFF48116A),
-                                fontSize: 24,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const Spacer(),
-                            Image.asset(
-                              'assets/logout@3x.png',
-                              width: 103,
-                              height: 24,
-                            ),
-                          ],
-                        )),
-                    const SizedBox(height: 20),
                     Container(
                       height: 116,
                       width: constraints.maxWidth > 388
@@ -154,7 +154,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 35),
+                    const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: LayoutBuilder(
@@ -208,8 +208,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SettingsScreen(),
+                                    builder: (context) => const SettingsScreen(),
                                   ),
                                 );
                               }),
@@ -250,8 +249,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const TeacherProfileScreen(),
+                                builder: (context) => const TeacherProfileScreen(),
                               ),
                             );
                           }),
@@ -320,7 +318,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
             color: color,
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
-              color: color, // Changed from Colors.black to color
+              color: color,
               width: 1,
             ),
           ),
@@ -368,7 +366,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
           color: color,
           borderRadius: BorderRadius.circular(22),
           border: Border.all(
-            color: color, // Changed from Colors.black to color
+            color: color,
             width: 1,
           ),
         ),
