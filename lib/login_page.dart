@@ -319,7 +319,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
         },
         child: Image.asset(
           'assets/send_otp.png',
-          width: responsive.screenWidth * 0.8,
+          width: responsive.screenWidth ,
           fit: BoxFit.contain,
         ),
       ),
