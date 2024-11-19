@@ -57,6 +57,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
           profilePhoto = data['profile_photo'] ??
               'https://via.placeholder.com/150'; // Fallback image URL
         });
+        print('Data fetched Successfully');
       } else {
         throw Exception('Failed to load profile data');
       }
@@ -108,9 +109,11 @@ class MyProfileScreenState extends State<Teacherpfpage> {
             children: [
               SizedBox(
                 width: 428,
+                height: 389,
                 child: Stack(
                   children: [
                     Positioned(
+                      bottom: 40,
                       left: 0,
                       right: 0,
                       child: Column(
