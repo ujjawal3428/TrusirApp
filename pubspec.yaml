@@ -176,7 +176,13 @@ flutter:
     - assets/men.png
     - assets/aboutus.png
     - assets/contactus.png
-    - assets/tnc.png    
+    - assets/tnc.png   
+    - assets/male@2x.png 
+    - assets/location@2x.png 
+    - assets/degree@2x.png 
+    - assets/medal@2x.png 
+    - assets/ab@2x.png 
+    - assets/phone@2x.png 
 
   fonts:
     - family: Poppins
