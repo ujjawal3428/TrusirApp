@@ -12,6 +12,7 @@ class Teacherpfpage extends StatefulWidget {
 }
 
 class MyProfileScreenState extends State<Teacherpfpage> {
+  String name = '';
   String age = '';
   String gender = '';
   String address = '';
@@ -37,6 +38,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
+          name = data['name'] ?? 'N/A';
           age = data['age']?.toString() ?? 'N/A';
           gender = data['gender'] ?? 'N/A';
           address = data['address'] ?? 'N/A';
@@ -117,9 +119,9 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          const Text(
-                            'Asmit Kumar',
-                            style: TextStyle(
+                          Text(
+                            name,
+                            style: const TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF48116A),
