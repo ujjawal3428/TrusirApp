@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:trusir/api.dart';
+
 class Teacherpfpage extends StatefulWidget {
   const Teacherpfpage({super.key});
 
@@ -10,6 +12,7 @@ class Teacherpfpage extends StatefulWidget {
 }
 
 class MyProfileScreenState extends State<Teacherpfpage> {
+  String name = '';
   String age = '';
   String gender = '';
   String address = '';
@@ -29,12 +32,13 @@ class MyProfileScreenState extends State<Teacherpfpage> {
   Future<void> fetchProfileData() async {
     try {
       final response = await http.get(
-        Uri.parse('https://balvikasyojana.com:8899/teacher-profile/testID'),
+        Uri.parse('$baseUrl/teacher-profile/testID'),
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
+          name = data['name'] ?? 'N/A';
           age = data['age']?.toString() ?? 'N/A';
           gender = data['gender'] ?? 'N/A';
           address = data['address'] ?? 'N/A';
@@ -115,9 +119,9 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                             ),
                           ),
                           const SizedBox(height: 15),
-                          const Text(
-                            'Asmit Kumar',
-                            style: TextStyle(
+                          Text(
+                            name,
+                            style: const TextStyle(
                               fontSize: 30,
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF48116A),

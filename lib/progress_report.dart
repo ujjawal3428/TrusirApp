@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -45,9 +46,33 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   }
 
   Future<void> _requestPermissions() async {
-    var status = await Permission.storage.status;
-    if (!status.isGranted) {
-      await Permission.storage.request();
+    if (await Permission.storage.isGranted) {
+      return;
+    }
+
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
+
+      // Skip permissions for Android versions below API 30
+      if (androidInfo.version.sdkInt < 30) {
+        return;
+      }
+
+      if (await Permission.photos.isGranted ||
+          await Permission.videos.isGranted ||
+          await Permission.audio.isGranted) {
+        return;
+      }
+
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.photos,
+        Permission.videos,
+        Permission.audio
+      ].request();
+
+      if (statuses.values.any((status) => !status.isGranted)) {
+        openAppSettings();
+      }
     }
   }
 
@@ -75,47 +100,19 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     }
   }
 
-  Future<String> _getDownloadPath(String filename) async {
-    Directory? directory;
-
-    if (Platform.isAndroid) {
-      try {
-        directory =
-            await getExternalStorageDirectory(); // App-specific directory
-        if (directory == null) {
-          throw Exception('Could not access external storage directory');
-        }
-        return '${directory.path}/$filename';
-      } catch (e) {
-        throw Exception('Error getting download path: $e');
-      }
-    } else {
-      directory = await getApplicationDocumentsDirectory();
-      return '${directory.path}/$filename';
-    }
+  Future<String> _getAppSpecificDownloadPath(String filename) async {
+    final directory = await getApplicationDocumentsDirectory();
+    return '${directory.path}/$filename';
   }
 
   Future<void> _downloadFile(String url, String filename) async {
-    if (!(await Permission.storage.isGranted)) {
-      var status = await Permission.storage.request();
-      if (!status.isGranted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Storage permission is required to download files'),
-            duration: Duration(seconds: 3),
-          ),
-        );
-        return;
-      }
-    }
-
     setState(() {
       _isDownloading = true;
       _downloadProgress = '0%';
     });
 
     try {
-      final filePath = await _getDownloadPath(filename);
+      final filePath = await _getAppSpecificDownloadPath(filename);
 
       final dio = Dio();
       await dio.download(
@@ -131,7 +128,6 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
         },
       );
 
-      // Save the path to the downloaded file
       setState(() {
         downloadedFiles[filename] = filePath;
         _isDownloading = false;

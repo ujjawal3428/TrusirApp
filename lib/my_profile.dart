@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'constants.dart';
+import 'api.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({super.key});
@@ -11,10 +11,12 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class MyProfileScreenState extends State<MyProfileScreen> {
+  String name = '';
   String dob = '';
   String school = '';
   String studentClass = '';
   String subject = '';
+  String profile = '';
 
   @override
   void initState() {
@@ -31,10 +33,12 @@ class MyProfileScreenState extends State<MyProfileScreen> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
+          name = data['name'];
           dob = data['dob'] ?? '';
           school = data['school'] ?? '';
           studentClass = data['class'] ?? '';
           subject = data['subject'] ?? '';
+          profile = data['profile_photo'];
         });
       } else {
         throw Exception('Failed to load profile data');
@@ -142,17 +146,17 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           Container(
                             width: isLargeScreen ? 250 : 175,
                             height: isLargeScreen ? 250 : 175,
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                image: AssetImage('assets/asmitcircle.png'),
+                                image: NetworkImage(profile),
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
                           const SizedBox(height: 15),
                           Text(
-                            'Asmit Kumar',
+                            name,
                             style: TextStyle(
                               fontSize: isLargeScreen ? 36 : 30,
                               fontWeight: FontWeight.w700,

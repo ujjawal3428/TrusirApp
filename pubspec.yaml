@@ -20,6 +20,8 @@ dependencies:
   flutter_svg: ^2.0.14
   url_launcher: ^6.3.1
   photo_view: ^0.15.0
+  device_info_plus: 
+  webview_flutter: ^4.10.0
   
 
 dev_dependencies:
