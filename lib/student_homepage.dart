@@ -61,7 +61,7 @@ class StudentHomepage extends StatelessWidget {
                 const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
-                  style: TextStyle(fontSize: 26, fontFamily: 'Poppins'),
+                  style: TextStyle(fontSize: 22, fontFamily: 'Poppins'),
                 ),
                 const SizedBox(height: 20),
 
@@ -136,7 +136,7 @@ class StudentHomepage extends StatelessWidget {
                       Text(
                         'Get the best learning support for your child',
                         style: TextStyle(
-                          fontSize: 33,
+                          fontSize: 30,
                           fontWeight: FontWeight.bold,
                           color: Colors.grey,
                           fontFamily: 'Poppins',
@@ -146,7 +146,7 @@ class StudentHomepage extends StatelessWidget {
                       Text(
                         'For all your learning support needs such as homework, test, school project and examinations; we are here to give you the best support.',
                         style: TextStyle(
-                          fontSize: 28,
+                          fontSize: 22,
                           color: Colors.black,
                           fontFamily: 'Poppins',
                         ),
@@ -155,7 +155,7 @@ class StudentHomepage extends StatelessWidget {
                       Text(
                         'The best tutors are here',
                         style: TextStyle(
-                          fontSize: 33,
+                          fontSize: 30,
                           fontWeight: FontWeight.bold,
                           color: Colors.grey,
                           fontFamily: 'Poppins',
@@ -165,7 +165,7 @@ class StudentHomepage extends StatelessWidget {
                       Text(
                         'Our tutors are seasoned professionals, screened and given relevant training on a monthly basis to deliver the excellent results you desire.',
                         style: TextStyle(
-                          fontSize: 28,
+                          fontSize: 22,
                           color: Colors.black,
                           fontFamily: 'Poppins',
                         ),
@@ -294,7 +294,7 @@ class StudentHomepage extends StatelessWidget {
             bottom: 0,
             child: Container(
               color: Colors.white,
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(10.0),
               child: Center(
                 child: InkWell(
                   onTap: () {
@@ -306,10 +306,10 @@ class StudentHomepage extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: 73,
+                    width: MediaQuery.of(context).size.width ,
+                    height: 70,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(40),
                       gradient: const LinearGradient(
                         colors: [
                           Color(0xFF045C19),

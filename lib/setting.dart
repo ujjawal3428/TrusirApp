@@ -8,53 +8,45 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.grey.shade300,
+          appBar: AppBar(
+  backgroundColor: Colors.grey[50],
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  title: Padding(
+    padding: const EdgeInsets.only(left: 10.0), 
+    child: Row(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+           color: Color(0xFF48116A), 
+            size: 30, 
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+       const SizedBox(width: 20), 
+        const Text(
+          'Setting',
+          style: TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 24,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    ),
+  ),
+  toolbarHeight: 70,
+),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0, top: 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        'assets/dikshaback@2x.png',
-                        width: 30,
-                        height: 30,
-                      ),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 30.0),
-                          child: Row(
-                            children: [
-                              const Text(
-                                'Settings',
-                                style: TextStyle(
-                                  color: Color(0xFF48116A),
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.arrow_forward_ios_rounded),
-                                color: Colors.black,
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                        
               const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.only(left: 10.0, right: 10),
@@ -480,7 +472,6 @@ class SettingsScreen extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }

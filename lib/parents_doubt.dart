@@ -21,35 +21,50 @@ class _MyAppState extends State<ParentsDoubtScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
+        appBar: AppBar(
+  backgroundColor: Colors.grey[50],
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  title: Padding(
+    padding: const EdgeInsets.only(left: 10.0), 
+    child: Row(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+           color: Color(0xFF48116A), 
+            size: 30, 
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+       const SizedBox(width: 20), 
+        const Text(
+          'Parents Doubt',
+          style: TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 24,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    ),
+  ),
+  toolbarHeight: 70,
+),
       body: LayoutBuilder(
         builder: (context, constraints) => Stack(
           children: [
             SingleChildScrollView(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15.0, top: 30),
+                 const Padding(
+                    padding: EdgeInsets.only(left: 15.0,),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Image.asset(
-                            'assets/dikshaback@2x.png',
-                            width: 58,
-                            height: 58,
-                          ),
-                        ),
-                        const SizedBox(width: 22),
-                        const Text(
-                          'Parents Doubts',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                      children: [  
                       ],
                     ),
                   ),

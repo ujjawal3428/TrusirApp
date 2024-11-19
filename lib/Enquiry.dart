@@ -18,7 +18,41 @@ class EnquiryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey.shade100,
+       appBar: AppBar(
+  backgroundColor: Colors.grey[50],
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  title: Padding(
+    padding: const EdgeInsets.only(left: 10.0), 
+    child: Row(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+           color: Color(0xFF48116A), 
+            size: 30, 
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+       const SizedBox(width: 20), 
+        const Text(
+          'Enquiry',
+          style: TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 24,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    ),
+  ),
+  toolbarHeight: 70,
+),
+
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -42,7 +76,7 @@ class EnquiryPage extends StatelessWidget {
                     height: 250,
                   ),
                 ),
-                const SizedBox(height: 20),
+                
 
                 // Teacher Enquiry Image
                 GestureDetector(
@@ -60,7 +94,7 @@ class EnquiryPage extends StatelessWidget {
                     height: 250,
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
 
                 // "Or Enquire On" Text
                 const Text(
@@ -74,7 +108,7 @@ class EnquiryPage extends StatelessWidget {
                         'Poppins', // Ensure Poppins font is added in pubspec.yaml
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
 
                 // WhatsApp and Call Buttons
                 Row(
@@ -84,7 +118,7 @@ class EnquiryPage extends StatelessWidget {
                     GestureDetector(
                       onTap: _openWhatsApp,
                       child: Image.asset(
-                        'assets/whatsapp.png', // Ensure asset path is correct
+                        'assets/whatsapp@3x.png', // Ensure asset path is correct
                         width: 100, // Adjust dimensions as needed
                         height: 100,
                       ),

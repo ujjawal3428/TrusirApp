@@ -55,36 +55,43 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title:const Padding(
+            padding:  EdgeInsets.only(top: 20.0),
+            child: Text(
+              'Student Facilities',
+              style: TextStyle(
+                color: Color(0xFF48116A),
+                fontSize: 24,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(top: 20, right: 20.0),
+              child: Image.asset(
+                'assets/logout@3x.png',
+                width: 103,
+                height: 24,
+              ),
+            ),
+          ],
+          toolbarHeight: 70,
+        ),
+        
         body: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(
                 child: Padding(
               padding: const EdgeInsets.only(
-                  left: 20.0, right: 20, bottom: 20, top: 50),
+                  left: 20.0, right: 20, bottom: 20, top: 18),
               child: Column(children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    children: [
-                      const Text(
-                        'Student Facilities',
-                        style: TextStyle(
-                          color: Color(0xFF48116A),
-                          fontSize: 24,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const Spacer(),
-                      Image.asset(
-                        'assets/logout@3x.png',
-                        width: 103,
-                        height: 24,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
+            
                 Container(
                   height: 116,
                   width: constraints.maxWidth > 388
@@ -166,7 +173,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 35),
+                const SizedBox(height: 15),
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: LayoutBuilder(builder: (context, constraints) {

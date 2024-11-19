@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +12,44 @@ import 'package:trusir/api.dart';
 
 class ProgressReportScreen extends StatelessWidget {
   const ProgressReportScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey.shade300,
+         appBar: AppBar(
+  backgroundColor: Colors.grey[50],
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  title: Padding(
+    padding: const EdgeInsets.only(left: 10.0), 
+    child: Row(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+           color: Color(0xFF48116A), 
+            size: 30, 
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+       const SizedBox(width: 20), 
+        const Text(
+          'Progress Report',
+          style: TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 24,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    ),
+  ),
+  toolbarHeight: 70,
+),
         body: const ProgressReportPage(),
       ),
     );
@@ -221,7 +252,6 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
               ),
             ),
           _buildBackButton(context),
-          const SizedBox(height: 20),
           _buildCurrentMonthCard(),
           const SizedBox(height: 20),
           _buildPreviousMonthsReports(),
@@ -262,29 +292,12 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   }
 
   Widget _buildBackButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10.0, top: 30),
+    return const Padding(
+      padding: EdgeInsets.only(left: 10.0, ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Image.asset(
-              'assets/dikshaback@2x.png',
-              width: 58,
-              height: 58,
-            ),
-          ),
-          const SizedBox(width: 22),
-          const Text(
-            'Progress Report',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+       
         ],
       ),
     );
@@ -292,7 +305,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   Widget _buildCurrentMonthCard() {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(top: 10.0, right: 10, left: 10, bottom: 10),
       child: Container(
         width: 386,
         height: 160,
@@ -320,7 +333,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.only(left: 10.0, right: 10, bottom: 10, top: 0),
           child: Row(
             children: [
               Expanded(

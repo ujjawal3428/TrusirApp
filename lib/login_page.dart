@@ -90,31 +90,29 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: constraints.maxHeight,
-                ),
-                child: IntrinsicHeight(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: responsive.horizontalPadding,
-                      vertical: responsive.verticalPadding,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildHeader(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.08),
-                        _buildCarousel(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.08),
-                        _buildPageIndicators(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.08),
-                        _buildPhoneInput(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.08),
-                        _buildSendOTPButton(responsive),
-                      ],
-                    ),
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: constraints.maxHeight,
+              ),
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: responsive.horizontalPadding,
+                    vertical: responsive.verticalPadding,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeader(responsive),
+                      SizedBox(height: responsive.safeHeight * 0.08),
+                      _buildCarousel(responsive),
+                      SizedBox(height: responsive.safeHeight * 0.08),
+                      _buildPageIndicators(responsive),
+                      SizedBox(height: responsive.safeHeight * 0.08),
+                      _buildPhoneInput(responsive),
+                      SizedBox(height: responsive.safeHeight * 0.08),
+                      _buildSendOTPButton(responsive),
+                    ],
                   ),
                 ),
               ),
@@ -269,39 +267,41 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
             horizontal: responsive.screenWidth * 0.03,
             vertical: responsive.safeHeight * 0.015,
           ),
-          child: Row(
-            children: [
-              Image.asset(
-                'assets/indianflag.png',
-                width: responsive.flagIconSize,
-                height: responsive.flagIconSize,
-              ),
-              SizedBox(width: responsive.screenWidth * 0.02),
-              Text(
-                "+91 |",
-                style: TextStyle(
-                  fontSize: responsive.screenWidth * 0.04,
-                  color: Colors.black,
-                  fontFamily: 'Poppins',
+          child: Center(
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/indianflag.png',
+                  width: responsive.flagIconSize,
+                  height: responsive.flagIconSize,
                 ),
-              ),
-              SizedBox(width: responsive.screenWidth * 0.02),
-              Expanded(
-                child: TextField(
-                  keyboardType: TextInputType.phone,
-                  style: TextStyle(fontSize: responsive.screenWidth * 0.04),
-                  decoration: InputDecoration(
-                    hintText: 'Mobile Number',
-                    hintStyle: TextStyle(
-                      fontSize: responsive.screenWidth * 0.04,
-                      color: Colors.grey,
-                      fontFamily: 'Poppins',
-                    ),
-                    border: InputBorder.none,
+                SizedBox(width: responsive.screenWidth * 0.02),
+                Text(
+                  "+91 |",
+                  style: TextStyle(
+                    fontSize: responsive.screenWidth * 0.04,
+                    color: Colors.black,
+                    fontFamily: 'Poppins',
                   ),
                 ),
-              ),
-            ],
+                SizedBox(width: responsive.screenWidth * 0.02),
+                Expanded(
+                  child: TextField(
+                    keyboardType: TextInputType.phone,
+                    style: TextStyle(fontSize: responsive.screenWidth * 0.04),
+                    decoration: InputDecoration(
+                      hintText: 'Mobile Number',
+                      hintStyle: TextStyle(
+                        fontSize: responsive.screenWidth * 0.04,
+                        color: Colors.grey,
+                        fontFamily: 'Poppins',
+                      ),
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -319,7 +319,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
         },
         child: Image.asset(
           'assets/send_otp.png',
-          width: responsive.screenWidth * 0.8,
+          width: responsive.screenWidth ,
           fit: BoxFit.contain,
         ),
       ),

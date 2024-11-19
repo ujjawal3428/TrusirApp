@@ -60,55 +60,37 @@ class MyProfileScreenState extends State<MyProfileScreen> {
       Color.fromARGB(255, 191, 184, 255),
     ];
 
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.grey[100],
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              // Profile header
-              SizedBox(
-                width: screenWidth,
-                child: Column(
-                  children: [
-                    // Top row with back button, title and edit button
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: isLargeScreen ? 60 : 40,
-                        bottom: 20, // Space between top row and profile section
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          // Back Button
-                          Padding(
-                            padding:
-                                EdgeInsets.only(left: isLargeScreen ? 30 : 10),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Image.asset(
-                                'assets/dikshaback@2x.png',
-                                width: isLargeScreen ? 70 : 58,
-                                height: isLargeScreen ? 70 : 58,
-                              ),
-                            ),
-                          ),
-                          // Profile Title
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: Text(
-                              'My Profile',
-                              style: TextStyle(
-                                fontSize: isLargeScreen ? 28 : 22,
-                                fontWeight: FontWeight.bold,
-                                color: const Color(0xFF48116A),
-                              ),
-                            ),
-                          ),
-                          // Edit Profile Button
-                          const Spacer(),
+           appBar: AppBar(
+  backgroundColor: Colors.grey[50],
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  title: Padding(
+    padding: const EdgeInsets.only(left: 10.0), 
+    child: Row(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+           color: Color(0xFF48116A), 
+            size: 30, 
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+       const SizedBox(width: 20), 
+        const Text(
+          'My Profile',
+          style: TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 24,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        const Spacer(),
                           Padding(
                             padding:
                                 EdgeInsets.only(right: isLargeScreen ? 30 : 10),
@@ -134,33 +116,56 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                               ),
                             ),
                           ),
-                        ],
+      ],
+    ),
+  ),
+
+  toolbarHeight: 70,
+),
+        
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Profile header
+              SizedBox(
+                width: screenWidth,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: isLargeScreen ? 60 : 40,
+                        bottom: 20,
                       ),
-                    ),
-                    // Profile picture and name section
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
                     Padding(
                       padding: const EdgeInsets.only(
                           top: 20.0), // Consistent 20px padding
                       child: Column(
                         children: [
-                          Container(
-                            width: isLargeScreen ? 250 : 175,
-                            height: isLargeScreen ? 250 : 175,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: NetworkImage(profile),
-                                fit: BoxFit.cover,
+                          Center(
+                            child: Container(
+                              width: isLargeScreen ? 250 : 175,
+                              height: isLargeScreen ? 250 : 175,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: NetworkImage(profile),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
                           const SizedBox(height: 15),
-                          Text(
-                            name,
-                            style: TextStyle(
-                              fontSize: isLargeScreen ? 36 : 30,
-                              fontWeight: FontWeight.w700,
-                              color: const Color(0xFF48116A),
+                          Center(
+                            child: Text(
+                              name,
+                              style: TextStyle(
+                                fontSize: isLargeScreen ? 36 : 30,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFF48116A),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 20), // Bottom spacing
@@ -206,8 +211,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
             ],
           ),
         ),
-      ),
-    );
+      ])));
   }
 
   Widget buildInfoRow(
@@ -269,3 +273,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
     );
   }
 }
+
+
+
+ 

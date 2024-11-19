@@ -40,38 +40,43 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
     return MaterialApp(
         home: Scaffold(
             backgroundColor: Colors.grey[200],
+              appBar: AppBar(
+  backgroundColor: Colors.grey[50],
+  elevation: 0,
+  automaticallyImplyLeading: false,
+  title: Padding(
+    padding: const EdgeInsets.only(left: 10.0), 
+    child: Row(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+           color: Color(0xFF48116A), 
+            size: 30, 
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+       const SizedBox(width: 20), 
+        const Text(
+          'Teacher Profile',
+          style: TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 24,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ],
+    ),
+  ),
+  toolbarHeight: 70,
+),
             body: isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : SingleChildScrollView(
-                    child: Column(children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0, top: 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Image.asset(
-                              'assets/dikshaback@2x.png',
-                              width: 58,
-                              height: 58,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          const Text(
-                            'Teacher Profile',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
+                    child: Column(children: [    
                     // Display the teacher profiles in a grid view
                     Padding(
                       padding: const EdgeInsets.only(
