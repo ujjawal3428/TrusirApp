@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/test_series.dart';
 import 'package:trusir/bottom_navigation_bar.dart';
 import 'package:trusir/fee_payment.dart';
@@ -52,9 +53,11 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
   }
 
   Future<void> fetchProfileData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/my-profile/testid'),
+        Uri.parse('$baseUrl/my-profile/$userID'),
       );
 
       if (response.statusCode == 200) {

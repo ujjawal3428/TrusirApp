@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:trusir/api.dart';
 import 'package:trusir/enquiry.dart';
 import 'package:trusir/menu.dart';
+import 'package:trusir/student_facilities.dart';
 import 'package:trusir/student_homepage.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/teacher_facilities.dart';
+import 'package:trusir/teacher_homepage.dart';
 
 // Custom class to handle responsive dimensions
 class ResponsiveDimensions {
@@ -42,6 +49,7 @@ class TrusirLoginPage extends StatefulWidget {
 
 class TrusirLoginPageState extends State<TrusirLoginPage> {
   String? _selectedLanguage;
+  final TextEditingController _phonecontroller = TextEditingController();
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -72,6 +80,118 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
       'imagePath': 'assets/girlimage@4x.png',
     },
   ];
+
+  Widget _buildSendOTPButton(ResponsiveDimensions responsive) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          onPost();
+        },
+        child: Image.asset(
+          'assets/send_otp.png',
+          width: responsive.screenWidth,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+
+  void onPost() async {
+    final userData = await fetchUserData(_phonecontroller.text);
+
+    if (userData != null) {
+      bool isNewUser = userData['new_user'] ?? false;
+      if (userData['role'] == 'student' && isNewUser) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const StudentHomepage()),
+        );
+      } else if (userData['role'] == 'teacher' && isNewUser) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Teacherhomepage()),
+        );
+      } else {
+        if (userData['role'] == 'student' && !isNewUser) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const Studentfacilities()),
+          );
+        } else if (userData['role'] == 'teacher' && !isNewUser) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const TeacherFacilities()),
+          );
+        }
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('OTP Sent'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('User Not Found!'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    }
+  }
+
+  Future<Map<String, dynamic>?> fetchUserData(String phoneNumber) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final cacheKey = 'user_data_$phoneNumber';
+
+    // Check cache
+    if (prefs.containsKey(cacheKey)) {
+      print('Fetching data from cache...');
+      final cachedData = prefs.getString(cacheKey);
+      return jsonDecode(cachedData!);
+    }
+
+    // Fetch from API
+    try {
+      final url = Uri.parse('$baseUrl/login/$phoneNumber');
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        // Check response structure
+        if (responseData.containsKey('phone_number') &&
+            responseData.containsKey('uerID') &&
+            responseData.containsKey('role') &&
+            responseData.containsKey('new_user')) {
+          // Save response to cache
+          await prefs.setString(cacheKey, jsonEncode(responseData));
+          await prefs.setString('userID', responseData['uerID']);
+          print('Data fetched from API and cached.');
+          return responseData;
+        } else {
+          print('Unexpected response structure.');
+          return null;
+        }
+      } else {
+        print('Failed to fetch data from API: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+      return null;
+    }
+  }
+
+  // Clear specific user data from cache
+  Future<void> clearUserCache(String phoneNumber) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final cacheKey = 'user_data_$phoneNumber';
+    if (prefs.containsKey(cacheKey)) {
+      await prefs.remove(cacheKey);
+      print('Cache cleared for phone number: $phoneNumber');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -290,6 +410,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                 Expanded(
                   child: TextField(
                     keyboardType: TextInputType.phone,
+                    controller: _phonecontroller,
                     style: TextStyle(fontSize: responsive.screenWidth * 0.04),
                     decoration: InputDecoration(
                       hintText: 'Mobile Number',
@@ -308,27 +429,5 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
         ),
       ],
     );
-  }
-
-  Widget _buildSendOTPButton(ResponsiveDimensions responsive) {
-    return Center(
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const StudentHomepage()),
-          );
-        },
-        child: Image.asset(
-          'assets/send_otp.png',
-          width: responsive.screenWidth,
-          fit: BoxFit.contain,
-        ),
-      ),
-    );
-  }
-
-  void onPost() {
-    print("OTP sent");
   }
 }

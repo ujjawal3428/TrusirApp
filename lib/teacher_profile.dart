@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'api.dart'; // Assuming you've added your base URL here
@@ -22,7 +23,9 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
   }
 
   Future<void> fetchTeachers() async {
-    final response = await http.get(Uri.parse('$baseUrl/my-teacher/testid'));
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
+    final response = await http.get(Uri.parse('$baseUrl/my-teacher/$userID'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -40,43 +43,43 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
     return MaterialApp(
         home: Scaffold(
             backgroundColor: Colors.grey[200],
-              appBar: AppBar(
-  backgroundColor: Colors.grey[50],
-  elevation: 0,
-  automaticallyImplyLeading: false,
-  title: Padding(
-    padding: const EdgeInsets.only(left: 10.0), 
-    child: Row(
-      children: [
-        IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-           color: Color(0xFF48116A), 
-            size: 30, 
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-       const SizedBox(width: 20), 
-        const Text(
-          'Teacher Profile',
-          style: TextStyle(
-            color: Color(0xFF48116A),
-            fontSize: 24,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    ),
-  ),
-  toolbarHeight: 70,
-),
+            appBar: AppBar(
+              backgroundColor: Colors.grey[50],
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              title: Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios_rounded,
+                        color: Color(0xFF48116A),
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    const SizedBox(width: 20),
+                    const Text(
+                      'Teacher Profile',
+                      style: TextStyle(
+                        color: Color(0xFF48116A),
+                        fontSize: 24,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              toolbarHeight: 70,
+            ),
             body: isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : SingleChildScrollView(
-                    child: Column(children: [    
+                    child: Column(children: [
                     // Display the teacher profiles in a grid view
                     Padding(
                       padding: const EdgeInsets.only(

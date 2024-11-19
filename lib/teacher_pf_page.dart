@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'package:trusir/api.dart';
@@ -30,9 +31,11 @@ class MyProfileScreenState extends State<Teacherpfpage> {
   }
 
   Future<void> fetchProfileData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/teacher-profile/testID'),
+        Uri.parse('$baseUrl/teacher-profile/$userID'),
       );
 
       if (response.statusCode == 200) {
@@ -67,39 +70,39 @@ class MyProfileScreenState extends State<Teacherpfpage> {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey[50],
-          appBar: AppBar(
-  backgroundColor: Colors.grey[50],
-  elevation: 0,
-  automaticallyImplyLeading: false,
-  title: Padding(
-    padding: const EdgeInsets.only(left: 10.0), 
-    child: Row(
-      children: [
-        IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-           color: Color(0xFF48116A), 
-            size: 30, 
+        appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Color(0xFF48116A),
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(width: 20),
+                const Text(
+                  'My Profile',
+                  style: TextStyle(
+                    color: Color(0xFF48116A),
+                    fontSize: 24,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          toolbarHeight: 70,
         ),
-       const SizedBox(width: 20), 
-        const Text(
-          'My Profile',
-          style: TextStyle(
-            color: Color(0xFF48116A),
-            fontSize: 24,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    ),
-  ),
-  toolbarHeight: 70,
-),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -108,7 +111,6 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                 height: 389,
                 child: Stack(
                   children: [
-                
                     Positioned(
                       bottom: 40,
                       left: 0,
