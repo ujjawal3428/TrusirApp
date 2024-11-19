@@ -40,8 +40,6 @@ class AddNoticePage extends StatelessWidget {
         ),
         toolbarHeight: 70,
       ),
-
-
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
         child: Column(
@@ -61,7 +59,7 @@ class AddNoticePage extends StatelessWidget {
                     height: 40,
                   ),
                 ),
-                const SizedBox(width: 10), 
+                const SizedBox(width: 10),
 
                 // Title Text
                 const Text(
@@ -69,8 +67,8 @@ class AddNoticePage extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF4A148C), 
-                    fontFamily: 'Poppins', 
+                    color: Color(0xFF4A148C),
+                    fontFamily: 'Poppins',
                   ),
                 ),
               ],
@@ -109,7 +107,8 @@ class AddNoticePage extends StatelessWidget {
                   height: 100,
                 ),
                 const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                   child: TextField(
                     maxLines: 4,
                     decoration: InputDecoration(
@@ -152,7 +151,8 @@ class AddNoticePage extends StatelessWidget {
     );
   }
 }
+
 void _onpost() {
-    print("post button pressed");
-    // Implement the Enquire action here
-  }
+  print("post button pressed");
+  // Implement the Enquire action here
+}
