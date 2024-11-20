@@ -38,7 +38,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     'assets/knowledge.png': {'width': 44, 'height': 46},
     'assets/notice.png': {'width': 43, 'height': 43},
     'assets/setting.png': {'width': 52, 'height': 52},
-    'assets/video knowledge.png': {'width': 85, 'height': 74},
+    'assets/video knowledge.png': {'width': 85, 'height': 55},
   };
 
   @override
