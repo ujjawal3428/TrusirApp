@@ -185,13 +185,13 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Color> containerColors = [
-      Colors.lightBlue.shade100,
-      Colors.lightGreen.shade100,
-      Colors.amber.shade100,
-      Colors.pink.shade100,
-      Colors.lime.shade100,
-      Colors.orange.shade100,
-      Colors.teal.shade100,
+      Colors.lightBlue.shade50,
+      Colors.lightGreen.shade50,
+      Colors.amber.shade50,
+      Colors.pink.shade50,
+      Colors.lime.shade50,
+      Colors.orange.shade50,
+      Colors.teal.shade50,
     ];
 
     return Scaffold(
@@ -259,13 +259,13 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                           int index = entry.key;
                           var test = entry.value;
                           return Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(16.0),
                             child: Container(
                               width: MediaQuery.of(context).size.width * 1,
                               decoration: BoxDecoration(
                                 color: containerColors[
                                     index % containerColors.length],
-                                borderRadius: BorderRadius.circular(32),
+                                borderRadius: BorderRadius.circular(22),
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
@@ -276,7 +276,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                         Expanded(
                                           child: Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 5.0, top: 10),
+                                                left: 10.0, right: 10, top: 10),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -285,7 +285,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                                   test['name'],
                                                   style: const TextStyle(
                                                     fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
+                                                    fontWeight: FontWeight.w500,
                                                     color: Colors.black,
                                                   ),
                                                 ),
@@ -294,6 +294,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                                   style: const TextStyle(
                                                     fontSize: 16,
                                                     color: Colors.black,
+                                                    fontWeight: FontWeight.w400,
                                                   ),
                                                 ),
                                                 const SizedBox(height: 10),
@@ -301,7 +302,8 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                                   test['date'],
                                                   style: const TextStyle(
                                                     fontSize: 14,
-                                                    color: Colors.black,
+                                                                                                        color: Colors.black,
+                                                    fontWeight: FontWeight.w400,
                                                   ),
                                                 ),
                                               ],
@@ -312,7 +314,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                           alignment: Alignment.topRight,
                                           child: Padding(
                                             padding: const EdgeInsets.only(
-                                                top: 10.0),
+                                                top: 0),
                                             child: Column(
                                               children: [
                                                 Text(
