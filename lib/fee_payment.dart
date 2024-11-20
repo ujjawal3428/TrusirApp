@@ -107,51 +107,47 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
           backgroundColor: Colors.grey[50],
           elevation: 0,
           automaticallyImplyLeading: false,
-          title: Padding(
-            padding: const EdgeInsets.only(left: 1.0),
-            child: Row(children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Color(0xFF48116A),
-                  size: 30,
+          title: Row(children: [
+            IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Color(0xFF48116A),
+                size: 30,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            const Text(
+              'Fee Payment',
+              style: TextStyle(
+                color: Color(0xFF48116A),
+                fontSize: 22,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(width: 20),
+            const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.wallet_rounded,
+                  size: 20,
+                  color: Color.fromARGB(255, 28, 37, 136),
                 ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              const SizedBox(width: 5),
-              const Text(
-                'Fee Payment',
-                style: TextStyle(
-                  color: Color(0xFF48116A),
-                  fontSize: 22,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
+                SizedBox(width: 1),
+                Text(
+                  '₹ 10,000.00',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 40),
-              const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.wallet_rounded,
-                    size: 20,
-                    color: Color.fromARGB(255, 28, 37, 136),
-                  ),
-                  SizedBox(width: 1),
-                  Text(
-                    '₹ 10,000.00',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ]),
-          ),
+              ],
+            ),
+          ]),
           toolbarHeight: 70,
         ),
         body: isLoading
@@ -170,9 +166,9 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                             children: [],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 10),
                         Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.only(left: 17.0, right: 17),
                           child: Container(
                             width: 386,
                             height: 160,
@@ -202,7 +198,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                   const Expanded(
                                     child: Padding(
                                       padding:
-                                          EdgeInsets.only(left: 20.0, top: 10),
+                                          EdgeInsets.only(left: 10.0, top: 20),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -215,19 +211,19 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                               color: Colors.white,
                                             ),
                                           ),
-                                          SizedBox(height: 8),
+                                          SizedBox(height: 5),
                                           Text(
                                             '24 Jan 2025 - Today',
                                             style: TextStyle(
                                               fontSize: 16,
+                                              fontWeight: FontWeight.w500,
                                               color: Colors.white,
                                             ),
                                           ),
-                                          SizedBox(height: 10),
                                           Text(
                                             'Total No. of Classes: 09',
                                             style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 14,
                                               color: Colors.white,
                                             ),
                                           ),
@@ -239,8 +235,8 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                     alignment: Alignment.topRight,
                                     child: Image.asset(
                                       'assets/money@3x.png',
-                                      width: 143,
-                                      height: 143,
+                                      width: 130,
+                                      height: 130,
                                     ),
                                   ),
                                 ],
@@ -273,7 +269,8 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                               cardColors[index % cardColors.length];
 
                           return Padding(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.only(
+                                left: 20.0, right: 20, bottom: 14),
                             child: Container(
                               width: 386,
                               height: 136,
