@@ -1,5 +1,59 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:trusir/teacher_facilities.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/api.dart';
+import 'package:trusir/teacher_main_screen.dart';
+
+class TeacherRegistrationData {
+  String? teacherName;
+  String? fathersName;
+  String? mothersName;
+  String? gender;
+  DateTime? dob;
+  String? phoneNumber;
+  String? qualification;
+  String? experience;
+  String? preferredclass;
+  String? medium;
+  String? subject;
+  String? state;
+  String? city;
+  String? area;
+  String? pincode;
+  String? caddress;
+  String? paddress;
+  String? photoPath;
+  String? aadharCardPath;
+  String? signaturePath;
+  bool? agreetoterms;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'teacherName': teacherName,
+      'fathersName': fathersName,
+      'mothersName': mothersName,
+      'gender': gender,
+      'dob': dob,
+      'phoneNumber': phoneNumber,
+      'qualification': qualification,
+      'experience': experience,
+      'preferredclass': preferredclass,
+      'medium': medium,
+      'subject': subject,
+      'state': state,
+      'city': city,
+      'area': area,
+      'pincode': pincode,
+      'caddress': caddress,
+      'paddress': paddress,
+      'photoPath': photoPath,
+      'aadharCardPath': aadharCardPath,
+      'signaturePath': signaturePath,
+      'agreetoterms': agreetoterms,
+    };
+  }
+}
 
 class TeacherRegistrationPage extends StatefulWidget {
   const TeacherRegistrationPage({super.key});
@@ -15,6 +69,35 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   String? preferredClass;
   String? subject;
   DateTime? selectedDOB;
+  bool agreeToTerms = false;
+
+  final TeacherRegistrationData formData = TeacherRegistrationData();
+
+  Future<void> submitForm() async {
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final role = prefs.getString('role');
+    final url = Uri.parse('$baseUrl/api/submit/registration/teacher');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(formData.toJson());
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        // Successfully submitted
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TeacherMainScreen()),
+        );
+        print(body);
+      } else {
+        // Handle error
+        print('Failed to submit form: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
 
   Future<void> _selectDOB(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -26,6 +109,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     if (picked != null && picked != selectedDOB) {
       setState(() {
         selectedDOB = picked;
+        formData.dob = selectedDOB;
       });
     }
   }
@@ -65,11 +149,17 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 ),
               ),
               // Teacher's basic information
-              _buildTextField('Teacher Name', onChanged: (value) {}),
+              _buildTextField('Teacher Name', onChanged: (value) {
+                formData.teacherName = value;
+              }),
               const SizedBox(height: 10),
-              _buildTextField("Father's Name", onChanged: (value) {}),
+              _buildTextField("Father's Name", onChanged: (value) {
+                formData.fathersName = value;
+              }),
               const SizedBox(height: 10),
-              _buildTextField("Mother's Name", onChanged: (value) {}),
+              _buildTextField("Mother's Name", onChanged: (value) {
+                formData.mothersName = value;
+              }),
               const SizedBox(height: 10),
               // Gender and DOB Row
               Row(
@@ -81,6 +171,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       onChanged: (value) {
                         setState(() {
                           gender = value;
+                          formData.gender = gender;
                         });
                       },
                       items: ['Male', 'Female', 'Other'],
@@ -100,11 +191,17 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 ],
               ),
               const SizedBox(height: 10),
-              _buildTextField('Phone Number', onChanged: (value) {}),
+              _buildTextField('Phone Number', onChanged: (value) {
+                formData.phoneNumber = value;
+              }),
               const SizedBox(height: 10),
-              _buildTextField('Qualification', onChanged: (value) {}),
+              _buildTextField('Qualification', onChanged: (value) {
+                formData.qualification = value;
+              }),
               const SizedBox(height: 10),
-              _buildTextField('Experience', onChanged: (value) {}),
+              _buildTextField('Experience', onChanged: (value) {
+                formData.experience = value;
+              }),
               const SizedBox(height: 10),
               // Dropdowns
               _buildDropdownField(
@@ -113,6 +210,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 onChanged: (value) {
                   setState(() {
                     preferredClass = value;
+                    formData.preferredclass = preferredClass;
                   });
                 },
                 items: ['10th', '11th', '12th'],
@@ -124,6 +222,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 onChanged: (value) {
                   setState(() {
                     medium = value;
+                    formData.medium = medium;
                   });
                 },
                 items: ['English', 'Hindi'],
@@ -135,12 +234,15 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 onChanged: (value) {
                   setState(() {
                     subject = value;
+                    formData.subject = subject;
                   });
                 },
                 items: ['Science', 'Arts'],
               ),
               const SizedBox(height: 10),
-              _buildTextField('State', onChanged: (value) {}),
+              _buildTextField('State', onChanged: (value) {
+                formData.state = value;
+              }),
               const SizedBox(height: 10),
               _buildDropdownField(
                 'City/Town',
@@ -148,6 +250,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 onChanged: (value) {
                   setState(() {
                     city = value;
+                    formData.city = city;
                   });
                 },
                 items: [
@@ -159,16 +262,24 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 ],
               ),
               const SizedBox(height: 10),
-              _buildTextField('Mohalla/Area', onChanged: (value) {}),
+              _buildTextField('Mohalla/Area', onChanged: (value) {
+                formData.area = value;
+              }),
               const SizedBox(height: 10),
-              _buildTextField('Pincode', onChanged: (value) {}),
+              _buildTextField('Pincode', onChanged: (value) {
+                formData.pincode = value;
+              }),
               const SizedBox(height: 10),
               // Address fields
-              _buildTextField('Current Full Address',
-                  height: 126, onChanged: (value) {}),
+              _buildTextField('Current Full Address', height: 126,
+                  onChanged: (value) {
+                formData.caddress = value;
+              }),
               const SizedBox(height: 10),
-              _buildTextField('Permanent Full Address',
-                  height: 126, onChanged: (value) {}),
+              _buildTextField('Permanent Full Address', height: 126,
+                  onChanged: (value) {
+                formData.paddress = value;
+              }),
               const SizedBox(height: 20),
 
               // Upload Sections
@@ -193,7 +304,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                   const Padding(
                     padding: EdgeInsets.only(right: 80.0),
                     child: Text(
-                      'Aadhar Card',
+                      'Aadhar\nCard',
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
@@ -222,7 +333,9 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 children: [
                   Checkbox(
                     value: true,
-                    onChanged: (bool? value) {},
+                    onChanged: (bool? value) {
+                      agreeToTerms = value!;
+                    },
                   ),
                   const Text('I agree with the '),
                   GestureDetector(
@@ -230,7 +343,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       // Handle terms and conditions navigation here
                     },
                     child: const Text(
-                      'terms and conditions',
+                      'Terms and Conditions',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Colors.blue,
@@ -261,12 +374,15 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TeacherFacilities(),
-                        ),
-                      );
+                      formData.agreetoterms == true
+                          ? submitForm()
+                          : ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Please Agree to Terms and Conditions'),
+                                duration: Duration(seconds: 1),
+                              ),
+                            );
                     },
                     child: const Text(
                       'Register',

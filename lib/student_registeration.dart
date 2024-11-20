@@ -1,7 +1,7 @@
 // import 'dart:io';
 import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/main_screen.dart';
 import 'package:http/http.dart' as http;
@@ -72,9 +72,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   // File? _adhaarImage;
 
   Future<void> submitForm() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final role = prefs.getString('role');
-    final url = Uri.parse('$baseUrl/api/submit/registration/$role');
+    // final SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final role = prefs.getString('role');
+    final url = Uri.parse('$baseUrl/api/submit/registration/student');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
 
@@ -328,7 +328,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   const Padding(
                     padding: EdgeInsets.only(right: 80.0),
                     child: Text(
-                      'Aadhar Card',
+                      'Aadhar\nCard',
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
@@ -355,7 +355,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       // Handle terms and conditions navigation here
                     },
                     child: const Text(
-                      'terms and conditions',
+                      'Terms and Conditions',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         color: Colors.blue,
