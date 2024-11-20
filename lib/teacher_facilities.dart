@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/bottom_navigation_bar.dart';
+import 'package:trusir/login_page.dart';
 import 'package:trusir/teacher_myprofile.dart';
 import 'package:trusir/notice.dart';
 import 'package:trusir/setting.dart';
@@ -75,6 +76,16 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
     }
   }
 
+  Future<void> logout(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const TrusirLoginPage()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -94,12 +105,17 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
             ),
           ),
           actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 20.0),
-              child: Image.asset(
-                'assets/logout@3x.png',
-                width: 103,
-                height: 24,
+            InkWell(
+              onTap: () {
+                logout(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20, right: 20.0),
+                child: Image.asset(
+                  'assets/logout@3x.png',
+                  width: 103,
+                  height: 24,
+                ),
               ),
             ),
           ],

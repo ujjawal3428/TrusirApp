@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/login_page.dart';
 import 'package:trusir/test_series.dart';
 import 'package:trusir/bottom_navigation_bar.dart';
 import 'package:trusir/fee_payment.dart';
@@ -50,6 +51,16 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  Future<void> logout(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const TrusirLoginPage()),
+      (route) => false,
+    );
   }
 
   Future<void> fetchProfileData() async {
@@ -105,12 +116,15 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
             ),
           ),
           actions: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20, right: 20.0),
-              child: Image.asset(
-                'assets/logout@3x.png',
-                width: 103,
-                height: 24,
+            InkWell(
+              onTap: (){logout(context);}
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20, right: 20.0),
+                child: Image.asset(
+                  'assets/logout@3x.png',
+                  width: 103,
+                  height: 24,
+                ),
               ),
             ),
           ],
