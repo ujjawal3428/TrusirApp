@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/api.dart';
 import 'package:trusir/enquiry.dart';
-import 'package:trusir/main_screen.dart';
 import 'package:trusir/menu.dart';
-import 'package:trusir/student_homepage.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trusir/teacher_homepage.dart';
-import 'package:trusir/teacher_main_screen.dart';
+import 'package:trusir/otp_screen.dart';
 
 // Custom class to handle responsive dimensions
 class ResponsiveDimensions {
@@ -85,7 +78,12 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     return Center(
       child: GestureDetector(
         onTap: () {
-          onPost();
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OTPScreen(
+                        phonenum: _phonecontroller.text,
+                      )));
         },
         child: Image.asset(
           'assets/send_otp.png',
@@ -94,87 +92,6 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
         ),
       ),
     );
-  }
-
-  void onPost() async {
-    final userData = await fetchUserData(_phonecontroller.text);
-
-    if (userData != null) {
-      bool isNewUser = userData['new_user'] ?? false;
-      if (userData['role'] == 'student' && isNewUser) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const StudentHomepage()),
-        );
-      } else if (userData['role'] == 'teacher' && isNewUser) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Teacherhomepage()),
-        );
-      } else {
-        if (userData['role'] == 'student' && !isNewUser) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const MainScreen()),
-          );
-        } else if (userData['role'] == 'teacher' && !isNewUser) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const TeacherMainScreen()),
-          );
-        }
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('OTP Sent'),
-          duration: Duration(seconds: 1),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('User Not Found!'),
-          duration: Duration(seconds: 1),
-        ),
-      );
-    }
-  }
-
-  Future<Map<String, dynamic>?> fetchUserData(String phoneNumber) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // Fetch from API
-    try {
-      final url = Uri.parse('$baseUrl/login/$phoneNumber');
-      final response = await http.get(url);
-
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-
-        // Check response structure
-        if (responseData.containsKey('phone_number') &&
-            responseData.containsKey('uerID') &&
-            responseData.containsKey('role') &&
-            responseData.containsKey('new_user')) {
-          // Save response to cache
-          await prefs.setString('userID', responseData['uerID']);
-          await prefs.setString('phone', responseData['phone_number']);
-          await prefs.setString('role', responseData['role']);
-          await prefs.setBool('new_user', responseData['new_user']);
-          print('Data fetched from API and cached.');
-          return responseData;
-        } else {
-          print('Unexpected response structure.');
-          return null;
-        }
-      } else {
-        print('Failed to fetch data from API: ${response.statusCode}');
-        return null;
-      }
-    } catch (e) {
-      print('Error fetching data: $e');
-      return null;
-    }
   }
 
   @override

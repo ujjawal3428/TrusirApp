@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
 
+class TeacherEnquiry {
+  String? name;
+  String? studentclass;
+  String? city;
+  String? pincode;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'studentclass': studentclass,
+      'city': city,
+      'pincode': pincode,
+    };
+  }
+}
+
 class TeacherEnquiryPage extends StatefulWidget {
-  const TeacherEnquiryPage({super.key});
+  TeacherEnquiryPage({super.key});
+
+  late TextEditingController _namecontroller;
+  late TextEditingController _classcontroller;
+  late TextEditingController _citycontroller;
+  late TextEditingController _pincodecontroller;
 
   @override
   State<TeacherEnquiryPage> createState() => _TeacherEnquiryPageState();
@@ -23,39 +44,39 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-        appBar: AppBar(
-  backgroundColor: Colors.grey[50],
-  elevation: 0,
-  automaticallyImplyLeading: false,
-  title: Padding(
-    padding: const EdgeInsets.only(left: 1.0), 
-    child: Row(
-      children: [
-        IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-           color: Color(0xFF48116A), 
-            size: 30, 
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 1.0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 5),
+              const Text(
+                'Teacher Enquiry',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 22,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
-       const SizedBox(width: 5), 
-        const Text(
-          'Teacher Enquiry',
-          style: TextStyle(
-            color: Color(0xFF48116A),
-            fontSize: 22,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    ),
-  ),
-  toolbarHeight: 70,
-),
+        toolbarHeight: 70,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),

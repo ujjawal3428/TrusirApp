@@ -1,10 +1,63 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/api.dart';
+import 'package:trusir/main_screen.dart';
+
+class StudentEnquiry {
+  String? name;
+  String? studentclass;
+  String? city;
+  String? pincode;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'studentclass': studentclass,
+      'city': city,
+      'pincode': pincode,
+    };
+  }
+}
 
 class StudentEnquiryPage extends StatelessWidget {
-  const StudentEnquiryPage({super.key});
+  StudentEnquiryPage({super.key});
 
-  void _onEnquire() {
-    print("Enquire button pressed");
+  late TextEditingController _namecontroller;
+  late TextEditingController _classcontroller;
+  late TextEditingController _citycontroller;
+  late TextEditingController _pincodecontroller;
+
+  final StudentEnquiry formData = StudentEnquiry();
+  void _onEnquire(BuildContext context) {
+    submitForm(context);
+  }
+
+  Future<void> submitForm(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final role = prefs.getString('role');
+    final url = Uri.parse('$baseUrl/api/submit/enqiry/$role');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(formData.toJson());
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        // Successfully submitted
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+        );
+        print(body);
+      } else {
+        // Handle error
+        print('Failed to submit form: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
   }
 
   @override
@@ -13,45 +66,45 @@ class StudentEnquiryPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-       appBar: AppBar(
-  backgroundColor: Colors.grey[50],
-  elevation: 0,
-  automaticallyImplyLeading: false,
-  title: Padding(
-    padding: const EdgeInsets.only(left: 1.0), 
-    child: Row(
-      children: [
-         IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-           color: Color(0xFF48116A), 
-            size: 30, 
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 1.0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 5),
+              const Text(
+                'Student Enquiry',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 22,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              )
+            ],
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
-       const SizedBox(width: 5), 
-        const Text(
-          'Student Enquiry',
-          style: TextStyle(
-            color: Color(0xFF48116A),
-            fontSize: 22,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w700,
-          ),
-        )],
-    ),
-  ),
-  toolbarHeight: 70,
-),
+        toolbarHeight: 70,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.only(top: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Center(
                 child: Image.asset(
                   'assets/studentenquiry2.png',
@@ -60,19 +113,25 @@ class StudentEnquiryPage extends StatelessWidget {
               SizedBox(height: screenHeight * 0.02),
 
               // Text Boxes with Background Images
-              _buildTextFieldWithBackground(hintText: 'Student Name'),
+              _buildTextFieldWithBackground(
+                  hintText: 'Student Name', controllers: _namecontroller),
               const SizedBox(height: 10),
-              _buildTextFieldWithBackground(hintText: 'Class'),
+              _buildTextFieldWithBackground(
+                  hintText: 'Class', controllers: _classcontroller),
               const SizedBox(height: 10),
-              _buildTextFieldWithBackground(hintText: 'City / Town'),
+              _buildTextFieldWithBackground(
+                  hintText: 'City / Town', controllers: _citycontroller),
               const SizedBox(height: 10),
-              _buildTextFieldWithBackground(hintText: 'Pincode'),
+              _buildTextFieldWithBackground(
+                  hintText: 'Pincode', controllers: _pincodecontroller),
               SizedBox(height: screenHeight * 0.05),
 
               // Enquire Button
               Center(
                 child: GestureDetector(
-                  onTap: _onEnquire,
+                  onTap: () {
+                    _onEnquire(context);
+                  },
                   child: Image.asset(
                     'assets/enquire.png',
                     fit: BoxFit.cover,
@@ -86,7 +145,8 @@ class StudentEnquiryPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTextFieldWithBackground({required String hintText}) {
+  Widget _buildTextFieldWithBackground(
+      {required String hintText, required TextEditingController controllers}) {
     return Stack(
       children: [
         Image.asset(
@@ -99,6 +159,7 @@ class StudentEnquiryPage extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: TextField(
+              controller: controllers,
               textAlign: TextAlign.start,
               decoration: InputDecoration(
                 hintText: hintText,

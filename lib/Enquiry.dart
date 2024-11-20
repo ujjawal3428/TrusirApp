@@ -65,7 +65,7 @@ class EnquiryPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const StudentEnquiryPage(),
+                        builder: (context) => StudentEnquiryPage(),
                       ),
                     );
                   },
@@ -82,7 +82,7 @@ class EnquiryPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const TeacherEnquiryPage(),
+                        builder: (context) => TeacherEnquiryPage(),
                       ),
                     );
                   },
