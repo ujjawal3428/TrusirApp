@@ -287,6 +287,150 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     );
   }
 
+<<<<<<< HEAD
+=======
+  Widget _buildBackButton(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.only(
+        left: 1.0,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [],
+      ),
+    );
+  }
+
+  Widget _buildCurrentMonthCard() {
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 5.0,
+        right: 18,
+        left: 18,
+      ),
+      child: Container(
+        width: 386,
+        height: 160,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [
+              Color(0xFFC22054),
+              Color(0xFF48116A),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(22),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFC22054).withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(-5, 5),
+            ),
+            BoxShadow(
+              color: const Color(0xFF48116A).withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(2, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding:
+              const EdgeInsets.only(left: 10.0, right: 10, bottom: 10, top: 0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20.0, top: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Current Month',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const Text(
+                        '24 Jan 2025 - Today',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      InkWell(
+                        child: Container(
+                          width: 102,
+                          height: 38,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color(0xFF045C19),
+                                Color(0xFF77D317),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'view report',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10.0),
+                  child: Image.asset(
+                    'assets/listaim@3x.png',
+                    width: 100,
+                    height: 105,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPreviousMonthsReports() {
+    return const Padding(
+      padding: EdgeInsets.only(top: 10.0),
+      child: Align(
+        alignment: Alignment.center,
+        child: Text(
+          'Previous months Reports',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+>>>>>>> cf31207ebdf4a7955ff444a1f225e192a9fe91e2
   Widget _buildPreviousMonthCard({
     required int index,
     required String subject,
@@ -319,6 +463,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                       color: Colors.black,
                     ),
                   ),
+<<<<<<< HEAD
                   Text(
                     'Marks Obtained: $marks',
                     style: const TextStyle(
@@ -331,10 +476,25 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                     style: const TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
+=======
+                  const Spacer(),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      time,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black54,
+                      ),
+>>>>>>> cf31207ebdf4a7955ff444a1f225e192a9fe91e2
                     ),
                   ),
                 ],
               ),
+<<<<<<< HEAD
               const Spacer(),
               Align(
                 alignment: Alignment.topRight,
@@ -343,6 +503,52 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                   style: const TextStyle(
                     fontSize: 12,
                     color: Colors.black54,
+=======
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 10, right: 10, bottom: 10.0),
+                child: Container(
+                  height: 48,
+                  width: 357,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      String filename = '${subject}_report_$date.jpg';
+
+                      if (downloadedFiles.containsKey(filename)) {
+                        _openFile(filename);
+                      } else {
+                        _downloadFile(reportUrl, filename);
+                      }
+                    },
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Download Report',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Icon(
+                          Icons.download,
+                          color: Colors.black,
+                          size: 19,
+                        ),
+                      ],
+                    ),
+>>>>>>> cf31207ebdf4a7955ff444a1f225e192a9fe91e2
                   ),
                 ),
               ),
