@@ -49,9 +49,19 @@ class OTPScreen extends StatelessWidget {
     }
   }
 
+  final List<TextEditingController> otpControllers =
+      List.generate(4, (_) => TextEditingController());
+
+  // FocusNodes for each field
+  final List<FocusNode> focusNodes = List.generate(4, (_) => FocusNode());
+
   void onPost(String phone, BuildContext context) async {
+    // Combine OTP from all controllers
+    String otp = otpControllers.map((controller) => controller.text).join();
+    print("Entered OTP: $otp");
     await fetchUserData(phone);
     showVerificationDialog(context);
+    // Handle OTP verification logic
   }
 
   void showVerificationDialog(BuildContext context) {
@@ -136,7 +146,8 @@ class OTPScreen extends StatelessWidget {
                     border: Border.all(color: Colors.grey, width: 1.5),
                   ),
                   child: TextField(
-                    controller: otpController,
+                    controller: otpControllers[index],
+                    focusNode: focusNodes[index],
                     textAlign: TextAlign.center,
                     keyboardType: TextInputType.number,
                     maxLength: 1,
@@ -148,20 +159,20 @@ class OTPScreen extends StatelessWidget {
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
+                    onChanged: (value) {
+                      if (value.isNotEmpty && index < 3) {
+                        // Move to the next field
+                        FocusScope.of(context)
+                            .requestFocus(focusNodes[index + 1]);
+                      } else if (value.isEmpty && index > 0) {
+                        // Move to the previous field if backspace is pressed
+                        FocusScope.of(context)
+                            .requestFocus(focusNodes[index - 1]);
+                      }
+                    },
                   ),
                 );
               }),
-            ),
-            const SizedBox(height: 16),
-            TextButton(
-              onPressed: () {},
-              child: const Text(
-                'Resend OTP',
-                style: TextStyle(
-                  color: Colors.purple,
-                  fontSize: 16,
-                ),
-              ),
             ),
             const SizedBox(height: 24),
             ElevatedButton(
