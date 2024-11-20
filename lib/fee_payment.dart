@@ -370,7 +370,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                       });
                                       fetchFeeDetails(page: currentPage);
                                     },
-                                    child: const Text('Load More....'),
+                                    child: const Text('Load More...'),
                                   ),
                           ),
                       ],

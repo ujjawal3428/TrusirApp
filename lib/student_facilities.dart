@@ -26,6 +26,8 @@ class Studentfacilities extends StatefulWidget {
 class _StudentfacilitiesState extends State<Studentfacilities> {
   String name = '';
   String profile = '';
+  String address = '';
+  String phone = '';
   final Map<String, Map<String, double>> imageSizes = {
     'assets/myprofile.png': {'width': 50, 'height': 50},
     'assets/teacherprofile.png': {'width': 50, 'height': 49},
@@ -70,6 +72,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
         setState(() {
           name = data['name'] ?? '';
           profile = data['profile_photo'] ?? 'https://via.placeholder.com/150';
+          phone = data['phone'] ?? '';
+          address = data['address'] ?? '';
         });
       } else {
         throw Exception('Failed to load profile data');
@@ -174,11 +178,11 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                     fontFamily: 'Poppins',
                                     fontWeight: FontWeight.w700),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.only(top: 5.0),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5.0),
                                 child: Text(
-                                  'Motihari, Bihar',
-                                  style: TextStyle(
+                                  address,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontFamily: 'Poppins',
@@ -186,11 +190,11 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   ),
                                 ),
                               ),
-                              const Padding(
-                                padding: EdgeInsets.only(top: 2.0),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 2.0),
                                 child: Text(
-                                  '980-456-7890',
-                                  style: TextStyle(
+                                  phone,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontFamily: 'Poppins',
                                     fontSize: 11,
