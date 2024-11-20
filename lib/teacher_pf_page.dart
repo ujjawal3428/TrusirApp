@@ -145,20 +145,60 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                 ),
               ),
               buildInfoRow(
-                  'assets/male@2x.png', 'Age & Gender', '$age, $gender'),
-              const SizedBox(height: 10),
-              buildInfoRow('assets/location@2x.png', 'Address', address),
+                'assets/male@2x.png',
+                'Age & Gender',
+                '$age, $gender',
+                imageBackgroundColor: Colors.blue.shade100,
+                textBackgroundColor: Colors.blue.shade50,
+              ),
               const SizedBox(height: 10),
               buildInfoRow(
-                  'assets/degree@2x.png', 'Graduation', graduation),
+                'assets/location@2x.png',
+                'Address',
+                address,
+                imageBackgroundColor: Colors.green.shade100,
+                textBackgroundColor: Colors.green.shade50,
+              ),
               const SizedBox(height: 10),
-              buildInfoRow('assets/medal@2x.png', 'Experience', experience),
+              buildInfoRow(
+                'assets/degree@2x.png',
+                'Graduation',
+                graduation,
+                imageBackgroundColor: Colors.yellow.shade100,
+                textBackgroundColor: Colors.yellow.shade50,
+              ),
               const SizedBox(height: 10),
-              buildInfoRow('assets/pensp@3x.png', 'Subjects', subjects),
+              buildInfoRow(
+                'assets/medal@2x.png',
+                'Experience',
+                experience,
+                imageBackgroundColor: Colors.red.shade100,
+                textBackgroundColor: Colors.red.shade50,
+              ),
               const SizedBox(height: 10),
-              buildInfoRow('assets/ab@2x.png', 'Language', language),
+              buildInfoRow(
+                'assets/pensp@3x.png',
+                'Subjects',
+                subjects,
+                imageBackgroundColor: Colors.purple.shade100,
+                textBackgroundColor: Colors.purple.shade50,
+              ),
               const SizedBox(height: 10),
-              buildInfoRow('assets/phone@2x.png', 'Phone Number', phoneNumber),
+              buildInfoRow(
+                'assets/ab@2x.png',
+                'Language',
+                language,
+                imageBackgroundColor: Colors.orange.shade100,
+                textBackgroundColor: Colors.orange.shade50,
+              ),
+              const SizedBox(height: 10),
+              buildInfoRow(
+                'assets/phone@2x.png',
+                'Phone Number',
+                phoneNumber,
+                imageBackgroundColor: Colors.teal.shade100,
+                textBackgroundColor: Colors.teal.shade50,
+              ),
               const SizedBox(height: 10),
             ],
           ),
@@ -167,9 +207,15 @@ class MyProfileScreenState extends State<Teacherpfpage> {
     );
   }
 
-  Widget buildInfoRow(String iconPath, String title, String value) {
+  Widget buildInfoRow(
+    String iconPath,
+    String title,
+    String value, {
+    Color imageBackgroundColor = Colors.pink,
+    Color textBackgroundColor = Colors.white,
+  }) {
     return Padding(
-      padding: const EdgeInsets.only(left: 12.0, right: 10),
+      padding: const EdgeInsets.only(left: 17.0, right: 17),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -177,7 +223,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
             width: 55,
             height: 63,
             decoration: BoxDecoration(
-              color: Colors.pink.shade100,
+              color: imageBackgroundColor,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
@@ -194,12 +240,16 @@ class MyProfileScreenState extends State<Teacherpfpage> {
               height: 63,
               width: 306,
               decoration: BoxDecoration(
-                color: const Color.fromARGB(65, 255, 46, 46),
+                color: textBackgroundColor,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: Padding(
                 padding: const EdgeInsets.only(
-                    left: 20, top: 10, bottom: 10, right: 20),
+                  left: 20,
+                  top: 10,
+                  bottom: 10,
+                  right: 20,
+                ),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
