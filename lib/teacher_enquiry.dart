@@ -1,17 +1,25 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:trusir/api.dart';
+import 'package:trusir/teacher_homepage.dart';
+import 'package:trusir/teacher_main_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TeacherEnquiry {
   String? name;
-  String? studentclass;
+  String? qualification;
   String? city;
   String? pincode;
+  String? gender;
 
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'studentclass': studentclass,
+      'qualification': qualification,
       'city': city,
       'pincode': pincode,
+      'gender': gender
     };
   }
 }
@@ -19,10 +27,13 @@ class TeacherEnquiry {
 class TeacherEnquiryPage extends StatefulWidget {
   TeacherEnquiryPage({super.key});
 
-  late TextEditingController _namecontroller;
-  late TextEditingController _classcontroller;
-  late TextEditingController _citycontroller;
-  late TextEditingController _pincodecontroller;
+  final TextEditingController _namecontroller = TextEditingController();
+  final TextEditingController _qualificationcontroller =
+      TextEditingController();
+  final TextEditingController _citycontroller = TextEditingController();
+  final TextEditingController _pincodecontroller = TextEditingController();
+
+  final TeacherEnquiry formData = TeacherEnquiry();
 
   @override
   State<TeacherEnquiryPage> createState() => _TeacherEnquiryPageState();
@@ -33,8 +44,47 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
   bool isFemaleSelected = false;
 
   void _onEnquire() {
-    // Implement the Enquire action here
-    print("Enquire button pressed");
+    setState(() {
+      widget.formData.name = widget._namecontroller.text;
+      widget.formData.qualification = widget._qualificationcontroller.text;
+      widget.formData.city = widget._citycontroller.text;
+      widget.formData.pincode = widget._pincodecontroller.text;
+    });
+    submitForm(context);
+  }
+
+  Future<void> submitForm(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final newuser = prefs.getBool('new_user');
+    final url = Uri.parse('$baseUrl/api/submit/enqiry/teacher');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(widget.formData.toJson());
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        // Successfully submitted
+        if (newuser == true) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Teacherhomepage()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const TeacherMainScreen()),
+          );
+        }
+
+        print(body);
+      } else {
+        // Handle error
+        print('Failed to submit form: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
   }
 
   @override
@@ -93,8 +143,8 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
 
               // Text Box with Image Background
               _buildTextFieldWithBackground(
-                hintText: 'Teacher Name',
-              ),
+                  hintText: 'Teacher Name',
+                  controllers: widget._namecontroller),
               const SizedBox(height: 15),
 
               // Gender Selection
@@ -106,7 +156,10 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
                     onChanged: (value) {
                       setState(() {
                         isMaleSelected = value!;
-                        if (value) isFemaleSelected = false;
+                        if (value) {
+                          isFemaleSelected = false;
+                          widget.formData.gender = 'Male';
+                        }
                       });
                     },
                   ),
@@ -117,7 +170,10 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
                     onChanged: (value) {
                       setState(() {
                         isFemaleSelected = value!;
-                        if (value) isMaleSelected = false;
+                        if (value) {
+                          isMaleSelected = false;
+                          widget.formData.gender = 'Female';
+                        }
                       });
                     },
                   ),
@@ -127,20 +183,18 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
 
               // Qualification Field
               _buildTextFieldWithBackground(
-                hintText: 'Qualification',
-              ),
+                  hintText: 'Qualification',
+                  controllers: widget._qualificationcontroller),
               const SizedBox(height: 10),
 
               // City / Town Field
               _buildTextFieldWithBackground(
-                hintText: 'City / Town',
-              ),
+                  hintText: 'City / Town', controllers: widget._citycontroller),
               const SizedBox(height: 10),
 
               // Pincode Field
               _buildTextFieldWithBackground(
-                hintText: 'Pincode',
-              ),
+                  hintText: 'Pincode', controllers: widget._pincodecontroller),
               const SizedBox(height: 15),
 
               // Enquire Button
@@ -160,7 +214,8 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
     );
   }
 
-  Widget _buildTextFieldWithBackground({required String hintText}) {
+  Widget _buildTextFieldWithBackground(
+      {required String hintText, required TextEditingController controllers}) {
     return Stack(
       children: [
         Image.asset(
@@ -172,6 +227,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
         Positioned.fill(
           child: TextField(
             textAlign: TextAlign.start,
+            controller: controllers,
             decoration: InputDecoration(
               hintText: hintText,
               hintStyle: const TextStyle(

@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/main_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/student_homepage.dart';
 
 class StudentEnquiry {
   String? name;
@@ -21,23 +22,34 @@ class StudentEnquiry {
   }
 }
 
-class StudentEnquiryPage extends StatelessWidget {
-  StudentEnquiryPage({super.key});
+class StudentEnquiryPage extends StatefulWidget {
+  const StudentEnquiryPage({super.key});
 
-  late TextEditingController _namecontroller;
-  late TextEditingController _classcontroller;
-  late TextEditingController _citycontroller;
-  late TextEditingController _pincodecontroller;
+  @override
+  State<StudentEnquiryPage> createState() => _StudentEnquiryPageState();
+}
 
+class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
+  final TextEditingController _namecontroller = TextEditingController();
+  final TextEditingController _classcontroller = TextEditingController();
+  final TextEditingController _citycontroller = TextEditingController();
+  final TextEditingController _pincodecontroller = TextEditingController();
   final StudentEnquiry formData = StudentEnquiry();
+
   void _onEnquire(BuildContext context) {
+    setState(() {
+      formData.name = _namecontroller.text;
+      formData.studentclass = _classcontroller.text;
+      formData.city = _citycontroller.text;
+      formData.pincode = _pincodecontroller.text;
+    });
     submitForm(context);
   }
 
   Future<void> submitForm(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final role = prefs.getString('role');
-    final url = Uri.parse('$baseUrl/api/submit/enqiry/$role');
+    final newuser = prefs.getBool('new_user');
+    final url = Uri.parse('$baseUrl/api/submit/enqiry/student');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
 
@@ -46,10 +58,17 @@ class StudentEnquiryPage extends StatelessWidget {
 
       if (response.statusCode == 200) {
         // Successfully submitted
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const MainScreen()),
-        );
+        if (newuser == true) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const StudentHomepage()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainScreen()),
+          );
+        }
         print(body);
       } else {
         // Handle error
