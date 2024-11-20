@@ -52,7 +52,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
   Future<void> fetchFeeDetails({int page = 1}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userID = prefs.getString('userID');
-    final url = '$apiBase/$userID?page=$page&data_per_page=10';
+    final url = '$apiBase$userID?page=$page&data_per_page=10';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {

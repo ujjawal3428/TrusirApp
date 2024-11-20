@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
-import 'package:trusir/bottom_navigation_bar.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/teacher_myprofile.dart';
 import 'package:trusir/notice.dart';
@@ -18,7 +17,6 @@ class TeacherFacilities extends StatefulWidget {
 }
 
 class _TeacherFacilitiesState extends State<TeacherFacilities> {
-  int _selectedIndex = 0;
   String name = '';
   String address = '';
   String phoneNumber = '';
@@ -38,12 +36,6 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
     'assets/setting.png': {'width': 52, 'height': 52},
     'assets/video knowledge.png': {'width': 85, 'height': 74},
   };
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
 
   @override
   void initState() {
@@ -352,10 +344,6 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
               ),
             );
           },
-        ),
-        bottomNavigationBar: CustomBottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
         ),
       ),
     );

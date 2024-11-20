@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/enquiry.dart';
+import 'package:trusir/main_screen.dart';
 import 'package:trusir/menu.dart';
-import 'package:trusir/student_facilities.dart';
 import 'package:trusir/student_homepage.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trusir/teacher_facilities.dart';
 import 'package:trusir/teacher_homepage.dart';
+import 'package:trusir/teacher_main_screen.dart';
 
 // Custom class to handle responsive dimensions
 class ResponsiveDimensions {
@@ -115,12 +115,12 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
         if (userData['role'] == 'student' && !isNewUser) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const Studentfacilities()),
+            MaterialPageRoute(builder: (context) => const MainScreen()),
           );
         } else if (userData['role'] == 'teacher' && !isNewUser) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const TeacherFacilities()),
+            MaterialPageRoute(builder: (context) => const TeacherMainScreen()),
           );
         }
       }

@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 
-class CustomBottomNavigationBar extends StatefulWidget {
-  const CustomBottomNavigationBar(
-      {super.key,
-      required int currentIndex,
-      required void Function(int index) onTap});
+class CustomBottomNavigationBar extends StatelessWidget {
+  final int currentIndex;
+  final void Function(int index) onTap;
 
-  @override
-  CustomBottomNavigationBarState createState() =>
-      CustomBottomNavigationBarState();
-}
-
-class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  int selectedIndex = 0;
+  const CustomBottomNavigationBar({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 80,
-      width: 428,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: const AssetImage('assets/bnbbg@4x.png'),
@@ -51,14 +46,10 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
   }
 
   Widget buildIconWithLabel(int index, String iconPath, String title) {
-    bool isSelected = selectedIndex == index;
+    bool isSelected = currentIndex == index;
 
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectedIndex = index;
-        });
-      },
+      onTap: () => onTap(index),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -79,7 +70,7 @@ class CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
                     },
                     child: ColorFiltered(
                       colorFilter: const ColorFilter.mode(
-                        Color.fromARGB(255, 255, 255, 255),
+                        Colors.white,
                         BlendMode.srcIn,
                       ),
                       child: Image.asset(

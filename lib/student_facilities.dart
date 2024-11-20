@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/extra_knowledge.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/test_series.dart';
-import 'package:trusir/bottom_navigation_bar.dart';
 import 'package:trusir/fee_payment.dart';
 import 'package:trusir/my_profile.dart';
 import 'package:trusir/notice.dart';
@@ -12,6 +12,7 @@ import 'package:trusir/setting.dart';
 import 'package:trusir/student_doubt.dart';
 import 'package:trusir/teacher_myprofile.dart';
 import 'package:http/http.dart' as http;
+import 'package:trusir/video_knowledge.dart';
 import 'dart:convert';
 import 'api.dart';
 
@@ -23,7 +24,6 @@ class Studentfacilities extends StatefulWidget {
 }
 
 class _StudentfacilitiesState extends State<Studentfacilities> {
-  int _selectedIndex = 0;
   String name = '';
   String profile = '';
   final Map<String, Map<String, double>> imageSizes = {
@@ -45,12 +45,6 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
   void initState() {
     super.initState();
     fetchProfileData();
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
   }
 
   Future<void> logout(BuildContext context) async {
@@ -353,12 +347,12 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                             'Extra Knowledge',
                             tileWidth,
                             tileHeight, () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const ExtraKnowledgeScreen(),
-                          //   ),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ExtraKnowledge(),
+                            ),
+                          );
                         }),
                         buildTile(
                             context,
@@ -395,12 +389,12 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                             'Video Knowledge',
                             tileWidth,
                             tileHeight, () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const VideoKnowledgeScreen(),
-                          //   ),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const VideoKnowledge(),
+                            ),
+                          );
                         }),
                       ],
                     );
@@ -409,10 +403,6 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
               ]),
             ));
           },
-        ),
-        bottomNavigationBar: CustomBottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
         ),
       ),
     );
