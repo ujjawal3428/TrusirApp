@@ -125,17 +125,17 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
             children: [
               // Back button at top left
               Padding(
-                padding: const EdgeInsets.only(top: 35, left: 0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Image.asset(
-                    'assets/back_button.png',
-                    width: 58,
-                    height: 58,
-                  ),
-                ),
+                padding: const EdgeInsets.only(top: 15, left: 0),
+                child:  IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_rounded,
+           color: Color(0xFF48116A), 
+            size: 30, 
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
               ),
               const SizedBox(
                 height: 20,
@@ -143,7 +143,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               // Top image
               Center(
                 child: Image.asset(
-                  'assets/studentregisteration@4x.png',
+                  'assets/teachersregisteration@4x.png',
                   width: 386,
                   height: 261,
                 ),
@@ -317,7 +317,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Padding(
-                    padding: EdgeInsets.only(right: 76),
+                    padding: EdgeInsets.only(right: 66),
                     child: Text(
                       'Signature',
                       style: TextStyle(fontSize: 14),

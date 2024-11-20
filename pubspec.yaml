@@ -184,6 +184,7 @@ flutter:
     - assets/medal@2x.png 
     - assets/ab@2x.png 
     - assets/phone@2x.png 
+    - assets/teachersregisteration@4x.png
 
   fonts:
     - family: Poppins
