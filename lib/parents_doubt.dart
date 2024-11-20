@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/bottom_navigation_bar.dart';
 
 class ParentsDoubtScreen extends StatefulWidget {
   const ParentsDoubtScreen({super.key});
@@ -9,57 +8,49 @@ class ParentsDoubtScreen extends StatefulWidget {
 }
 
 class _MyAppState extends State<ParentsDoubtScreen> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
-        appBar: AppBar(
-  backgroundColor: Colors.grey[50],
-  elevation: 0,
-  automaticallyImplyLeading: false,
-  title: Padding(
-    padding: const EdgeInsets.only(left: 1.0), 
-    child: Row(
-      children: [
-        IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-           color: Color(0xFF48116A), 
-            size: 30, 
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 1.0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 5),
+              const Text(
+                'Parents Doubt',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 22,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
-       const SizedBox(width: 5), 
-        const Text(
-          'Parents Doubt',
-          style: TextStyle(
-            color: Color(0xFF48116A),
-            fontSize: 22,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    ),
-  ),
-  toolbarHeight: 70,
-),
- floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 16.0, right: 16.0), 
+        toolbarHeight: 70,
+      ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 16.0, right: 16.0),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: LinearGradient(
-            colors: [Colors.grey[300]!, Colors.white], 
+            colors: [Colors.grey[300]!, Colors.white],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -69,10 +60,11 @@ class _MyAppState extends State<ParentsDoubtScreen> {
             // Your onPressed action
           },
           elevation: 0, // To match the gradient
-          backgroundColor:const Color(0xFF48116A), // Transparent for gradient to show
+          backgroundColor:
+              const Color(0xFF48116A), // Transparent for gradient to show
           child: const Icon(
             Icons.add, // Plus icon
-          color: Colors.white,
+            color: Colors.white,
             size: 50, // Icon size
           ),
         ),
@@ -84,12 +76,13 @@ class _MyAppState extends State<ParentsDoubtScreen> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                 const Padding(
-                    padding: EdgeInsets.only(left: 15.0,),
+                  const Padding(
+                    padding: EdgeInsets.only(
+                      left: 15.0,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: [  
-                      ],
+                      children: [],
                     ),
                   ),
                   Padding(
@@ -262,7 +255,6 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                           child: Padding(
                             padding: EdgeInsets.only(
                               top: MediaQuery.of(context).size.height * 0.05,
-                              left: MediaQuery.of(context).size.width * 0.05,
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -271,8 +263,8 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                   padding: EdgeInsets.all(
                                       MediaQuery.of(context).size.width * 0.02),
                                   child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.35,
                                     height: MediaQuery.of(context).size.height *
                                         0.2,
                                     decoration: BoxDecoration(
@@ -286,6 +278,8 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                       ],
                                     ),
                                     child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Padding(
                                           padding: EdgeInsets.only(
@@ -349,8 +343,8 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                   padding: EdgeInsets.all(
                                       MediaQuery.of(context).size.width * 0.02),
                                   child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.3,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.35,
                                     height: MediaQuery.of(context).size.height *
                                         0.2,
                                     decoration: BoxDecoration(
@@ -434,13 +428,8 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                 ],
               ),
             ),
-           
           ],
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
       ),
     );
   }

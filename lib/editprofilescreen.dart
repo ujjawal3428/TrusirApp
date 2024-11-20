@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/api.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -15,26 +19,40 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController schoolController = TextEditingController();
   final TextEditingController classController = TextEditingController();
   final TextEditingController subjectController = TextEditingController();
-  
+
   File? _profileImage;
+  String profile = '';
 
   @override
   void initState() {
     super.initState();
-    // Initialize text controllers with current data
-    fetchCurrentProfileData();
+    fetchProfileData();
   }
 
-  Future<void> fetchCurrentProfileData() async {
-    // This function should fetch and populate current profile data into text fields
-    // Example:
-    setState(() {
-      nameController.text = "John Doe";
-      dobController.text = "2000-01-01";
-      schoolController.text = "Sample School";
-      classController.text = "10th Grade";
-      subjectController.text = "Math, Science";
-    });
+  Future<void> fetchProfileData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/my-profile/$userID'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          nameController.text = data['name'] ?? '';
+          dobController.text = data['dob'] ?? '';
+          schoolController.text = data['school'] ?? '';
+          classController.text = data['class'] ?? '';
+          subjectController.text = data['subject'] ?? '';
+          profile = data['profile_photo'];
+        });
+      } else {
+        throw Exception('Failed to load profile data');
+      }
+    } catch (e) {
+      print('Error fetching profile data: $e');
+    }
   }
 
   Future<void> _pickImage() async {
@@ -79,7 +97,8 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         ),
         toolbarHeight: 70,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded, color: Color(0xFF48116A)),
+          icon: const Icon(Icons.arrow_back_ios_rounded,
+              color: Color(0xFF48116A)),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
@@ -109,7 +128,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                     radius: isLargeScreen ? 80 : 60,
                     backgroundImage: _profileImage != null
                         ? FileImage(_profileImage!)
-                        : const AssetImage('assets/default_profile.png') as ImageProvider,
+                        : NetworkImage(profile) as ImageProvider,
                   ),
                   Positioned(
                     bottom: 0,
@@ -131,20 +150,24 @@ class EditProfileScreenState extends State<EditProfileScreen> {
             ),
             const SizedBox(height: 20),
             // Input Fields
-            buildInputField("Name", nameController, isLargeScreen),
+            buildInputField('Enter your name', nameController, isLargeScreen),
             const SizedBox(height: 15),
-            buildInputField("Date of Birth", dobController, isLargeScreen),
+            buildInputField(
+                'Enter your date of birth', dobController, isLargeScreen),
             const SizedBox(height: 15),
-            buildInputField("School", schoolController, isLargeScreen),
+            buildInputField(
+                'Enter your school', schoolController, isLargeScreen),
             const SizedBox(height: 15),
-            buildInputField("Class", classController, isLargeScreen),
+            buildInputField('Enter your class', classController, isLargeScreen),
             const SizedBox(height: 15),
-            buildInputField("Subjects", subjectController, isLargeScreen),
+            buildInputField(
+                'Enter your subjects', subjectController, isLargeScreen),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: _saveProfile,
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                 backgroundColor: const Color(0xFF48116A),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -166,11 +189,11 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget buildInputField(
-      String label, TextEditingController controller, bool isLargeScreen) {
+      String hint, TextEditingController controller, bool isLargeScreen) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        labelText: label,
+        labelText: hint,
         labelStyle: TextStyle(fontSize: isLargeScreen ? 18 : 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
