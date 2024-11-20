@@ -351,7 +351,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                           horizontal: 5.0),
                                       child: Container(
                                         width: 94,
-                                        height: 120,
+                                        height: 129,
                                         decoration: BoxDecoration(
                                           color: cardColor,
                                           borderRadius:
