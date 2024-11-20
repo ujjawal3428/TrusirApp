@@ -8,48 +8,48 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'package:trusir/api.dart';
 
 class ProgressReportScreen extends StatelessWidget {
   const ProgressReportScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey.shade300,
-         appBar: AppBar(
-  backgroundColor: Colors.grey[50],
-  elevation: 0,
-  automaticallyImplyLeading: false,
-  title: Padding(
-    padding: const EdgeInsets.only(left: 1.0), 
-    child: Row(
-      children: [
-        IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-           color: Color(0xFF48116A), 
-            size: 30, 
+        appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 1.0),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Color(0xFF48116A),
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(width: 5),
+                const Text(
+                  'Progress Report',
+                  style: TextStyle(
+                    color: Color(0xFF48116A),
+                    fontSize: 22,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          toolbarHeight: 70,
         ),
-       const SizedBox(width: 5), 
-        const Text(
-          'Progress Report',
-          style: TextStyle(
-            color: Color(0xFF48116A),
-            fontSize: 22,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    ),
-  ),
-  toolbarHeight: 70,
-),
         body: const ProgressReportPage(),
       ),
     );
@@ -65,10 +65,18 @@ class ProgressReportPage extends StatefulWidget {
 
 class _ProgressReportPageState extends State<ProgressReportPage> {
   late Future<List<dynamic>> _reports;
-  List<dynamic> _loadedReports = []; // List to store loaded reports
+  List<dynamic> _loadedReports = [];
   bool _isDownloading = false;
   String _downloadProgress = '';
   Map<String, String> downloadedFiles = {};
+
+  final List<Color> _backgroundColors = [
+    Colors.purple.shade50,
+    Colors.green.shade50,
+    Colors.blue.shade50,
+    Colors.orange.shade50,
+    Colors.yellow.shade50,
+  ];
 
   @override
   void initState() {
@@ -110,7 +118,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   Future<List<dynamic>> fetchProgressReports() async {
     final response =
-        await http.get(Uri.parse('$baseUrl/progress-report/testID'));
+        await http.get(Uri.parse('https://your-api-url/progress-report/testID'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -121,10 +129,8 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   void _loadMoreReports() async {
     try {
-      // Fetch the same data again
       List<dynamic> newReports = await fetchProgressReports();
       setState(() {
-        // Append the new reports to the existing list
         _loadedReports.addAll(newReports);
       });
     } catch (e) {
@@ -190,7 +196,6 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   Future<void> _openFile(String filename) async {
     final filePath = downloadedFiles[filename];
     if (filePath != null) {
-      // Show the image in PhotoView
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -213,15 +218,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
           );
         },
       );
-      // Show a SnackBar for debugging purposes
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Opening file: $filePath'),
-          duration: const Duration(seconds: 1),
-        ),
-      );
     } else {
-      // Handle the case when the file is not found
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('File not found'),
@@ -251,10 +248,6 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                 ],
               ),
             ),
-          _buildBackButton(context),
-          _buildCurrentMonthCard(),
-          const SizedBox(height: 20),
-          _buildPreviousMonthsReports(),
           const SizedBox(height: 20),
           FutureBuilder<List<dynamic>>(
             future: _reports,
@@ -265,25 +258,28 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else {
                 final reports = snapshot.data!;
-                // Store the fetched data in _loadedReports
                 _loadedReports = reports;
                 return Column(
-                  children: _loadedReports
-                      .map((report) => _buildPreviousMonthCard(
-                            subject: report['subject'],
-                            date: report['date'],
-                            time: report['time'],
-                            marks: report['marks'],
-                            reportUrl: report['report'],
-                          ))
-                      .toList(),
+                  children: List.generate(
+                    _loadedReports.length,
+                    (index) {
+                      final report = _loadedReports[index];
+                      return _buildPreviousMonthCard(
+                        index: index,
+                        subject: report['subject'],
+                        date: report['date'],
+                        time: report['time'],
+                        marks: report['marks'],
+                        reportUrl: report['report'],
+                      );
+                    },
+                  ),
                 );
               }
             },
           ),
           TextButton(
-            onPressed:
-                _loadMoreReports, // Call the _loadMoreReports method when clicked
+            onPressed: _loadMoreReports,
             child: const Text('Load More...'),
           ),
         ],
@@ -291,144 +287,8 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     );
   }
 
-  Widget _buildBackButton(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(left: 1.0, ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-       
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCurrentMonthCard() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 5.0, right: 18, left: 18,),
-      child: Container(
-        width: 386,
-        height: 160,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xFFC22054),
-              Color(0xFF48116A),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(22),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFC22054).withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 10,
-              offset: const Offset(-5, 5),
-            ),
-            BoxShadow(
-              color: const Color(0xFF48116A).withOpacity(0.5),
-              spreadRadius: 1,
-              blurRadius: 10,
-              offset: const Offset(2, 4),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10.0, right: 10, bottom: 10, top: 0),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Current Month',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
-                    
-                      const Text(
-                        '24 Jan 2025 - Today',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      InkWell(
-                        child: Container(
-                          width: 102,
-                          height: 38,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFF045C19),
-                                Color(0xFF77D317),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'view report',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.center,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10,right: 10.0),
-                  child: Image.asset(
-                    'assets/listaim@3x.png',
-                    width: 100,
-                    height: 105,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPreviousMonthsReports() {
-    return const Padding(
-      padding: EdgeInsets.only( top: 10.0),
-      child: Align(
-        alignment: Alignment.center,
-        child: Text(
-          'Previous months Reports',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
-  }
-
   Widget _buildPreviousMonthCard({
+    required int index,
     required String subject,
     required String date,
     required String time,
@@ -441,122 +301,53 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
         width: 386,
         height: 136,
         decoration: BoxDecoration(
-          color: Colors.purple.shade50,
+          color: _backgroundColors[index % _backgroundColors.length],
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Stack(
-          children: [
-            Positioned(
-              top: -30,
-              left: -35,
-              child: Image.asset(
-                'assets/circleleft.png',
-                width: 160,
-                height: 160,
-              ),
-            ),
-            Positioned(
-              bottom: -42,
-              right: -40,
-              child: Image.asset(
-                'assets/circleright.png',
-                width: 160,
-                height: 160,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        subject,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        'Marks Obtained: $marks',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        'Date: $date',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    subject,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                  const Spacer(),
-                  const SizedBox(height: 8,),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      time,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.black54,
-                      ),
+                  Text(
+                    'Marks Obtained: $marks',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    'Date: $date',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
                     ),
                   ),
                 ],
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10,right: 10,bottom: 10.0),
-                child: Container(
-                  height: 48,
-                  width: 357,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      String filename = '${subject}_report_$date.jpg';
-
-                      if (downloadedFiles.containsKey(filename)) {
-                        _openFile(filename);
-                      } else {
-                        _downloadFile(reportUrl, filename);
-                      }
-                    },
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Download Report',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        Icon(
-                          Icons.download,
-                          color: Colors.black,
-                          size: 19,
-                        ),
-                      ],
-                    ),
+              const Spacer(),
+              Align(
+                alignment: Alignment.topRight,
+                child: Text(
+                  time,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.black54,
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
