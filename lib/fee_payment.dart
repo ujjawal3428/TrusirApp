@@ -90,6 +90,14 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
     fetchFeeDetails();
   }
 
+  final List<Color> cardColors = [
+    Colors.blue.shade100,
+    Colors.yellow.shade100,
+    Colors.pink.shade100,
+    Colors.green.shade100,
+    Colors.purple.shade100,
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -256,14 +264,21 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        ...feepayment.map((payment) {
+                        ...feepayment.asMap().entries.map((entry) {
+                          int index = entry.key;
+                          Fees payment = entry.value;
+
+                          // Cycle through colors using the modulus operator
+                          Color cardColor =
+                              cardColors[index % cardColors.length];
+
                           return Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Container(
                               width: 386,
                               height: 136,
                               decoration: BoxDecoration(
-                                color: Colors.blue.shade100,
+                                color: cardColor, // Apply dynamic color
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Padding(
