@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/editprofilescreen.dart';
-import 'package:trusir/main_screen.dart';
 import 'package:trusir/terms_and_conditions.dart';
 import 'package:trusir/about_us.dart';
 import 'package:trusir/parents_doubt.dart';
