@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/student_profile.dart';
-import 'package:trusir/teacher_myprofile.dart';
 import 'package:trusir/notice.dart';
 import 'package:trusir/setting.dart';
 import 'package:trusir/teacher_pf_page.dart';
