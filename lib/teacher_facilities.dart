@@ -245,7 +245,6 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 //   ),
                                 // );
                               }),
-                            
                               buildTile(context, const Color(0xFF00E533),
                                   'assets/setting.png', 'Setting', () {
                                 Navigator.push(
@@ -264,10 +263,13 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
-                        padding: EdgeInsets.only(top: 20,left: 10, bottom: 10),
+                        padding: EdgeInsets.only(top: 20, left: 10, bottom: 10),
                         child: Text(
                           'Student Profile',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, fontFamily: 'Poppins'),
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Poppins'),
                         ),
                       ),
                     ),
@@ -283,7 +285,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const StudentProfileScreen(),
+                                builder: (context) =>
+                                    const StudentProfileScreen(),
                               ),
                             );
                           }),
@@ -294,29 +297,31 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    const TeacherProfileScreen(),
+                                    const StudentProfileScreen(),
                               ),
                             );
                           }),
                           const SizedBox(width: 17),
                           buildHorizontalTile(context, const Color(0xFFF8BBD0),
                               'assets/sir.png', 'Rakesh Tripathi', () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const (),
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const StudentProfileScreen(),
+                              ),
+                            );
                           }),
                           const SizedBox(width: 17),
                           buildHorizontalTile(context, const Color(0xFFFFCDD2),
                               'assets/sir.png', 'Rakesh Tripathi', () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const WritetoUs(),
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const StudentProfileScreen(),
+                              ),
+                            );
                           }),
                           const SizedBox(width: 17),
                           buildHorizontalTile(context, const Color(0xFF00E533),
@@ -324,7 +329,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const SettingsScreen(),
+                                builder: (context) =>
+                                    const StudentProfileScreen(),
                               ),
                             );
                           }),
