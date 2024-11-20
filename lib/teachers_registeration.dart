@@ -317,7 +317,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Padding(
-                    padding: EdgeInsets.only(right: 70),
+                    padding: EdgeInsets.only(right: 76),
                     child: Text(
                       'Signature',
                       style: TextStyle(fontSize: 14),
