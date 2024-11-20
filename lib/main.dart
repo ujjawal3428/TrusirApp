@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/login_page.dart';
+import 'package:trusir/main_screen.dart';
 import 'package:trusir/student_homepage.dart';
 import 'package:trusir/teacher_homepage.dart';
-import 'package:trusir/student_facilities.dart';
-import 'package:trusir/teacher_facilities.dart';
+import 'package:trusir/teacher_main_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,9 +31,9 @@ class MyApp extends StatelessWidget {
     } else if (role == 'teacher' && isNewUser) {
       return const Teacherhomepage();
     } else if (role == 'student' && !isNewUser) {
-      return const Studentfacilities();
+      return const MainScreen();
     } else if (role == 'teacher' && !isNewUser) {
-      return const TeacherFacilities();
+      return const TeacherMainScreen();
     } else {
       // Fallback to login page if the role is unrecognized
       return const TrusirLoginPage();
