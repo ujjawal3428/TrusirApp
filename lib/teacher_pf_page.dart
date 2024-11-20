@@ -174,28 +174,28 @@ class MyProfileScreenState extends State<Teacherpfpage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 65,
-            height: 65,
+            width: 55,
+            height: 63,
             decoration: BoxDecoration(
               color: Colors.pink.shade100,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(5.0),
               child: Image.asset(
                 iconPath,
                 fit: BoxFit.contain,
               ),
             ),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: 10),
           Flexible(
             child: Container(
-              height: 65,
+              height: 63,
               width: 306,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(65, 255, 46, 46),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(15),
               ),
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -205,8 +205,8 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                   child: Text(
                     value.isNotEmpty ? value : 'Loading...',
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16,
                     ),
                   ),
                 ),
