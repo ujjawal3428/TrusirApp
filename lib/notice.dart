@@ -145,7 +145,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                         children: [
                           Container(
                             width: 386,
-                            height: 136,
+                            height: 147,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: cardColor,
