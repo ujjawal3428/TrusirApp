@@ -305,7 +305,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   Widget _buildCurrentMonthCard() {
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0, right: 10, left: 10, bottom: 10),
+      padding: const EdgeInsets.only(top: 5.0, right: 18, left: 18,),
       child: Container(
         width: 386,
         height: 160,
@@ -338,7 +338,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
             children: [
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 10),
+                  padding: const EdgeInsets.only(left: 20.0, top: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -346,20 +346,21 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                         'Current Month',
                         style: TextStyle(
                           fontSize: 20,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w500,
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                    
                       const Text(
                         '24 Jan 2025 - Today',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
                           color: Colors.white,
                         ),
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 20,
                       ),
                       InkWell(
                         child: Container(
@@ -394,11 +395,11 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
               Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 20.0),
+                  padding: const EdgeInsets.only(left: 10,right: 10.0),
                   child: Image.asset(
                     'assets/listaim@3x.png',
-                    width: 108,
-                    height: 115,
+                    width: 100,
+                    height: 105,
                   ),
                 ),
               ),
@@ -411,9 +412,9 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   Widget _buildPreviousMonthsReports() {
     return const Padding(
-      padding: EdgeInsets.only(left: 60, top: 20.0),
+      padding: EdgeInsets.only( top: 10.0),
       child: Align(
-        alignment: Alignment.topLeft,
+        alignment: Alignment.center,
         child: Text(
           'Previous months Reports',
           style: TextStyle(
@@ -435,7 +436,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     required String reportUrl,
   }) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(left: 18.0, right: 18, top: 0, bottom: 10),
       child: Container(
         width: 386,
         height: 136,
@@ -495,11 +496,15 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                     ],
                   ),
                   const Spacer(),
-                  Text(
-                    time,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.black54,
+                  const SizedBox(height: 8,),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Text(
+                      time,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.black54,
+                      ),
                     ),
                   ),
                 ],
@@ -508,7 +513,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
+                padding: const EdgeInsets.only(left: 10,right: 10,bottom: 10.0),
                 child: Container(
                   height: 48,
                   width: 357,
