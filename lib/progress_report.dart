@@ -17,39 +17,39 @@ class ProgressReportScreen extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.grey.shade300,
-         appBar: AppBar(
-  backgroundColor: Colors.grey[50],
-  elevation: 0,
-  automaticallyImplyLeading: false,
-  title: Padding(
-    padding: const EdgeInsets.only(left: 1.0), 
-    child: Row(
-      children: [
-        IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-           color: Color(0xFF48116A), 
-            size: 30, 
+        appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 1.0),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Color(0xFF48116A),
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(width: 5),
+                const Text(
+                  'Progress Report',
+                  style: TextStyle(
+                    color: Color(0xFF48116A),
+                    fontSize: 22,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          toolbarHeight: 70,
         ),
-       const SizedBox(width: 5), 
-        const Text(
-          'Progress Report',
-          style: TextStyle(
-            color: Color(0xFF48116A),
-            fontSize: 22,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    ),
-  ),
-  toolbarHeight: 70,
-),
         body: const ProgressReportPage(),
       ),
     );
@@ -293,19 +293,23 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   Widget _buildBackButton(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.only(left: 1.0, ),
+      padding: EdgeInsets.only(
+        left: 1.0,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-       
-        ],
+        children: [],
       ),
     );
   }
 
   Widget _buildCurrentMonthCard() {
     return Padding(
-      padding: const EdgeInsets.only(top: 5.0, right: 18, left: 18,),
+      padding: const EdgeInsets.only(
+        top: 5.0,
+        right: 18,
+        left: 18,
+      ),
       child: Container(
         width: 386,
         height: 160,
@@ -333,7 +337,8 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.only(left: 10.0, right: 10, bottom: 10, top: 0),
+          padding:
+              const EdgeInsets.only(left: 10.0, right: 10, bottom: 10, top: 0),
           child: Row(
             children: [
               Expanded(
@@ -350,7 +355,6 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                           color: Colors.white,
                         ),
                       ),
-                    
                       const Text(
                         '24 Jan 2025 - Today',
                         style: TextStyle(
@@ -395,7 +399,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
               Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 10,right: 10.0),
+                  padding: const EdgeInsets.only(left: 10, right: 10.0),
                   child: Image.asset(
                     'assets/listaim@3x.png',
                     width: 100,
@@ -412,7 +416,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   Widget _buildPreviousMonthsReports() {
     return const Padding(
-      padding: EdgeInsets.only( top: 10.0),
+      padding: EdgeInsets.only(top: 10.0),
       child: Align(
         alignment: Alignment.center,
         child: Text(
@@ -496,7 +500,9 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                     ],
                   ),
                   const Spacer(),
-                  const SizedBox(height: 8,),
+                  const SizedBox(
+                    height: 8,
+                  ),
                   Align(
                     alignment: Alignment.topRight,
                     child: Text(
@@ -513,7 +519,8 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(left: 10,right: 10,bottom: 10.0),
+                padding:
+                    const EdgeInsets.only(left: 10, right: 10, bottom: 10.0),
                 child: Container(
                   height: 48,
                   width: 357,

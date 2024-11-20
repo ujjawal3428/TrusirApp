@@ -34,7 +34,7 @@ class TeacherRegistrationData {
       'fathersName': fathersName,
       'mothersName': mothersName,
       'gender': gender,
-      'dob': dob,
+      'dob': dob?.toIso8601String(),
       'phoneNumber': phoneNumber,
       'qualification': qualification,
       'experience': experience,
@@ -332,9 +332,12 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               Row(
                 children: [
                   Checkbox(
-                    value: true,
+                    value: agreeToTerms,
                     onChanged: (bool? value) {
-                      agreeToTerms = value!;
+                      setState(() {
+                        agreeToTerms = value!;
+                        formData.agreetoterms = agreeToTerms;
+                      });
                     },
                   ),
                   const Text('I agree with the '),
