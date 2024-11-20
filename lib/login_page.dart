@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/enquiry.dart';
 import 'package:trusir/menu.dart';
 import 'package:trusir/otp_screen.dart';
 
@@ -160,13 +159,6 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
             height: responsive.safeHeight * 0.05,
             fit: BoxFit.contain,
           ),
-        ),
-        TextButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const EnquiryPage()),
-          ),
-          child: const Text('go'),
         ),
         _buildLanguageDropdown(responsive),
       ],
