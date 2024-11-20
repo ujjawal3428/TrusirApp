@@ -9,6 +9,23 @@ import 'package:trusir/notice.dart';
 import 'package:trusir/setting.dart';
 import 'package:trusir/teacher_pf_page.dart';
 
+class StudentProfile {
+  final String name;
+  final String image;
+
+  StudentProfile({
+    required this.name,
+    required this.image,
+  });
+
+  factory StudentProfile.fromJson(Map<String, dynamic> json) {
+    return StudentProfile(
+      name: json['name'],
+      image: json['image'],
+    );
+  }
+}
+
 class TeacherFacilities extends StatefulWidget {
   const TeacherFacilities({super.key});
 
@@ -17,10 +34,40 @@ class TeacherFacilities extends StatefulWidget {
 }
 
 class _TeacherFacilitiesState extends State<TeacherFacilities> {
+  List<StudentProfile> studentprofile = [];
   String name = '';
   String address = '';
   String phoneNumber = '';
   String profilePhoto = '';
+
+  final apiBase = '$baseUrl/my-students';
+
+  Future<void> fetchStudentProfiles({int page = 1}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
+    final url = '$apiBase/$userID';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      setState(() {
+        // Initial fetch
+        studentprofile =
+            data.map((json) => StudentProfile.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception('Failed to load student profiles');
+    }
+  }
+
+  final List<Color> cardColors = [
+    Colors.blue.shade100,
+    Colors.yellow.shade100,
+    Colors.pink.shade100,
+    Colors.green.shade100,
+    Colors.purple.shade100,
+  ];
 
   final Map<String, Map<String, double>> imageSizes = {
     'assets/myprofile.png': {'width': 50, 'height': 50},
@@ -41,6 +88,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
   void initState() {
     super.initState();
     fetchProfileData();
+    fetchStudentProfiles();
   }
 
   Future<void> fetchProfileData() async {
@@ -264,7 +312,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                       child: Padding(
                         padding: EdgeInsets.only(top: 20, left: 10, bottom: 10),
                         child: Text(
-                          'Student Profile',
+                          'Student Profiles',
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w500,
@@ -273,69 +321,80 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                       ),
                     ),
                     SizedBox(
-                      height: 129,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 7, vertical: 10),
-                        children: [
-                          buildHorizontalTile(context, const Color(0xFFB3E5FC),
-                              'assets/sir.png', 'Rakesh Tripathi', () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const StudentProfileScreen(),
-                              ),
-                            );
-                          }),
-                          const SizedBox(width: 17),
-                          buildHorizontalTile(context, const Color(0xFFF59D80),
-                              'assets/sir.png', 'Rakesh Tripathi', () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const StudentProfileScreen(),
-                              ),
-                            );
-                          }),
-                          const SizedBox(width: 17),
-                          buildHorizontalTile(context, const Color(0xFFF8BBD0),
-                              'assets/sir.png', 'Rakesh Tripathi', () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const StudentProfileScreen(),
-                              ),
-                            );
-                          }),
-                          const SizedBox(width: 17),
-                          buildHorizontalTile(context, const Color(0xFFFFCDD2),
-                              'assets/sir.png', 'Rakesh Tripathi', () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const StudentProfileScreen(),
-                              ),
-                            );
-                          }),
-                          const SizedBox(width: 17),
-                          buildHorizontalTile(context, const Color(0xFF00E533),
-                              'assets/sir.png', 'Rakesh Tripathi', () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const StudentProfileScreen(),
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
-                    ),
+                        height: 130,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ...studentprofile.asMap().entries.map((entry) {
+                                  int index = entry.key;
+                                  StudentProfile studentProfile = entry.value;
+
+                                  // Cycle through colors using the modulus operator
+                                  Color cardColor =
+                                      cardColors[index % cardColors.length];
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const StudentProfileScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5.0),
+                                      child: Container(
+                                        width: 94,
+                                        height: 120,
+                                        decoration: BoxDecoration(
+                                          color: cardColor,
+                                          borderRadius:
+                                              BorderRadius.circular(22),
+                                          border: Border.all(
+                                            color: cardColor,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.network(
+                                              studentProfile.image,
+                                              width: 50,
+                                              height: 50,
+                                              fit: BoxFit.contain,
+                                            ),
+                                            const SizedBox(height: 4),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 4),
+                                              child: Text(
+                                                studentProfile.name,
+                                                textAlign: TextAlign.center,
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ]),
+                        )),
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -394,52 +453,6 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildHorizontalTile(BuildContext context, Color color,
-      String imagePath, String title, VoidCallback onTap) {
-    final imageSize = imageSizes[imagePath] ?? {'width': 40.0, 'height': 40.0};
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 94,
-        height: 129,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(
-            color: color,
-            width: 1,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              imagePath,
-              width: imageSize['width']!,
-              height: imageSize['height']!,
-              fit: BoxFit.contain,
-            ),
-            const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

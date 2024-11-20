@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 
 class Notice {
@@ -36,10 +37,12 @@ class _NoticeScreenState extends State<NoticeScreen> {
   bool isLoadingMore = false;
   int currentPage = 1;
   bool hasMore = true;
-  final apiBase = '$baseUrl/my-notice/testId';
+  final apiBase = '$baseUrl/my-notice';
 
   Future<void> fetchNotices({int page = 1}) async {
-    final url = '$apiBase?page=$page&data_per_page=10';
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
+    final url = '$apiBase/$userID?page=$page&data_per_page=10';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
