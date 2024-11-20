@@ -117,7 +117,9 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
           ),
           actions: [
             InkWell(
-              onTap: (){logout(context);}
+              onTap: () {
+                logout(context);
+              },
               child: Padding(
                 padding: const EdgeInsets.only(top: 20, right: 20.0),
                 child: Image.asset(
