@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/student_facilities.dart';
-import 'package:trusir/teacher_facilities.dart';
+import 'package:trusir/student_homepage.dart';
+import 'package:trusir/teacher_homepage.dart';
 
 class PopupScreen extends StatelessWidget {
   const PopupScreen({super.key});
@@ -31,10 +31,10 @@ class PopupScreen extends StatelessWidget {
               ),
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const Studentfacilities(),
+                      builder: (context) => const StudentHomepage(),
                     ),
                   );
                 },
@@ -59,7 +59,7 @@ class PopupScreen extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const TeacherFacilities(),
+                      builder: (context) => const Teacherhomepage(),
                     ),
                   );
                 },

@@ -1,7 +1,6 @@
-import 'dart:io';
-
+// import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/main_screen.dart';
@@ -69,8 +68,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   DateTime? selectedDOB;
   bool agreeToTerms = false;
   final StudentRegistrationData formData = StudentRegistrationData();
-  File? _profileImage;
-  File? _adhaarImage;
+  // File? _profileImage;
+  // File? _adhaarImage;
 
   Future<void> submitForm() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -98,27 +97,27 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     }
   }
 
-  Future<void> _pickprofileImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  // Future<void> _pickprofileImage() async {
+  //   final picker = ImagePicker();
+  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-      });
-    }
-  }
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _profileImage = File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
-  Future<void> _pickadhaarImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  // Future<void> _pickadhaarImage() async {
+  //   final picker = ImagePicker();
+  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
-      setState(() {
-        _adhaarImage = File(pickedFile.path);
-      });
-    }
-  }
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _adhaarImage = File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
   Future<void> _selectDOB(BuildContext context) async {
     final DateTime? picked = await showDatePicker(

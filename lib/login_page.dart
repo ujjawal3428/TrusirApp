@@ -102,12 +102,12 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     if (userData != null) {
       bool isNewUser = userData['new_user'] ?? false;
       if (userData['role'] == 'student' && isNewUser) {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const StudentHomepage()),
         );
       } else if (userData['role'] == 'teacher' && isNewUser) {
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const Teacherhomepage()),
         );
@@ -362,26 +362,38 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
   Widget _buildPhoneInput(ResponsiveDimensions responsive) {
     return Stack(
       children: [
-        Image.asset(
-          'assets/textfield.png',
+        // Background shape for the input field
+        Container(
           width: double.infinity,
           height: responsive.safeHeight * 0.08,
-          fit: BoxFit.fill,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(35),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: responsive.screenWidth * 0.03,
-            vertical: responsive.safeHeight * 0.015,
+            horizontal: responsive.screenWidth * 0.04,
+            vertical: responsive.safeHeight * 0.01,
           ),
           child: Center(
             child: Row(
               children: [
+                // Country flag icon
                 Image.asset(
                   'assets/indianflag.png',
                   width: responsive.flagIconSize,
                   height: responsive.flagIconSize,
                 ),
                 SizedBox(width: responsive.screenWidth * 0.02),
+                // Country code text
                 Text(
                   "+91 |",
                   style: TextStyle(
@@ -391,11 +403,16 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                   ),
                 ),
                 SizedBox(width: responsive.screenWidth * 0.02),
+                // Mobile number input field
                 Expanded(
                   child: TextField(
                     keyboardType: TextInputType.phone,
                     controller: _phonecontroller,
-                    style: TextStyle(fontSize: responsive.screenWidth * 0.04),
+                    style: TextStyle(
+                      fontSize: responsive.screenWidth * 0.04,
+                      color: Colors.black,
+                      fontFamily: 'Poppins',
+                    ),
                     decoration: InputDecoration(
                       hintText: 'Mobile Number',
                       hintStyle: TextStyle(

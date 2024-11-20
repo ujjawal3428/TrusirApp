@@ -3,8 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/main_screen.dart';
-import 'package:trusir/student_homepage.dart';
-import 'package:trusir/teacher_homepage.dart';
 import 'package:trusir/teacher_main_screen.dart';
 
 void main() {
@@ -27,9 +25,9 @@ class MyApp extends StatelessWidget {
       // No user is logged in
       return const TrusirLoginPage();
     } else if (role == 'student' && isNewUser) {
-      return const StudentHomepage();
+      return const TrusirLoginPage();
     } else if (role == 'teacher' && isNewUser) {
-      return const Teacherhomepage();
+      return const TrusirLoginPage();
     } else if (role == 'student' && !isNewUser) {
       return const MainScreen();
     } else if (role == 'teacher' && !isNewUser) {
