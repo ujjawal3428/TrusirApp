@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/login_page.dart';
+import 'package:trusir/student_profile.dart';
 import 'package:trusir/teacher_myprofile.dart';
 import 'package:trusir/notice.dart';
 import 'package:trusir/setting.dart';
@@ -102,7 +103,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                 logout(context);
               },
               child: Padding(
-                padding: const EdgeInsets.only(top: 20, right: 20.0),
+                padding: const EdgeInsets.only(top: 0, right: 20.0),
                 child: Image.asset(
                   'assets/logout@3x.png',
                   width: 103,
@@ -118,7 +119,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
             return SingleChildScrollView(
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Column(
                   children: [
                     Container(
@@ -159,7 +160,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     name,
                                     style: const TextStyle(
                                       color: Colors.white,
-                                      fontSize: 22,
+                                      fontSize: 20,
                                       fontFamily: 'Poppins',
                                       fontWeight: FontWeight.w700,
                                     ),
@@ -171,7 +172,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                       style: const TextStyle(
                                         fontFamily: 'Poppins',
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -244,15 +245,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 //   ),
                                 // );
                               }),
-                              buildTile(context, const Color(0xFFFFCDD2),
-                                  'assets/pen@3x.png', 'Write to us', () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => const FeePaymentScreen(),
-                                //   ),
-                                // );
-                              }),
+                            
                               buildTile(context, const Color(0xFF00E533),
                                   'assets/setting.png', 'Setting', () {
                                 Navigator.push(
@@ -271,10 +264,10 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Padding(
-                        padding: EdgeInsets.only(left: 20, bottom: 10),
+                        padding: EdgeInsets.only(top: 20,left: 10, bottom: 10),
                         child: Text(
                           'Student Profile',
-                          style: TextStyle(fontSize: 16),
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, fontFamily: 'Poppins'),
                         ),
                       ),
                     ),
@@ -283,14 +276,14 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 25, vertical: 10),
+                            horizontal: 7, vertical: 10),
                         children: [
                           buildHorizontalTile(context, const Color(0xFFB3E5FC),
                               'assets/sir.png', 'Rakesh Tripathi', () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const NoticeScreen(),
+                                builder: (context) => const StudentProfileScreen(),
                               ),
                             );
                           }),
