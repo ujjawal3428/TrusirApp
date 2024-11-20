@@ -1,36 +1,89 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:trusir/api.dart';
 
 class Notice {
-  final String paymenttype;
+  final String noticetitle;
   final String date;
-  final String transactionid;
-  final String paymentmethod;
-  final String amount;
-  final String time;
+  final String notice;
 
   Notice({
-    required this.paymenttype,
-    required this.paymentmethod,
-    required this.transactionid,
+    required this.noticetitle,
+    required this.notice,
     required this.date,
-    required this.time,
-    required this.amount,
   });
 
   factory Notice.fromJson(Map<String, dynamic> json) {
     return Notice(
-      paymenttype: json['payment_type'],
-      paymentmethod: json['payment_method'],
-      date: json['date'],
-      time: json['time'],
-      amount: json['amount'],
-      transactionid: json['transaction_id'],
+      noticetitle: json['notice_title'],
+      notice: json['notice'],
+      date: json['posted_on'],
     );
   }
 }
 
-class NoticeScreen extends StatelessWidget {
+class NoticeScreen extends StatefulWidget {
   const NoticeScreen({super.key});
+
+  @override
+  State<NoticeScreen> createState() => _NoticeScreenState();
+}
+
+class _NoticeScreenState extends State<NoticeScreen> {
+  List<Notice> notices = [];
+  bool isLoading = true;
+  bool isLoadingMore = false;
+  int currentPage = 1;
+  bool hasMore = true;
+  final apiBase = '$baseUrl/my-notice/testId';
+
+  Future<void> fetchNotices({int page = 1}) async {
+    final url = '$apiBase?page=$page&data_per_page=10';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      setState(() {
+        if (page == 1) {
+          // Initial fetch
+          notices = data.map((json) => Notice.fromJson(json)).toList();
+        } else {
+          // Append new data
+          notices.addAll(data.map((json) => Notice.fromJson(json)));
+        }
+
+        isLoading = false;
+        isLoadingMore = false;
+
+        // Check if more data is available
+        if (data.isEmpty) {
+          hasMore = false;
+        }
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+        isLoadingMore = false;
+      });
+      throw Exception('Failed to load notices');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchNotices();
+  }
+
+  final List<Color> cardColors = [
+    Colors.blue.shade100,
+    Colors.yellow.shade100,
+    Colors.pink.shade100,
+    Colors.green.shade100,
+    Colors.purple.shade100,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -77,91 +130,92 @@ class NoticeScreen extends StatelessWidget {
                   left: 15, right: 15, bottom: 15, top: 0),
               child: Column(
                 children: [
-                  _buildnoticetile(
-                      'Republic Day Holiday',
-                      'January 26, 2023',
-                      'The class will have a off on 26th Jan 20233 on occasion of Republic Day',
-                      const Color.fromARGB(255, 251, 202, 218),
-                      'assets/bell.png'),
-                  _buildnoticetile(
-                      'Republic Day Holiday',
-                      'January 26, 2023',
-                      'The class will have a off on 26th Jan 20233 on occasion of Republic Day',
-                      const Color.fromARGB(255, 182, 211, 255),
-                      'assets/bell.png'),
-                  _buildnoticetile(
-                      'Republic Day Holiday',
-                      'January 26, 2023',
-                      'The class will have a off on 26th Jan 20233 on occasion of Republic Day',
-                      const Color.fromARGB(255, 255, 229, 142),
-                      'assets/bell.png'),
-                  TextButton(
-                      onPressed: () {}, child: const Text('Load More...'))
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+                  ...notices.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    Notice notice = entry.value;
 
-  Widget _buildnoticetile(String title, String date, String notice,
-      Color bgcolor, String iconPath) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: 386,
-            height: 136,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: bgcolor,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 55, top: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
+                    // Cycle through colors using the modulus operator
+                    Color cardColor = cardColors[index % cardColors.length];
+
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, top: 20, right: 10),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            width: 386,
+                            height: 136,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: cardColor,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 55, top: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    notice.noticetitle,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    'Posted on : ${notice.date}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    notice.notice,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 10,
+                            left: 10,
+                            child: Image.asset(
+                              'assets/bell.png',
+                              width: 36,
+                              height: 36,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                  if (hasMore)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: isLoadingMore
+                          ? const CircularProgressIndicator()
+                          : TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  isLoadingMore = true;
+                                  currentPage++;
+                                });
+                                fetchNotices(page: currentPage);
+                              },
+                              child: const Text('Load More...'),
+                            ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    'Posted on : $date',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    notice,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  ),
                 ],
               ),
-            ),
-          ),
-          Positioned(
-            top: 10,
-            left: 10,
-            child: Image.asset(
-              iconPath,
-              width: 36,
-              height: 36,
             ),
           ),
         ],
