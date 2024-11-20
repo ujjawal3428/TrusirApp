@@ -185,13 +185,13 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Color> containerColors = [
-      Colors.lightBlue.shade50,
-      Colors.lightGreen.shade50,
-      Colors.amber.shade50,
-      Colors.pink.shade50,
-      Colors.lime.shade50,
-      Colors.orange.shade50,
-      Colors.teal.shade50,
+      Colors.lightBlue.shade100,
+      Colors.lightGreen.shade100,
+      Colors.amber.shade100,
+      Colors.pink.shade100,
+      Colors.lime.shade100,
+      Colors.orange.shade100,
+      Colors.teal.shade100,
     ];
 
     return Scaffold(
@@ -201,7 +201,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   elevation: 0,
   automaticallyImplyLeading: false,
   title: Padding(
-    padding: const EdgeInsets.only(left: 1.0), 
+    padding: const EdgeInsets.only(left: 1.0),
     child: Row(
       children: [
         IconButton(
@@ -259,7 +259,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                           int index = entry.key;
                           var test = entry.value;
                           return Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.only(top: 16.0, right: 16, left:16,),
                             child: Container(
                               width: MediaQuery.of(context).size.width * 1,
                               decoration: BoxDecoration(
@@ -302,7 +302,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                                   test['date'],
                                                   style: const TextStyle(
                                                     fontSize: 14,
-                                                                                                        color: Colors.black,
+                                               color: Colors.black,
                                                     fontWeight: FontWeight.w400,
                                                   ),
                                                 ),

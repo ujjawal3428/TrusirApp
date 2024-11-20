@@ -143,7 +143,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               // Top image
               Center(
                 child: Image.asset(
-                  'assets/teachersregisteration@4x.png',
+                  'assets/groupregister.png',
                   width: 386,
                   height: 261,
                 ),

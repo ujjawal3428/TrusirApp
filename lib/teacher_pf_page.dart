@@ -109,18 +109,18 @@ class MyProfileScreenState extends State<Teacherpfpage> {
             children: [
               SizedBox(
                 width: 428,
-                height: 260,
+                height: 180,
                 child: Stack(
                   children: [
                     Positioned(
-                      bottom: 20,
+                     
                       left: 0,
                       right: 0,
                       child: Column(
                         children: [
                           Container(
-                            width: 175,
-                            height: 175,
+                            width: 130,
+                            height: 130,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
@@ -133,7 +133,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                           Text(
                             name,
                             style: const TextStyle(
-                              fontSize: 30,
+                              fontSize: 20,
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF48116A),
                             ),

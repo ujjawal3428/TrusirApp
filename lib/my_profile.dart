@@ -91,7 +91,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                     color: Color(0xFF48116A),
                     fontSize: 22,
                     fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const Spacer(),
@@ -136,20 +136,17 @@ class MyProfileScreenState extends State<MyProfileScreen> {
          SizedBox(
   width: screenWidth,
   child: Column(
-    mainAxisAlignment: MainAxisAlignment.center, // Center children vertically
-    crossAxisAlignment: CrossAxisAlignment.center, // Center children horizontally
+    mainAxisAlignment: MainAxisAlignment.center, 
+    crossAxisAlignment: CrossAxisAlignment.center, 
     children: [
       Padding(
-        padding: EdgeInsets.only(
-          top: isLargeScreen ? 60 : 40,
-          bottom: 20,
-        ),
+        padding: const EdgeInsets.only(top: 20.0),
         child: Column(
           children: [
             Center(
               child: Container(
-                width: isLargeScreen ? 250 : 175,
-                height: isLargeScreen ? 250 : 175,
+                width: isLargeScreen ? 250 : 130,
+                height: isLargeScreen ? 250 : 130,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
@@ -159,13 +156,13 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 7),
             Center(
               child: Text(
                 name,
                 style: TextStyle(
-                  fontSize: isLargeScreen ? 36 : 30,
-                  fontWeight: FontWeight.w700,
+                  fontSize: isLargeScreen ? 22 : 20,
+                  fontWeight: FontWeight.w500,
                   color: const Color(0xFF48116A),
                 ),
               ),
@@ -178,7 +175,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
   )
             ),
                 // Info rows
-                const SizedBox(height: 10),
+                const SizedBox(height: 18),
                 buildInfoRow(
                   'assets/pastry@3x.png',
                   'Date of Birth',
@@ -224,14 +221,14 @@ class MyProfileScreenState extends State<MyProfileScreen> {
     Color backgroundColor,
   ) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0, right: 10),
+      padding: const EdgeInsets.only(left: 18.0, right: 18),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Icon container
           Container(
-            width: isLargeScreen ? 100 : 75,
-            height: isLargeScreen ? 100 : 75,
+            width: isLargeScreen ? 100 : 65,
+            height: isLargeScreen ? 100 : 65,
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(10),
@@ -244,15 +241,15 @@ class MyProfileScreenState extends State<MyProfileScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 15),
+          const SizedBox(width: 12),
           // Text container
           Flexible(
             child: Container(
-              height: isLargeScreen ? 100 : 75,
+              height: isLargeScreen ? 100 : 65,
               width: isLargeScreen ? 400 : 306,
               decoration: BoxDecoration(
                 color: backgroundColor,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Padding(
                 padding: const EdgeInsets.only(
@@ -262,8 +259,8 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                   child: Text(
                     value.isNotEmpty ? value : 'Loading...',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: isLargeScreen ? 22 : 18,
+                      fontWeight: FontWeight.w500,
+                      fontSize: isLargeScreen ? 22 : 16,
                     ),
                   ),
                 ),
