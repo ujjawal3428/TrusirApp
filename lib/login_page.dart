@@ -160,7 +160,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
           await prefs.setString('userID', responseData['uerID']);
           await prefs.setString('phone', responseData['phone_number']);
           await prefs.setString('role', responseData['role']);
-          // await prefs.setString('new_user', responseData['new_user']);
+          await prefs.setBool('new_user', responseData['new_user']);
           print('Data fetched from API and cached.');
           return responseData;
         } else {
