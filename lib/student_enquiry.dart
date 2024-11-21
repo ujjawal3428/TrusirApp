@@ -181,14 +181,14 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
               controller: controllers,
               textAlign: TextAlign.start,
               decoration: InputDecoration(
-                hintText: hintText,
+                labelText: hintText,
                 hintStyle: const TextStyle(
                   fontFamily: 'Poppins-SemiBold',
                   color: Color(0xFF7E7E7E),
                 ),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(
-                  vertical: 18,
+                  vertical: 10,
                   horizontal: 10,
                 ),
               ),
