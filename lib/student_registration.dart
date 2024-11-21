@@ -649,6 +649,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     return Container(
       height: 58,
       width: 184,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -661,10 +662,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       child: InkWell(
         onTap: onTap,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: Text(value ?? hintText),
               ),
             ),

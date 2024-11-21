@@ -8,10 +8,8 @@ class StudentHomepage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      
       body: Stack(
         children: [
-          
           // Main Content
           SingleChildScrollView(
             padding: const EdgeInsets.only(
@@ -20,7 +18,6 @@ class StudentHomepage extends StatelessWidget {
               top: 16.0,
               bottom: 100.0,
             ),
-            
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -60,8 +57,7 @@ class StudentHomepage extends StatelessWidget {
                     fontFamily: 'Poppins',
                   ),
                 ),
-                const Divider(
-                    color: Colors.black, thickness: 2, endIndent: 90),
+                const Divider(color: Colors.black, thickness: 2, endIndent: 90),
                 const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
@@ -195,7 +191,6 @@ class StudentHomepage extends StatelessWidget {
                         padding: EdgeInsets.only(
                           top: 10,
                           left: 6,
-                         
                         ),
                         child: Align(
                           alignment: Alignment.centerLeft,
@@ -361,7 +356,7 @@ class StudentHomepage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) =>  StudentRegistrationPage(),
+                        builder: (context) => const StudentRegistrationPage(),
                       ),
                     );
                   },
@@ -395,35 +390,34 @@ class StudentHomepage extends StatelessWidget {
             ),
           ),
           Positioned(
-              right: 13,
-              top: MediaQuery.of(context).size.height * 0.5 - 28, 
-              child: SizedBox(
-                height: 50,
-                width: 50,
-                child: FloatingActionButton(
-                  onPressed: () {
-                  },
-                  child: Image.asset('assets/whatsapp@3x.png',
-                  ),
+            right: 13,
+            top: MediaQuery.of(context).size.height * 0.5 - 28,
+            child: SizedBox(
+              height: 50,
+              width: 50,
+              child: FloatingActionButton(
+                onPressed: () {},
+                child: Image.asset(
+                  'assets/whatsapp@3x.png',
                 ),
               ),
             ),
-            Positioned(
-              right: 13,
-              top: MediaQuery.of(context).size.height * 0.58 - 28, 
-              child: SizedBox(
-                height: 50,
-                width: 50,
-                child: FloatingActionButton(
-                  onPressed: () {
-                  },
-                  child: Image.asset('assets/whatsapp@3x.png',
-                  ),
+          ),
+          Positioned(
+            right: 13,
+            top: MediaQuery.of(context).size.height * 0.58 - 28,
+            child: SizedBox(
+              height: 50,
+              width: 50,
+              child: FloatingActionButton(
+                onPressed: () {},
+                child: Image.asset(
+                  'assets/whatsapp@3x.png',
                 ),
               ),
             ),
+          ),
         ],
-        
       ),
     );
   }
