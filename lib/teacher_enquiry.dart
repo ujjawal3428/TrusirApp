@@ -89,9 +89,6 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
@@ -133,13 +130,11 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-     
               Center(
                 child: Image.asset(
                   'assets/Teacher_Enquiry2.png',
                 ),
               ),
-        
 
               // Text Box with Image Background
               _buildTextFieldWithBackground(

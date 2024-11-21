@@ -24,6 +24,7 @@ dependencies:
   webview_flutter: ^4.10.0
   shared_preferences: ^2.3.3
   image_picker: ^1.1.2
+  intl:
   
 
 dev_dependencies:

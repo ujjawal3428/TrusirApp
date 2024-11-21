@@ -4,6 +4,7 @@ import 'package:trusir/api.dart';
 import 'package:trusir/main_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class StudentRegistrationData {
   String? studentName;
@@ -20,18 +21,20 @@ class StudentRegistrationData {
   String? area;
   String? pincode;
   String? address;
+  String? timeslot;
   String? photoPath;
   String? aadharFrontPath;
   String? aadharBackPath;
   bool? agreetoterms;
 
   Map<String, dynamic> toJson() {
+    final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
     return {
       'studentName': studentName,
       'fathersName': fathersName,
       'mothersName': mothersName,
       'gender': gender,
-      'dob': dob?.toIso8601String(),
+      'dob': dob != null ? dateFormatter.format(dob!) : null,
       'schoolName': schoolName,
       'medium': medium,
       'studentClass': studentClass,
@@ -41,6 +44,7 @@ class StudentRegistrationData {
       'area': area,
       'pincode': pincode,
       'address': address,
+      'time_slot': timeslot,
       'photoPath': photoPath,
       'aadharfrontPath': aadharFrontPath,
       'aadharbackPath': aadharBackPath,
@@ -66,10 +70,38 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   DateTime? selectedDOB;
   bool agreeToTerms = false;
 
+  final List<String> timeSlots = [
+    "06:00 AM - 07:00 AM",
+    "07:00 AM - 08:00 AM",
+    "08:00 AM - 09:00 AM",
+    "09:00 AM - 10:00 AM",
+    "10:00 AM - 11:00 AM",
+    "11:00 AM - 12:00 PM",
+    "12:00 PM - 01:00 PM",
+    "02:00 PM - 03:00 PM",
+    "03:00 PM - 04:00 PM",
+    "04:00 PM - 05:00 PM",
+    "05:00 PM - 06:00 PM",
+    "06:00 PM - 07:00 PM",
+    "08:00 PM - 09:00 PM",
+    "09:00 PM - 10:00 PM",
+  ];
+
+  final Set<String> selectedSlots = {};
+  String selectedSlotsString = "";
+
+  void updateSelectedSlots(int index) {
+    setState(() {
+      selectedSlotsString = selectedSlots.join(", ");
+      studentForms[index].timeslot = selectedSlotsString;
+    });
+  }
+
   Future<void> postStudentData({
     required List<StudentRegistrationData> studentFormsData,
   }) async {
-    // Preparing the data to send to the server
+    final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
+
     final Map<String, dynamic> payload = {
       "phone": phoneNum,
       "number_of_students": numberOfStudents,
@@ -80,7 +112,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           "father_name": student.fathersName,
           "mother_name": student.mothersName,
           "gender": student.gender,
-          "DOB": student.dob?.toIso8601String(),
+          "DOB":
+              student.dob != null ? dateFormatter.format(student.dob!) : null,
           "school_name": student.schoolName,
           "medium": student.medium,
           "class": student.studentClass,
@@ -90,11 +123,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           "area": student.area,
           "pincode": student.pincode,
           "address": student.address,
-          "time_slot": "6:00am-7:00am", // Update this dynamically if needed
+          "time_slot": student.timeslot, // Update this dynamically if needed
           "profile": student.photoPath,
           "adhaar_front": student.aadharFrontPath,
           "adhaar_back": student.aadharBackPath,
-          "agree_to_terms": agreeToTerms
+          "agree_to_terms": agreeToTerms,
         };
       }).toList(),
     };
@@ -536,6 +569,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 displayPath: studentForms[index].aadharBackPath),
           ],
         ),
+        const Text('Time Slot:'),
+        const SizedBox(height: 10),
+        _buildTimeSlotField(index),
         const SizedBox(height: 10),
         // Add more fields as needed
       ],
@@ -628,7 +664,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(value ?? hintText),
               ),
             ),
@@ -682,6 +718,35 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTimeSlotField(int index) {
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: timeSlots.map((slot) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Checkbox(
+              value: selectedSlots.contains(slot),
+              onChanged: (value) {
+                setState(() {
+                  if (value ?? false) {
+                    selectedSlots.add(slot);
+                  } else {
+                    selectedSlots.remove(slot);
+                  }
+                  // Update the variable whenever the state changes
+                  updateSelectedSlots(index);
+                });
+              },
+            ),
+            Text(slot),
+          ],
+        );
+      }).toList(),
     );
   }
 }
