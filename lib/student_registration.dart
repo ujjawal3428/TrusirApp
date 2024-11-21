@@ -55,7 +55,8 @@ class StudentRegistrationData {
 }
 
 class StudentRegistrationPage extends StatefulWidget {
-  const StudentRegistrationPage({super.key});
+  final bool enablephonefield;
+  const StudentRegistrationPage({super.key, required this.enablephonefield});
 
   @override
   StudentRegistrationPageState createState() => StudentRegistrationPageState();
@@ -85,7 +86,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     String? savedPhoneNumber =
         prefs.getString('phone_number'); // Replace with your key
     if (savedPhoneNumber != null) {
-      _phoneController.text = savedPhoneNumber; // Set the text field value
+      _phoneController.text = savedPhoneNumber;
+      phoneNum = savedPhoneNumber; // Set the text field value
     }
   }
 

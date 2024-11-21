@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:trusir/student_registration.dart';
 
 class StudentHomepage extends StatelessWidget {
-  const StudentHomepage({super.key});
+  final bool enablephone;
+  const StudentHomepage({super.key, required this.enablephone});
 
   @override
   Widget build(BuildContext context) {
@@ -356,7 +357,9 @@ class StudentHomepage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const StudentRegistrationPage(),
+                        builder: (context) => StudentRegistrationPage(
+                          enablephonefield: enablephone,
+                        ),
                       ),
                     );
                   },

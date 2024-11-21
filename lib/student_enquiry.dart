@@ -61,7 +61,10 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
         if (newuser == true) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const StudentHomepage()),
+            MaterialPageRoute(
+                builder: (context) => const StudentHomepage(
+                      enablephone: false,
+                    )),
           );
         } else {
           Navigator.pushReplacement(
@@ -129,8 +132,7 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
                   'assets/studentenquiry2.png',
                 ),
               ),
-           
-                
+
               // Text Boxes with Background Images
               _buildTextFieldWithBackground(
                   hintText: 'Student Name', controllers: _namecontroller),
@@ -144,7 +146,7 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
               _buildTextFieldWithBackground(
                   hintText: 'Pincode', controllers: _pincodecontroller),
               SizedBox(height: screenHeight * 0.05),
-                
+
               // Enquire Button
               Center(
                 child: GestureDetector(
