@@ -88,6 +88,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     if (savedPhoneNumber != null) {
       _phoneController.text = savedPhoneNumber;
       phoneNum = savedPhoneNumber; // Set the text field value
+    } else {
+      phoneNum = _phoneController.text;
     }
   }
 
@@ -128,7 +130,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
 
     final Map<String, dynamic> payload = {
-      "phone": phoneNum,
+      "phone": phoneNum ?? _phoneController.text,
       "number_of_students": numberOfStudents,
       "role": "student",
       "data": studentForms.map((student) {
