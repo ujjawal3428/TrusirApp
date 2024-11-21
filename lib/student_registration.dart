@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/main_screen.dart';
@@ -70,6 +71,23 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   String? subject;
   DateTime? selectedDOB;
   bool agreeToTerms = false;
+  final TextEditingController _phoneController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPhoneNumber();
+  }
+
+  // Load the phone number from SharedPreferences
+  Future<void> _loadPhoneNumber() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedPhoneNumber =
+        prefs.getString('phone_number'); // Replace with your key
+    if (savedPhoneNumber != null) {
+      _phoneController.text = savedPhoneNumber; // Set the text field value
+    }
+  }
 
   final List<String> timeSlots = [
     "06:00 AM - 07:00 AM",
@@ -310,9 +328,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              _buildTextField("Phone Number", onChanged: (value) {
-                phoneNum = value;
-              }),
+              _buildPhoneField("Phone Number"),
               const SizedBox(
                 height: 20,
               ),
@@ -402,9 +418,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                           duration: Duration(seconds: 1),
                                         ),
                                       );
-                                print(
-                                    "Student Data: ${studentForms.map((e) => e.toJson()).toList()}");
-                                // submitForm();
                               },
                               child: const Text(
                                 'Register',
@@ -416,7 +429,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         ),
                       ],
                     ),
-              // Submit Button
             ],
           ),
         ),
@@ -623,6 +635,34 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       ),
       child: TextField(
         onChanged: onChanged,
+        decoration: InputDecoration(
+          label: Text(hintText),
+          border: InputBorder.none,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPhoneField(
+    String hintText,
+  ) {
+    return Container(
+      height: 58,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: Colors.grey),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+        ],
+      ),
+      child: TextField(
+        controller: _phoneController,
+        enabled: false,
         decoration: InputDecoration(
           label: Text(hintText),
           border: InputBorder.none,
