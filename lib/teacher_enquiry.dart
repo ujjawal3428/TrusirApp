@@ -149,6 +149,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
 
               // Gender Selection
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _buildGenderCheckbox(
                     label: "Male",
@@ -225,22 +226,22 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
           height: 60,
         ),
         Positioned.fill(
-          child: TextField(
-            textAlign: TextAlign.start,
-            controller: controllers,
-            decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: const TextStyle(
-                fontFamily: 'Poppins-SemiBold',
-                color: Color(0xFF7E7E7E),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide.none,
-              ),
-              contentPadding: const EdgeInsets.symmetric(
-                vertical: 18,
-                horizontal: 20,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: TextField(
+              controller: controllers,
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                labelText: hintText,
+                hintStyle: const TextStyle(
+                  fontFamily: 'Poppins-SemiBold',
+                  color: Color(0xFF7E7E7E),
+                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 10,
+                ),
               ),
             ),
           ),
