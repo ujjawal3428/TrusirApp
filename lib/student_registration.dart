@@ -1,7 +1,5 @@
-// import 'dart:io';
 import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/main_screen.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +21,8 @@ class StudentRegistrationData {
   String? pincode;
   String? address;
   String? photoPath;
-  String? aadharCardPath;
+  String? aadharFrontPath;
+  String? aadharBackPath;
   bool? agreetoterms;
 
   Map<String, dynamic> toJson() {
@@ -43,13 +42,14 @@ class StudentRegistrationData {
       'pincode': pincode,
       'address': address,
       'photoPath': photoPath,
-      'aadharCardPath': aadharCardPath,
+      'aadharfrontPath': aadharFrontPath,
+      'aadharbackPath': aadharBackPath,
     };
   }
 }
 
 class StudentRegistrationPage extends StatefulWidget {
-  StudentRegistrationPage({super.key});
+  const StudentRegistrationPage({super.key});
 
   @override
   StudentRegistrationPageState createState() => StudentRegistrationPageState();
@@ -66,12 +66,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   DateTime? selectedDOB;
   bool agreeToTerms = false;
 
-  // File? _profileImage;
-  // File? _adhaarBackImage;
-  // File? _adhaarFrontImage;
-
   Future<void> postStudentData({
-    // required String phoneNumber,
     required List<StudentRegistrationData> studentFormsData,
   }) async {
     // Preparing the data to send to the server
@@ -96,12 +91,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           "pincode": student.pincode,
           "address": student.address,
           "time_slot": "6:00am-7:00am", // Update this dynamically if needed
-          "profile":
-              "https://th.bing.com/th/id/OIP.tjUOUBGnthmW762mbRAFdQHaE8?rs=1&pid=ImgDetMain.jpg",
-          "adhaar_front":
-              "https://th.bing.com/th/id/OIP.tjUOUBGnthmW762mbRAFdQHaE8?rs=1&pid=ImgDetMain.jpg",
-          "adhaar_back":
-              "https://th.bing.com/th/id/OIP.tjUOUBGnthmW762mbRAFdQHaE8?rs=1&pid=ImgDetMain.jpg",
+          "profile": student.photoPath,
+          "adhaar_front": student.aadharFrontPath,
+          "adhaar_back": student.aadharBackPath,
           "agree_to_terms": agreeToTerms
         };
       }).toList(),
@@ -132,27 +124,66 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     }
   }
 
-  // Future<void> _pickprofileImage() async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  Future<String> uploadImage(XFile imageFile) async {
+    final uri = Uri.parse('$baseUrl/api/upload-profile');
+    final request = http.MultipartRequest('POST', uri);
 
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _profileImage = File(pickedFile.path);
-  //     });
-  //   }
-  // }
+    // Add the image file to the request
+    request.files
+        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
 
-  // Future<void> _pickadhaarImage() async {
-  //   final picker = ImagePicker();
-  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    // Send the request
+    final response = await request.send();
 
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _adhaarImage = File(pickedFile.path);
-  //     });
-  //   }
-  // }
+    if (response.statusCode == 201) {
+      // Parse the response to extract the download URL
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse.containsKey('download_url')) {
+        return jsonResponse['download_url'] as String;
+      } else {
+        print('Download URL not found in the response.');
+        return 'null';
+      }
+    } else {
+      print('Failed to upload image: ${response.statusCode}');
+      return 'null';
+    }
+  }
+
+  Future<void> handleImageSelection(int index, String? path) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        // Upload the image and get the path
+        final uploadedPath = await uploadImage(pickedFile);
+        if (uploadedPath != 'null') {
+          setState(() {
+            // Example: Update the first student's photo path
+            if (path == 'profilephoto') {
+              studentForms[index].photoPath = uploadedPath;
+            } else if (path == 'aadharfront') {
+              studentForms[index].aadharFrontPath = uploadedPath;
+            } else if (path == 'aadharback') {
+              studentForms[index].aadharBackPath = uploadedPath;
+            }
+            //)
+          });
+          print('Image uploaded successfully: $uploadedPath');
+        } else {
+          print('Failed to upload the image.');
+        }
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      print('Error during image selection: $e');
+    }
+  }
 
   List<StudentRegistrationData> studentForms = [];
 
@@ -220,6 +251,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               _buildTextField("Phone Number", onChanged: (value) {
                 phoneNum = value;
               }),
+              const SizedBox(
+                height: 20,
+              ),
               // Number of Students Dropdown
               _buildDropdownField(
                 'No. of Students',
@@ -459,7 +493,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField('Upload Image', width: 200),
+            _buildFileUploadField('Upload Image',
+                width: 200,
+                index: index,
+                path: 'profilephoto',
+                displayPath: studentForms[index].photoPath),
           ],
         ),
         const SizedBox(height: 10),
@@ -473,7 +511,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField('Upload Image', width: 200),
+            _buildFileUploadField('Upload Image',
+                width: 200,
+                index: index,
+                path: 'aadharfront',
+                displayPath: studentForms[index].aadharFrontPath),
           ],
         ),
         const SizedBox(height: 10),
@@ -487,7 +529,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField('Upload Image', width: 200),
+            _buildFileUploadField('Upload Image',
+                width: 200,
+                index: index,
+                path: 'aadharback',
+                displayPath: studentForms[index].aadharBackPath),
           ],
         ),
         const SizedBox(height: 10),
@@ -557,71 +603,85 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       ),
     );
   }
-}
 
-Widget _buildTextFieldWithIcon(
-  String hintText,
-  IconData icon, {
-  required VoidCallback onTap,
-  String? value,
-}) {
-  return Container(
-    height: 58,
-    width: 184,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(22),
-      border: Border.all(color: Colors.grey),
-      boxShadow: [
-        BoxShadow(color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
-      ],
-    ),
-    child: InkWell(
-      onTap: onTap,
-      child: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Text(value ?? hintText),
-            ),
-          ),
-          Icon(icon),
+  Widget _buildTextFieldWithIcon(
+    String hintText,
+    IconData icon, {
+    required VoidCallback onTap,
+    String? value,
+  }) {
+    return Container(
+      height: 58,
+      width: 184,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: Colors.grey),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
         ],
       ),
-    ),
-  );
-}
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Text(value ?? hintText),
+              ),
+            ),
+            Icon(icon),
+          ],
+        ),
+      ),
+    );
+  }
 
-Widget _buildFileUploadField(
-  String placeholder, {
-  double width = 200,
-}) {
-  return Container(
-    height: 58,
-    width: width,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(22),
-      border: Border.all(color: Colors.grey),
-      boxShadow: [
-        BoxShadow(color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
-      ],
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(placeholder, style: const TextStyle(color: Colors.grey)),
-        ),
-        IconButton(
-          onPressed: () {
-            // Handle file upload action
-          },
-          icon: const Icon(Icons.upload_file),
-        ),
-      ],
-    ),
-  );
+  Widget _buildFileUploadField(String placeholder,
+      {required int index,
+      required String path,
+      double width = 200,
+      required displayPath}) {
+    return Container(
+      height: 58,
+      width: width,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: Colors.grey),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: displayPath == null
+                ? Text(placeholder, style: const TextStyle(color: Colors.grey))
+                : Image.network(
+                    displayPath,
+                    fit: BoxFit.fill,
+                  ),
+          ),
+          IconButton(
+            onPressed: () {
+              handleImageSelection(index, path);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Image Uploaded Successfully'),
+                  duration: Duration(seconds: 1),
+                ),
+              );
+            },
+            icon: const Icon(Icons.upload_file),
+          ),
+        ],
+      ),
+    );
+  }
 }
