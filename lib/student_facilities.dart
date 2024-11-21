@@ -96,13 +96,13 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
 
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Colors.grey[200],
         appBar: AppBar(
-          backgroundColor: Colors.grey[50],
+          backgroundColor: Colors.grey[100],
           elevation: 0,
           automaticallyImplyLeading: false,
           title: const Padding(
-            padding: EdgeInsets.only(top: 20.0),
+            padding: EdgeInsets.only(top: 0),
             child: Text(
               'Student Facilities',
               style: TextStyle(
@@ -119,7 +119,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                 logout(context);
               },
               child: Padding(
-                padding: const EdgeInsets.only(top: 20, right: 20.0),
+                padding: const EdgeInsets.only(top: 0, right: 20.0),
                 child: Image.asset(
                   'assets/logout@3x.png',
                   width: 103,
@@ -128,284 +128,283 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
               ),
             ),
           ],
-          toolbarHeight: 70,
+          toolbarHeight: 50,
         ),
         body: LayoutBuilder(
           builder: (context, constraints) {
-            return SingleChildScrollView(
-                child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 20.0, right: 20, bottom: 20, top: 18),
-              child: Column(children: [
-                Container(
-                  height: 116,
-                  width: constraints.maxWidth > 388
-                      ? 388
-                      : constraints.maxWidth - 40,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFFC22054),
-                        Color(0xFF48116A),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(22),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFC22054).withOpacity(0.3),
-                        spreadRadius: 3,
-                        blurRadius: 15,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
+            return Padding(
+                          padding: const EdgeInsets.only(
+              left: 20.0, right: 20, bottom: 5, top: 10),
+                          child: Column(children: [
+            Container(
+              height: 116,
+              width: constraints.maxWidth > 388
+                  ? 388
+                  : constraints.maxWidth - 40,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFFC22054),
+                    Color(0xFF48116A),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(22),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFFC22054).withOpacity(0.3),
+                    spreadRadius: 3,
+                    blurRadius: 15,
+                    offset: const Offset(0, 10),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 25.0, top: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                name,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 22,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5.0),
-                                child: Text(
-                                  address,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 2.0),
-                                child: Text(
-                                  phone,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontFamily: 'Poppins',
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 15.0, top: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            name,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w700),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Text(
+                              address,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 2.0),
+                            child: Text(
+                              phone,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Poppins',
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 12.0),
-                        child: Image.network(
-                          profile,
-                          width: 72,
-                          height: 72,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return GridView.count(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: constraints.maxWidth > 600 ? 4 : 3,
-                      crossAxisSpacing: 17,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: tileWidth / tileHeight,
-                      children: [
-                        buildTile(
-                            context,
-                            const Color(0xFFB3E5FC),
-                            'assets/myprofile.png',
-                            'My Profile',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MyProfileScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0xFFF59D80),
-                            'assets/teacherprofile.png',
-                            'Teacher Profile',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const TeacherProfileScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0xFFF8BBD0),
-                            'assets/attendance.png',
-                            'Attendance',
-                            tileWidth,
-                            tileHeight, () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const AttendanceScreen(),
-                          //   ),
-                          // );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0xFFFFCDD2),
-                            'assets/money.png',
-                            'Fee Payment',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const FeePaymentScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color.fromARGB(255, 242, 255, 186),
-                            'assets/pencil and ruller.png',
-                            'Test Series',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const TestSeriesScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0xFFB3E5FC),
-                            'assets/medal.png',
-                            'Progress Report',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const ProgressReportScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color.fromARGB(255, 255, 198, 247),
-                            'assets/qna.png',
-                            'Student Doubt',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const StudentDoubtScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color.fromARGB(255, 198, 255, 185),
-                            'assets/sir.png',
-                            'Parents Doubt',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ParentsDoubtScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color.fromARGB(255, 248, 180, 180),
-                            'assets/knowledge.png',
-                            'Extra Knowledge',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ExtraKnowledge(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color.fromARGB(255, 187, 231, 251),
-                            'assets/notice.png',
-                            'Notice',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const NoticeScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color.fromARGB(255, 253, 194, 246),
-                            'assets/setting.png',
-                            'Settings',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SettingsScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color.fromARGB(255, 246, 238, 189),
-                            'assets/video knowledge.png',
-                            'Video Knowledge',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const VideoKnowledge(),
-                            ),
-                          );
-                        }),
-                      ],
-                    );
-                  }),
-                ),
-              ]),
-            ));
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12.0),
+                    child: Image.network(
+                      profile,
+                      width: 92,
+                      height: 92,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: LayoutBuilder(builder: (context, constraints) {
+                return GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: constraints.maxWidth > 600 ? 4 : 3,
+                  crossAxisSpacing: 17,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: tileWidth / tileHeight,
+                  children: [
+                    buildTile(
+                        context,
+                        const Color(0xFFB3E5FC),
+                        'assets/myprofile.png',
+                        'My Profile',
+                        tileWidth,
+                        tileHeight, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MyProfileScreen(),
+                        ),
+                      );
+                    }),
+                    buildTile(
+                        context,
+                        const Color(0x80FFF59D),
+                        'assets/teacherprofile.png',
+                        'Teacher Profile',
+                        tileWidth,
+                        tileHeight, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const TeacherProfileScreen(),
+                        ),
+                      );
+                    }),
+                    buildTile(
+                        context,
+                        const Color(0xFFF8BBD0),
+                        'assets/attendance.png',
+                        'Attendance',
+                        tileWidth,
+                        tileHeight, () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => const AttendanceScreen(),
+                      //   ),
+                      // );
+                    }),
+                    buildTile(
+                        context,
+                        const Color(0xFFFFCDD2),
+                        'assets/money.png',
+                        'Fee Payment',
+                        tileWidth,
+                        tileHeight, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FeePaymentScreen(),
+                        ),
+                      );
+                    }),
+                    buildTile(
+                        context,
+                        const Color(0x33FF00E5),
+                        'assets/pencil and ruller.png',
+                        'Test Series',
+                        tileWidth,
+                        tileHeight, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TestSeriesScreen(),
+                        ),
+                      );
+                    }),
+                    buildTile(
+                        context,
+                        const Color(0x80FFE082),
+                        'assets/medal.png',
+                        'Progress Report',
+                        tileWidth,
+                        tileHeight, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const ProgressReportScreen(),
+                        ),
+                      );
+                    }),
+                    buildTile(
+                        context,
+                        const Color(0x80F48FB1),
+                        'assets/qna.png',
+                        'Student Doubt',
+                        tileWidth,
+                        tileHeight, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const StudentDoubtScreen(),
+                        ),
+                      );
+                    }),
+                    buildTile(
+                        context,
+                        const Color(0xFFB3E5FC),
+                        'assets/sir.png',
+                        'Parents Doubt',
+                        tileWidth,
+                        tileHeight, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ParentsDoubtScreen(),
+                        ),
+                      );
+                    }),
+                    buildTile(
+                        context,
+                        const Color(0x80FFF59D),
+                        'assets/knowledge.png',
+                        'Extra Knowledge',
+                        tileWidth,
+                        tileHeight, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ExtraKnowledge(),
+                        ),
+                      );
+                    }),
+                    buildTile(
+                        context,
+                        const Color(0x80FFE082),
+                        'assets/notice.png',
+                        'Notice',
+                        tileWidth,
+                        tileHeight, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NoticeScreen(),
+                        ),
+                      );
+                    }),
+                    buildTile(
+                        context,
+                        const Color(0x33FF00E5),
+                        'assets/setting.png',
+                        'Settings',
+                        tileWidth,
+                        tileHeight, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SettingsScreen(),
+                        ),
+                      );
+                    }),
+                    buildTile(
+                        context,
+                        const Color(0xFFFFCDD2),
+                        'assets/video knowledge.png',
+                        'Video Knowledge',
+                        tileWidth,
+                        tileHeight, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const VideoKnowledge(),
+                        ),
+                      );
+                    }),
+                  ],
+                );
+              }),
+            ),
+                          ]),
+                        );
           },
         ),
       ),
@@ -419,7 +418,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     final scaleFactor = screenWidth < 360 ? 0.7 : 1.0;
 
     // Create a lighter version of the background color for the border
-    final borderColor = HSLColor.fromColor(color).withLightness(0.9).toColor();
+    final borderColor = HSLColor.fromColor(color).withLightness(0.95).toColor();
 
     return GestureDetector(
       onTap: onTap,
