@@ -17,7 +17,7 @@ class OTPScreen extends StatelessWidget {
 
     // Fetch from API
     try {
-      final url = Uri.parse('$baseUrl/login/$phoneNumber');
+      final url = Uri.parse('$baseUrl/api/login/$phoneNumber');
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
@@ -25,12 +25,14 @@ class OTPScreen extends StatelessWidget {
 
         // Check response structure
         if (responseData.containsKey('phone_number') &&
+            responseData.containsKey('token') &&
             responseData.containsKey('uerID') &&
             responseData.containsKey('role') &&
             responseData.containsKey('new_user')) {
           // Save response to cache
           await prefs.setString('userID', responseData['uerID']);
           await prefs.setString('role', responseData['role']);
+          await prefs.setString('token', responseData['token']);
           await prefs.setBool('new_user', responseData['new_user']);
           print('Data fetched from API and cached.');
           return responseData;

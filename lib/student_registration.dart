@@ -664,7 +664,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       ),
       child: TextField(
         controller: _phoneController,
-        enabled: false,
+        enabled: widget.enablephonefield,
         decoration: InputDecoration(
           label: Text(hintText),
           border: InputBorder.none,
