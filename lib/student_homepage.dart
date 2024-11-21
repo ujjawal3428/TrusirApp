@@ -28,7 +28,7 @@ class StudentHomepage extends StatelessWidget {
                       'trusir',
                       style: TextStyle(
                         color: Colors.purple,
-                        fontSize: 24,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Poppins',
                       ),
@@ -51,19 +51,26 @@ class StudentHomepage extends StatelessWidget {
                 const Text(
                   'Welcome To Trusir',
                   style: TextStyle(
-                    fontSize: 47,
+                    fontSize: 40,
+                    height: 1.1,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Poppins',
                   ),
                 ),
                 const Divider(
-                    color: Colors.black, thickness: 1.5, endIndent: 200),
-                const SizedBox(height: 10),
+                    color: Colors.black, thickness: 3, endIndent: 195),
+                const SizedBox(height: 15),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
-                  style: TextStyle(fontSize: 22, fontFamily: 'Poppins'),
+                  style: TextStyle(
+                    fontSize: 25,
+                    height: 1.1,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
+                    color: Color(0xFF001241),
+                  ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
 
                 // Services ListView (Horizontal)
                 SizedBox(
@@ -92,12 +99,16 @@ class StudentHomepage extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // Our Services title
-                const Text(
-                  'Our Services',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins',
+                const Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    'Our Services',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF00081D),
+                      fontFamily: 'Poppins',
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -111,7 +122,7 @@ class StudentHomepage extends StatelessWidget {
                     child: Column(
                       children: [
                         Image.asset(
-                          'assets/g1@4x.png',
+                          'assets/g2@4x.png',
                           fit: BoxFit.cover,
                         ),
                       ],
@@ -123,57 +134,98 @@ class StudentHomepage extends StatelessWidget {
                 const Center(
                   child: Column(
                     children: [
-                      Text(
-                        'Get the Best Tutor for your child',
-                        style: TextStyle(
-                          fontSize: 33,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontFamily: 'Poppins',
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 30.0,
+                          left: 6,
+                          right: 6,
+                        ),
+                        child: Text(
+                          'Get the Best Tutor for your child',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                            height: 1,
+                            color: Color(0xFF00081D),
+                            fontFamily: 'Poppins',
+                          ),
                         ),
                       ),
                       SizedBox(height: 20),
-                      Text(
-                        'Get the best learning support for your child',
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                          fontFamily: 'Poppins',
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 10.0,
+                          left: 6,
+                          right: 6,
+                        ),
+                        child: Text(
+                          'Get the best learning support for your child',
+                          style: TextStyle(
+                            fontSize: 28,
+                            height: 1,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFBCBCBC),
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 0,
+                          left: 6,
+                          right: 6,
+                        ),
+                        child: Text(
+                          'For all your learning support needs such as homework, test, school project and examinations; we are here to give you the best support.',
+                          style: TextStyle(
+                            fontSize: 24,
+                            height: 1,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Poppins',
+                          ),
                         ),
                       ),
                       SizedBox(height: 20),
-                      Text(
-                        'For all your learning support needs such as homework, test, school project and examinations; we are here to give you the best support.',
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.black,
-                          fontFamily: 'Poppins',
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 10,
+                          left: 6,
+                          right: 20,
+                        ),
+                        child: Text(
+                          'The best tutors are here',
+                          style: TextStyle(
+                            fontSize: 28,
+                            height: 1,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFFBCBCBC),
+                            fontFamily: 'Poppins',
+                          ),
                         ),
                       ),
-                      SizedBox(height: 25),
-                      Text(
-                        'The best tutors are here',
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                          fontFamily: 'Poppins',
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: 10.0,
+                          left: 6,
+                          right: 6,
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        'Our tutors are seasoned professionals, screened and given relevant training on a monthly basis to deliver the excellent results you desire.',
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.black,
-                          fontFamily: 'Poppins',
+                        child: Text(
+                          'Our tutors are seasoned professionals, screened and given relevant training on a monthly basis to deliver the excellent results you desire.',
+                          style: TextStyle(
+                            fontSize: 24,
+                            height: 1,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Poppins',
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
 
                 // Row of two images
                 Column(
@@ -187,21 +239,22 @@ class StudentHomepage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
 
                 // Explore our offerings text
-                const Center(
+                const Align(
+                  alignment: Alignment.centerLeft,
                   child: Text(
                     'Explore our offerings',
                     style: TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 43, 58, 100),
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF2B395F),
                       fontFamily: 'Poppins',
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
 
                 // Subjects Buttons
                 Wrap(
@@ -239,21 +292,22 @@ class StudentHomepage extends StatelessWidget {
                     );
                   }).toList(),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
 
                 // Explore Subjects title
-                const Center(
+                const Align(
+                  alignment: Alignment.centerLeft,
                   child: Text(
                     'Explore Subjects',
                     style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 43, 58, 100),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF2B395F),
                       fontFamily: 'Poppins',
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
 
                 Wrap(
                   spacing: 10,

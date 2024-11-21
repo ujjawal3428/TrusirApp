@@ -30,7 +30,7 @@ class Teacherhomepage extends StatelessWidget {
                       'trusir',
                       style: TextStyle(
                         color: Colors.purple,
-                        fontSize: 24,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Poppins',
                       ),
@@ -113,7 +113,7 @@ class Teacherhomepage extends StatelessWidget {
                     child: Column(
                       children: [
                         Image.asset(
-                          'assets/g2@4x.png',
+                          'assets/g1@4x.png',
                           fit: BoxFit.cover,
                         ),
                       ],
