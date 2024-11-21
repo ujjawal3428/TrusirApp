@@ -117,35 +117,35 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
                 'Teacher Enquiry',
                 style: TextStyle(
                   color: Color(0xFF48116A),
-                  fontSize: 22,
+                  fontSize: 20,
                   fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
         ),
-        toolbarHeight: 70,
+        toolbarHeight: 50,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+          padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Teacher Enquiry Image
+     
               Center(
                 child: Image.asset(
                   'assets/Teacher_Enquiry2.png',
                 ),
               ),
-              SizedBox(height: screenHeight * 0.02),
+        
 
               // Text Box with Image Background
               _buildTextFieldWithBackground(
                   hintText: 'Teacher Name',
                   controllers: widget._namecontroller),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
 
               // Gender Selection
               Row(
@@ -195,7 +195,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
               // Pincode Field
               _buildTextFieldWithBackground(
                   hintText: 'Pincode', controllers: widget._pincodecontroller),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
 
               // Enquire Button
               Center(
@@ -220,7 +220,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
       children: [
         Image.asset(
           'assets/textfield.png',
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
           width: double.infinity,
           height: 60,
         ),

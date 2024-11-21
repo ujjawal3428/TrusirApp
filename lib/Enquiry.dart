@@ -31,7 +31,7 @@ class EnquiryPage extends StatelessWidget {
                 icon: const Icon(
                   Icons.arrow_back_ios_rounded,
                   color: Color(0xFF48116A),
-                  size: 30,
+                  size: 25,
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -42,101 +42,97 @@ class EnquiryPage extends StatelessWidget {
                 'Enquiry',
                 style: TextStyle(
                   color: Color(0xFF48116A),
-                  fontSize: 22,
+                  fontSize: 20,
                   fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
         ),
-        toolbarHeight: 70,
+        toolbarHeight: 50,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Column(
+      body: Padding(
+        padding: const EdgeInsets.only(top:40,left: 16.0, right: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // Student Enquiry Image
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const StudentEnquiryPage(),
+                  ),
+                );
+              },
+              child: Image.asset(
+                "assets/studentenquiry.png", // Ensure asset path is correct
+                width: 300,
+                height: 200,
+              ),
+            ),
+              
+            // Teacher Enquiry Image
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TeacherEnquiryPage(),
+                  ),
+                );
+              },
+              child: Image.asset(
+                "assets/teacherenquiry.png", // Ensure asset path is correct
+                width: 300,
+                height: 200,
+              ),
+            ),
+           const SizedBox(height: 10,),
+              
+            // "Or Enquire On" Text
+            const Text(
+              'Or Enquire On',
+              style: TextStyle(
+                fontSize: 20,
+                decoration: TextDecoration.underline,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF8C4C92),
+                fontFamily:
+                    'Poppins', // Ensure Poppins font is added in pubspec.yaml
+              ),
+            ),
+            const SizedBox(height: 25),
+              
+
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Student Enquiry Image
+                // WhatsApp Button
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const StudentEnquiryPage(),
-                      ),
-                    );
-                  },
+                  onTap: _openWhatsApp,
                   child: Image.asset(
-                    "assets/studentenquiry.png", // Ensure asset path is correct
-                    width: 350,
-                    height: 250,
+                    'assets/whatsapp@3x.png', 
+                    width: 70, 
+                    height: 70,
                   ),
                 ),
-
-                // Teacher Enquiry Image
+                const SizedBox(width: 70), 
+              
+                // Call Button
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TeacherEnquiryPage(),
-                      ),
-                    );
-                  },
+                  onTap: _call,
                   child: Image.asset(
-                    "assets/teacherenquiry.png", // Ensure asset path is correct
-                    width: 350,
-                    height: 250,
+                    'assets/call.png', 
+                    width: 80, 
+                    height: 80,
                   ),
-                ),
-                const SizedBox(height: 20),
-
-                // "Or Enquire On" Text
-                const Text(
-                  'Or Enquire On',
-                  style: TextStyle(
-                    fontSize: 20,
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF8C4C92),
-                    fontFamily:
-                        'Poppins', // Ensure Poppins font is added in pubspec.yaml
-                  ),
-                ),
-                const SizedBox(height: 10),
-
-                // WhatsApp and Call Buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // WhatsApp Button
-                    GestureDetector(
-                      onTap: _openWhatsApp,
-                      child: Image.asset(
-                        'assets/whatsapp@3x.png', // Ensure asset path is correct
-                        width: 100, // Adjust dimensions as needed
-                        height: 100,
-                      ),
-                    ),
-                    const SizedBox(width: 70), // Adjust spacing as needed
-
-                    // Call Button
-                    GestureDetector(
-                      onTap: _call,
-                      child: Image.asset(
-                        'assets/call.png', // Ensure asset path is correct
-                        width: 115, // Adjust dimensions as needed
-                        height: 115,
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );

@@ -153,11 +153,20 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
           onTap: () {
             showPopupDialog(context);
           },
-          child: Image.asset(
-            'assets/skipbutton.png',
-            width: responsive.screenWidth * 0.15,
-            height: responsive.safeHeight * 0.05,
-            fit: BoxFit.contain,
+          child: Container(
+            height: 26,
+            width: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(8)
+            ),
+            child: const Padding(
+              padding: EdgeInsets.only(left: 10.0, top: 2),
+              child: Text(
+                'skip',
+              ),
+            ),
           ),
         ),
         _buildLanguageDropdown(responsive),
@@ -230,7 +239,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                     fontFamily: 'Poppins-semi bold',
                   ),
                 ),
-                SizedBox(height: responsive.safeHeight * 0.02),
+          
               ],
               Expanded(
                 child: Image.asset(

@@ -97,7 +97,7 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
                 icon: const Icon(
                   Icons.arrow_back_ios_rounded,
                   color: Color(0xFF48116A),
-                  size: 30,
+                  size: 25,
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -108,19 +108,19 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
                 'Student Enquiry',
                 style: TextStyle(
                   color: Color(0xFF48116A),
-                  fontSize: 22,
+                  fontSize: 20,
                   fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                 ),
               )
             ],
           ),
         ),
-        toolbarHeight: 70,
+        toolbarHeight: 50,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -129,8 +129,8 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
                   'assets/studentenquiry2.png',
                 ),
               ),
-              SizedBox(height: screenHeight * 0.02),
-
+           
+                
               // Text Boxes with Background Images
               _buildTextFieldWithBackground(
                   hintText: 'Student Name', controllers: _namecontroller),
@@ -144,7 +144,7 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
               _buildTextFieldWithBackground(
                   hintText: 'Pincode', controllers: _pincodecontroller),
               SizedBox(height: screenHeight * 0.05),
-
+                
               // Enquire Button
               Center(
                 child: GestureDetector(
@@ -170,13 +170,13 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
       children: [
         Image.asset(
           'assets/textfield.png',
-          fit: BoxFit.cover,
+          fit: BoxFit.contain,
           width: double.infinity,
           height: 60,
         ),
         Positioned.fill(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
               controller: controllers,
               textAlign: TextAlign.start,
