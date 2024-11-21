@@ -251,6 +251,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               _buildTextField("Phone Number", onChanged: (value) {
                 phoneNum = value;
               }),
+              const SizedBox(
+                height: 20,
+              ),
               // Number of Students Dropdown
               _buildDropdownField(
                 'No. of Students',
