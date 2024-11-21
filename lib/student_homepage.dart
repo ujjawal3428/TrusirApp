@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/student_registeration.dart';
+import 'package:trusir/student_registration.dart';
 
 class StudentHomepage extends StatelessWidget {
   const StudentHomepage({super.key});
@@ -301,7 +301,7 @@ class StudentHomepage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const StudentRegistrationPage(),
+                        builder: (context) => StudentRegistrationPage(),
                       ),
                     );
                   },
