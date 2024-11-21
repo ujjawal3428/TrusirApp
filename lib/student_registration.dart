@@ -88,8 +88,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     if (savedPhoneNumber != null) {
       _phoneController.text = savedPhoneNumber;
       phoneNum = savedPhoneNumber; // Set the text field value
-    } else {
-      phoneNum = _phoneController.text;
     }
   }
 
