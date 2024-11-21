@@ -131,293 +131,299 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
           ],
           toolbarHeight: 50,
         ),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            return Padding(
-              padding: const EdgeInsets.only(
-                  left: 20.0, right: 20, bottom: 5, top: 10),
-              child: Column(children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        opaque: false,
-                        pageBuilder: (context, _, __) => const ProfilePopup(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    height: 116,
-                    width: constraints.maxWidth > 388
-                        ? 388
-                        : constraints.maxWidth - 40,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFFC22054),
-                          Color(0xFF48116A),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(22),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFC22054).withOpacity(0.3),
-                          spreadRadius: 3,
-                          blurRadius: 15,
-                          offset: const Offset(0, 10),
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Padding(
+                padding: const EdgeInsets.only(
+                    left: 20.0, right: 20, bottom: 5, top: 10),
+                child: Column(children: [
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          opaque: false,
+                          pageBuilder: (context, _, __) => const ProfilePopup(),
                         ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 15.0, top: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  name,
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 22,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5.0),
-                                  child: Text(
-                                    address,
+                      );
+                    },
+                    child: Container(
+                      height: 116,
+                      width: constraints.maxWidth > 388
+                          ? 388
+                          : constraints.maxWidth - 40,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [
+                            Color(0xFFC22054),
+                            Color(0xFF48116A),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(22),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFC22054).withOpacity(0.3),
+                            spreadRadius: 3,
+                            blurRadius: 15,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 15.0, top: 20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    name,
                                     style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                        fontSize: 22,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5.0),
+                                    child: Text(
+                                      address,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontFamily: 'Poppins',
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 2.0),
-                                  child: Text(
-                                    phone,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Poppins',
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w500,
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 2.0),
+                                    child: Text(
+                                      phone,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Poppins',
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 12.0),
-                          child: Image.network(
-                            profile,
-                            width: 92,
-                            height: 92,
-                            fit: BoxFit.contain,
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12.0),
+                            child: Image.network(
+                              profile,
+                              width: 92,
+                              height: 92,
+                              fit: BoxFit.contain,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 15),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return GridView.count(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: constraints.maxWidth > 600 ? 4 : 3,
-                      crossAxisSpacing: 17,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: tileWidth / tileHeight,
-                      children: [
-                        buildTile(
-                            context,
-                            const Color(0xFFB3E5FC),
-                            'assets/myprofile.png',
-                            'My Profile',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const MyProfileScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0x80FFF59D),
-                            'assets/teacherprofile.png',
-                            'Teacher Profile',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const TeacherProfileScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0xFFF8BBD0),
-                            'assets/attendance.png',
-                            'Attendance',
-                            tileWidth,
-                            tileHeight, () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const AttendanceScreen(),
-                          //   ),
-                          // );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0xFFFFCDD2),
-                            'assets/money.png',
-                            'Fee Payment',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const FeePaymentScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0x33FF00E5),
-                            'assets/pencil and ruller.png',
-                            'Test Series',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const TestSeriesScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0x80FFE082),
-                            'assets/medal.png',
-                            'Progress Report',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const ProgressReportScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0x80F48FB1),
-                            'assets/qna.png',
-                            'Student Doubt',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const StudentDoubtScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0xFFB3E5FC),
-                            'assets/sir.png',
-                            'Parents Doubt',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ParentsDoubtScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0x80FFF59D),
-                            'assets/knowledge.png',
-                            'Extra Knowledge',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ExtraKnowledge(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0x80FFE082),
-                            'assets/notice.png',
-                            'Notice',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const NoticeScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0x33FF00E5),
-                            'assets/setting.png',
-                            'Settings',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SettingsScreen(),
-                            ),
-                          );
-                        }),
-                        buildTile(
-                            context,
-                            const Color(0xFFFFCDD2),
-                            'assets/video knowledge.png',
-                            'Video Knowledge',
-                            tileWidth,
-                            tileHeight, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const VideoKnowledge(),
-                            ),
-                          );
-                        }),
-                      ],
-                    );
-                  }),
-                ),
-              ]),
-            );
-          },
+                  const SizedBox(height: 15),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: LayoutBuilder(builder: (context, constraints) {
+                      return GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: constraints.maxWidth > 600 ? 4 : 3,
+                        crossAxisSpacing: 17,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: tileWidth / tileHeight,
+                        children: [
+                          buildTile(
+                              context,
+                              const Color(0xFFB3E5FC),
+                              'assets/myprofile.png',
+                              'My Profile',
+                              tileWidth,
+                              tileHeight, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const MyProfileScreen(),
+                              ),
+                            );
+                          }),
+                          buildTile(
+                              context,
+                              const Color(0x80FFF59D),
+                              'assets/teacherprofile.png',
+                              'Teacher Profile',
+                              tileWidth,
+                              tileHeight, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const TeacherProfileScreen(),
+                              ),
+                            );
+                          }),
+                          buildTile(
+                              context,
+                              const Color(0xFFF8BBD0),
+                              'assets/attendance.png',
+                              'Attendance',
+                              tileWidth,
+                              tileHeight, () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => const AttendanceScreen(),
+                            //   ),
+                            // );
+                          }),
+                          buildTile(
+                              context,
+                              const Color(0xFFFFCDD2),
+                              'assets/money.png',
+                              'Fee Payment',
+                              tileWidth,
+                              tileHeight, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const FeePaymentScreen(),
+                              ),
+                            );
+                          }),
+                          buildTile(
+                              context,
+                              const Color(0x33FF00E5),
+                              'assets/pencil and ruller.png',
+                              'Test Series',
+                              tileWidth,
+                              tileHeight, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const TestSeriesScreen(),
+                              ),
+                            );
+                          }),
+                          buildTile(
+                              context,
+                              const Color(0x80FFE082),
+                              'assets/medal.png',
+                              'Progress Report',
+                              tileWidth,
+                              tileHeight, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ProgressReportScreen(),
+                              ),
+                            );
+                          }),
+                          buildTile(
+                              context,
+                              const Color(0x80F48FB1),
+                              'assets/qna.png',
+                              'Student Doubt',
+                              tileWidth,
+                              tileHeight, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const StudentDoubtScreen(),
+                              ),
+                            );
+                          }),
+                          buildTile(
+                              context,
+                              const Color(0xFFB3E5FC),
+                              'assets/sir.png',
+                              'Parents Doubt',
+                              tileWidth,
+                              tileHeight, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ParentsDoubtScreen(),
+                              ),
+                            );
+                          }),
+                          buildTile(
+                              context,
+                              const Color(0x80FFF59D),
+                              'assets/knowledge.png',
+                              'Extra Knowledge',
+                              tileWidth,
+                              tileHeight, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ExtraKnowledge(),
+                              ),
+                            );
+                          }),
+                          buildTile(
+                              context,
+                              const Color(0x80FFE082),
+                              'assets/notice.png',
+                              'Notice',
+                              tileWidth,
+                              tileHeight, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const NoticeScreen(),
+                              ),
+                            );
+                          }),
+                          buildTile(
+                              context,
+                              const Color(0x33FF00E5),
+                              'assets/setting.png',
+                              'Settings',
+                              tileWidth,
+                              tileHeight, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SettingsScreen(),
+                              ),
+                            );
+                          }),
+                          buildTile(
+                              context,
+                              const Color(0xFFFFCDD2),
+                              'assets/video knowledge.png',
+                              'Video Knowledge',
+                              tileWidth,
+                              tileHeight, () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const VideoKnowledge(),
+                              ),
+                            );
+                          }),
+                        ],
+                      );
+                    }),
+                  ),
+                ]),
+              );
+            },
+          ),
         ),
       ),
     );

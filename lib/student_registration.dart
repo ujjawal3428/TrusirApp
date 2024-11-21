@@ -86,9 +86,23 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           "mother_name": student.mothersName,
           "gender": student.gender,
           "DOB": student.dob?.toIso8601String(),
+          "school_name": student.schoolName,
+          "medium": student.medium,
+          "class": student.studentClass,
+          "subject": student.subject,
+          "state": student.state,
+          "city": student.city,
+          "area": student.area,
+          "pincode": student.pincode,
+          "address": student.address,
           "time_slot": "6:00am-7:00am", // Update this dynamically if needed
           "profile":
-              "https://th.bing.com/th/id/OIP.tjUOUBGnthmW762mbRAFdQHaE8?rs=1&pid=ImgDetMain.jpg", // Assuming `photoPath` contains the profile URL
+              "https://th.bing.com/th/id/OIP.tjUOUBGnthmW762mbRAFdQHaE8?rs=1&pid=ImgDetMain.jpg",
+          "adhaar_front":
+              "https://th.bing.com/th/id/OIP.tjUOUBGnthmW762mbRAFdQHaE8?rs=1&pid=ImgDetMain.jpg",
+          "adhaar_back":
+              "https://th.bing.com/th/id/OIP.tjUOUBGnthmW762mbRAFdQHaE8?rs=1&pid=ImgDetMain.jpg",
+          "agree_to_terms": agreeToTerms
         };
       }).toList(),
     };
