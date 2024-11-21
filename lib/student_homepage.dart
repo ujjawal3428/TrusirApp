@@ -355,7 +355,7 @@ class StudentHomepage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => StudentRegistrationPage(),
+                        builder: (context) => const StudentRegistrationPage(),
                       ),
                     );
                   },
