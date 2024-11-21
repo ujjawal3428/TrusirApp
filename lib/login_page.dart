@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/menu.dart';
 import 'package:trusir/otp_screen.dart';
 
@@ -44,6 +45,13 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
   final TextEditingController _phonecontroller = TextEditingController();
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  String phonenum = '';
+
+  Future<void> storePhoneNo() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('phone_number', phonenum);
+    print('Phone Number Stored to shared preferences: $phonenum');
+  }
 
   final List<Map<String, String>> pageContent = [
     {
@@ -77,11 +85,15 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     return Center(
       child: GestureDetector(
         onTap: () {
+          setState(() {
+            phonenum = _phonecontroller.text;
+          });
+          storePhoneNo();
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => OTPScreen(
-                        phonenum: _phonecontroller.text,
+                        phonenum: phonenum,
                       )));
         },
         child: Image.asset(
@@ -157,10 +169,9 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
             height: 26,
             width: 50,
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(8)
-            ),
+                color: Colors.white,
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(8)),
             child: const Padding(
               padding: EdgeInsets.only(left: 10.0, top: 2),
               child: Text(
@@ -239,7 +250,6 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                     fontFamily: 'Poppins-semi bold',
                   ),
                 ),
-          
               ],
               Expanded(
                 child: Image.asset(

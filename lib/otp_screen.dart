@@ -30,7 +30,6 @@ class OTPScreen extends StatelessWidget {
             responseData.containsKey('new_user')) {
           // Save response to cache
           await prefs.setString('userID', responseData['uerID']);
-          await prefs.setString('phone', responseData['phone_number']);
           await prefs.setString('role', responseData['role']);
           await prefs.setBool('new_user', responseData['new_user']);
           print('Data fetched from API and cached.');

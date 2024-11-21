@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:trusir/api.dart';
+import 'package:trusir/login_page.dart';
 import 'package:trusir/main_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -87,13 +88,17 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     "09:00 PM - 10:00 PM",
   ];
 
-  final Set<String> selectedSlots = {};
-  String selectedSlotsString = "";
+  // List to store selected slots for each student form
+  final List<Set<String>> selectedSlots = [];
+
+  // List to store selected slot strings for each student form
+  final List<String> selectedSlotsString = [];
 
   void updateSelectedSlots(int index) {
     setState(() {
-      selectedSlotsString = selectedSlots.join(", ");
-      studentForms[index].timeslot = selectedSlotsString;
+      selectedSlotsString[index] = selectedSlots[index].join(", ");
+      studentForms[index].timeslot =
+          selectedSlotsString[index]; // Assuming this field exists
     });
   }
 
@@ -147,8 +152,32 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           context,
           MaterialPageRoute(builder: (context) => const MainScreen()),
         );
-      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Registration Successful'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      } else if (response.statusCode == 409) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TrusirLoginPage()),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('User Already Exists!'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        print(payload);
+      } else if (response.statusCode == 500) {
         print('Failed to post data: ${response.statusCode}, ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Internal Server Error'),
+            duration: Duration(seconds: 1),
+          ),
+        );
         print(payload);
       }
     } catch (e) {
@@ -571,7 +600,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ),
         const Text('Time Slot:'),
         const SizedBox(height: 10),
-        _buildTimeSlotField(index),
+        _buildTimeSlotField(index), // Pass index to handle each form's state
         const SizedBox(height: 10),
         // Add more fields as needed
       ],
@@ -724,6 +753,12 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }
 
   Widget _buildTimeSlotField(int index) {
+    // Initialize selectedSlots for the form if it hasn't been initialized yet
+    if (selectedSlots.length <= index) {
+      selectedSlots.add({});
+      selectedSlotsString.add(""); // Initialize empty string for each form
+    }
+
     return Wrap(
       spacing: 10,
       runSpacing: 10,
@@ -732,15 +767,15 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Checkbox(
-              value: selectedSlots.contains(slot),
+              value: selectedSlots[index].contains(slot),
               onChanged: (value) {
                 setState(() {
                   if (value ?? false) {
-                    selectedSlots.add(slot);
+                    selectedSlots[index].add(slot);
                   } else {
-                    selectedSlots.remove(slot);
+                    selectedSlots[index].remove(slot);
                   }
-                  // Update the variable whenever the state changes
+                  // Update the selected slots string for this index
                   updateSelectedSlots(index);
                 });
               },
