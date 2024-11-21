@@ -668,6 +668,12 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           IconButton(
             onPressed: () {
               handleImageSelection(index, path);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Image Uploaded Successfully'),
+                  duration: Duration(seconds: 1),
+                ),
+              );
             },
             icon: const Icon(Icons.upload_file),
           ),
@@ -676,13 +682,3 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     );
   }
 }
-//  onTap: () async {
-//               studentForms[index].aadharBackPath = await pickImage();
-//               ScaffoldMessenger.of(context).showSnackBar(
-//                 SnackBar(
-//                   content: Text(
-//                       'The Download URL:${studentForms[index].aadharBackPath}'),
-//                   duration: const Duration(seconds: 1),
-//                 ),
-//               );
-//             }
