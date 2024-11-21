@@ -8,8 +8,10 @@ class StudentHomepage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
+      
       body: Stack(
         children: [
+          
           // Main Content
           SingleChildScrollView(
             padding: const EdgeInsets.only(
@@ -18,6 +20,7 @@ class StudentHomepage extends StatelessWidget {
               top: 16.0,
               bottom: 100.0,
             ),
+            
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -45,32 +48,32 @@ class StudentHomepage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
 
                 // Welcome text
                 const Text(
                   'Welcome To Trusir',
                   style: TextStyle(
-                    fontSize: 40,
+                    fontSize: 25,
                     height: 1.1,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontFamily: 'Poppins',
                   ),
                 ),
                 const Divider(
-                    color: Colors.black, thickness: 3, endIndent: 195),
-                const SizedBox(height: 15),
+                    color: Colors.black, thickness: 2, endIndent: 90),
+                const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 18,
                     height: 1.1,
                     fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w400,
                     color: Color(0xFF001241),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 24),
 
                 // Services ListView (Horizontal)
                 SizedBox(
@@ -104,8 +107,8 @@ class StudentHomepage extends StatelessWidget {
                   child: Text(
                     'Our Services',
                     style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
                       color: Color(0xFF00081D),
                       fontFamily: 'Poppins',
                     ),
@@ -143,15 +146,15 @@ class StudentHomepage extends StatelessWidget {
                         child: Text(
                           'Get the Best Tutor for your child',
                           style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
                             height: 1,
                             color: Color(0xFF00081D),
                             fontFamily: 'Poppins',
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 15),
                       Padding(
                         padding: EdgeInsets.only(
                           top: 10.0,
@@ -161,9 +164,9 @@ class StudentHomepage extends StatelessWidget {
                         child: Text(
                           'Get the best learning support for your child',
                           style: TextStyle(
-                            fontSize: 28,
+                            fontSize: 18,
                             height: 1,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                             color: Color(0xFFBCBCBC),
                             fontFamily: 'Poppins',
                           ),
@@ -179,7 +182,7 @@ class StudentHomepage extends StatelessWidget {
                         child: Text(
                           'For all your learning support needs such as homework, test, school project and examinations; we are here to give you the best support.',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 18,
                             height: 1,
                             color: Colors.black,
                             fontWeight: FontWeight.w400,
@@ -192,16 +195,19 @@ class StudentHomepage extends StatelessWidget {
                         padding: EdgeInsets.only(
                           top: 10,
                           left: 6,
-                          right: 20,
+                         
                         ),
-                        child: Text(
-                          'The best tutors are here',
-                          style: TextStyle(
-                            fontSize: 28,
-                            height: 1,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFFBCBCBC),
-                            fontFamily: 'Poppins',
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'The best tutors are here',
+                            style: TextStyle(
+                              fontSize: 18,
+                              height: 1,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFFBCBCBC),
+                              fontFamily: 'Poppins',
+                            ),
                           ),
                         ),
                       ),
@@ -214,7 +220,7 @@ class StudentHomepage extends StatelessWidget {
                         child: Text(
                           'Our tutors are seasoned professionals, screened and given relevant training on a monthly basis to deliver the excellent results you desire.',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 18,
                             height: 1,
                             color: Colors.black,
                             fontWeight: FontWeight.w400,
@@ -247,8 +253,8 @@ class StudentHomepage extends StatelessWidget {
                   child: Text(
                     'Explore our offerings',
                     style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
                       color: Color(0xFF2B395F),
                       fontFamily: 'Poppins',
                     ),
@@ -258,8 +264,8 @@ class StudentHomepage extends StatelessWidget {
 
                 // Subjects Buttons
                 Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
+                  spacing: 5,
+                  runSpacing: 6,
                   children: [
                     'Nursery',
                     'LKG',
@@ -301,7 +307,7 @@ class StudentHomepage extends StatelessWidget {
                     'Explore Subjects',
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                       color: Color(0xFF2B395F),
                       fontFamily: 'Poppins',
                     ),
@@ -310,8 +316,8 @@ class StudentHomepage extends StatelessWidget {
                 const SizedBox(height: 15),
 
                 Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
+                  spacing: 5,
+                  runSpacing: 6,
                   children: [
                     'Hindi',
                     'English',
@@ -361,9 +367,9 @@ class StudentHomepage extends StatelessWidget {
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width,
-                    height: 70,
+                    height: 40,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(40),
+                      borderRadius: BorderRadius.circular(15),
                       gradient: const LinearGradient(
                         colors: [
                           Color(0xFF045C19),
@@ -377,9 +383,9 @@ class StudentHomepage extends StatelessWidget {
                       child: Text(
                         'Registeration',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                             color: Colors.white,
-                            fontSize: 22,
+                            fontSize: 20,
                             fontFamily: 'Poppins'),
                       ),
                     ),
@@ -388,7 +394,36 @@ class StudentHomepage extends StatelessWidget {
               ),
             ),
           ),
+          Positioned(
+              right: 13,
+              top: MediaQuery.of(context).size.height * 0.5 - 28, 
+              child: SizedBox(
+                height: 50,
+                width: 50,
+                child: FloatingActionButton(
+                  onPressed: () {
+                  },
+                  child: Image.asset('assets/whatsapp@3x.png',
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              right: 13,
+              top: MediaQuery.of(context).size.height * 0.58 - 28, 
+              child: SizedBox(
+                height: 50,
+                width: 50,
+                child: FloatingActionButton(
+                  onPressed: () {
+                  },
+                  child: Image.asset('assets/whatsapp@3x.png',
+                  ),
+                ),
+              ),
+            ),
         ],
+        
       ),
     );
   }

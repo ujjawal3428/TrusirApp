@@ -47,25 +47,29 @@ class Teacherhomepage extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
 
                 // Welcome text
                 const Text(
                   'Welcome To Trusir',
                   style: TextStyle(
-                    fontSize: 47,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                    height: 1.1,
+                    fontWeight: FontWeight.w600,
                     fontFamily: 'Poppins',
                   ),
                 ),
                 const Divider(
-                    color: Colors.black, thickness: 1.5, endIndent: 200),
+                    color: Colors.black, thickness: 2, endIndent: 90),
                 const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping male and female teaching service.',
-                  style: TextStyle(fontSize: 26, fontFamily: 'Poppins'),
+                  style: TextStyle(fontSize: 18, 
+                  fontFamily: 'Poppins',
+                  color: Color(0xFF001241),
+                  height: 1.1,),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
 
                 // Services ListView (Horizontal)
                 SizedBox(
@@ -94,21 +98,25 @@ class Teacherhomepage extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // Our Services title
-                const Text(
-                  'Our Services',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins',
+               const Padding(
+                  padding: EdgeInsets.only(left: 8.0),
+                  child: Text(
+                    'Our Services',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF00081D),
+                      fontFamily: 'Poppins',
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
 
-                // Offline Payment Button with descriptive text
+               
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      // Define your onTap action here
+                      
                     },
                     child: Column(
                       children: [
@@ -120,55 +128,29 @@ class Teacherhomepage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 60),
 
-                // Click here for registration text
-                const Center(
-                  child: Text(
-                    'Click here for registration',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 27,
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 60),
-
-                // Row of two images
-                Column(
-                  children: [
-                    Image.asset(
-                      'assets/t1@3x.png',
-                    ),
-                    const SizedBox(height: 20),
-                    Image.asset(
-                      'assets/t2@3x.png',
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
+         const SizedBox(height: 30,),
+      
 
                 // Explore our offerings text
-                const Center(
+                const Align(
+                  alignment: Alignment.centerLeft,
                   child: Text(
                     'Explore our offerings',
                     style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 43, 58, 100),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF2B395F),
                       fontFamily: 'Poppins',
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
 
                 // Subjects Buttons
                 Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
+                  spacing: 5,
+                  runSpacing: 6,
                   children: [
                     'Nursery',
                     'LKG',
@@ -201,25 +183,26 @@ class Teacherhomepage extends StatelessWidget {
                     );
                   }).toList(),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
 
                 // Explore Subjects title
-                const Center(
+                const Align(
+                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Explore Subjects',
                     style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 43, 58, 100),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                       color: Color(0xFF2B395F),
                       fontFamily: 'Poppins',
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
 
                 Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
+                  spacing: 5,
+                  runSpacing: 6,
                   children: [
                     'Hindi',
                     'English',
@@ -256,7 +239,7 @@ class Teacherhomepage extends StatelessWidget {
             bottom: 0,
             child: Container(
               color: Colors.white,
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(10.0),
               child: Center(
                 child: InkWell(
                   onTap: () {
@@ -268,10 +251,10 @@ class Teacherhomepage extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: 73,
+                    width: MediaQuery.of(context).size.width,
+                    height: 40,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(15),
                       gradient: const LinearGradient(
                         colors: [
                           Color(0xFF045C19),
@@ -285,9 +268,9 @@ class Teacherhomepage extends StatelessWidget {
                       child: Text(
                         'Registeration',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                             color: Colors.white,
-                            fontSize: 22,
+                            fontSize: 20,
                             fontFamily: 'Poppins'),
                       ),
                     ),
@@ -296,6 +279,34 @@ class Teacherhomepage extends StatelessWidget {
               ),
             ),
           ),
+          Positioned(
+              right: 13,
+              top: MediaQuery.of(context).size.height * 0.5 - 28, 
+              child: SizedBox(
+                height: 50,
+                width: 50,
+                child: FloatingActionButton(
+                  onPressed: () {
+                  },
+                  child: Image.asset('assets/whatsapp@3x.png',
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              right: 13,
+              top: MediaQuery.of(context).size.height * 0.58 - 28, 
+              child: SizedBox(
+                height: 50,
+                width: 50,
+                child: FloatingActionButton(
+                  onPressed: () {
+                  },
+                  child: Image.asset('assets/whatsapp@3x.png',
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -308,7 +319,7 @@ class Teacherhomepage extends StatelessWidget {
   }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      width: 200,
+      width: 160,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(20),
