@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/editprofilescreen.dart';
-import 'dart:convert';
-import 'api.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({super.key});
@@ -13,12 +10,15 @@ class MyProfileScreen extends StatefulWidget {
 }
 
 class MyProfileScreenState extends State<MyProfileScreen> {
-  String name = '';
-  String dob = '';
-  String school = '';
-  String studentClass = '';
-  String subject = '';
-  String profile = '';
+  String? name;
+  String? dob;
+  String? school;
+  String? studentClass;
+  String? subject;
+  String? profile;
+  String? userID;
+  String? address;
+  String? phone;
 
   @override
   void initState() {
@@ -28,28 +28,17 @@ class MyProfileScreenState extends State<MyProfileScreen> {
 
   Future<void> fetchProfileData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userID = prefs.getString('userID');
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/my-profile/$userID'),
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          name = data['name'] ?? '';
-          dob = data['dob'] ?? '';
-          school = data['school'] ?? '';
-          studentClass = data['class'] ?? '';
-          subject = data['subject'] ?? '';
-          profile = data['profile_photo'];
-        });
-      } else {
-        throw Exception('Failed to load profile data');
-      }
-    } catch (e) {
-      print('Error fetching profile data: $e');
-    }
+    setState(() {
+      userID = prefs.getString('userID');
+      name = prefs.getString('name');
+      dob = prefs.getString('DOB');
+      school = prefs.getString('school');
+      studentClass = prefs.getString('class');
+      subject = prefs.getString('subject');
+      profile = prefs.getString('profile');
+      address = prefs.getString('address');
+      phone = prefs.getString('phone_number');
+    });
   }
 
   @override
@@ -99,13 +88,12 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                   padding: EdgeInsets.only(right: isLargeScreen ? 30 : 10),
                   child: GestureDetector(
                     onTap: () {
-                          Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const EditProfileScreen(),
-                                      ),
-                                    );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditProfileScreen(),
+                        ),
+                      );
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -131,86 +119,83 @@ class MyProfileScreenState extends State<MyProfileScreen> {
           toolbarHeight: 70,
         ),
         body: SingleChildScrollView(
-            child: Column(children: [
-          // Profile header
-         SizedBox(
-  width: screenWidth,
-  child: Column(
-    mainAxisAlignment: MainAxisAlignment.center, 
-    crossAxisAlignment: CrossAxisAlignment.center, 
-    children: [
-      Padding(
-        padding: const EdgeInsets.only(top: 20.0),
-        child: Column(
-          children: [
-            Center(
-              child: Container(
-                width: isLargeScreen ? 250 : 130,
-                height: isLargeScreen ? 250 : 130,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: NetworkImage(profile),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
+          child: Column(children: [
+            // Profile header
+            SizedBox(
+                width: screenWidth,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: Column(
+                        children: [
+                          Center(
+                            child: Container(
+                              width: isLargeScreen ? 250 : 130,
+                              height: isLargeScreen ? 250 : 130,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: NetworkImage(profile!),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 7),
+                          Center(
+                            child: Text(
+                              name!,
+                              style: TextStyle(
+                                fontSize: isLargeScreen ? 22 : 20,
+                                fontWeight: FontWeight.w500,
+                                color: const Color(0xFF48116A),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5), // Bottom spacing
+                        ],
+                      ),
+                    ),
+                  ],
+                )),
+            // Info rows
+            const SizedBox(height: 18),
+            buildInfoRow(
+              'assets/pastry@3x.png',
+              'Date of Birth',
+              dob!,
+              isLargeScreen,
+              rowColors[0],
             ),
-            const SizedBox(height: 7),
-            Center(
-              child: Text(
-                name,
-                style: TextStyle(
-                  fontSize: isLargeScreen ? 22 : 20,
-                  fontWeight: FontWeight.w500,
-                  color: const Color(0xFF48116A),
-                ),
-              ),
+            const SizedBox(height: 10),
+            buildInfoRow(
+              'assets/house@3x.png',
+              'School',
+              school!,
+              isLargeScreen,
+              rowColors[1],
             ),
-            const SizedBox(height: 5), // Bottom spacing
-          ],
-        ),
-      ),
-    ],
-  )
+            const SizedBox(height: 10),
+            buildInfoRow(
+              'assets/graduation@3x.png',
+              'Class',
+              studentClass!,
+              isLargeScreen,
+              rowColors[2],
             ),
-                // Info rows
-                const SizedBox(height: 18),
-                buildInfoRow(
-                  'assets/pastry@3x.png',
-                  'Date of Birth',
-                  dob,
-                  isLargeScreen,
-                  rowColors[0],
-                ),
-                const SizedBox(height: 10),
-                buildInfoRow(
-                  'assets/house@3x.png',
-                  'School',
-                  school,
-                  isLargeScreen,
-                  rowColors[1],
-                ),
-                const SizedBox(height: 10),
-                buildInfoRow(
-                  'assets/graduation@3x.png',
-                  'Class',
-                  studentClass,
-                  isLargeScreen,
-                  rowColors[2],
-                ),
-                const SizedBox(height: 10),
-                buildInfoRow(
-                  'assets/pensp@3x.png',
-                  'Subjects',
-                  subject,
-                  isLargeScreen,
-                  rowColors[3],
-                ),
-            ]),
-          )
-          );
-        
+            const SizedBox(height: 10),
+            buildInfoRow(
+              'assets/pensp@3x.png',
+              'Subjects',
+              subject!,
+              isLargeScreen,
+              rowColors[3],
+            ),
+          ]),
+        ));
   }
 
   Widget buildInfoRow(

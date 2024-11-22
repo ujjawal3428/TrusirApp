@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/login_page.dart';
+import 'package:trusir/popup_splash_screen.dart';
 
 class ProfilePopup extends StatefulWidget {
   const ProfilePopup({super.key});
@@ -126,8 +127,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            selectedProfile?['email'] ??
-                                                'youremail@example.com',
+                                            'Class: ${selectedProfile?['class']}',
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: Colors.grey[700],
@@ -175,8 +175,8 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                               const EdgeInsets.symmetric(
                                                   horizontal: 10, vertical: 0),
                                           title: Text(data[index]['name']),
-                                          subtitle: Text(data[index]['email'] ??
-                                              'profile$index@example.com'),
+                                          subtitle: Text(
+                                              'Class: ${data[index]['class']}'),
                                           leading: CircleAvatar(
                                             radius: 18,
                                             backgroundImage: data[index]
@@ -195,6 +195,16 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                               data.insert(0, selectedProfile!);
                                               profiles = json.encode(data);
                                             });
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PopUpSplashScreen(
+                                                        userId:
+                                                            selectedProfile![
+                                                                'userID']),
+                                              ),
+                                            );
                                           },
                                         ),
                                         Divider(

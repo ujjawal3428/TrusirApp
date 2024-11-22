@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trusir/api.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -21,7 +18,15 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController subjectController = TextEditingController();
 
   File? _profileImage;
-  String profile = '';
+  String? name;
+  String? dob;
+  String? school;
+  String? studentClass;
+  String? subject;
+  String? profile;
+  String? userID;
+  String? address;
+  String? phone;
 
   @override
   void initState() {
@@ -31,28 +36,22 @@ class EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> fetchProfileData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userID = prefs.getString('userID');
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/my-profile/$userID'),
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          nameController.text = data['name'] ?? '';
-          dobController.text = data['dob'] ?? '';
-          schoolController.text = data['school'] ?? '';
-          classController.text = data['class'] ?? '';
-          subjectController.text = data['subject'] ?? '';
-          profile = data['profile_photo'];
-        });
-      } else {
-        throw Exception('Failed to load profile data');
-      }
-    } catch (e) {
-      print('Error fetching profile data: $e');
-    }
+    setState(() {
+      userID = prefs.getString('userID');
+      name = prefs.getString('name');
+      dob = prefs.getString('DOB');
+      school = prefs.getString('school');
+      studentClass = prefs.getString('class');
+      subject = prefs.getString('subject');
+      profile = prefs.getString('profile');
+      address = prefs.getString('address');
+      phone = prefs.getString('phone_number');
+      nameController.text = name!;
+      dobController.text = dob!;
+      schoolController.text = school!;
+      classController.text = studentClass!;
+      subjectController.text = subject!;
+    });
   }
 
   Future<void> _pickImage() async {
@@ -128,7 +127,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                     radius: isLargeScreen ? 80 : 60,
                     backgroundImage: _profileImage != null
                         ? FileImage(_profileImage!)
-                        : NetworkImage(profile) as ImageProvider,
+                        : NetworkImage(profile!) as ImageProvider,
                   ),
                   Positioned(
                     bottom: 0,

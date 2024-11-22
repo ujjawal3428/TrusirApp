@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:trusir/api.dart';
-import 'package:trusir/main_screen.dart';
+import 'package:trusir/login_splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/student_homepage.dart';
 
@@ -69,7 +69,7 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const MainScreen()),
+            MaterialPageRoute(builder: (context) => const LoginSplashScreen()),
           );
         }
         print(body);

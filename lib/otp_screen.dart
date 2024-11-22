@@ -24,15 +24,19 @@ class OTPScreen extends StatelessWidget {
         final responseData = jsonDecode(response.body);
 
         // Check response structure
-        if (responseData.containsKey('phone_number')) {
+        if (responseData['new_user'] == true) {
           // Save response to cache
-          await prefs.setString('userID', 'testID');
-          // await prefs.setString('role', responseData['role']);
-          // await prefs.setString('token', responseData['token']);
           await prefs.setBool('new_user', responseData['new_user']);
           final newuser = prefs.getBool('new_user');
           print('Data fetched from API and cached.');
           print(newuser);
+          return responseData;
+        } else if (responseData['new_user'] == false) {
+          await prefs.setString('userID', responseData['uerID']);
+          await prefs.setString('role', responseData['role']);
+          await prefs.setString('token', responseData['token']);
+          await prefs.setString('new_user', responseData['new_user']);
+          print('Data fetched from API and cached.');
           return responseData;
         } else {
           print('Unexpected response structure.');

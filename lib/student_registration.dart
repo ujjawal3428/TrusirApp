@@ -3,10 +3,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/login_page.dart';
-import 'package:trusir/main_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:trusir/registration_splash_screen.dart';
 
 class StudentRegistrationData {
   String? studentName;
@@ -141,7 +141,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           "gender": student.gender,
           "DOB":
               student.dob != null ? dateFormatter.format(student.dob!) : null,
-          "school_name": student.schoolName,
+          "school": student.schoolName,
           "medium": student.medium,
           "class": student.studentClass,
           "subject": student.subject,
@@ -172,7 +172,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         print(payload);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const MainScreen()),
+          MaterialPageRoute(builder: (context) => const SplashScreen()),
         );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

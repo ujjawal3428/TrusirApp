@@ -12,10 +12,7 @@ import 'package:trusir/progress_report.dart';
 import 'package:trusir/setting.dart';
 import 'package:trusir/student_doubt.dart';
 import 'package:trusir/teacher_myprofile.dart';
-import 'package:http/http.dart' as http;
 import 'package:trusir/video_knowledge.dart';
-import 'dart:convert';
-import 'api.dart';
 
 class Studentfacilities extends StatefulWidget {
   const Studentfacilities({super.key});
@@ -25,10 +22,12 @@ class Studentfacilities extends StatefulWidget {
 }
 
 class _StudentfacilitiesState extends State<Studentfacilities> {
-  String name = '';
-  String profile = '';
-  String address = '';
-  String phone = '';
+  String? name;
+  String? profile;
+  String? address;
+  String? phone;
+  String? userID;
+
   final Map<String, Map<String, double>> imageSizes = {
     'assets/myprofile.png': {'width': 50, 'height': 50},
     'assets/teacherprofile.png': {'width': 50, 'height': 49},
@@ -62,26 +61,13 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
 
   Future<void> fetchProfileData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userID = prefs.getString('userID');
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/my-profile/$userID'),
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          name = data['name'] ?? '';
-          profile = data['profile_photo'] ?? 'https://via.placeholder.com/150';
-          phone = data['phone'] ?? '';
-          address = data['address'] ?? '';
-        });
-      } else {
-        throw Exception('Failed to load profile data');
-      }
-    } catch (e) {
-      print('Error fetching profile data: $e');
-    }
+    setState(() {
+      userID = prefs.getString('userID');
+      name = prefs.getString('name');
+      profile = prefs.getString('profile');
+      address = prefs.getString('address');
+      phone = prefs.getString('phone_number');
+    });
   }
 
   @override
@@ -184,7 +170,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    name,
+                                    name!,
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 22,
@@ -194,7 +180,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 5.0),
                                     child: Text(
-                                      address,
+                                      address!,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
@@ -206,7 +192,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 2.0),
                                     child: Text(
-                                      phone,
+                                      phone!,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'Poppins',
@@ -222,7 +208,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                           Padding(
                             padding: const EdgeInsets.only(right: 12.0),
                             child: Image.network(
-                              profile,
+                              profile!,
                               width: 92,
                               height: 92,
                               fit: BoxFit.contain,
