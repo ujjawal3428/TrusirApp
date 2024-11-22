@@ -14,6 +14,7 @@ class ProfilePopup extends StatefulWidget {
 
 class _ProfilePopupState extends State<ProfilePopup> {
   String? profiles;
+  Map<String, dynamic>? selectedProfile;
 
   @override
   void initState() {
@@ -39,17 +40,16 @@ class _ProfilePopupState extends State<ProfilePopup> {
       final response =
           await http.get(Uri.parse('$baseUrl/api/users/$phonenum'));
       if (response.statusCode == 200) {
-        // Parse response
         final responseData = json.decode(response.body);
 
         if (responseData['success'] == true) {
-          // Store data in SharedPreferences
-
-          print("Data successfully stored in SharedPreferences.");
           setState(() {
             profiles = json.encode(responseData['data']);
+            // Set the first profile as the default selected profile
+            if (responseData['data'].isNotEmpty) {
+              selectedProfile = responseData['data'][0];
+            }
           });
-          print(profiles);
         } else {
           print("API response indicates failure.");
         }
@@ -88,32 +88,27 @@ class _ProfilePopupState extends State<ProfilePopup> {
                       } else if (snapshot.hasError) {
                         return Center(child: Text("Error: ${snapshot.error}"));
                       } else {
-                        // Data fetched
                         List<Map<String, dynamic>> data =
                             snapshot.data as List<Map<String, dynamic>>;
 
-                        // Example: Filter only names
-                        List<String> names =
-                            data.map((item) => item['name'] as String).toList();
-                        List<String?> profilepic = data
-                            .map((item) => item['profile'] as String?)
-                            .toList();
-                        List<String?> email = data
-                            .map((item) => item['email'] as String?)
-                            .toList();
                         return Stack(children: [
                           Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
+                              // Top Section
                               Container(
-                                padding: const EdgeInsets.only(
-                                    top: 4), // Leave space for the close button
+                                padding: const EdgeInsets.only(top: 4),
                                 child: Row(
                                   children: [
-                                    const CircleAvatar(
+                                    CircleAvatar(
                                       radius: 35,
                                       backgroundImage:
-                                          AssetImage('assets/rakesh@3x.png'),
+                                          selectedProfile?['profile'] != null
+                                              ? NetworkImage(
+                                                  selectedProfile!['profile'])
+                                              : const AssetImage(
+                                                      'assets/rakesh@3x.png')
+                                                  as ImageProvider,
                                     ),
                                     const SizedBox(width: 16),
                                     Expanded(
@@ -121,16 +116,18 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          const Text(
-                                            'Your Name',
-                                            style: TextStyle(
+                                          Text(
+                                            selectedProfile?['name'] ??
+                                                'Your Name',
+                                            style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                           const SizedBox(height: 4),
                                           Text(
-                                            'youremail@example.com',
+                                            selectedProfile?['email'] ??
+                                                'youremail@example.com',
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: Colors.grey[700],
@@ -162,45 +159,55 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                   ],
                                 ),
                               ),
-                              // Scrollable Profiles List
                               const SizedBox(height: 8),
+                              // Scrollable Profiles List
                               Container(
                                 height: 230,
                                 width: double.infinity,
                                 color: Colors.grey[100],
                                 child: ListView.builder(
-                                  itemCount: names.length,
+                                  itemCount: data.length,
                                   itemBuilder: (context, index) {
                                     return Column(
                                       children: [
                                         ListTile(
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 10,
-                                                    vertical: 0),
-                                            title: Text(names[index]),
-                                            subtitle: Text(email[index] ??
-                                                'profile$index@example.com'),
-                                            leading: CircleAvatar(
-                                              radius: 18,
-                                              backgroundImage: NetworkImage(
-                                                  profilepic[index] ??
-                                                      'https://via.placeholder.com/150'),
-                                            )),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 10, vertical: 0),
+                                          title: Text(data[index]['name']),
+                                          subtitle: Text(data[index]['email'] ??
+                                              'profile$index@example.com'),
+                                          leading: CircleAvatar(
+                                            radius: 18,
+                                            backgroundImage: data[index]
+                                                        ['profile'] !=
+                                                    null
+                                                ? NetworkImage(
+                                                    data[index]['profile'])
+                                                : const NetworkImage(
+                                                    'https://via.placeholder.com/150'),
+                                          ),
+                                          onTap: () {
+                                            // Move the selected profile to the top
+                                            setState(() {
+                                              selectedProfile = data[index];
+                                              data.removeAt(index);
+                                              data.insert(0, selectedProfile!);
+                                              profiles = json.encode(data);
+                                            });
+                                          },
+                                        ),
                                         Divider(
                                           color: Colors.grey[300],
                                           thickness: 1,
-                                          height:
-                                              1, // Controls the space above and below the divider
+                                          height: 1,
                                         ),
                                       ],
                                     );
                                   },
                                 ),
                               ),
-                              const SizedBox(
-                                height: 8,
-                              ),
+                              const SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
@@ -219,10 +226,9 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                             MaterialTapTargetSize.shrinkWrap,
                                       ),
                                       onPressed: () {
-                                        logout(context); // Close the popup
+                                        logout(context);
                                       },
                                       child: const Center(
-                                        // Center the text within the button
                                         child: Text('Sign Out',
                                             style: TextStyle(
                                               color: Colors.grey,
@@ -242,7 +248,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
                             child: IconButton(
                               icon: const Icon(Icons.close),
                               onPressed: () {
-                                Navigator.pop(context); // Close the popup
+                                Navigator.pop(context);
                               },
                             ),
                           ),
