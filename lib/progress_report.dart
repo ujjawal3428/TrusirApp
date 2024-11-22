@@ -75,7 +75,6 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   void initState() {
     super.initState();
     _reports = fetchProgressReports();
-    _requestPermissions();
   }
 
   Future<void> _requestPermissions() async {
@@ -92,15 +91,13 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
       }
 
       if (await Permission.photos.isGranted ||
-          await Permission.videos.isGranted ||
-          await Permission.audio.isGranted) {
+          await Permission.videos.isGranted) {
         return;
       }
 
       Map<Permission, PermissionStatus> statuses = await [
         Permission.photos,
         Permission.videos,
-        Permission.audio
       ].request();
 
       if (statuses.values.any((status) => !status.isGranted)) {
@@ -140,6 +137,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   Future<void> _downloadFile(String url, String filename) async {
     setState(() {
+      _requestPermissions();
       _isDownloading = true;
       _downloadProgress = '0%';
     });

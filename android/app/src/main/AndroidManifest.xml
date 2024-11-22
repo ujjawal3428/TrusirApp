@@ -50,10 +50,6 @@
     <uses-permission android:name="android.permission.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-
-
-
     <!-- <key>NSDocumentsDirectoryUsageDescription</key>
     <string>This app needs access to documents directory to save images</string> -->
 

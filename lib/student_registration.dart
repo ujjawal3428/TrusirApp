@@ -78,6 +78,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   void initState() {
     super.initState();
     _loadPhoneNumber();
+    updateStudentForms(1);
+    numberOfStudents = '1';
   }
 
   // Load the phone number from SharedPreferences

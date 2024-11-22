@@ -31,7 +31,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   void initState() {
     super.initState();
     fetchTestSeries();
-    _requestPermissions();
   }
 
   Future<void> _requestPermissions() async {
@@ -48,15 +47,13 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
       }
 
       if (await Permission.photos.isGranted ||
-          await Permission.videos.isGranted ||
-          await Permission.audio.isGranted) {
+          await Permission.videos.isGranted) {
         return;
       }
 
       Map<Permission, PermissionStatus> statuses = await [
         Permission.photos,
         Permission.videos,
-        Permission.audio
       ].request();
 
       if (statuses.values.any((status) => !status.isGranted)) {
@@ -89,6 +86,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
   Future<void> _downloadFile(String url, String filename) async {
     setState(() {
+      _requestPermissions();
       _isDownloading = true;
       _downloadProgress = '0%';
     });
@@ -196,45 +194,44 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
-        appBar: AppBar(
-  backgroundColor: Colors.grey[50],
-  elevation: 0,
-  automaticallyImplyLeading: false,
-  title: Padding(
-    padding: const EdgeInsets.only(left: 1.0),
-    child: Row(
-      children: [
-        IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_rounded,
-           color: Color(0xFF48116A), 
-            size: 30, 
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 1.0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 5),
+              const Text(
+                'Test Series',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 22,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
-       const SizedBox(width: 5), 
-        const Text(
-          'Test Series',
-          style: TextStyle(
-            color: Color(0xFF48116A),
-            fontSize: 22,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ],
-    ),
-  ),
-  toolbarHeight: 70,
-),
+        toolbarHeight: 70,
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(
             child: Column(
               children: [
-             
                 if (_isDownloading)
                   Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -259,7 +256,11 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                           int index = entry.key;
                           var test = entry.value;
                           return Padding(
-                            padding: const EdgeInsets.only(top: 16.0, right: 16, left:16,),
+                            padding: const EdgeInsets.only(
+                              top: 16.0,
+                              right: 16,
+                              left: 16,
+                            ),
                             child: Container(
                               width: MediaQuery.of(context).size.width * 1,
                               decoration: BoxDecoration(
@@ -302,7 +303,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                                   test['date'],
                                                   style: const TextStyle(
                                                     fontSize: 14,
-                                               color: Colors.black,
+                                                    color: Colors.black,
                                                     fontWeight: FontWeight.w400,
                                                   ),
                                                 ),
@@ -313,8 +314,8 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                         Align(
                                           alignment: Alignment.topRight,
                                           child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 0),
+                                            padding:
+                                                const EdgeInsets.only(top: 0),
                                             child: Column(
                                               children: [
                                                 Text(
