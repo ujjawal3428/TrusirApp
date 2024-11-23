@@ -7,7 +7,8 @@ import 'package:trusir/main_screen.dart';
 import 'package:trusir/teacher_main_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final String phone;
+  const SplashScreen({super.key, required this.phone});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -42,12 +43,6 @@ class _SplashScreenState extends State<SplashScreen> {
           MaterialPageRoute(builder: (context) => const TeacherMainScreen()),
         );
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login Successful!'),
-          duration: Duration(seconds: 1),
-        ),
-      );
     } catch (e) {
       print('Error during initialization: $e');
     }
@@ -56,16 +51,10 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _fetchAndStoreUserID() async {
     final prefs = await SharedPreferences.getInstance();
 
-    // Fetch phone number from SharedPreferences
-    String? phoneNumber = prefs.getString('phone_number');
-    if (phoneNumber == null) {
-      throw Exception('Phone number not found in SharedPreferences');
-    }
-
     // Call the login API
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/api/login/$phoneNumber'),
+        Uri.parse('$baseUrl/api/login/${widget.phone}'),
       );
 
       if (response.statusCode == 200) {
@@ -73,13 +62,14 @@ class _SplashScreenState extends State<SplashScreen> {
         String userID = responseData['uerID'];
         String token = responseData['token'];
         String role = responseData['role'];
-        String newUser = responseData['new_user'];
+        bool newUser = responseData['new_user'];
 
         // Store userID in SharedPreferences
         await prefs.setString('userID', userID);
+        await prefs.setString('phone_number', widget.phone);
         await prefs.setString('token', token);
         await prefs.setString('role', role);
-        await prefs.setString('new_user', newUser);
+        await prefs.setBool('new_user', newUser);
       } else {
         throw Exception(
             'Failed to fetch userID. Status code: ${response.statusCode}');
@@ -128,8 +118,6 @@ class _SplashScreenState extends State<SplashScreen> {
         await prefs.setString('adhaar_back', responseData['adhaar_back']);
         await prefs.setString('profile', responseData['profile']);
         await prefs.setString('time_slot', responseData['time_slot']);
-        await prefs.setString('created_at', responseData['created_at']);
-        await prefs.setString('updated_at', responseData['updated_at']);
       } else {
         throw Exception(
             'Failed to fetch user details. Status code: ${response.statusCode}');

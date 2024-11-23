@@ -3,8 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/teacher_homepage.dart';
-import 'package:trusir/teacher_main_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TeacherEnquiry {
   String? name;
@@ -54,8 +52,6 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
   }
 
   Future<void> submitForm(BuildContext context) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final newuser = prefs.getBool('new_user');
     final url = Uri.parse('$baseUrl/api/submit/enqiry/teacher');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(widget.formData.toJson());
@@ -65,17 +61,11 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
 
       if (response.statusCode == 200) {
         // Successfully submitted
-        if (newuser == true) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const Teacherhomepage()),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const TeacherMainScreen()),
-          );
-        }
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Teacherhomepage()),
+        );
 
         print(body);
       } else {

@@ -172,7 +172,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         print(payload);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const SplashScreen()),
+          MaterialPageRoute(
+              builder: (context) =>
+                  SplashScreen(phone: phoneNum ?? _phoneController.text)),
         );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -565,7 +567,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Padding(
-              padding: EdgeInsets.only(right: 60),
+              padding: EdgeInsets.only(right: 50),
               child: Text(
                 'Profile Photo',
                 style: TextStyle(fontSize: 14),
@@ -583,7 +585,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Padding(
-              padding: EdgeInsets.only(right: 30),
+              padding: EdgeInsets.only(right: 19),
               child: Text(
                 'Aadhar Card Front',
                 style: TextStyle(fontSize: 14),
@@ -601,7 +603,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Padding(
-              padding: EdgeInsets.only(right: 31),
+              padding: EdgeInsets.only(right: 20),
               child: Text(
                 'Aadhar Card Back',
                 style: TextStyle(fontSize: 14),
@@ -699,7 +701,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         value: selectedValue,
         onChanged: onChanged,
         decoration: InputDecoration(
-          hintText: hintText,
+          labelText: hintText,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
         ),

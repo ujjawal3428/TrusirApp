@@ -4,6 +4,7 @@
         android:label="flutter_application_3"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true"
         >
         <activity
             android:name=".MainActivity"
@@ -50,6 +51,7 @@
     <uses-permission android:name="android.permission.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+
     <!-- <key>NSDocumentsDirectoryUsageDescription</key>
     <string>This app needs access to documents directory to save images</string> -->
 

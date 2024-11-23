@@ -24,6 +24,7 @@ class LoginSplashScreenState extends State<LoginSplashScreen> {
     final prefs = await SharedPreferences.getInstance();
     // Fetch UserID from SharedPreferences
     String? userId = prefs.getString('userID');
+    print("UserID: $userId");
     if (userId == null) {
       print("UserID not found in SharedPreferences");
       return;
@@ -40,26 +41,49 @@ class LoginSplashScreenState extends State<LoginSplashScreen> {
         final responseData = json.decode(response.body);
 
         // Store each entry in SharedPreferences
-        await prefs.setString('id', responseData['id'].toString());
-        await prefs.setString('name', responseData['name']);
-        await prefs.setString('father_name', responseData['father_name']);
-        await prefs.setString('mother_name', responseData['mother_name']);
-        await prefs.setString('gender', responseData['gender']);
-        await prefs.setString('class', responseData['class']);
-        await prefs.setString('subject', responseData['subject']);
-        await prefs.setString('DOB', responseData['DOB']);
-        await prefs.setString('role', responseData['role']);
-        await prefs.setString('school', responseData['school']);
-        await prefs.setString('medium', responseData['medium']);
-        await prefs.setString('state', responseData['state']);
-        await prefs.setString('city', responseData['city']);
-        await prefs.setString('address', responseData['address']);
-        await prefs.setString('area', responseData['area']);
-        await prefs.setString('pincode', responseData['pincode']);
-        await prefs.setString('adhaar_front', responseData['adhaar_front']);
-        await prefs.setString('adhaar_back', responseData['adhaar_back']);
-        await prefs.setString('profile', responseData['profile']);
-        await prefs.setString('time_slot', responseData['time_slot']);
+        if (responseData['role'] == 'student') {
+          await prefs.setString('id', responseData['id'].toString());
+          await prefs.setString('name', responseData['name']);
+          await prefs.setString('father_name', responseData['father_name']);
+          await prefs.setString('mother_name', responseData['mother_name']);
+          await prefs.setString('gender', responseData['gender']);
+          await prefs.setString('class', responseData['class']);
+          await prefs.setString('subject', responseData['subject']);
+          await prefs.setString('DOB', responseData['DOB']);
+          await prefs.setString('role', responseData['role']);
+          await prefs.setString('school', responseData['school']);
+          await prefs.setString('medium', responseData['medium']);
+          await prefs.setString('state', responseData['state']);
+          await prefs.setString('city', responseData['city']);
+          await prefs.setString('address', responseData['address']);
+          await prefs.setString('area', responseData['area']);
+          await prefs.setString('pincode', responseData['pincode']);
+          await prefs.setString('adhaar_front', responseData['adhaar_front']);
+          await prefs.setString('adhaar_back', responseData['adhaar_back']);
+          await prefs.setString('profile', responseData['profile']);
+          await prefs.setString('time_slot', responseData['time_slot']);
+        } else if (responseData['role'] == 'teacher') {
+          await prefs.setString('id', responseData['id'].toString());
+          await prefs.setString('name', responseData['name']);
+          await prefs.setString('father_name', responseData['father_name']);
+          await prefs.setString('mother_name', responseData['mother_name']);
+          await prefs.setString('gender', responseData['gender']);
+          await prefs.setString('class', responseData['class']);
+          await prefs.setString('subject', responseData['subject']);
+          await prefs.setString('DOB', responseData['DOB']);
+          await prefs.setString('role', responseData['role']);
+          await prefs.setString('school', responseData['school']);
+          await prefs.setString('medium', responseData['medium']);
+          await prefs.setString('state', responseData['state']);
+          await prefs.setString('city', responseData['city']);
+          await prefs.setString('address', responseData['address']);
+          await prefs.setString('area', responseData['area']);
+          await prefs.setString('pincode', responseData['pincode']);
+          await prefs.setString('adhaar_front', responseData['adhaar_front']);
+          await prefs.setString('adhaar_back', responseData['adhaar_back']);
+          await prefs.setString('profile', responseData['profile']);
+          await prefs.setString('time_slot', responseData['time_slot']);
+        }
 
         // Navigate to the next screen
         if (responseData['role'] == 'student') {
@@ -73,6 +97,7 @@ class LoginSplashScreenState extends State<LoginSplashScreen> {
             MaterialPageRoute(builder: (context) => const TeacherMainScreen()),
           );
         }
+        print(responseData);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Login Successful!'),

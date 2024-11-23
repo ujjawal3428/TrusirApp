@@ -35,10 +35,11 @@ class TeacherFacilities extends StatefulWidget {
 
 class _TeacherFacilitiesState extends State<TeacherFacilities> {
   List<StudentProfile> studentprofile = [];
-  String name = '';
-  String address = '';
-  String phoneNumber = '';
-  String profilePhoto = '';
+  String? name;
+  String? address;
+  String? phone;
+  String? profile;
+  String? userID;
 
   final apiBase = '$baseUrl/my-students';
 
@@ -92,27 +93,13 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
 
   Future<void> fetchProfileData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userID = prefs.getString('userID');
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/teacher-profile/$userID'),
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        setState(() {
-          name = data['name'] ?? 'N/A';
-          phoneNumber = data['phoneNumber'] ?? 'N/A';
-          address = data['address'] ?? 'N/A';
-          profilePhoto = data['profile_photo'] ??
-              'https://via.placeholder.com/150'; // Fallback image URL
-        });
-      } else {
-        throw Exception('Failed to load profile data');
-      }
-    } catch (e) {
-      print('Error fetching profile data: $e');
-    }
+    setState(() {
+      userID = prefs.getString('userID');
+      name = prefs.getString('name');
+      profile = prefs.getString('profile');
+      address = prefs.getString('address');
+      phone = prefs.getString('phone_number');
+    });
   }
 
   Future<void> logout(BuildContext context) async {
@@ -163,8 +150,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
         body: LayoutBuilder(
           builder: (context, constraints) {
             return Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Column(
                 children: [
                   Container(
@@ -196,13 +182,12 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 15.0, top: 13),
+                            padding: const EdgeInsets.only(left: 15.0, top: 13),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  name,
+                                  name!,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -213,7 +198,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5.0),
                                   child: Text(
-                                    address,
+                                    address!,
                                     style: const TextStyle(
                                       fontFamily: 'Poppins',
                                       color: Colors.white,
@@ -225,7 +210,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 2.0),
                                   child: Text(
-                                    phoneNumber,
+                                    phone!,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 11,
@@ -241,7 +226,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                         Padding(
                           padding: const EdgeInsets.only(right: 12.0),
                           child: Image.network(
-                            profilePhoto,
+                            profile!,
                             width: 92,
                             height: 92,
                             fit: BoxFit.contain,
@@ -295,9 +280,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                        
-                                      const SettingsScreen(),
+                                  builder: (context) => const SettingsScreen(),
                                 ),
                               );
                             }),
@@ -330,13 +313,16 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               ...studentprofile.asMap().entries.map((entry) {
                                 int index = entry.key;
                                 StudentProfile studentProfile = entry.value;
-            
+
                                 // Cycle through colors using the modulus operator
                                 Color cardColor =
                                     cardColors[index % cardColors.length];
-                                    
-                                    final borderColor = HSLColor.fromColor(cardColor).withLightness(0.95).toColor();
-            
+
+                                final borderColor =
+                                    HSLColor.fromColor(cardColor)
+                                        .withLightness(0.95)
+                                        .toColor();
+
                                 return GestureDetector(
                                   onTap: () {
                                     Navigator.push(
@@ -355,8 +341,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                       height: 129,
                                       decoration: BoxDecoration(
                                         color: cardColor,
-                                        borderRadius:
-                                            BorderRadius.circular(22),
+                                        borderRadius: BorderRadius.circular(22),
                                         border: Border.all(
                                           color: borderColor,
                                           width: 2,
@@ -374,9 +359,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                           ),
                                           const SizedBox(height: 4),
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 4),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 4),
                                             child: Text(
                                               studentProfile.name,
                                               textAlign: TextAlign.center,
@@ -425,7 +409,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
             color: color,
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
-              color:  borderColor,
+              color: borderColor,
               width: 2,
             ),
           ),

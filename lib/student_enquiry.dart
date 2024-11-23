@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:trusir/api.dart';
-import 'package:trusir/login_splash_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/student_homepage.dart';
 
 class StudentEnquiry {
@@ -47,8 +45,6 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
   }
 
   Future<void> submitForm(BuildContext context) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final newuser = prefs.getBool('new_user');
     final url = Uri.parse('$baseUrl/api/submit/enqiry/student');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
@@ -58,20 +54,15 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
 
       if (response.statusCode == 200) {
         // Successfully submitted
-        if (newuser == true) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const StudentHomepage(
-                      enablephone: false,
-                    )),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginSplashScreen()),
-          );
-        }
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const StudentHomepage(
+                    enablephone: true,
+                  )),
+        );
+
         print(body);
       } else {
         // Handle error

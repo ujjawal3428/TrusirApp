@@ -5,12 +5,19 @@ import 'package:trusir/api.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:trusir/enquiry.dart';
+import 'package:trusir/login_splash_screen.dart';
 
-class OTPScreen extends StatelessWidget {
+class OTPScreen extends StatefulWidget {
   final String phonenum;
-  OTPScreen({super.key, required this.phonenum});
+  const OTPScreen({super.key, required this.phonenum});
 
+  @override
+  State<OTPScreen> createState() => _OTPScreenState();
+}
+
+class _OTPScreenState extends State<OTPScreen> {
   final TextEditingController otpController = TextEditingController();
+  bool newuser = false;
 
   Future<Map<String, dynamic>?> fetchUserData(String phoneNumber) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -24,19 +31,25 @@ class OTPScreen extends StatelessWidget {
         final responseData = jsonDecode(response.body);
 
         // Check response structure
-        if (responseData['new_user'] == true) {
+        if (responseData.containsKey('new_user')) {
+          final bool isNewUser = responseData['new_user'];
+
           // Save response to cache
-          await prefs.setBool('new_user', responseData['new_user']);
-          final newuser = prefs.getBool('new_user');
-          print('Data fetched from API and cached.');
-          print(newuser);
-          return responseData;
-        } else if (responseData['new_user'] == false) {
-          await prefs.setString('userID', responseData['uerID']);
-          await prefs.setString('role', responseData['role']);
-          await prefs.setString('token', responseData['token']);
-          await prefs.setString('new_user', responseData['new_user']);
-          print('Data fetched from API and cached.');
+          await prefs.setBool('new_user', isNewUser);
+          setState(() {
+            newuser = isNewUser;
+          });
+
+          if (isNewUser) {
+            print('New user: $newuser');
+          } else {
+            await prefs.setString('userID', responseData['uerID']);
+            await prefs.setString('role', responseData['role']);
+            await prefs.setString('token', responseData['token']);
+            await prefs.setBool('new_user', responseData['new_user']);
+            print('Returning user data cached.');
+          }
+
           return responseData;
         } else {
           print('Unexpected response structure.');
@@ -98,10 +111,17 @@ class OTPScreen extends StatelessWidget {
     // Close the dialog and navigate to the next screen after 2 seconds
     Timer(const Duration(seconds: 2), () {
       Navigator.pop(context); // Close the dialog
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const EnquiryPage()),
-      );
+      if (newuser) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const EnquiryPage()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginSplashScreen()),
+        );
+      }
     });
   }
 
@@ -180,7 +200,7 @@ class OTPScreen extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                onPost(phonenum, context);
+                onPost(widget.phonenum, context);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green,
