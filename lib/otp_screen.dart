@@ -117,9 +117,10 @@ class _OTPScreenState extends State<OTPScreen> {
           MaterialPageRoute(builder: (context) => const EnquiryPage()),
         );
       } else {
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const LoginSplashScreen()),
+          (route) => false,
         );
       }
     });
