@@ -310,6 +310,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -539,9 +540,16 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           items: ['Science', 'Arts'],
         ),
         const SizedBox(height: 10),
-        _buildTextField('State', onChanged: (value) {
-          studentForms[index].state = value;
-        }),
+        _buildDropdownField(
+          'State',
+          selectedValue: studentForms[index].state,
+          onChanged: (value) {
+            setState(() {
+              studentForms[index].state = value;
+            });
+          },
+          items: ['UP', 'Bihar', 'Gujarat', 'Maharastra', 'Rajasthan', 'Delhi'],
+        ),
         const SizedBox(height: 10),
         _buildDropdownField(
           'City/Town',
@@ -554,13 +562,33 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           items: ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'],
         ),
         const SizedBox(height: 10),
-        _buildTextField('Mohalla/Area', onChanged: (value) {
-          studentForms[index].area = value;
-        }),
+        _buildDropdownField(
+          'Mohalla/Area',
+          selectedValue: studentForms[index].area,
+          onChanged: (value) {
+            setState(() {
+              studentForms[index].area = value;
+            });
+          },
+          items: [
+            'Balua',
+            'Chandmari',
+            'Raja Bazar',
+            'Chhatauni',
+            'Lakshmipur'
+          ],
+        ),
         const SizedBox(height: 10),
-        _buildTextField('Pincode', onChanged: (value) {
-          studentForms[index].pincode = value;
-        }),
+        _buildDropdownField(
+          'Pincode',
+          selectedValue: studentForms[index].pincode,
+          onChanged: (value) {
+            setState(() {
+              studentForms[index].pincode = value;
+            });
+          },
+          items: ['845401', '845437', '845456', '845422', '845435'],
+        ),
         const SizedBox(height: 10),
         // Full address
         _buildTextField('Full Address', height: 126, onChanged: (value) {

@@ -115,6 +115,7 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
       body: Padding(
         padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
         child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

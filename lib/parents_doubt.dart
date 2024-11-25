@@ -1,4 +1,22 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:trusir/api.dart';
+
+class ParentsDoubt {
+  String? title;
+  String? description;
+  String? photo;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'description': description,
+      'photo': photo,
+    };
+  }
+}
 
 class ParentsDoubtScreen extends StatefulWidget {
   const ParentsDoubtScreen({super.key});
@@ -8,6 +26,93 @@ class ParentsDoubtScreen extends StatefulWidget {
 }
 
 class _MyAppState extends State<ParentsDoubtScreen> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  final ParentsDoubt formData = ParentsDoubt();
+  Future<void> submitForm(BuildContext context) async {
+    final url = Uri.parse('$baseUrl/api/submit/doubt/parents');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(formData.toJson());
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        // Successfully submitted
+
+        Navigator.pop(context);
+
+        print(body);
+      } else {
+        // Handle error
+        print('Failed to submit form: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
+
+  Future<String> uploadImage(XFile imageFile) async {
+    final uri = Uri.parse('$baseUrl/api/upload-profile');
+    final request = http.MultipartRequest('POST', uri);
+
+    // Add the image file to the request
+    request.files
+        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
+
+    // Send the request
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      // Parse the response to extract the download URL
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse.containsKey('download_url')) {
+        return jsonResponse['download_url'] as String;
+      } else {
+        print('Download URL not found in the response.');
+        return 'null';
+      }
+    } else {
+      print('Failed to upload image: ${response.statusCode}');
+      return 'null';
+    }
+  }
+
+  Future<void> handleImageSelection(String? path) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        // Upload the image and get the path
+        final uploadedPath = await uploadImage(pickedFile);
+        if (uploadedPath != 'null') {
+          setState(() {
+            // Example: Update the first student's photo path
+            formData.photo = uploadedPath;
+            //)
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Image Uploaded Successfully!'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+          print('Image uploaded successfully: $uploadedPath');
+        } else {
+          print('Failed to upload the image.');
+        }
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      print('Error during image selection: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,7 +162,17 @@ class _MyAppState extends State<ParentsDoubtScreen> {
         ),
         child: FloatingActionButton(
           onPressed: () {
-            // Your onPressed action
+            setState(() {
+              formData.title = titleController.text;
+              formData.description = descriptionController.text;
+            });
+            submitForm(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Doubt Submitted Successfully!'),
+                duration: Duration(seconds: 1),
+              ),
+            );
           },
           elevation: 0, // To match the gradient
           backgroundColor:
@@ -183,56 +298,60 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                 ),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Container(
-                                width: constraints.maxWidth *
-                                    0.2, // Responsive width
-                                height: 168,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(14.40),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.white,
-                                        offset: Offset(2, 2),
-                                      )
-                                    ]),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(1.0),
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 25),
-                                          child: Image.asset(
-                                            'assets/camera@3x.png',
-                                            width: 46,
-                                            height: 37,
+                            GestureDetector(
+                              onTap: () {
+                                handleImageSelection(formData.photo);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Container(
+                                  width: constraints.maxWidth *
+                                      0.2, // Responsive width
+                                  height: 168,
+                                  decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(14.40),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.white,
+                                          offset: Offset(2, 2),
+                                        )
+                                      ]),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(1.0),
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 25),
+                                            child: Image.asset(
+                                              'assets/camera@3x.png',
+                                              width: 46,
+                                              height: 37,
+                                            ),
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        const Center(
-                                          child: Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Text(
-                                              'Upload Image',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 10,
+                                          const SizedBox(
+                                            height: 10,
+                                          ),
+                                          const Center(
+                                            child: Align(
+                                              alignment: Alignment.topCenter,
+                                              child: Text(
+                                                'Upload Image',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 10,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          height: 5,
-                                        ),
-                                        const Center(
-                                          child: InkWell(
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          const Center(
                                             child: Text(
                                               'Click here',
                                               style: TextStyle(
@@ -240,9 +359,9 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                                 fontSize: 10,
                                               ),
                                             ),
-                                          ),
-                                        )
-                                      ],
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -288,7 +407,7 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                                       .height *
                                                   0.04),
                                           child: Image.asset(
-                                            'assets/camera@3x.png',
+                                            'assets/whatsapp@3x.png',
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
@@ -307,7 +426,7 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                         ),
                                         const Center(
                                           child: Text(
-                                            'Upload Image',
+                                            'WhatsApp',
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 14,

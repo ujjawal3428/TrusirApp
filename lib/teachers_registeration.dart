@@ -287,6 +287,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -362,17 +363,52 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               const SizedBox(height: 10),
               _buildPhoneField('Phone Number'),
               const SizedBox(height: 10),
-              _buildTextField('Qualification', onChanged: (value) {
-                formData.qualification = value;
-              }),
+              _buildDropdownField(
+                'Qualification',
+                selectedValue: formData.qualification,
+                onChanged: (value) {
+                  setState(() {
+                    formData.qualification = value;
+                  });
+                },
+                items: [
+                  'Matric',
+                  'Non-Matric',
+                  'Under Graduate',
+                  'Post Graduate',
+                  'Diploma',
+                  'Other'
+                ],
+              ),
               const SizedBox(height: 10),
-              _buildTextField('Experience', onChanged: (value) {
-                formData.experience = value;
-              }),
+              _buildDropdownField(
+                'Experience',
+                selectedValue: formData.experience,
+                onChanged: (value) {
+                  setState(() {
+                    formData.experience = value;
+                  });
+                },
+                items: [
+                  'Fresher',
+                  '1 Year+',
+                  '2 Years+',
+                  '3 Years+',
+                  '4 Years+',
+                  '5 Years+'
+                ],
+              ),
               const SizedBox(height: 10),
-              _buildTextField('Board Name', onChanged: (value) {
-                formData.board = value;
-              }),
+              _buildDropdownField(
+                'Board Name',
+                selectedValue: formData.board,
+                onChanged: (value) {
+                  setState(() {
+                    formData.board = value;
+                  });
+                },
+                items: ['BSEB', 'CBSE', 'ICSE'],
+              ),
               const SizedBox(height: 10),
               _buildTextField('School Name', onChanged: (value) {
                 formData.school = value;
@@ -415,17 +451,30 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 items: ['Science', 'Arts'],
               ),
               const SizedBox(height: 10),
-              _buildTextField('State', onChanged: (value) {
-                formData.state = value;
-              }),
+              _buildDropdownField(
+                'State',
+                selectedValue: formData.state,
+                onChanged: (value) {
+                  setState(() {
+                    formData.state = value;
+                  });
+                },
+                items: [
+                  'UP',
+                  'Bihar',
+                  'Gujarat',
+                  'Maharastra',
+                  'Rajasthan',
+                  'Delhi'
+                ],
+              ),
               const SizedBox(height: 10),
               _buildDropdownField(
                 'City/Town',
-                selectedValue: city,
+                selectedValue: formData.city,
                 onChanged: (value) {
                   setState(() {
-                    city = value;
-                    formData.city = city;
+                    formData.city = value;
                   });
                 },
                 items: [
@@ -437,13 +486,33 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 ],
               ),
               const SizedBox(height: 10),
-              _buildTextField('Mohalla/Area', onChanged: (value) {
-                formData.area = value;
-              }),
+              _buildDropdownField(
+                'Mohalla/Area',
+                selectedValue: formData.area,
+                onChanged: (value) {
+                  setState(() {
+                    formData.area = value;
+                  });
+                },
+                items: [
+                  'Balua',
+                  'Chandmari',
+                  'Raja Bazar',
+                  'Chhatauni',
+                  'Lakshmipur'
+                ],
+              ),
               const SizedBox(height: 10),
-              _buildTextField('Pincode', onChanged: (value) {
-                formData.pincode = value;
-              }),
+              _buildDropdownField(
+                'Pincode',
+                selectedValue: formData.pincode,
+                onChanged: (value) {
+                  setState(() {
+                    formData.pincode = value;
+                  });
+                },
+                items: ['845401', '845437', '845456', '845422', '845435'],
+              ),
               const SizedBox(height: 10),
               // Address fields
               _buildTextField('Current Full Address', height: 126,
@@ -788,6 +857,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     ];
 
     return Wrap(
+      direction: Axis.horizontal,
       spacing: 10,
       runSpacing: 10,
       children: timeSlots.map((slot) {

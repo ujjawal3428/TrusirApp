@@ -150,6 +150,30 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
           ]),
           toolbarHeight: 70,
         ),
+        floatingActionButton: Container(
+          margin: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(
+              colors: [Colors.grey[300]!, Colors.white],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: FloatingActionButton(
+            onPressed: () {},
+            elevation: 0, // To match the gradient
+            backgroundColor:
+                const Color(0xFF48116A), // Transparent for gradient to show
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 50,
+            ), // Plus icon
+            // Icon size
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         body: isLoading
             ? const Center(
                 child: CircularProgressIndicator(),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/login_page.dart';
+import 'package:trusir/my_profile.dart';
 import 'package:trusir/popup_splash_screen.dart';
 
 class ProfilePopup extends StatefulWidget {
@@ -138,7 +139,14 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                             height: 25,
                                             width: 80,
                                             child: ElevatedButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const MyProfileScreen()),
+                                                );
+                                              },
                                               style: ElevatedButton.styleFrom(
                                                 backgroundColor: Colors.purple,
                                                 shape: RoundedRectangleBorder(

@@ -138,88 +138,92 @@ class _OTPScreenState extends State<OTPScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Enter OTP',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.purple,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Enter the verification code we just sent on your phone number.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.redAccent,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(4, (index) {
-                return Container(
-                  height: 60,
-                  width: 60,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey, width: 1.5),
-                  ),
-                  child: TextField(
-                    controller: otpControllers[index],
-                    focusNode: focusNodes[index],
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                    maxLength: 1,
-                    decoration: const InputDecoration(
-                      counterText: '',
-                      border: InputBorder.none,
-                    ),
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    onChanged: (value) {
-                      if (value.isNotEmpty && index < 3) {
-                        // Move to the next field
-                        FocusScope.of(context)
-                            .requestFocus(focusNodes[index + 1]);
-                      } else if (value.isEmpty && index > 0) {
-                        // Move to the previous field if backspace is pressed
-                        FocusScope.of(context)
-                            .requestFocus(focusNodes[index - 1]);
-                      }
-                    },
-                  ),
-                );
-              }),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () {
-                onPost(widget.phonenum, context);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 14, horizontal: 40),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-              ),
-              child: const Text(
-                'Verify',
+        child: SingleChildScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          physics: const NeverScrollableScrollPhysics(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Enter OTP',
                 style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple,
                 ),
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              const Text(
+                'Enter the verification code we just sent on your phone number.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.redAccent,
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(4, (index) {
+                  return Container(
+                    height: 60,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey, width: 1.5),
+                    ),
+                    child: TextField(
+                      controller: otpControllers[index],
+                      focusNode: focusNodes[index],
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      maxLength: 1,
+                      decoration: const InputDecoration(
+                        counterText: '',
+                        border: InputBorder.none,
+                      ),
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      onChanged: (value) {
+                        if (value.isNotEmpty && index < 3) {
+                          // Move to the next field
+                          FocusScope.of(context)
+                              .requestFocus(focusNodes[index + 1]);
+                        } else if (value.isEmpty && index > 0) {
+                          // Move to the previous field if backspace is pressed
+                          FocusScope.of(context)
+                              .requestFocus(focusNodes[index - 1]);
+                        }
+                      },
+                    ),
+                  );
+                }),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed: () {
+                  onPost(widget.phonenum, context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 14, horizontal: 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                child: const Text(
+                  'Verify',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

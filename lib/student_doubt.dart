@@ -184,31 +184,26 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
               ),
               child: FloatingActionButton(
                 onPressed: () {
-                  // Your onPressed action
+                  setState(() {
+                    formData.title = _titleController.text;
+                  });
+                  submitForm(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Doubt Submitted Successfully!'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
                 },
                 elevation: 0, // To match the gradient
                 backgroundColor:
                     const Color(0xFF48116A), // Transparent for gradient to show
-                child: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      formData.title = _titleController.text;
-                    });
-                    submitForm(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Doubt Submitted Successfully!'),
-                        duration: Duration(seconds: 1),
-                      ),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 50,
-                  ), // Plus icon
-                  // Icon size
-                ),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 50,
+                ), // Plus icon
+                // Icon size
               ),
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -372,29 +367,29 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: 10,
-                                            left: 2,
-                                            right: 2,
-                                            top: 2),
-                                        child: Container(
-                                          width: 150,
-                                          height: 133,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(14.40),
-                                              boxShadow: const [
-                                                BoxShadow(
-                                                  color: Colors.white54,
-                                                  offset: Offset(2, 2),
-                                                )
-                                              ]),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              handleImageSelection(
-                                                  formData.photo);
-                                            },
+                                      GestureDetector(
+                                        onTap: () {
+                                          handleImageSelection(formData.photo);
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 10,
+                                              left: 2,
+                                              right: 2,
+                                              top: 2),
+                                          child: Container(
+                                            width: 150,
+                                            height: 133,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        14.40),
+                                                boxShadow: const [
+                                                  BoxShadow(
+                                                    color: Colors.white54,
+                                                    offset: Offset(2, 2),
+                                                  )
+                                                ]),
                                             child: Column(
                                               children: [
                                                 Padding(
@@ -426,13 +421,11 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                                   height: 5,
                                                 ),
                                                 const Center(
-                                                  child: InkWell(
-                                                    child: Text(
-                                                      'Click here',
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 10,
-                                                      ),
+                                                  child: Text(
+                                                    'Click here',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 10,
                                                     ),
                                                   ),
                                                 )
