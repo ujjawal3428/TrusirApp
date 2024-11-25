@@ -77,17 +77,6 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  Future<void> setProfileData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    await prefs.setString('name', name!);
-    await prefs.setString('DOB', dob!);
-    await prefs.setString('school', school!);
-    await prefs.setString('class', studentClass!);
-    await prefs.setString('subject', subject!);
-    await prefs.setString('profile', profile!);
-  }
-
   Future<String> uploadImage(XFile imageFile) async {
     final uri = Uri.parse('$baseUrl/api/upload-profile');
     final request = http.MultipartRequest('POST', uri);

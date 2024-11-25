@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 
 class StudentDoubts {
@@ -57,7 +58,9 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   }
 
   Future<void> submitForm(BuildContext context) async {
-    final url = Uri.parse('$baseUrl/api/submit/doubt/student');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userID');
+    final url = Uri.parse('$baseUrl/api/add-student-doubts/$userId');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
 

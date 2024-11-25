@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 
 class ParentsDoubt {
@@ -30,7 +31,9 @@ class _MyAppState extends State<ParentsDoubtScreen> {
   TextEditingController descriptionController = TextEditingController();
   final ParentsDoubt formData = ParentsDoubt();
   Future<void> submitForm(BuildContext context) async {
-    final url = Uri.parse('$baseUrl/api/submit/doubt/parents');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userID');
+    final url = Uri.parse('$baseUrl/api/add-parents-doubts/$userId');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
 
