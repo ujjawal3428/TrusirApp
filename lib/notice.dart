@@ -148,7 +148,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                         children: [
                           Container(
                             width: 386,
-                            height: 147,
+                            height: 150,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: cardColor,
@@ -161,7 +161,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                   Text(
                                     notice.noticetitle,
                                     style: const TextStyle(
-                                      fontSize: 18,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black,
                                     ),
@@ -170,7 +170,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                   Text(
                                     'Posted on : ${notice.date}',
                                     style: const TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.w400,
                                       color: Colors.grey,
                                     ),
@@ -179,7 +179,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                   Text(
                                     notice.notice,
                                     style: const TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.w500,
                                       color: Colors.black,
                                     ),

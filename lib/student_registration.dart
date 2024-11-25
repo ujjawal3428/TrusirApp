@@ -259,6 +259,12 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             }
             //)
           });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Images Uploaded Successfully!'),
+              duration: Duration(seconds: 1),
+            ),
+          );
           print('Image uploaded successfully: $uploadedPath');
         } else {
           print('Failed to upload the image.');
@@ -784,12 +790,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           IconButton(
             onPressed: () {
               handleImageSelection(index, path);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Image Uploaded Successfully'),
-                  duration: Duration(seconds: 1),
-                ),
-              );
             },
             icon: const Icon(Icons.upload_file),
           ),

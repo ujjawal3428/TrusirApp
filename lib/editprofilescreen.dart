@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/api.dart';
+import 'package:trusir/login_splash_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -26,6 +30,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   String? profile;
   String? userID;
   String? address;
+  String? token;
   String? phone;
 
   @override
@@ -39,6 +44,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     setState(() {
       userID = prefs.getString('userID');
       name = prefs.getString('name');
+      token = prefs.getString('token');
       dob = prefs.getString('DOB');
       school = prefs.getString('school');
       studentClass = prefs.getString('class');
@@ -54,25 +60,120 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  Future<String> uploadImage(XFile imageFile) async {
+    final uri = Uri.parse('$baseUrl/api/upload-profile');
+    final request = http.MultipartRequest('POST', uri);
 
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-      });
+    // Add the image file to the request
+    request.files
+        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
+
+    // Send the request
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      // Parse the response to extract the download URL
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse.containsKey('download_url')) {
+        return jsonResponse['download_url'] as String;
+      } else {
+        print('Download URL not found in the response.');
+        return 'null';
+      }
+    } else {
+      print('Failed to upload image: ${response.statusCode}');
+      return 'null';
     }
   }
 
-  void _saveProfile() {
-    // Save the updated profile data (send it to the backend)
-    print("Name: ${nameController.text}");
-    print("DOB: ${dobController.text}");
-    print("School: ${schoolController.text}");
-    print("Class: ${classController.text}");
-    print("Subjects: ${subjectController.text}");
-    print("Profile Image: ${_profileImage?.path}");
+  Future<void> handleImageSelection(String? path) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        // Upload the image and get the path
+        final uploadedPath = await uploadImage(pickedFile);
+        if (uploadedPath != 'null') {
+          setState(() {
+            // Example: Update the first student's photo path
+            profile = uploadedPath;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Image Uploaded Successfully!'),
+                duration: Duration(seconds: 1),
+              ),
+            );
+            //')
+            //)
+          });
+          print('Image uploaded successfully: $uploadedPath');
+        } else {
+          print('Failed to upload the image.');
+        }
+      } else {
+        print('No image selected.');
+      }
+    } catch (e) {
+      print('Error during image selection: $e');
+    }
+  }
+
+  Future<void> _saveprofile({
+    required String name,
+    required String dob,
+    required String school,
+    required String studentClass,
+    required String subject,
+    required String profile,
+    required String token,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/edit-profile/$userID'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token', // Add if your API requires a token
+        },
+        body: jsonEncode({
+          'name': name,
+          'DOB': dob,
+          'school': school,
+          'class': studentClass,
+          'profile': profile,
+          'subject': subject,
+          'token': token,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile Updated Successfully!'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const LoginSplashScreen(
+                    editprofile: true,
+                  )),
+          (route) => false,
+        );
+        // Success
+        print("Data posted successfully: ${response.body}");
+      } else {
+        // Error
+        print("Failed to post data: ${response.statusCode}");
+        print("Error: ${response.body}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
   }
 
   @override
@@ -102,7 +203,17 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: _saveProfile,
+            onPressed: () {
+              _saveprofile(
+                name: nameController.text,
+                dob: dobController.text,
+                school: schoolController.text,
+                studentClass: classController.text,
+                subject: subjectController.text,
+                profile: profile!,
+                token: token!,
+              );
+            },
             child: const Text(
               'Save',
               style: TextStyle(
@@ -120,7 +231,9 @@ class EditProfileScreenState extends State<EditProfileScreen> {
           children: [
             // Profile Picture
             GestureDetector(
-              onTap: _pickImage,
+              onTap: () {
+                handleImageSelection(profile);
+              },
               child: Stack(
                 children: [
                   CircleAvatar(
@@ -163,7 +276,17 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                 'Enter your subjects', subjectController, isLargeScreen),
             const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: _saveProfile,
+              onPressed: () {
+                _saveprofile(
+                  name: nameController.text,
+                  dob: dobController.text,
+                  school: schoolController.text,
+                  studentClass: classController.text,
+                  subject: subjectController.text,
+                  profile: profile!,
+                  token: token!,
+                );
+              },
               style: ElevatedButton.styleFrom(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 15),

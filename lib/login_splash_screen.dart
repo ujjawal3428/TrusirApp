@@ -4,10 +4,13 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/main_screen.dart';
+import 'package:trusir/student_facilities.dart';
+import 'package:trusir/teacher_facilities.dart';
 import 'package:trusir/teacher_main_screen.dart';
 
 class LoginSplashScreen extends StatefulWidget {
-  const LoginSplashScreen({super.key});
+  final bool editprofile;
+  const LoginSplashScreen({super.key, this.editprofile = false});
 
   @override
   LoginSplashScreenState createState() => LoginSplashScreenState();
@@ -85,17 +88,34 @@ class LoginSplashScreenState extends State<LoginSplashScreen> {
           await prefs.setString('time_slot', responseData['time_slot']);
         }
 
-        // Navigate to the next screen
-        if (responseData['role'] == 'student') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const MainScreen()),
-          );
-        } else if (responseData['role'] == 'teacher') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const TeacherMainScreen()),
-          );
+        if (widget.editprofile) {
+          if (responseData['role'] == 'student') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const Studentfacilities()),
+            );
+          } else if (responseData['role'] == 'teacher') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const TeacherFacilities()),
+            );
+          }
+        } else {
+          // Navigate to the next screen
+          if (responseData['role'] == 'student') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const MainScreen()),
+            );
+          } else if (responseData['role'] == 'teacher') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const TeacherMainScreen()),
+            );
+          }
         }
         print(responseData);
         ScaffoldMessenger.of(context).showSnackBar(
