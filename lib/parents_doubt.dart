@@ -14,7 +14,7 @@ class ParentsDoubt {
     return {
       'title': title,
       'description': description,
-      'photo': photo,
+      'image': photo,
     };
   }
 }
@@ -42,7 +42,12 @@ class _MyAppState extends State<ParentsDoubtScreen> {
 
       if (response.statusCode == 200) {
         // Successfully submitted
-
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Doubt Submitted Successfully!'),
+            duration: Duration(seconds: 1),
+          ),
+        );
         Navigator.pop(context);
 
         print(body);
@@ -170,12 +175,6 @@ class _MyAppState extends State<ParentsDoubtScreen> {
               formData.description = descriptionController.text;
             });
             submitForm(context);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Doubt Submitted Successfully!'),
-                duration: Duration(seconds: 1),
-              ),
-            );
           },
           elevation: 0, // To match the gradient
           backgroundColor:
@@ -192,6 +191,7 @@ class _MyAppState extends State<ParentsDoubtScreen> {
         builder: (context, constraints) => Stack(
           children: [
             SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Column(
                 children: [
                   const Padding(
@@ -222,6 +222,7 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                             ],
                           ),
                           child: TextField(
+                            controller: titleController,
                             textAlignVertical: TextAlignVertical.top,
                             decoration: InputDecoration(
                               hintText: 'Title',
@@ -270,6 +271,7 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                 ],
                               ),
                               child: TextField(
+                                controller: descriptionController,
                                 textAlignVertical: TextAlignVertical.top,
                                 decoration: InputDecoration(
                                   hintText: 'Description',
@@ -329,35 +331,42 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                         children: [
                                           Padding(
                                             padding:
-                                                const EdgeInsets.only(top: 25),
-                                            child: Image.asset(
-                                              'assets/camera@3x.png',
-                                              width: 46,
-                                              height: 37,
-                                            ),
+                                                const EdgeInsets.only(top: 30),
+                                            child: formData.photo != null
+                                                ? Image.network(
+                                                    width: 50,
+                                                    height: 50,
+                                                    formData.photo!)
+                                                : Image.asset(
+                                                    'assets/camera@3x.png',
+                                                    width: 46,
+                                                    height: 37,
+                                                  ),
                                           ),
                                           const SizedBox(
                                             height: 10,
                                           ),
-                                          const Center(
-                                            child: Align(
-                                              alignment: Alignment.topCenter,
-                                              child: Text(
-                                                'Upload Image',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 10,
-                                                ),
+                                          Center(
+                                            child: Text(
+                                              formData.photo != null
+                                                  ? 'Image Uploaded'
+                                                  : 'Upload Image',
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
                                               ),
                                             ),
                                           ),
                                           const SizedBox(
                                             height: 5,
                                           ),
-                                          const Center(
+                                          Center(
                                             child: Text(
-                                              'Click here',
-                                              style: TextStyle(
+                                              formData.photo != null
+                                                  ? ''
+                                                  : 'Click Here',
+                                              style: const TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 10,
                                               ),

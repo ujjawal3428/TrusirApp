@@ -15,7 +15,7 @@ class StudentDoubts {
     return {
       'title': title,
       'course': course,
-      'photo': photo,
+      'image': photo,
     };
   }
 }
@@ -60,6 +60,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   Future<void> submitForm(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userID');
+    print(userId);
     final url = Uri.parse('$baseUrl/api/add-student-doubts/$userId');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
@@ -69,7 +70,12 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
 
       if (response.statusCode == 200) {
         // Successfully submitted
-
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Doubt Submitted Successfully!'),
+            duration: Duration(seconds: 1),
+          ),
+        );
         Navigator.pop(context);
 
         print(body);
@@ -125,6 +131,12 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
             formData.photo = uploadedPath;
             //)
           });
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Images Uploaded Successfully!'),
+              duration: Duration(seconds: 1),
+            ),
+          );
           print('Image uploaded successfully: $uploadedPath');
         } else {
           print('Failed to upload the image.');
@@ -191,12 +203,6 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                     formData.title = _titleController.text;
                   });
                   submitForm(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Doubt Submitted Successfully!'),
-                      duration: Duration(seconds: 1),
-                    ),
-                  );
                 },
                 elevation: 0, // To match the gradient
                 backgroundColor:
@@ -213,6 +219,8 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
             body: Stack(
               children: [
                 SingleChildScrollView(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   child: Column(children: [
                     const SizedBox(
                       height: 20,
@@ -401,6 +409,8 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                                           top: 30),
                                                   child: formData.photo != null
                                                       ? Image.network(
+                                                          width: 50,
+                                                          height: 50,
                                                           formData.photo!)
                                                       : Image.asset(
                                                           'assets/camera@3x.png',
@@ -411,10 +421,12 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                                 const SizedBox(
                                                   height: 10,
                                                 ),
-                                                const Center(
+                                                Center(
                                                   child: Text(
-                                                    'Upload Image',
-                                                    style: TextStyle(
+                                                    formData.photo != null
+                                                        ? 'Image Uploaded'
+                                                        : 'Upload Image',
+                                                    style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 14,
                                                     ),
@@ -423,10 +435,12 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                                 const SizedBox(
                                                   height: 5,
                                                 ),
-                                                const Center(
+                                                Center(
                                                   child: Text(
-                                                    'Click here',
-                                                    style: TextStyle(
+                                                    formData.photo != null
+                                                        ? ''
+                                                        : 'Click Here',
+                                                    style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 10,
                                                     ),
