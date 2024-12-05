@@ -168,16 +168,16 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
             showPopupDialog(context);
           },
           child: Container(
-            height: 26,
-            width: 50,
+            height: 30,
+            width: 54,
             decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(color: Colors.black),
                 borderRadius: BorderRadius.circular(8)),
-            child: const Padding(
-              padding: EdgeInsets.only(left: 10.0, top: 2),
+            child: const Center(
               child: Text(
-                'skip',
+                'Skip',
+                style: TextStyle(fontSize: 20),
               ),
             ),
           ),
@@ -194,7 +194,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
         "Language",
         style: TextStyle(fontSize: responsive.screenWidth * 0.04),
       ),
-      items: <String>['Hindi', 'Punjabi', 'Marathi']
+      items: <String>['Hindi', 'English']
           .map<DropdownMenuItem<String>>((String language) {
         return DropdownMenuItem<String>(
           value: language,
@@ -234,10 +234,10 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                 Text(
                   pageContent[index]['title']!,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: responsive.titleSize,
+                  style: const TextStyle(
+                    fontSize: 25,
                     fontWeight: FontWeight.w900,
-                    color: const Color.fromRGBO(72, 17, 106, 1),
+                    color:  Color.fromRGBO(72, 17, 106, 1),
                     fontFamily: 'Poppins',
                   ),
                 ),
