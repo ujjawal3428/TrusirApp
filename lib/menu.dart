@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/student_enquiry.dart';
-import 'package:trusir/teacher_enquiry.dart';
+import 'package:trusir/student_homepage.dart';
+import 'package:trusir/teacher_homepage.dart';
 
 class PopupScreen extends StatelessWidget {
   const PopupScreen({super.key});
@@ -35,7 +35,9 @@ class PopupScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const StudentEnquiryPage(),
+                      builder: (context) => const StudentHomepage(
+                        enablephone: true,
+                      ),
                     ),
                   );
                 },
@@ -61,7 +63,7 @@ class PopupScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => TeacherEnquiryPage(),
+                      builder: (context) => const Teacherhomepage(),
                     ),
                   );
                 },
