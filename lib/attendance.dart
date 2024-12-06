@@ -59,7 +59,7 @@ class AttendancePageState extends State<AttendancePage> {
                   child: Center(
                     child: Text(
                       '${date.day}',
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ),
                 );
