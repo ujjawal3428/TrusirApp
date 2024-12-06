@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/attendance.dart';
 import 'package:trusir/extra_knowledge.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/profilepopup.dart';
@@ -266,12 +267,12 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               'Attendance',
                               tileWidth,
                               tileHeight, () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const AttendanceScreen(),
-                            //   ),
-                            // );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AttendancePage(),
+                              ),
+                            );
                           }),
                           buildTile(
                               context,

@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
+import 'package:trusir/general_knowledge.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/student_profile.dart';
 import 'package:trusir/notice.dart';
@@ -268,12 +269,12 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             }),
                             buildTile(context, const Color(0xFFF8BBD0),
                                 'assets/gksp@3x.png', 'General Knowledge', () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => const (),
-                              //   ),
-                              // );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const GKPage(),
+                                ),
+                              );
                             }),
                             buildTile(context, const Color(0xFFB3E5FC),
                                 'assets/setting.png', 'Setting', () {
