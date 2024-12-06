@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/add_gk.dart';
 import 'package:trusir/api.dart';
-import 'package:trusir/general_knowledge.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/student_profile.dart';
 import 'package:trusir/notice.dart';
-import 'package:trusir/setting.dart';
 import 'package:trusir/teacher_pf_page.dart';
+import 'package:trusir/teacherssettings.dart';
 
 class StudentProfile {
   final String name;
@@ -272,7 +272,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const GKPage(),
+                                  builder: (context) => const AddGK(),
                                 ),
                               );
                             }),
@@ -281,7 +281,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SettingsScreen(),
+                                  builder: (context) => const Teacherssettings(),
                                 ),
                               );
                             }),

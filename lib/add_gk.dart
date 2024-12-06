@@ -15,19 +15,19 @@ class AddGK extends StatelessWidget {
             // Row for Back Button and Title
             Row(
               children: [
-                GestureDetector(
-                  onTap: () {
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Color(0xFF48116A),
+                    size: 30,
+                  ),
+                  onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Image.asset(
-                    'assets/back_button.png', // Replace with your back button image path
-                    width: 40,
-                    height: 40,
-                  ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 5),
                 const Text(
-                  'Add General Knowledge',
+                  'Add GK',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -41,11 +41,12 @@ class AddGK extends StatelessWidget {
 
             // Title Input Field with Background
             Stack(
+              alignment: Alignment.centerLeft,
               children: [
                 Image.asset(
-                  'titlebox.png', // Background image for text field
+                  'assets/titlebox.png', // Ensure this path is correct
                   fit: BoxFit.fill,
-                  width: double.infinity,
+                  width: 300,
                   height: 50,
                 ),
                 const Padding(
@@ -63,10 +64,11 @@ class AddGK extends StatelessWidget {
 
             // Description Input Field with Background
             Stack(
+              alignment: Alignment.topLeft,
               children: [
                 Image.asset(
-                  'descriptionbox.png', // Background image for description field
-                  fit: BoxFit.fill,
+                  'assets/descriptionbox.png', 
+                  fit: BoxFit.contain,
                   width: double.infinity,
                   height: 100,
                 ),
@@ -86,15 +88,18 @@ class AddGK extends StatelessWidget {
 
             // Attach File Box
             Stack(
+              alignment: Alignment.centerLeft,
               children: [
-                Image.asset(
-                  'attachfilebox.png', // Background image for attach file box
-                  
-                  width: 160,
-                  height: 50,
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Image.asset(
+                    'assets/attachfilebox.png', 
+                    width: 160,
+                    height: 50,
+                  ),
                 ),
                 const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 14),
+                  padding: EdgeInsets.symmetric(horizontal: 14.0, vertical: 14.0),
                   child: Row(
                     children: [
                       Icon(
@@ -118,19 +123,21 @@ class AddGK extends StatelessWidget {
             const SizedBox(height: 5),
 
             // File Format Text
-           
-              const Text(
+           const Padding(
+                padding: EdgeInsets.only(left: 20.0),
+              child: Text(
                 'Attach PDF, JPEG, PNG',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Color.fromARGB(255, 0, 0, 0),
+                  color: Colors.black,
                   fontFamily: 'Poppins',
                 ),
               ),
-            
-
+            ),
             const Spacer(),
-             const Center(
+
+            // Disclaimer Text
+            const Center(
               child: Text(
                 'This post will be only visible to the\nstudent you teach',
                 textAlign: TextAlign.center,
@@ -141,15 +148,17 @@ class AddGK extends StatelessWidget {
                 ),
               ),
             ),
-const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Post Button
             Center(
               child: GestureDetector(
-                onTap: _onpost,
+                onTap: _onPost,
                 child: Image.asset(
-                  'postbutton.png', // Image for Post button
-                  fit: BoxFit.cover,
+                  'assets/postbutton.png', // Ensure this path is correct
+                  fit: BoxFit.contain,
+                  width: 200,
+                  height: 60,
                 ),
               ),
             ),
@@ -159,8 +168,8 @@ const SizedBox(height: 20),
     );
   }
 
-  void _onpost() {
-    print("Post button pressed");
-    // Implement the post action here
+  void _onPost() {
+    debugPrint("Post button pressed");
+    // Implement your post action logic here
   }
 }

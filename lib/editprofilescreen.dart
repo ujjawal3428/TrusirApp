@@ -288,37 +288,37 @@ class EditProfileScreenState extends State<EditProfileScreen> {
             buildInputField(
                 'Enter your school', schoolController, isLargeScreen),
             const SizedBox(height: 15),
-            _buildDropdownField(
-              'Class',
-              isLargeScreen,
-              selectedValue: classController.text,
-              onChanged: (value) {
-                setState(() {
-                  classController.text = value!;
-                });
-              },
-              items: [
-                '10th',
-                '11th',
-                '12th',
-              ],
-            ),
+            // _buildDropdownField(
+            //   'Class',
+            //   isLargeScreen,
+            //   selectedValue: classController.text,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       classController.text = value!;
+            //     });
+            //   },
+            //   items: [
+            //     '10th',
+            //     '11th',
+            //     '12th',
+            //   ],
+            // ),
             const SizedBox(height: 15),
-            _buildDropdownField(
-              'Subjects',
-              isLargeScreen,
-              selectedValue: subjectController.text,
-              onChanged: (value) {
-                setState(() {
-                  subjectController.text = value!;
-                });
-              },
-              items: [
-                'Hindi',
-                'English',
-                'Maths',
-              ],
-            ),
+            // _buildDropdownField(
+            //   'Subjects',
+            //   isLargeScreen,
+            //   selectedValue: subjectController.text,
+            //   onChanged: (value) {
+            //     setState(() {
+            //       subjectController.text = value!;
+            //     });
+            //   },
+            //   items: [
+            //     'Hindi',
+            //     'English',
+            //     'Maths',
+            //   ],
+            // ),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
@@ -404,35 +404,6 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         fillColor: Colors.white,
       ),
       style: TextStyle(fontSize: isLargeScreen ? 18 : 14),
-    );
-  }
-
-  Widget _buildDropdownField(
-    String hintText,
-    bool isLargeScreen, {
-    String? selectedValue,
-    required ValueChanged<String?> onChanged,
-    required List<String> items,
-  }) {
-    return DropdownButtonFormField<String>(
-      value: selectedValue,
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        labelText: hintText,
-        labelStyle:
-            TextStyle(color: Colors.black, fontSize: isLargeScreen ? 18 : 14),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-      ),
-      style: TextStyle(fontSize: isLargeScreen ? 18 : 14, color: Colors.black),
-      items: items
-          .map((item) => DropdownMenuItem(
-                value: item,
-                child: Text(item),
-              ))
-          .toList(),
     );
   }
 }

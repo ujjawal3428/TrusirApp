@@ -53,14 +53,14 @@ class Teacherhomepage extends StatelessWidget {
                 const Text(
                   'Welcome To Trusir',
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 30,
                     height: 1.1,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Poppins',
                   ),
                 ),
                 const Divider(
-                    color: Colors.black, thickness: 2, endIndent: 90),
+                    color: Colors.black, thickness: 2, endIndent: 50),
                 const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping male and female teaching service.',
@@ -80,17 +80,17 @@ class Teacherhomepage extends StatelessWidget {
                       _serviceCard(
                         title: 'Annual Gift Hamper',
                         imagePath: 'assets/girlimage@4x.png',
-                        backgroundColor: Colors.pink.shade50,
+                        backgroundColor:  const Color.fromARGB(214, 193, 226, 252),
                       ),
                       _serviceCard(
                         title: '100% Trusted & Satisfied',
                         imagePath: 'assets/girlimage@4x.png',
-                        backgroundColor: Colors.orange.shade50,
+                        backgroundColor: const Color.fromARGB(210, 251, 197, 216),
                       ),
                       _serviceCard(
                         title: 'Trusted App',
                         imagePath: 'assets/girlimage@4x.png',
-                        backgroundColor: Colors.blue.shade50,
+                      backgroundColor: const Color.fromARGB(229, 252, 211, 215),
                       ),
                     ],
                   ),
@@ -302,7 +302,7 @@ class Teacherhomepage extends StatelessWidget {
                 child: FloatingActionButton(
                   onPressed: () {
                   },
-                  child: Image.asset('assets/whatsapp@3x.png',
+                  child: Image.asset('assets/call.png',
                   ),
                 ),
               ),

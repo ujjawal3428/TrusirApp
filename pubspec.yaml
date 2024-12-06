@@ -124,7 +124,7 @@ flutter:
     - assets/listaim@3x.png
     - assets/camera@3x.png
     - assets/textfield@4x.png
-    - assets/description@4x.png
+    - assets/descriptionbox.png
     - assets/whatsapp@3x.png
     - assets/phone@3x.png
     - assets/anup@4x.png
@@ -135,6 +135,7 @@ flutter:
     - assets/contact@3x.png
     - assets/AB@3x.png
     - assets/pin@2x.png
+    - assets/editprofile.png
     - assets/changenumber@2x.png
     - assets/qna@2x.png
     - assets/parentsdoubt@2x.png

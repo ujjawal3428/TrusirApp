@@ -355,7 +355,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     updateStudentForms(int.parse(value!));
                   });
                 },
-                items: List.generate(20, (index) => (index + 1).toString()),
+                items: List.generate(3, (index) => (index + 1).toString()),
               ),
               const SizedBox(height: 20),
               // Dynamically Generated Forms

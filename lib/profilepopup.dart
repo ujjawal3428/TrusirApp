@@ -99,7 +99,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
                             children: [
                               // Top Section
                               Container(
-                                padding: const EdgeInsets.only(top: 4),
+                                padding: const EdgeInsets.all(24),
                                 child: Row(
                                   children: [
                                     CircleAvatar(
@@ -167,92 +167,98 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                   ],
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              // Scrollable Profiles List
-                              Container(
-                                height: 230,
-                                width: double.infinity,
-                                color: Colors.grey[100],
-                                child: ListView.builder(
-                                  itemCount: data.length,
-                                  itemBuilder: (context, index) {
-                                    return Column(
-                                      children: [
-                                        ListTile(
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 10, vertical: 0),
-                                          title: Text(data[index]['name']),
-                                          subtitle: Text(
-                                              'Class: ${data[index]['class']}'),
-                                          leading: CircleAvatar(
-                                            radius: 18,
-                                            backgroundImage: data[index]
-                                                        ['profile'] !=
-                                                    null
-                                                ? NetworkImage(
-                                                    data[index]['profile'])
-                                                : const NetworkImage(
-                                                    'https://via.placeholder.com/150'),
+                              
+                             
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10.0, right: 10,),
+                                child: Container(
+                                  height: 230,
+                                  width: double.infinity,
+                                  color: Colors.grey[100],
+                                  child: ListView.builder(
+                                    itemCount: data.length,
+                                    itemBuilder: (context, index) {
+                                      return Column(
+                                        children: [
+                                          ListTile(
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 10, vertical: 0),
+                                            title: Text(data[index]['name']),
+                                            subtitle: Text(
+                                                'Class: ${data[index]['class']}'),
+                                            leading: CircleAvatar(
+                                              radius: 18,
+                                              backgroundImage: data[index]
+                                                          ['profile'] !=
+                                                      null
+                                                  ? NetworkImage(
+                                                      data[index]['profile'])
+                                                  : const NetworkImage(
+                                                      'https://via.placeholder.com/150'),
+                                            ),
+                                            onTap: () {
+                                              // Move the selected profile to the top
+                                              setState(() {
+                                                selectedProfile = data[index];
+                                                data.removeAt(index);
+                                                data.insert(0, selectedProfile!);
+                                                profiles = json.encode(data);
+                                              });
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PopUpSplashScreen(
+                                                          userId:
+                                                              selectedProfile![
+                                                                  'userID']),
+                                                ),
+                                              );
+                                            },
                                           ),
-                                          onTap: () {
-                                            // Move the selected profile to the top
-                                            setState(() {
-                                              selectedProfile = data[index];
-                                              data.removeAt(index);
-                                              data.insert(0, selectedProfile!);
-                                              profiles = json.encode(data);
-                                            });
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PopUpSplashScreen(
-                                                        userId:
-                                                            selectedProfile![
-                                                                'userID']),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                        Divider(
-                                          color: Colors.grey[300],
-                                          thickness: 1,
-                                          height: 1,
-                                        ),
-                                      ],
-                                    );
-                                  },
+                                          Divider(
+                                            color: Colors.grey[300],
+                                            thickness: 1,
+                                            height: 1,
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  Container(
-                                    width: 80,
-                                    height: 26,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: TextButton(
-                                      style: TextButton.styleFrom(
-                                        padding: EdgeInsets.zero,
-                                        minimumSize: Size.zero,
-                                        tapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
+                                  Padding(
+                                    padding: const EdgeInsets.all(18.0),
+                                    child: Container(
+                                      width: 80,
+                                      height: 26,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
-                                      onPressed: () {
-                                        logout(context);
-                                      },
-                                      child: const Center(
-                                        child: Text('Sign Out',
-                                            style: TextStyle(
-                                              color: Colors.grey,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 12,
-                                            )),
+                                      child: TextButton(
+                                        style: TextButton.styleFrom(
+                                          padding: EdgeInsets.zero,
+                                          minimumSize: Size.zero,
+                                          tapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                        ),
+                                        onPressed: () {
+                                          logout(context);
+                                        },
+                                        child: const Center(
+                                          child: Text('Sign Out',
+                                              style: TextStyle(
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 12,
+                                              )),
+                                        ),
                                       ),
                                     ),
                                   ),

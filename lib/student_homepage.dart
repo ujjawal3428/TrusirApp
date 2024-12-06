@@ -52,13 +52,13 @@ class StudentHomepage extends StatelessWidget {
                 const Text(
                   'Welcome To Trusir',
                   style: TextStyle(
-                    fontSize: 25,
+                    fontSize: 30,
                     height: 1.1,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Poppins',
                   ),
                 ),
-                const Divider(color: Colors.black, thickness: 2, endIndent: 90),
+                const Divider(color: Colors.black, thickness: 2, endIndent: 50),
                 const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
@@ -81,17 +81,17 @@ class StudentHomepage extends StatelessWidget {
                       _serviceCard(
                         title: 'Trusted Teachers',
                         imagePath: 'assets/girlimage@4x.png',
-                        backgroundColor: Colors.pink.shade50,
+                        backgroundColor:  const Color.fromARGB(214, 193, 226, 252),
                       ),
                       _serviceCard(
                         title: 'Home to Home Tuition',
                         imagePath: 'assets/girlimage@4x.png',
-                        backgroundColor: Colors.orange.shade50,
+                        backgroundColor: const Color.fromARGB(210, 251, 197, 216),
                       ),
                       _serviceCard(
                         title: 'Qualified And Trusted Teachers',
                         imagePath: 'assets/girlimage@4x.png',
-                        backgroundColor: Colors.blue.shade50,
+                        backgroundColor: const Color.fromARGB(229, 252, 211, 215),
                       ),
                     ],
                   ),
@@ -415,7 +415,7 @@ class StudentHomepage extends StatelessWidget {
               child: FloatingActionButton(
                 onPressed: () {},
                 child: Image.asset(
-                  'assets/whatsapp@3x.png',
+                  'assets/call.png',
                 ),
               ),
             ),
