@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/attendance.dart';
-import 'package:trusir/course.dart';
 import 'package:trusir/extra_knowledge.dart';
 import 'package:trusir/login_page.dart';
-import 'package:trusir/newcourse.dart';
 import 'package:trusir/profilepopup.dart';
 import 'package:trusir/test_series.dart';
 import 'package:trusir/fee_payment.dart';
@@ -406,7 +404,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const NewCoursePage(),
+                              builder: (context) => const VideoKnowledge(),
                             ),
                           );
                         }),

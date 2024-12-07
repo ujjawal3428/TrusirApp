@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/bottom_navigation_bar.dart';
-import 'package:trusir/course.dart';
+import 'package:trusir/newcourse.dart';
 import 'package:trusir/setting.dart';
 import 'package:trusir/student_facilities.dart';
 
@@ -17,7 +17,7 @@ class MainScreenState extends State<MainScreen> {
   // List of pages for each bottom navigation item
   final List<Widget> pages = [
     const Studentfacilities(), // Home page (Student Facilities)
-    const CoursePage(), // Placeholder for Courses
+    const NewCoursePage(), // Placeholder for Courses
     const SettingsScreen(),
   ];
 
