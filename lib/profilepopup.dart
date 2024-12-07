@@ -38,12 +38,13 @@ class _ProfilePopupState extends State<ProfilePopup> {
   Future<void> saveSelectedProfile(Map<String, dynamic> profile) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('selectedProfile', json.encode(profile));
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
         builder: (context) =>
             PopUpSplashScreen(userId: selectedProfile!['userID']),
       ),
+      (route) => false,
     );
   }
 
