@@ -13,16 +13,25 @@ import 'package:trusir/teacherssettings.dart';
 class StudentProfile {
   final String name;
   final String image;
+  final String phone;
+  final String subject;
+  final String userID;
 
   StudentProfile({
     required this.name,
     required this.image,
+    required this.phone,
+    required this.subject,
+    required this.userID,
   });
 
   factory StudentProfile.fromJson(Map<String, dynamic> json) {
     return StudentProfile(
       name: json['name'],
       image: json['image'],
+      phone: json['mobile'],
+      subject: json['subject'],
+      userID: json['userID'],
     );
   }
 }
@@ -42,7 +51,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
   String profile = '';
   String userID = '';
 
-  final apiBase = '$baseUrl/my-students';
+  final apiBase = '$baseUrl/my-student';
 
   Future<void> fetchStudentProfiles({int page = 1}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -346,7 +355,16 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const StudentProfileScreen(),
+                                          StudentProfileScreen(
+                                              name: studentprofile[index].name,
+                                              phone:
+                                                  studentprofile[index].phone,
+                                              subject:
+                                                  studentprofile[index].subject,
+                                              image:
+                                                  studentprofile[index].image,
+                                              userID:
+                                                  studentprofile[index].userID),
                                     ),
                                   );
                                 },

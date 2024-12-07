@@ -7,7 +7,19 @@ import 'package:trusir/progress_report.dart';
 import 'package:trusir/test_series.dart';
 
 class StudentProfileScreen extends StatelessWidget {
-  const StudentProfileScreen({super.key});
+  final String name;
+  final String phone;
+  final String subject;
+  final String image;
+  final String userID;
+
+  const StudentProfileScreen(
+      {super.key,
+      required this.name,
+      required this.phone,
+      required this.subject,
+      required this.image,
+      required this.userID});
 
   Widget _buildContent(BuildContext context, BoxConstraints constraints) {
     return Scaffold(
@@ -84,24 +96,33 @@ class StudentProfileScreen extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(12.0),
-                            child: Image.asset(
-                              'assets/contact@3x.png',
+                            child: Image.network(
+                              image,
                               width: 80,
                               height: 80,
                               fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    color: Colors.grey,
+                                    size: 80,
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                          const Expanded(
+                          Expanded(
                             child: Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   top: 0, left: 4.0, right: 0.0),
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'Raj Roy',
-                                      style: TextStyle(
+                                      name,
+                                      style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 18,
                                         fontFamily: 'Poppins',
@@ -109,10 +130,10 @@ class StudentProfileScreen extends StatelessWidget {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(top: 5.0),
+                                      padding: const EdgeInsets.only(top: 5.0),
                                       child: Text(
-                                        '+91-82979739933',
-                                        style: TextStyle(
+                                        '+91-$phone',
+                                        style: const TextStyle(
                                           fontFamily: 'Poppins',
                                           color: Colors.white,
                                           fontSize: 11,
@@ -121,10 +142,10 @@ class StudentProfileScreen extends StatelessWidget {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(top: 2.0),
+                                      padding: const EdgeInsets.only(top: 2.0),
                                       child: Text(
-                                        'Mathematics & English',
-                                        style: TextStyle(
+                                        subject,
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 11,
                                           fontFamily: 'Poppins',
@@ -445,8 +466,7 @@ class StudentProfileScreen extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                 AddDoubt(),
+                                            builder: (context) => AddDoubt(),
                                           ),
                                         );
                                       },
