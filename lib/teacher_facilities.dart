@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trusir/add_gk.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/student_profile.dart';
