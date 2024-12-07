@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
+import 'package:trusir/main_screen.dart';
+import 'package:trusir/teacher_main_screen.dart';
 
 class EditSplashScreen extends StatefulWidget {
   const EditSplashScreen({super.key});
@@ -84,10 +86,24 @@ class EditSplashScreenState extends State<EditSplashScreen> {
         }
 
         // Navigate to the next screen
-
-        Navigator.pop(context);
-
+        if (responseData['role'] == 'student') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainScreen()),
+          );
+        } else if (responseData['role'] == 'teacher') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const TeacherMainScreen()),
+          );
+        }
         print(responseData);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login Successful!'),
+            duration: Duration(seconds: 1),
+          ),
+        );
       } else {
         // Handle API error
         print('Failed to fetch user data. Status code: ${response.statusCode}');

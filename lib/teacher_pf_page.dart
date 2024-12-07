@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 import 'package:trusir/api.dart';
+import 'package:trusir/teacher_edit_profile.dart';
 
 class Teacherpfpage extends StatefulWidget {
   const Teacherpfpage({super.key});
@@ -91,7 +92,37 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                   color: Color(0xFF48116A),
                   fontSize: 22,
                   fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TeacherEditProfileScreen(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Text(
+                      'Edit Profile',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF48116A),
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
