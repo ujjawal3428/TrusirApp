@@ -77,8 +77,8 @@ class NewCoursePage extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      height: 40,
-                      width: 40,
+                      height: 70,
+                      width: 70,
                       decoration: BoxDecoration(
                         color: Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(8.0),
@@ -112,41 +112,18 @@ class NewCoursePage extends StatelessWidget {
                         ],
                       ),
                     ),
+                    const Align(
+                 alignment: AlignmentDirectional.topEnd,
+                 child: Text(
+                  '7:45 PM'
+                 ),
+                ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: FractionallySizedBox(
-                          alignment: Alignment.centerLeft,
-                          widthFactor: 0.7,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    const Text(
-                      "70%",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
+              
+               
+               
+              
                 Align(
                   alignment: Alignment.bottomRight,
                   child: TextButton(
