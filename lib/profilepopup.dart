@@ -21,8 +21,8 @@ class _ProfilePopupState extends State<ProfilePopup> {
   @override
   void initState() {
     super.initState();
+    fetchDataAndStoreInSharedPreferences({});
     loadSelectedProfile();
-    fetchDataAndStoreInSharedPreferences();
   }
 
   Future<void> loadSelectedProfile() async {
@@ -48,7 +48,8 @@ class _ProfilePopupState extends State<ProfilePopup> {
     );
   }
 
-  Future<void> fetchDataAndStoreInSharedPreferences() async {
+  Future<void> fetchDataAndStoreInSharedPreferences(
+      Map<String, dynamic> profile) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? phonenum = prefs.getString('phone_number');
     try {
@@ -62,7 +63,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
             profiles = json.encode(responseData['data']);
             if (responseData['data'].isNotEmpty && selectedProfile == null) {
               selectedProfile = responseData['data'][0];
-              saveSelectedProfile(selectedProfile!);
+              prefs.setString('selectedProfile', json.encode(profile));
             }
           });
         }
@@ -95,6 +96,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
   Widget build(BuildContext context) {
     return profiles != null
         ? Scaffold(
+            backgroundColor: Colors.transparent,
             body: Container(
               color: Colors.black54,
               child: Center(
@@ -304,6 +306,8 @@ class _ProfilePopupState extends State<ProfilePopup> {
               ),
             ),
           )
-        : const Scaffold(body: Center(child: CircularProgressIndicator()));
+        : const Scaffold(
+            backgroundColor: Colors.white30,
+            body: Center(child: CircularProgressIndicator()));
   }
 }
