@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/bottom_navigation_bar.dart';
+import 'package:trusir/teacher_bottomnavbar.dart';
 import 'package:trusir/teacher_facilities.dart';
 import 'package:trusir/teacherssettings.dart';
 
@@ -42,7 +42,7 @@ class TeacherMainScreenState extends State<TeacherMainScreen> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: CustomBottomNavigationBar(
+            child: TeacherBottomNavigationBar(
               currentIndex: currentIndex,
               onTap: onTabTapped,
             ),
