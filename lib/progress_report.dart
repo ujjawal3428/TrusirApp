@@ -230,60 +230,92 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          if (_isDownloading)
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  const CircularProgressIndicator(),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Downloading: $_downloadProgress',
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Color(0xFF48116A),
+                size: 30,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            const SizedBox(width: 5),
+            const Text(
+              'Progress Report',
+              style: TextStyle(
+                color: Color(0xFF48116A),
+                fontSize: 22,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
               ),
             ),
-          _buildBackButton(context),
-          _buildCurrentMonthCard(),
-          const SizedBox(height: 20),
-          _buildPreviousMonthsReports(),
-          const SizedBox(height: 20),
-          FutureBuilder<List<dynamic>>(
-            future: _reports,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                final reports = snapshot.data!;
-                // Store the fetched data in _loadedReports
-                _loadedReports = reports;
-                return Column(
-                  children: _loadedReports
-                      .map((report) => _buildPreviousMonthCard(
-                            subject: report['subject'],
-                            date: report['date'],
-                            time: report['time'],
-                            marks: report['marks'],
-                            reportUrl: report['report'],
-                          ))
-                      .toList(),
-                );
-              }
-            },
-          ),
-          TextButton(
-            onPressed:
-                _loadMoreReports, // Call the _loadMoreReports method when clicked
-            child: const Text('Load More...'),
-          ),
-        ],
+          ],
+        ),
+        toolbarHeight: 70,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            if (_isDownloading)
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Downloading: $_downloadProgress',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            _buildBackButton(context),
+            _buildCurrentMonthCard(),
+            const SizedBox(height: 20),
+            _buildPreviousMonthsReports(),
+            const SizedBox(height: 20),
+            FutureBuilder<List<dynamic>>(
+              future: _reports,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else {
+                  final reports = snapshot.data!;
+                  // Store the fetched data in _loadedReports
+                  _loadedReports = reports;
+                  return Column(
+                    children: _loadedReports
+                        .map((report) => _buildPreviousMonthCard(
+                              subject: report['subject'],
+                              date: report['date'],
+                              time: report['time'],
+                              marks: report['marks'],
+                              reportUrl: report['report'],
+                            ))
+                        .toList(),
+                  );
+                }
+              },
+            ),
+            TextButton(
+              onPressed:
+                  _loadMoreReports, // Call the _loadMoreReports method when clicked
+              child: const Text('Load More...'),
+            ),
+          ],
+        ),
       ),
     );
   }
