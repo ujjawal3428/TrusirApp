@@ -35,7 +35,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
     String? userID = prefs.getString('userID');
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/teacher-profile/$userID'),
+        Uri.parse('$baseUrl/api/get-user/$userID'),
       );
 
       if (response.statusCode == 200) {
@@ -47,14 +47,10 @@ class MyProfileScreenState extends State<Teacherpfpage> {
           address = data['address'] ?? 'N/A';
           graduation = data['graduation'] ?? 'N/A';
           experience = data['experience'] ?? 'N/A';
-          subjects = data['subjects'] != null
-              ? (data['subjects'] as List<dynamic>).join(', ')
-              : 'N/A';
-          language = data['language'] != null
-              ? (data['language'] as List<dynamic>).join(', ')
-              : 'N/A';
-          phoneNumber = data['phoneNumber'] ?? 'N/A';
-          profilePhoto = data['profile_photo'] ??
+          subjects = data['subject'] ?? 'N/A';
+          language = data['medium'] ?? 'N/A';
+          phoneNumber = data['phone'] ?? 'N/A';
+          profilePhoto = data['profile'] ??
               'https://via.placeholder.com/150'; // Fallback image URL
         });
         print('Data fetched Successfully');
@@ -193,7 +189,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
             buildInfoRow(
               'assets/phone@2x.png',
               'Phone Number',
-              phoneNumber,
+              '+91-$phoneNumber',
               imageBackgroundColor: Colors.teal.shade100,
               textBackgroundColor: Colors.teal.shade50,
             ),
