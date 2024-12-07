@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
-import 'package:trusir/student_facilities.dart';
+import 'package:trusir/main_screen.dart';
 
 class PopUpSplashScreen extends StatefulWidget {
   final String userId;
@@ -93,10 +93,9 @@ class PopUpSplashScreenState extends State<PopUpSplashScreen> {
         await prefs.setString('time_slot', responseData['time_slot']);
 
         // Navigate to the next screen
-        Navigator.pushAndRemoveUntil(
+        Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Studentfacilities()),
-          (route) => false,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
         );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
