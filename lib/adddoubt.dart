@@ -64,8 +64,8 @@ class AddDoubt extends StatelessWidget {
                  
                    Image.asset(
                       'assets/jpg@3x.png',
-                      
-                    
+                      height: 30,
+                      width: 30,
                     ),
                     const SizedBox(width: 15),
                     
