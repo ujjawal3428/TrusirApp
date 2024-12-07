@@ -293,15 +293,15 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               ),
                             );
                           }),
-                          buildTile(context, const Color(0xFFF8BBD0),
-                              'assets/gksp@3x.png', 'General Knowledge', () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>  AddGK(),
-                              ),
-                            );
-                          }),
+                          // buildTile(context, const Color(0xFFF8BBD0),
+                          //     'assets/gksp@3x.png', 'General Knowledge', () {
+                          //   Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       builder: (context) =>  AddGK(),
+                          //     ),
+                          //   );
+                          // }),
                           buildTile(context, const Color(0xFFB3E5FC),
                               'assets/setting.png', 'Setting', () {
                             Navigator.push(
@@ -330,91 +330,87 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                   ),
                 ),
                 SizedBox(
-                    height: 130,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      physics: const BouncingScrollPhysics(),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ...studentprofile.asMap().entries.map((entry) {
-                              int index = entry.key;
-                              StudentProfile studentProfile = entry.value;
+                  height: 340, // Set an appropriate height for the GridView
+                  child: GridView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3, // Number of columns
+                      crossAxisSpacing: 15, // Horizontal space between items
+                      mainAxisSpacing: 15, // Vertical space between items
+                      childAspectRatio:
+                          94 / 120, // Adjust the width/height ratio
+                    ),
+                    itemCount: studentprofile.length,
+                    itemBuilder: (context, index) {
+                      StudentProfile studentProfile = studentprofile[index];
 
-                              // Cycle through colors using the modulus operator
-                              Color cardColor =
-                                  cardColors[index % cardColors.length];
+                      // Cycle through colors using the modulus operator
+                      Color cardColor = cardColors[index % cardColors.length];
 
-                              final borderColor = HSLColor.fromColor(cardColor)
-                                  .withLightness(0.95)
-                                  .toColor();
+                      final borderColor = HSLColor.fromColor(cardColor)
+                          .withLightness(0.95)
+                          .toColor();
 
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          StudentProfileScreen(
-                                              name: studentprofile[index].name,
-                                              phone:
-                                                  studentprofile[index].phone,
-                                              subject:
-                                                  studentprofile[index].subject,
-                                              image:
-                                                  studentprofile[index].image,
-                                              userID:
-                                                  studentprofile[index].userID),
-                                    ),
-                                  );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 7.0),
-                                  child: Container(
-                                    width: 94,
-                                    height: 129,
-                                    decoration: BoxDecoration(
-                                      color: cardColor,
-                                      borderRadius: BorderRadius.circular(22),
-                                      border: Border.all(
-                                        color: borderColor,
-                                        width: 2,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.network(
-                                          studentProfile.image,
-                                          width: 47,
-                                          height: 53,
-                                          fit: BoxFit.contain,
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 4),
-                                          child: Text(
-                                            studentProfile.name,
-                                            textAlign: TextAlign.center,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StudentProfileScreen(
+                                name: studentProfile.name,
+                                phone: studentProfile.phone,
+                                subject: studentProfile.subject,
+                                image: studentProfile.image,
+                                userID: studentProfile.userID,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width:
+                              94, // Optional: Maintain fixed width for debugging
+                          height:
+                              120, // Optional: Maintain fixed height for debugging
+                          decoration: BoxDecoration(
+                            color: cardColor,
+                            borderRadius: BorderRadius.circular(22),
+                            border: Border.all(
+                              color: borderColor,
+                              width: 2,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.network(
+                                studentProfile.image,
+                                width: 100,
+                                height: 50,
+                                fit: BoxFit.contain,
+                              ),
+                              const SizedBox(height: 4),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4),
+                                child: Text(
+                                  studentProfile.name,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              );
-                            }),
-                          ]),
-                    )),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
                 const SizedBox(height: 20),
               ],
             ),

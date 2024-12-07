@@ -139,6 +139,8 @@ class _AddtestseriesState extends State<Addtestseries> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Test uploaded successfully!')),
         );
+        Navigator.pop(context);
+        print(postData);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to upload test.')),
@@ -292,7 +294,6 @@ class _AddtestseriesState extends State<Addtestseries> {
                       _testNameController.text,
                       selectedSubject!,
                     );
-                    Navigator.pop(context);
                   }
                 },
                 style: ElevatedButton.styleFrom(
