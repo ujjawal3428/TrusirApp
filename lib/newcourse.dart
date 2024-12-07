@@ -10,23 +10,11 @@ class NewCoursePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 1.0),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 1.0),
           child: Row(
             children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Color(0xFF48116A),
-                  size: 30,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              const SizedBox(width: 5),
-              const Text(
+              Text(
                 'Courses',
                 style: TextStyle(
                   color: Color(0xFF48116A),
@@ -57,9 +45,7 @@ class NewCoursePage extends StatelessWidget {
                 ),
                 DropdownButton<String>(
                   value: "New",
-                  onChanged: (String? newValue) {
-                
-                  },
+                  onChanged: (String? newValue) {},
                   items: <String>['New', 'Old', 'Watched']
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -75,7 +61,7 @@ class NewCoursePage extends StatelessWidget {
             margin: const EdgeInsets.all(16.0),
             padding: const EdgeInsets.all(12.0),
             decoration: BoxDecoration(
-                 color: const Color.fromARGB(51, 0, 255, 187),
+              color: const Color.fromARGB(51, 0, 255, 187),
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
@@ -97,13 +83,13 @@ class NewCoursePage extends StatelessWidget {
                         color: Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(8.0),
                         image: const DecorationImage(
-                          image: AssetImage('assets/gksp@3x.png'), 
+                          image: AssetImage('assets/gksp@3x.png'),
                           fit: BoxFit.cover,
                         ),
                       ),
                     ),
                     const SizedBox(width: 16),
-                   const Expanded(
+                    const Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -140,7 +126,7 @@ class NewCoursePage extends StatelessWidget {
                         ),
                         child: FractionallySizedBox(
                           alignment: Alignment.centerLeft,
-                          widthFactor: 0.7, 
+                          widthFactor: 0.7,
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.blue,
@@ -164,9 +150,7 @@ class NewCoursePage extends StatelessWidget {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: TextButton(
-                    onPressed: () {
-                 
-                    },
+                    onPressed: () {},
                     child: const Text(
                       "Enroll",
                       style: TextStyle(
