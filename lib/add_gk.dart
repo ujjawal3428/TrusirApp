@@ -69,7 +69,7 @@ class AddGK extends StatelessWidget {
                 Image.asset(
                   'assets/descriptionbox.png', 
                   fit: BoxFit.contain,
-                  width: double.infinity,
+                  width: 300,
                   height: 100,
                 ),
                 const Padding(
@@ -84,7 +84,6 @@ class AddGK extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
 
             // Attach File Box
             Stack(
