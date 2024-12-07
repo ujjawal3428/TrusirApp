@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:trusir/adddoubt.dart';
 import 'package:trusir/editprofilescreen.dart';
 import 'package:trusir/extra_knowledge.dart';
 import 'package:trusir/notice.dart';
 import 'package:trusir/progress_report.dart';
-import 'package:trusir/student_doubt.dart';
 import 'package:trusir/test_series.dart';
 
 class StudentProfileScreen extends StatelessWidget {
@@ -446,7 +446,7 @@ class StudentProfileScreen extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const StudentDoubtScreen(),
+                                                 AddDoubt(),
                                           ),
                                         );
                                       },
