@@ -8,6 +8,7 @@ import 'package:photo_view/photo_view.dart';
 import 'dart:io';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:trusir/addtestseries.dart';
 import 'package:trusir/api.dart';
 
 class TestSeriesScreen extends StatefulWidget {
@@ -238,7 +239,15 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
           ),
         ),
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+              Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const Addtestseries(),
+                                    ),
+                                  );
+          },
           elevation: 0, // To match the gradient
           backgroundColor:
               const Color(0xFF48116A), // Transparent for gradient to show
