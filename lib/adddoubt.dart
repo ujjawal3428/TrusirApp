@@ -33,7 +33,7 @@ class AddDoubt extends StatelessWidget {
             ),
             const SizedBox(width: 5),
             const Text(
-              'Student Doubts',
+              'Add Doubt',
               style: TextStyle(
                 color: Color(0xFF48116A),
                 fontSize: 22,
@@ -56,16 +56,16 @@ class AddDoubt extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
                   children: [
                  
-                    const Icon(
-                      Icons.picture_as_pdf,
-                      size: 50,
-                      color: Colors.redAccent,
+                   Image.asset(
+                      'assets/jpg@3x.png',
+                      
+                    
                     ),
                     const SizedBox(width: 15),
                     
