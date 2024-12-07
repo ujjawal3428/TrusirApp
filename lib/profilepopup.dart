@@ -21,17 +21,29 @@ class _ProfilePopupState extends State<ProfilePopup> {
   @override
   void initState() {
     super.initState();
+    loadSelectedProfile();
     fetchDataAndStoreInSharedPreferences();
-    getDataFromSharedPreferences();
   }
 
-  Future<void> logout(BuildContext context) async {
+  Future<void> loadSelectedProfile() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    Navigator.pushAndRemoveUntil(
+    final String? savedProfile = prefs.getString('selectedProfile');
+    if (savedProfile != null) {
+      setState(() {
+        selectedProfile = json.decode(savedProfile);
+      });
+    }
+  }
+
+  Future<void> saveSelectedProfile(Map<String, dynamic> profile) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedProfile', json.encode(profile));
+    Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const TrusirLoginPage()),
-      (route) => false,
+      MaterialPageRoute(
+        builder: (context) =>
+            PopUpSplashScreen(userId: selectedProfile!['userID']),
+      ),
     );
   }
 
@@ -47,28 +59,35 @@ class _ProfilePopupState extends State<ProfilePopup> {
         if (responseData['success'] == true) {
           setState(() {
             profiles = json.encode(responseData['data']);
-            // Set the first profile as the default selected profile
-            if (responseData['data'].isNotEmpty) {
+            if (responseData['data'].isNotEmpty && selectedProfile == null) {
               selectedProfile = responseData['data'][0];
+              saveSelectedProfile(selectedProfile!);
             }
           });
-        } else {
-          print("API response indicates failure.");
         }
-      } else {
-        print("Failed to fetch data: ${response.statusCode}");
       }
     } catch (e) {
       print("Error occurred: $e");
     }
   }
 
-  Future<List<Map<String, dynamic>>> getDataFromSharedPreferences() async {
+  Future<List<Map<String, dynamic>>> getProfiles() async {
     if (profiles != null) {
-      List<dynamic> jsonData = json.decode(profiles!);
-      return jsonData.map((e) => e as Map<String, dynamic>).toList();
+      return (json.decode(profiles!) as List)
+          .map((e) => e as Map<String, dynamic>)
+          .toList();
     }
     return [];
+  }
+
+  Future<void> logout(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const TrusirLoginPage()),
+      (route) => false,
+    );
   }
 
   @override
@@ -83,7 +102,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
                   height: 500,
                   color: Colors.white,
                   child: FutureBuilder(
-                    future: getDataFromSharedPreferences(),
+                    future: getProfiles(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
@@ -167,10 +186,11 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                   ],
                                 ),
                               ),
-                              
-                             
                               Padding(
-                                padding: const EdgeInsets.only(left: 10.0, right: 10,),
+                                padding: const EdgeInsets.only(
+                                  left: 10.0,
+                                  right: 10,
+                                ),
                                 child: Container(
                                   height: 230,
                                   width: double.infinity,
@@ -183,7 +203,8 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                           ListTile(
                                             contentPadding:
                                                 const EdgeInsets.symmetric(
-                                                    horizontal: 10, vertical: 0),
+                                                    horizontal: 10,
+                                                    vertical: 0),
                                             title: Text(data[index]['name']),
                                             subtitle: Text(
                                                 'Class: ${data[index]['class']}'),
@@ -197,24 +218,12 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                                   : const NetworkImage(
                                                       'https://via.placeholder.com/150'),
                                             ),
-                                            onTap: () {
-                                              // Move the selected profile to the top
+                                            onTap: () async {
                                               setState(() {
                                                 selectedProfile = data[index];
-                                                data.removeAt(index);
-                                                data.insert(0, selectedProfile!);
-                                                profiles = json.encode(data);
                                               });
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      PopUpSplashScreen(
-                                                          userId:
-                                                              selectedProfile![
-                                                                  'userID']),
-                                                ),
-                                              );
+                                              await saveSelectedProfile(
+                                                  selectedProfile!);
                                             },
                                           ),
                                           Divider(
@@ -249,6 +258,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                               MaterialTapTargetSize.shrinkWrap,
                                         ),
                                         onPressed: () {
+                                          Navigator.pop(context);
                                           logout(context);
                                         },
                                         child: const Center(

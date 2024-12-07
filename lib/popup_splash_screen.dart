@@ -93,9 +93,10 @@ class PopUpSplashScreenState extends State<PopUpSplashScreen> {
         await prefs.setString('time_slot', responseData['time_slot']);
 
         // Navigate to the next screen
-        Navigator.pushReplacement(
+        Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const Studentfacilities()),
+          (route) => false,
         );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
