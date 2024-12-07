@@ -36,11 +36,11 @@ class TeacherFacilities extends StatefulWidget {
 
 class _TeacherFacilitiesState extends State<TeacherFacilities> {
   List<StudentProfile> studentprofile = [];
-  String? name;
-  String? address;
-  String? phone;
-  String? profile;
-  String? userID;
+  String name = '';
+  String address = '';
+  String phone = '';
+  String profile = '';
+  String userID = '';
 
   final apiBase = '$baseUrl/my-students';
 
@@ -95,11 +95,11 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
   Future<void> fetchProfileData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userID = prefs.getString('userID');
-      name = prefs.getString('name');
-      profile = prefs.getString('profile');
-      address = prefs.getString('address');
-      phone = prefs.getString('phone_number');
+      userID = prefs.getString('userID')!;
+      name = prefs.getString('name')!;
+      profile = prefs.getString('profile')!;
+      address = prefs.getString('address')!;
+      phone = prefs.getString('phone_number')!;
     });
   }
 
@@ -188,7 +188,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  name!,
+                                  name,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -199,7 +199,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5.0),
                                   child: Text(
-                                    address!,
+                                    address,
                                     style: const TextStyle(
                                       fontFamily: 'Poppins',
                                       color: Colors.white,
@@ -211,7 +211,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 2.0),
                                   child: Text(
-                                    phone!,
+                                    phone,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 11,
@@ -227,10 +227,19 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                         Padding(
                           padding: const EdgeInsets.only(right: 12.0),
                           child: Image.network(
-                            profile!,
+                            profile,
                             width: 92,
                             height: 92,
                             fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                child: Icon(
+                                  Icons.broken_image,
+                                  color: Colors.grey,
+                                  size: 50,
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ],
@@ -281,7 +290,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const Teacherssettings(),
+                                  builder: (context) =>
+                                      const Teacherssettings(),
                                 ),
                               );
                             }),

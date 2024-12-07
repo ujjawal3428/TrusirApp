@@ -23,11 +23,11 @@ class Studentfacilities extends StatefulWidget {
 }
 
 class _StudentfacilitiesState extends State<Studentfacilities> {
-  String? name;
-  String? profile;
-  String? address;
-  String? phone;
-  String? userID;
+  String name = '';
+  String profile = '';
+  String address = '';
+  String phone = '';
+  String userID = '';
 
   final Map<String, Map<String, double>> imageSizes = {
     'assets/myprofile.png': {'width': 50, 'height': 50},
@@ -63,11 +63,11 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
   Future<void> fetchProfileData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userID = prefs.getString('userID');
-      name = prefs.getString('name');
-      profile = prefs.getString('profile');
-      address = prefs.getString('address');
-      phone = prefs.getString('phone_number');
+      userID = prefs.getString('userID')!;
+      name = prefs.getString('name')!;
+      profile = prefs.getString('profile')!;
+      address = prefs.getString('address')!;
+      phone = prefs.getString('phone_number')!;
     });
   }
 
@@ -171,7 +171,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    name!,
+                                    name,
                                     style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 22,
@@ -181,7 +181,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 5.0),
                                     child: Text(
-                                      address!,
+                                      address,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 16,
@@ -193,7 +193,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 2.0),
                                     child: Text(
-                                      phone!,
+                                      phone,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontFamily: 'Poppins',
@@ -209,10 +209,19 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                           Padding(
                             padding: const EdgeInsets.only(right: 12.0),
                             child: Image.network(
-                              profile!,
+                              profile,
                               width: 92,
                               height: 92,
                               fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Center(
+                                  child: Icon(
+                                    Icons.broken_image,
+                                    color: Colors.grey,
+                                    size: 50,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ],

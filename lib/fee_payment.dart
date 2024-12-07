@@ -100,155 +100,240 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade100,
-        appBar: AppBar(
-          backgroundColor: Colors.grey[50],
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          title: Row(children: [
-            IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios_rounded,
-                color: Color(0xFF48116A),
-                size: 30,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
+    return Scaffold(
+      backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Row(children: [
+          IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_rounded,
+              color: Color(0xFF48116A),
+              size: 30,
             ),
-            const Text(
-              'Fee Payment',
-              style: TextStyle(
-                color: Color(0xFF48116A),
-                fontSize: 22,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w700,
-              ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          const Text(
+            'Fee Payment',
+            style: TextStyle(
+              color: Color(0xFF48116A),
+              fontSize: 22,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w700,
             ),
-            const SizedBox(width: 20),
-            const Row(
-              mainAxisSize: MainAxisSize.min,
+          ),
+          const SizedBox(width: 20),
+          const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.wallet_rounded,
+                size: 20,
+                color: Color.fromARGB(255, 28, 37, 136),
+              ),
+              SizedBox(width: 1),
+              Text(
+                '₹ 10,000.00',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ]),
+        toolbarHeight: 70,
+      ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: LinearGradient(
+            colors: [Colors.grey[300]!, Colors.white],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: FloatingActionButton(
+          onPressed: () {},
+          elevation: 0, // To match the gradient
+          backgroundColor:
+              const Color(0xFF48116A), // Transparent for gradient to show
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 50,
+          ), // Plus icon
+          // Icon size
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Stack(
               children: [
-                Icon(
-                  Icons.wallet_rounded,
-                  size: 20,
-                  color: Color.fromARGB(255, 28, 37, 136),
-                ),
-                SizedBox(width: 1),
-                Text(
-                  '₹ 10,000.00',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ],
-            ),
-          ]),
-          toolbarHeight: 70,
-        ),
-        floatingActionButton: Container(
-          margin: const EdgeInsets.only(bottom: 16.0, right: 16.0),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              colors: [Colors.grey[300]!, Colors.white],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: FloatingActionButton(
-            onPressed: () {},
-            elevation: 0, // To match the gradient
-            backgroundColor:
-                const Color(0xFF48116A), // Transparent for gradient to show
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 50,
-            ), // Plus icon
-            // Icon size
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        body: isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 10.0, top: 12),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [],
-                          ),
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10.0, top: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [],
                         ),
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 17.0, right: 17),
-                          child: Container(
-                            width: 386,
-                            height: 160,
-                            decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFFC22054),
-                                  Color(0xFF48116A),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 17.0, right: 17),
+                        child: Container(
+                          width: 386,
+                          height: 160,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [
+                                Color(0xFFC22054),
+                                Color(0xFF48116A),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(22),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.25),
+                                spreadRadius: 0,
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
                               ),
-                              borderRadius: BorderRadius.circular(22),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.25),
-                                  spreadRadius: 0,
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              children: [
+                                const Expanded(
+                                  child: Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 10.0, top: 20),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Current Month',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          '24 Jan 2025 - Today',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Total No. of Classes: 09',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Image.asset(
+                                    'assets/money@3x.png',
+                                    width: 130,
+                                    height: 130,
+                                  ),
                                 ),
                               ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 20.0, left: 23),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Previous month',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      ...feepayment.asMap().entries.map((entry) {
+                        int index = entry.key;
+                        Fees payment = entry.value;
+
+                        // Cycle through colors using the modulus operator
+                        Color cardColor = cardColors[index % cardColors.length];
+
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20.0, right: 20, bottom: 14),
+                          child: Container(
+                            width: 386,
+                            height: 136,
+                            decoration: BoxDecoration(
+                              color: cardColor, // Apply dynamic color
+                              borderRadius: BorderRadius.circular(12),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Row(
                                 children: [
-                                  const Expanded(
+                                  Expanded(
                                     child: Padding(
-                                      padding:
-                                          EdgeInsets.only(left: 10.0, top: 20),
+                                      padding: const EdgeInsets.only(
+                                          left: 5.0, top: 10),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Current Month',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          SizedBox(height: 5),
-                                          Text(
-                                            '24 Jan 2025 - Today',
-                                            style: TextStyle(
+                                            payment.paymenttype,
+                                            style: const TextStyle(
                                               fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
                                             ),
                                           ),
                                           Text(
-                                            'Total No. of Classes: 09',
-                                            style: TextStyle(
+                                            payment.transactionid,
+                                            style: const TextStyle(
                                               fontSize: 14,
-                                              color: Colors.white,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 18),
+                                          Text(
+                                            payment.paymentmethod,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
                                         ],
@@ -256,153 +341,64 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                     ),
                                   ),
                                   Align(
-                                    alignment: Alignment.topRight,
-                                    child: Image.asset(
-                                      'assets/money@3x.png',
-                                      width: 130,
-                                      height: 130,
+                                    alignment: Alignment.centerRight,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 10.0),
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            '₹ ${payment.amount}',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            payment.date,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 18),
+                                          Text(
+                                            payment.time,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                           ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 20.0, left: 23),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'Previous month',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        ...feepayment.asMap().entries.map((entry) {
-                          int index = entry.key;
-                          Fees payment = entry.value;
-
-                          // Cycle through colors using the modulus operator
-                          Color cardColor =
-                              cardColors[index % cardColors.length];
-
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20.0, right: 20, bottom: 14),
-                            child: Container(
-                              width: 386,
-                              height: 136,
-                              decoration: BoxDecoration(
-                                color: cardColor, // Apply dynamic color
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 5.0, top: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              payment.paymenttype,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            Text(
-                                              payment.transactionid,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 18),
-                                            Text(
-                                              payment.paymentmethod,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 10.0),
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              '₹ ${payment.amount}',
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Text(
-                                              payment.date,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 18),
-                                            Text(
-                                              payment.time,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                        );
+                      }),
+                      if (hasMore)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: isLoadingMore
+                              ? const CircularProgressIndicator()
+                              : TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      isLoadingMore = true;
+                                      currentPage++;
+                                    });
+                                    fetchFeeDetails(page: currentPage);
+                                  },
+                                  child: const Text('Load More...'),
                                 ),
-                              ),
-                            ),
-                          );
-                        }),
-                        if (hasMore)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: isLoadingMore
-                                ? const CircularProgressIndicator()
-                                : TextButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        isLoadingMore = true;
-                                        currentPage++;
-                                      });
-                                      fetchFeeDetails(page: currentPage);
-                                    },
-                                    child: const Text('Load More...'),
-                                  ),
-                          ),
-                      ],
-                    ),
+                        ),
+                    ],
                   ),
-                ],
-              ),
-      ),
+                ),
+              ],
+            ),
     );
   }
 }

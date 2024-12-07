@@ -14,23 +14,22 @@ class Teacherssettings extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
-        automaticallyImplyLeading: false,
-        title:  Padding(
-          padding: EdgeInsets.only(left: 1.0),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 1.0),
           child: Row(
             children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_rounded,
-                    color: Color(0xFF48116A),
-                    size: 30,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
                 ),
-                const SizedBox(width: 5),
-              Text(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 5),
+              const Text(
                 'Setting',
                 style: TextStyle(
                   color: Color(0xFF48116A),
@@ -119,7 +118,6 @@ class Teacherssettings extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-          
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10),
               child: Row(

@@ -14,7 +14,6 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
-        automaticallyImplyLeading: false,
         title: const Padding(
           padding: EdgeInsets.only(left: 1.0),
           child: Row(
