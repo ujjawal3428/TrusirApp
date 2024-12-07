@@ -51,25 +51,33 @@ class _ProfilePopupState extends State<ProfilePopup> {
   Future<void> fetchDataAndStoreInSharedPreferences(
       Map<String, dynamic> profile) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? phonenum = prefs.getString('phone_number');
-    try {
-      final response =
-          await http.get(Uri.parse('$baseUrl/api/users/$phonenum'));
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-
-        if (responseData['success'] == true) {
-          setState(() {
-            profiles = json.encode(responseData['data']);
-            if (responseData['data'].isNotEmpty && selectedProfile == null) {
-              selectedProfile = responseData['data'][0];
-              prefs.setString('selectedProfile', json.encode(profile));
-            }
-          });
+    String? savedProfiles = prefs.getString('profiles');
+    if (savedProfiles != null) {
+      setState(() {
+        profiles = savedProfiles;
+      });
+    } else {
+      String? phonenum = prefs.getString('phone_number');
+      try {
+        final response =
+            await http.get(Uri.parse('$baseUrl/api/users/$phonenum'));
+        if (response.statusCode == 200) {
+          final responseData = json.decode(response.body);
+          if (responseData['success'] == true) {
+            setState(() {
+              profiles = json.encode(responseData['data']);
+              prefs.setString('profiles', profiles!);
+              if (responseData['data'].isNotEmpty && selectedProfile == null) {
+                selectedProfile = responseData['data'][0];
+                prefs.setString(
+                    'selectedProfile', json.encode(selectedProfile));
+              }
+            });
+          }
         }
+      } catch (e) {
+        print("Error occurred: $e");
       }
-    } catch (e) {
-      print("Error occurred: $e");
     }
   }
 
@@ -229,8 +237,26 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                               ),
                                               onTap: () async {
                                                 setState(() {
-                                                  selectedProfile = data[index];
+                                                  // Remove the selected profile from its current position
+                                                  final selected =
+                                                      data.removeAt(index);
+                                                  // Insert it at the top of the list
+                                                  data.insert(0, selected);
+                                                  // Update the selectedProfile to the newly selected one
+                                                  selectedProfile = selected;
                                                 });
+
+                                                // Save the reordered list and selected profile
+                                                final SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                prefs.setString('profiles',
+                                                    json.encode(data));
+                                                prefs.setString(
+                                                    'selectedProfile',
+                                                    json.encode(
+                                                        selectedProfile!));
+
                                                 await saveSelectedProfile(
                                                     selectedProfile!);
                                               },
