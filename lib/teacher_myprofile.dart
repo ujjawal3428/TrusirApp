@@ -40,148 +40,146 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            backgroundColor: Colors.grey[200],
-            appBar: AppBar(
-              backgroundColor: Colors.grey[50],
-              elevation: 0,
-              automaticallyImplyLeading: false,
-              title: Padding(
-                padding: const EdgeInsets.only(left: 1.0),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.arrow_back_ios_rounded,
-                        color: Color(0xFF48116A),
-                        size: 30,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    const SizedBox(width: 5),
-                    const Text(
-                      'Teacher Profile',
-                      style: TextStyle(
-                        color: Color(0xFF48116A),
-                        fontSize: 22,
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
+    return Scaffold(
+        backgroundColor: Colors.grey[200],
+        appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 1.0),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Color(0xFF48116A),
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
-              ),
-              toolbarHeight: 70,
+                const SizedBox(width: 5),
+                const Text(
+                  'Teacher Profile',
+                  style: TextStyle(
+                    color: Color(0xFF48116A),
+                    fontSize: 22,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
-            body: isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                    child: Column(children: [
-                    // Display the teacher profiles in a grid view
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 20, right: 8, top: 8, bottom: 8),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 14,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 0.72,
-                        ),
-                        itemCount: teachers.length,
-                        itemBuilder: (context, index) {
-                          final teacher = teachers[index];
+          ),
+          toolbarHeight: 70,
+        ),
+        body: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                child: Column(children: [
+                // Display the teacher profiles in a grid view
+                Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 8, top: 8, bottom: 8),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 14,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 0.72,
+                    ),
+                    itemCount: teachers.length,
+                    itemBuilder: (context, index) {
+                      final teacher = teachers[index];
 
-                          return Stack(
-                            clipBehavior: Clip.hardEdge,
-                            children: [
-                              Container(
-                                width: 180,
-                                height: 251,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(20),
-                                  border:
-                                      Border.all(color: Colors.grey, width: 1),
+                      return Stack(
+                        clipBehavior: Clip.hardEdge,
+                        children: [
+                          Container(
+                            width: 180,
+                            height: 251,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(color: Colors.grey, width: 1),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Image from network
+                                Container(
+                                  width: 98,
+                                  height: 101,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(teacher.image),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
                                 ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    // Image from network
-                                    Container(
-                                      width: 98,
-                                      height: 101,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage(teacher.image),
-                                          fit: BoxFit.cover,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    // Name Text
-                                    Text(
-                                      teacher.name,
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    // Phone Number
-                                    Text(
-                                      teacher.mobile,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
+                                const SizedBox(height: 10),
+                                // Name Text
+                                Text(
+                                  teacher.name,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(height: 6),
+                                // Phone Number
+                                Text(
+                                  teacher.mobile,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
 
-                              // Tag
-                              Positioned(
-                                top: -10,
-                                left: -30,
-                                child: Transform.rotate(
-                                  angle: -0.785398,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0, left: 0, right: 0),
-                                    child: Container(
-                                      width: 150,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 25, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: Colors.purple.shade100,
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      child: Text(
-                                        teacher.subject,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
-                                      ),
+                          // Tag
+                          Positioned(
+                            top: -10,
+                            left: -30,
+                            child: Transform.rotate(
+                              angle: -0.785398,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 0, left: 0, right: 0),
+                                child: Container(
+                                  width: 150,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: Colors.purple.shade100,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Text(
+                                    teacher.subject,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),
                               ),
-                            ],
-                          );
-                        },
-                      ),
-                    )
-                  ]))));
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                )
+              ])));
   }
 }
 

@@ -115,288 +115,284 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey[200],
-        appBar: AppBar(
-          backgroundColor: Colors.grey[100],
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          title: const Text(
-            'Teacher Facilities',
-            style: TextStyle(
-              color: Color(0xFF48116A),
-              fontSize: 22,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w700,
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(
+        backgroundColor: Colors.grey[100],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Teacher Facilities',
+          style: TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 22,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        actions: [
+          InkWell(
+            onTap: () {
+              logout(context);
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(top: 0, right: 20.0),
+              child: Image.asset(
+                'assets/logout@3x.png',
+                width: 103,
+                height: 24,
+              ),
             ),
           ),
-          actions: [
-            InkWell(
-              onTap: () {
-                logout(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.only(top: 0, right: 20.0),
-                child: Image.asset(
-                  'assets/logout@3x.png',
-                  width: 103,
-                  height: 24,
-                ),
-              ),
-            ),
-          ],
-          toolbarHeight: 70,
-        ),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                children: [
-                  Container(
-                    height: 116,
-                    width: constraints.maxWidth > 388
-                        ? 388
-                        : constraints.maxWidth - 40,
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFFC22054),
-                          Color(0xFF48116A),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(22),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0xFFC22054).withOpacity(0.2),
-                          spreadRadius: 3,
-                          blurRadius: 15,
-                          offset: const Offset(0, 10),
-                        ),
+        ],
+        toolbarHeight: 70,
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Column(
+              children: [
+                Container(
+                  height: 116,
+                  width: constraints.maxWidth > 388
+                      ? 388
+                      : constraints.maxWidth - 40,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xFFC22054),
+                        Color(0xFF48116A),
                       ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 15.0, top: 13),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  name,
+                    borderRadius: BorderRadius.circular(22),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFC22054).withOpacity(0.2),
+                        spreadRadius: 3,
+                        blurRadius: 15,
+                        offset: const Offset(0, 10),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15.0, top: 13),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                name,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontFamily: 'Poppins',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5.0),
+                                child: Text(
+                                  address,
+                                  style: const TextStyle(
+                                    fontFamily: 'Poppins',
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 2.0),
+                                child: Text(
+                                  phone,
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 20,
+                                    fontSize: 11,
                                     fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5.0),
-                                  child: Text(
-                                    address,
-                                    style: const TextStyle(
-                                      fontFamily: 'Poppins',
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 2.0),
-                                  child: Text(
-                                    phone,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 11,
-                                      fontFamily: 'Poppins',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 12.0),
-                          child: Image.network(
-                            profile,
-                            width: 92,
-                            height: 92,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                child: Icon(
-                                  Icons.broken_image,
-                                  color: Colors.grey,
-                                  size: 50,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        return GridView.count(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          crossAxisCount: constraints.maxWidth > 600 ? 4 : 3,
-                          crossAxisSpacing: 17,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 116 / 140,
-                          children: [
-                            buildTile(context, const Color(0xFFB3E5FC),
-                                'assets/myprofile.png', 'My Profile', () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const Teacherpfpage(),
-                                ),
-                              );
-                            }),
-                            buildTile(context, const Color(0x80FFF59D),
-                                'assets/noticesp@3x.png', 'Notice', () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const NoticeScreen(),
-                                ),
-                              );
-                            }),
-                            buildTile(context, const Color(0xFFF8BBD0),
-                                'assets/gksp@3x.png', 'General Knowledge', () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const AddGK(),
-                                ),
-                              );
-                            }),
-                            buildTile(context, const Color(0xFFB3E5FC),
-                                'assets/setting.png', 'Setting', () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const Teacherssettings(),
-                                ),
-                              );
-                            }),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 20, left: 10, bottom: 10),
-                      child: Text(
-                        'Student Profiles',
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Poppins'),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12.0),
+                        child: Image.network(
+                          profile,
+                          width: 92,
+                          height: 92,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(
+                                Icons.broken_image,
+                                color: Colors.grey,
+                                size: 50,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: constraints.maxWidth > 600 ? 4 : 3,
+                        crossAxisSpacing: 17,
+                        mainAxisSpacing: 10,
+                        childAspectRatio: 116 / 140,
+                        children: [
+                          buildTile(context, const Color(0xFFB3E5FC),
+                              'assets/myprofile.png', 'My Profile', () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Teacherpfpage(),
+                              ),
+                            );
+                          }),
+                          buildTile(context, const Color(0x80FFF59D),
+                              'assets/noticesp@3x.png', 'Notice', () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const NoticeScreen(),
+                              ),
+                            );
+                          }),
+                          buildTile(context, const Color(0xFFF8BBD0),
+                              'assets/gksp@3x.png', 'General Knowledge', () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AddGK(),
+                              ),
+                            );
+                          }),
+                          buildTile(context, const Color(0xFFB3E5FC),
+                              'assets/setting.png', 'Setting', () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Teacherssettings(),
+                              ),
+                            );
+                          }),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 20, left: 10, bottom: 10),
+                    child: Text(
+                      'Student Profiles',
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Poppins'),
                     ),
                   ),
-                  SizedBox(
-                      height: 130,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        physics: const BouncingScrollPhysics(),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              ...studentprofile.asMap().entries.map((entry) {
-                                int index = entry.key;
-                                StudentProfile studentProfile = entry.value;
+                ),
+                SizedBox(
+                    height: 130,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ...studentprofile.asMap().entries.map((entry) {
+                              int index = entry.key;
+                              StudentProfile studentProfile = entry.value;
 
-                                // Cycle through colors using the modulus operator
-                                Color cardColor =
-                                    cardColors[index % cardColors.length];
+                              // Cycle through colors using the modulus operator
+                              Color cardColor =
+                                  cardColors[index % cardColors.length];
 
-                                final borderColor =
-                                    HSLColor.fromColor(cardColor)
-                                        .withLightness(0.95)
-                                        .toColor();
+                              final borderColor = HSLColor.fromColor(cardColor)
+                                  .withLightness(0.95)
+                                  .toColor();
 
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const StudentProfileScreen(),
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const StudentProfileScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 7.0),
+                                  child: Container(
+                                    width: 94,
+                                    height: 129,
+                                    decoration: BoxDecoration(
+                                      color: cardColor,
+                                      borderRadius: BorderRadius.circular(22),
+                                      border: Border.all(
+                                        color: borderColor,
+                                        width: 2,
                                       ),
-                                    );
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 7.0),
-                                    child: Container(
-                                      width: 94,
-                                      height: 129,
-                                      decoration: BoxDecoration(
-                                        color: cardColor,
-                                        borderRadius: BorderRadius.circular(22),
-                                        border: Border.all(
-                                          color: borderColor,
-                                          width: 2,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.network(
+                                          studentProfile.image,
+                                          width: 47,
+                                          height: 53,
+                                          fit: BoxFit.contain,
                                         ),
-                                      ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Image.network(
-                                            studentProfile.image,
-                                            width: 47,
-                                            height: 53,
-                                            fit: BoxFit.contain,
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 4),
-                                            child: Text(
-                                              studentProfile.name,
-                                              textAlign: TextAlign.center,
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                        const SizedBox(height: 4),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4),
+                                          child: Text(
+                                            studentProfile.name,
+                                            textAlign: TextAlign.center,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                );
-                              }),
-                            ]),
-                      )),
-                  const SizedBox(height: 20),
-                ],
-              ),
-            );
-          },
-        ),
+                                ),
+                              );
+                            }),
+                          ]),
+                    )),
+                const SizedBox(height: 20),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
