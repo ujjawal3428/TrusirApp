@@ -467,7 +467,7 @@ class StudentProfileScreen extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                StudentDoubts(),
+                                                const StudentDoubts(),
                                           ),
                                         );
                                       },
