@@ -244,11 +244,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                         Padding(
                           padding: const EdgeInsets.only(right: 12.0),
                           child: Container(
-<<<<<<< HEAD
-                             decoration: BoxDecoration(
-=======
                             decoration: BoxDecoration(
->>>>>>> 3efcf2eae71b73ee1bff48024db7d2900e4e68e0
                               color: Colors.white10,
                               borderRadius: BorderRadius.circular(22),
                               border: Border.all(
@@ -311,10 +307,6 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               ),
                             );
                           }),
-<<<<<<< HEAD
-                        
-=======
->>>>>>> 3efcf2eae71b73ee1bff48024db7d2900e4e68e0
                           buildTile(context, const Color(0xFFB3E5FC),
                               'assets/setting.png', 'Setting', () {
                             Navigator.push(
@@ -344,28 +336,26 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                 ),
                 Expanded(
                   child: SizedBox(
-                    height: 340, 
+                    height: 340,
                     child: GridView.builder(
                       physics: const BouncingScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                         crossAxisSpacing: 15,
-                        mainAxisSpacing: 15, 
-                        childAspectRatio:
-                            94 / 120,
+                        mainAxisSpacing: 15,
+                        childAspectRatio: 94 / 120,
                       ),
                       itemCount: studentprofile.length,
                       itemBuilder: (context, index) {
                         StudentProfile studentProfile = studentprofile[index];
-                  
-                    
+
                         Color cardColor = cardColors[index % cardColors.length];
-                  
+
                         final borderColor = HSLColor.fromColor(cardColor)
                             .withLightness(0.95)
                             .toColor();
-                  
+
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -382,10 +372,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             );
                           },
                           child: Container(
-                            width:
-                                94, 
-                            height:
-                                120, 
+                            width: 94,
+                            height: 120,
                             decoration: BoxDecoration(
                               color: cardColor,
                               borderRadius: BorderRadius.circular(22),
@@ -398,18 +386,6 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
-<<<<<<< HEAD
-                                   decoration: BoxDecoration(
-                              color: cardColor,
-                              borderRadius: BorderRadius.circular(15),
-                              border: Border.all(
-                                color: borderColor,  
-                                width: 1.5,
-                              ),
-                            ),
-                                  child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15.0),
-=======
                                   decoration: BoxDecoration(
                                     color: cardColor,
                                     borderRadius: BorderRadius.circular(15),
@@ -420,25 +396,18 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(15.0),
->>>>>>> 3efcf2eae71b73ee1bff48024db7d2900e4e68e0
                                     child: Image.network(
                                       studentProfile.image,
                                       width: 65,
                                       height: 65,
-                                      
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Padding(
-<<<<<<< HEAD
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 12),
-=======
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 12),
->>>>>>> 3efcf2eae71b73ee1bff48024db7d2900e4e68e0
                                   child: Text(
                                     studentProfile.name,
                                     textAlign: TextAlign.center,
