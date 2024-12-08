@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/Add_Notice.dart';
 import 'package:trusir/api.dart';
 
 class Notice {
@@ -125,6 +126,38 @@ class _NoticeScreenState extends State<NoticeScreen> {
         ),
         toolbarHeight: 70,
       ),
+       floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 16.0, right: 16.0),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: LinearGradient(
+            colors: [Colors.grey[300]!, Colors.white],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: FloatingActionButton(
+          onPressed: () {
+              Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const AddNoticePage(),
+                                    ),
+                                  );
+          },
+          elevation: 0, // To match the gradient
+          backgroundColor:
+              const Color(0xFF48116A), // Transparent for gradient to show
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 50,
+          ), // Plus icon
+          // Icon size
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Stack(
         children: [
           SingleChildScrollView(

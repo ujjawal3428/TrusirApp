@@ -330,22 +330,22 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                 ),
                 Expanded(
                   child: SizedBox(
-                    height: 340, // Set an appropriate height for the GridView
+                    height: 340, 
                     child: GridView.builder(
                       physics: const BouncingScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3, // Number of columns
-                        crossAxisSpacing: 15, // Horizontal space between items
-                        mainAxisSpacing: 15, // Vertical space between items
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 15, 
                         childAspectRatio:
-                            94 / 120, // Adjust the width/height ratio
+                            94 / 120,
                       ),
                       itemCount: studentprofile.length,
                       itemBuilder: (context, index) {
                         StudentProfile studentProfile = studentprofile[index];
                   
-                        // Cycle through colors using the modulus operator
+                    
                         Color cardColor = cardColors[index % cardColors.length];
                   
                         final borderColor = HSLColor.fromColor(cardColor)
@@ -383,17 +383,13 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                              
-                              borderRadius: BorderRadius.circular(22),
-                             
-                            ),
+                                ClipOval(
                                   child: Image.network(
                                     studentProfile.image,
-                                    width: 80,
-                                    height: 80,
-                                    fit: BoxFit.contain,
+                                    width: 70,
+                                    height: 70,
+                                    
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
