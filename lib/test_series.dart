@@ -8,6 +8,7 @@ import 'package:photo_view/photo_view.dart';
 import 'dart:io';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/addtestseries.dart';
 import 'package:trusir/api.dart';
 
@@ -23,7 +24,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
   bool _isDownloading = false;
   String _downloadProgress = '';
-  final url = "$baseUrl/test-series/testID?page=2&data_per_page=10";
+  final url = "$baseUrl/api/test-series";
 
   // Map to store downloaded file paths for questions and answers
   Map<String, String> downloadedFiles = {};
@@ -64,9 +65,12 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   }
 
   Future<void> fetchTestSeries() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getString('userID');
     try {
-      final response =
-          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(Uri.parse('$url/$userID?page=1&data_per_page=2'))
+          .timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         final newData = json.decode(response.body);
         setState(() {
@@ -240,13 +244,12 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         ),
         child: FloatingActionButton(
           onPressed: () {
-              Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const Addtestseries(),
-                                    ),
-                                  );
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Addtestseries(),
+              ),
+            );
           },
           elevation: 0, // To match the gradient
           backgroundColor:
@@ -316,7 +319,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  test['name'],
+                                                  test['test_name'],
                                                   style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w500,
@@ -370,16 +373,16 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                         InkWell(
                                           onTap: () {
                                             String filename =
-                                                'questions_${test['name']}.jpg';
+                                                'question_${test['test_name']}.jpg';
                                             if (downloadedFiles
                                                 .containsKey(filename)) {
                                               // Open the file if it already exists
                                               _openFile(filename);
                                             } else {
                                               // Download the file if it doesn't exist
-                                              if (test['questions'] != null) {
+                                              if (test['question'] != null) {
                                                 _downloadFile(
-                                                  test['questions'],
+                                                  test['question'],
                                                   filename,
                                                 );
                                               } else {
@@ -436,16 +439,16 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                         InkWell(
                                           onTap: () {
                                             String filename =
-                                                'answers_${test['name']}.jpg';
+                                                'answer_${test['test_name']}.jpg';
                                             if (downloadedFiles
                                                 .containsKey(filename)) {
                                               // Open the file if it already exists
                                               _openFile(filename);
                                             } else {
                                               // Download the file if it doesn't exist
-                                              if (test['answers'] != null) {
+                                              if (test['answer'] != null) {
                                                 _downloadFile(
-                                                  test['answers'],
+                                                  test['answer'],
                                                   filename,
                                                 );
                                               } else {

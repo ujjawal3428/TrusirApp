@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/student_profile.dart';
-import 'package:trusir/teacher_notice.dart';
+import 'package:trusir/notice.dart';
 import 'package:trusir/teacher_pf_page.dart';
 import 'package:trusir/teacherssettings.dart';
 
@@ -198,12 +198,14 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 15.0, top: 13),
+                            padding: const EdgeInsets.only(left: 20.0, top: 20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -241,20 +243,33 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 12.0),
-                          child: Image.network(
-                            profile,
-                            width: 92,
-                            height: 92,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                child: Icon(
-                                  Icons.broken_image,
-                                  color: Colors.grey,
-                                  size: 50,
-                                ),
-                              );
-                            },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white10,
+                              borderRadius: BorderRadius.circular(22),
+                              border: Border.all(
+                                color: Colors.white12,
+                                width: 2,
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(22),
+                              child: Image.network(
+                                profile,
+                                width: 92,
+                                height: 92,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Center(
+                                    child: Icon(
+                                      Icons.broken_image,
+                                      color: Colors.grey,
+                                      size: 50,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -284,24 +299,14 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             );
                           }),
                           buildTile(context, const Color(0x80FFF59D),
-                              'assets/notice.png', 'Notice', () {
+                              'assets/noticesp@3x.png', 'Notice', () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const TeacherNoticeScreen(),
+                                builder: (context) => const NoticeScreen(),
                               ),
                             );
                           }),
-                          // buildTile(context, const Color(0xFFF8BBD0),
-                          //     'assets/gksp@3x.png', 'General Knowledge', () {
-                          //   Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) =>  AddGK(),
-                          //     ),
-                          //   );
-                          // }),
                           buildTile(context, const Color(0xFFB3E5FC),
                               'assets/setting.png', 'Setting', () {
                             Navigator.push(
@@ -383,14 +388,14 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 Container(
                                   decoration: BoxDecoration(
                                     color: cardColor,
-                                    borderRadius: BorderRadius.circular(22),
+                                    borderRadius: BorderRadius.circular(15),
                                     border: Border.all(
                                       color: borderColor,
-                                      width: 2,
+                                      width: 1.5,
                                     ),
                                   ),
                                   child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(22.0),
+                                    borderRadius: BorderRadius.circular(15.0),
                                     child: Image.network(
                                       studentProfile.image,
                                       width: 65,
@@ -401,8 +406,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 ),
                                 const SizedBox(height: 4),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12),
                                   child: Text(
                                     studentProfile.name,
                                     textAlign: TextAlign.center,
