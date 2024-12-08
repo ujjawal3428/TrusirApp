@@ -164,7 +164,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 15.0, top: 20),
+                            padding: const EdgeInsets.only(left: 20.0, top: 20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -206,20 +206,33 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 12.0),
-                          child: Image.network(
-                            profile,
-                            width: 92,
-                            height: 92,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                child: Icon(
-                                  Icons.broken_image,
-                                  color: Colors.grey,
-                                  size: 50,
-                                ),
-                              );
-                            },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white10,
+                              borderRadius: BorderRadius.circular(22),
+                              border: Border.all(
+                                color: Colors.white12,
+                                width: 2,
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Image.network(
+                                profile,
+                                width: 92,
+                                height: 92,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Center(
+                                    child: Icon(
+                                      Icons.broken_image,
+                                      color: Colors.grey,
+                                      size: 50,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ),
                       ],

@@ -96,20 +96,33 @@ class StudentProfileScreen extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(12.0),
-                            child: Image.network(
-                              image,
-                              width: 80,
-                              height: 80,
-                              fit: BoxFit.contain,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Center(
-                                  child: Icon(
-                                    Icons.broken_image,
-                                    color: Colors.grey,
-                                    size: 80,
-                                  ),
-                                );
-                              },
+                            child: Container(
+                             decoration: BoxDecoration(
+                              color: Colors.white10,
+                              borderRadius: BorderRadius.circular(22),
+                              border: Border.all(
+                                color: Colors.white12,
+                                width: 2,
+                              ),
+                            ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(22),
+                                child: Image.network(
+                                  image,
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return const Center(
+                                      child: Icon(
+                                        Icons.broken_image,
+                                        color: Colors.grey,
+                                        size: 80,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
                             ),
                           ),
                           Expanded(
@@ -117,14 +130,18 @@ class StudentProfileScreen extends StatelessWidget {
                               padding: const EdgeInsets.only(
                                   top: 0, left: 4.0, right: 0.0),
                               child: Column(
+                                
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
                                       name,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 18,
+                                        
                                         fontFamily: 'Poppins',
                                         fontWeight: FontWeight.w700,
                                       ),

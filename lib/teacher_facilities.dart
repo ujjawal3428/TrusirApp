@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/student_profile.dart';
-import 'package:trusir/teacher_notice.dart';
+import 'package:trusir/notice.dart';
 import 'package:trusir/teacher_pf_page.dart';
 import 'package:trusir/teacherssettings.dart';
 
@@ -198,12 +198,14 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 15.0, top: 13),
+                            padding: const EdgeInsets.only(left: 20.0, top: 20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -241,20 +243,33 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 12.0),
-                          child: Image.network(
-                            profile,
-                            width: 92,
-                            height: 92,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                child: Icon(
-                                  Icons.broken_image,
-                                  color: Colors.grey,
-                                  size: 50,
-                                ),
-                              );
-                            },
+                          child: Container(
+                             decoration: BoxDecoration(
+                              color: Colors.white10,
+                              borderRadius: BorderRadius.circular(22),
+                              border: Border.all(
+                                color: Colors.white12,
+                                width: 2,
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(22),
+                              child: Image.network(
+                                profile,
+                                width: 92,
+                                height: 92,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Center(
+                                    child: Icon(
+                                      Icons.broken_image,
+                                      color: Colors.grey,
+                                      size: 50,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -288,20 +303,11 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const TeacherNoticeScreen(),
+                                builder: (context) => const NoticeScreen(),
                               ),
                             );
                           }),
-                          // buildTile(context, const Color(0xFFF8BBD0),
-                          //     'assets/gksp@3x.png', 'General Knowledge', () {
-                          //   Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //       builder: (context) =>  AddGK(),
-                          //     ),
-                          //   );
-                          // }),
+                        
                           buildTile(context, const Color(0xFFB3E5FC),
                               'assets/setting.png', 'Setting', () {
                             Navigator.push(
@@ -331,26 +337,28 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                 ),
                 Expanded(
                   child: SizedBox(
-                    height: 340,
+                    height: 340, 
                     child: GridView.builder(
                       physics: const BouncingScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                         crossAxisSpacing: 15,
-                        mainAxisSpacing: 15,
-                        childAspectRatio: 94 / 120,
+                        mainAxisSpacing: 15, 
+                        childAspectRatio:
+                            94 / 120,
                       ),
                       itemCount: studentprofile.length,
                       itemBuilder: (context, index) {
                         StudentProfile studentProfile = studentprofile[index];
-
+                  
+                    
                         Color cardColor = cardColors[index % cardColors.length];
-
+                  
                         final borderColor = HSLColor.fromColor(cardColor)
                             .withLightness(0.95)
                             .toColor();
-
+                  
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -367,8 +375,10 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             );
                           },
                           child: Container(
-                            width: 94,
-                            height: 120,
+                            width:
+                                94, 
+                            height:
+                                120, 
                             decoration: BoxDecoration(
                               color: cardColor,
                               borderRadius: BorderRadius.circular(22),
@@ -380,22 +390,34 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                ClipOval(
-                                  child: Image.network(
-                                    studentProfile.image,
-                                    width: 70,
-                                    height: 70,
-                                    fit: BoxFit.cover,
+                                Container(
+                                   decoration: BoxDecoration(
+                              color: cardColor,
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                color: borderColor,
+                                width: 1.5,
+                              ),
+                            ),
+                                  child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                    child: Image.network(
+                                      studentProfile.image,
+                                      width: 65,
+                                      height: 65,
+                                      
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
                                 Padding(
                                   padding:
-                                      const EdgeInsets.symmetric(horizontal: 4),
+                                      const EdgeInsets.symmetric(horizontal: 12),
                                   child: Text(
                                     studentProfile.name,
                                     textAlign: TextAlign.center,
-                                    maxLines: 2,
+                                    maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       fontSize: 12,
@@ -450,15 +472,15 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                 imagePath,
                 width: imageSize['width']! * scaleFactor,
                 height: imageSize['height']! * scaleFactor,
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
               ),
               const SizedBox(height: 4),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Text(
                   title,
                   textAlign: TextAlign.center,
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontFamily: 'Poppins',
