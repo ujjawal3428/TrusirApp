@@ -72,12 +72,30 @@ class _OTPScreenState extends State<OTPScreen> {
   final List<FocusNode> focusNodes = List.generate(4, (_) => FocusNode());
 
   void onPost(String phone, BuildContext context) async {
-    // Combine OTP from all controllers
     String otp = otpControllers.map((controller) => controller.text).join();
     print("Entered OTP: $otp");
     await fetchUserData(phone);
-    showVerificationDialog(context);
+    verifyOTP(phone, otp);
     // Handle OTP verification logic
+  }
+
+  Future<void> verifyOTP(String phone, String otp) async {
+    final url = Uri.parse(
+      '$otpapi/SMS/VERIFY3/91$phone/$otp',
+    );
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        print('OTP verified successfully: ${response.body}');
+        showVerificationDialog(context);
+      } else {
+        print('Failed to verify OTP: ${response.body}');
+      }
+    } catch (e) {
+      print('Error verifying OTP: $e');
+    }
   }
 
   void showVerificationDialog(BuildContext context) {
@@ -112,7 +130,7 @@ class _OTPScreenState extends State<OTPScreen> {
     Timer(const Duration(seconds: 2), () {
       Navigator.pop(context); // Close the dialog
       if (newuser) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const EnquiryPage()),
         );
@@ -130,15 +148,12 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      
-      body: 
-      Padding(
+      body: Padding(
         padding: const EdgeInsets.only(left: 24.0, right: 24, top: 150),
         child: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           physics: const NeverScrollableScrollPhysics(),
           child: Column(
-          
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
@@ -146,7 +161,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 style: TextStyle(
                   fontSize: 35,
                   fontWeight: FontWeight.bold,
-                 color: Color(0xFF48116A),
+                  color: Color(0xFF48116A),
                 ),
               ),
               const SizedBox(height: 8),
@@ -166,9 +181,11 @@ class _OTPScreenState extends State<OTPScreen> {
                     height: 60,
                     width: 60,
                     decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
+                      color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(18),
-                      border: Border.all(color: const Color.fromARGB(255, 177, 177, 177), width: 1.5),
+                      border: Border.all(
+                          color: const Color.fromARGB(255, 177, 177, 177),
+                          width: 1.5),
                     ),
                     child: TextField(
                       controller: otpControllers[index],
@@ -199,58 +216,54 @@ class _OTPScreenState extends State<OTPScreen> {
                   );
                 }),
               ),
-              const SizedBox(height: 20,),
-              const Text('Resend OTP',
-              style: TextStyle(
-                color: Color(0xFF48116A),
-                fontSize:17,
-                fontWeight: FontWeight.w500, 
-              ),),
-              const SizedBox(height: 250,),
-              
-               GestureDetector(
-                 onTap: () {
-                   onPost(widget.phonenum, context);
-                 },
-                 child: Container(
-                   width: 300,
-                   height: 50,
-                   decoration: BoxDecoration(
-                     borderRadius: BorderRadius.circular(50),
-                     gradient: const LinearGradient(
-                       colors: [
-                         Color.fromARGB(255, 25, 220, 70),
-                         Color.fromARGB(255, 2, 120, 12),
-                       ],
-                       begin: Alignment.topCenter,
-                       end: Alignment.bottomCenter,
-                     ),
-                   ),
-                   child: const Center(
-                     child: Text(
-                       'Verify',
-                       style: TextStyle(
-                           fontWeight: FontWeight.bold,
-                           color: Colors.white,
-                           fontSize: 20,
-                           fontFamily: 'Poppins'),
-                     ),
-                   ),
-                 ),
-               ),
-            
+              const SizedBox(
+                height: 20,
+              ),
+              const Text(
+                'Resend OTP',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(
+                height: 250,
+              ),
+              GestureDetector(
+                onTap: () {
+                  onPost(widget.phonenum, context);
+                },
+                child: Container(
+                  width: 300,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromARGB(255, 25, 220, 70),
+                        Color.fromARGB(255, 2, 120, 12),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Verify',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'Poppins'),
+                    ),
+                  ),
+                ),
+              ),
             ],
-            
           ),
-          
         ),
-      
-      
       ),
-    
-      
     );
   }
 }
-
-
