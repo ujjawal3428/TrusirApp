@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/student_profile.dart';
-import 'package:trusir/notice.dart';
+import 'package:trusir/teacher_notice.dart';
 import 'package:trusir/teacher_pf_page.dart';
 import 'package:trusir/teacherssettings.dart';
 
@@ -288,7 +288,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const NoticeScreen(),
+                                builder: (context) =>
+                                    const TeacherNoticeScreen(),
                               ),
                             );
                           }),
@@ -330,28 +331,26 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                 ),
                 Expanded(
                   child: SizedBox(
-                    height: 340, 
+                    height: 340,
                     child: GridView.builder(
                       physics: const BouncingScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
                         crossAxisSpacing: 15,
-                        mainAxisSpacing: 15, 
-                        childAspectRatio:
-                            94 / 120,
+                        mainAxisSpacing: 15,
+                        childAspectRatio: 94 / 120,
                       ),
                       itemCount: studentprofile.length,
                       itemBuilder: (context, index) {
                         StudentProfile studentProfile = studentprofile[index];
-                  
-                    
+
                         Color cardColor = cardColors[index % cardColors.length];
-                  
+
                         final borderColor = HSLColor.fromColor(cardColor)
                             .withLightness(0.95)
                             .toColor();
-                  
+
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -368,10 +367,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             );
                           },
                           child: Container(
-                            width:
-                                94, 
-                            height:
-                                120, 
+                            width: 94,
+                            height: 120,
                             decoration: BoxDecoration(
                               color: cardColor,
                               borderRadius: BorderRadius.circular(22),
@@ -388,7 +385,6 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     studentProfile.image,
                                     width: 70,
                                     height: 70,
-                                    
                                     fit: BoxFit.cover,
                                   ),
                                 ),
