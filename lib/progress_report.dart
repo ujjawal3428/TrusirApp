@@ -4,11 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:photo_view/photo_view.dart';
-import 'package:photo_view/photo_view_gallery.dart';
 import 'package:trusir/api.dart';
+import 'package:trusir/notificationhelper.dart';
 
 class ProgressReportScreen extends StatelessWidget {
   const ProgressReportScreen({super.key});
@@ -40,6 +40,13 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   void initState() {
     super.initState();
     _reports = fetchProgressReports();
+    _requestNotificationPermission();
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
   }
 
   Future<void> _requestPermissions() async {
@@ -130,12 +137,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
         _downloadProgress = '';
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Downloaded to $filePath'),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      showDownloadNotification(filename, filePath);
     } catch (e) {
       setState(() {
         _isDownloading = false;
@@ -153,46 +155,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   Future<void> _openFile(String filename) async {
     final filePath = downloadedFiles[filename];
-    if (filePath != null) {
-      // Show the image in PhotoView
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            child: PhotoViewGallery.builder(
-              itemCount: 1,
-              builder: (context, index) {
-                return PhotoViewGalleryPageOptions(
-                  imageProvider: FileImage(File(filePath)),
-                  minScale: PhotoViewComputedScale.contained,
-                  maxScale: PhotoViewComputedScale.covered,
-                );
-              },
-              scrollPhysics: const BouncingScrollPhysics(),
-              backgroundDecoration: const BoxDecoration(
-                color: Colors.black,
-              ),
-              pageController: PageController(),
-            ),
-          );
-        },
-      );
-      // Show a SnackBar for debugging purposes
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Opening file: $filePath'),
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    } else {
-      // Handle the case when the file is not found
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('File not found'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
+    OpenFile.open(filePath);
   }
 
   @override

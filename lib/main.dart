@@ -4,9 +4,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/main_screen.dart';
 import 'package:trusir/teacher_main_screen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:trusir/notificationhelper.dart';
 
-void main() {
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const InitializationSettings initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse:
+        (NotificationResponse notificationResponse) {
+      if (notificationResponse.payload != null) {
+        handleNotificationTap(notificationResponse.payload!); // Handle tap
+      }
+    },
+  );
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(const MyApp());
 }

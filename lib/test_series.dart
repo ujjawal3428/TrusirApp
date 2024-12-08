@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
+import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:photo_view/photo_view.dart';
 import 'dart:io';
-import 'package:photo_view/photo_view_gallery.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/addtestseries.dart';
 import 'package:trusir/api.dart';
+import 'package:trusir/notificationhelper.dart';
 
 class TestSeriesScreen extends StatefulWidget {
   const TestSeriesScreen({super.key});
@@ -21,7 +21,6 @@ class TestSeriesScreen extends StatefulWidget {
 
 class _TestSeriesScreenState extends State<TestSeriesScreen> {
   List<dynamic> testSeriesList = [];
-
   bool _isDownloading = false;
   String _downloadProgress = '';
   final url = "$baseUrl/api/test-series";
@@ -33,6 +32,13 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   void initState() {
     super.initState();
     fetchTestSeries();
+    _requestNotificationPermission();
+  }
+
+  Future<void> _requestNotificationPermission() async {
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
   }
 
   Future<void> _requestPermissions() async {
@@ -119,12 +125,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         _downloadProgress = '';
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Downloaded to $filePath'),
-          duration: const Duration(seconds: 3),
-        ),
-      );
+      showDownloadNotification(filename, filePath);
     } catch (e) {
       setState(() {
         _isDownloading = false;
@@ -142,47 +143,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
   Future<void> _openFile(String filename) async {
     final filePath = downloadedFiles[filename];
-    if (filePath != null) {
-      // Show the image in PhotoView
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            child: PhotoViewGallery.builder(
-              itemCount: 1,
-              builder: (context, index) {
-                return PhotoViewGalleryPageOptions(
-                  imageProvider: FileImage(File(filePath)),
-                  minScale: PhotoViewComputedScale.contained,
-                  maxScale: PhotoViewComputedScale.covered,
-                );
-              },
-              scrollPhysics: const BouncingScrollPhysics(),
-              backgroundDecoration: const BoxDecoration(
-                color: Colors.black,
-              ),
-              pageController: PageController(),
-            ),
-          );
-        },
-      );
-
-      // Show a SnackBar for debugging purposes
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Opening file: $filePath'),
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    } else {
-      // Handle the case when the file is not found
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('File not found'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
+    OpenFile.open(filePath);
   }
 
   @override
