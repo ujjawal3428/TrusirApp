@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:trusir/contactus.dart';
 import 'package:trusir/editprofilescreen.dart';
-import 'package:trusir/parents_doubts.dart';
+import 'package:trusir/parents_doubt.dart';
 import 'package:trusir/terms_and_conditions.dart';
 import 'package:trusir/about_us.dart';
 import 'package:trusir/your_doubt.dart';
@@ -51,10 +52,10 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     child: Center(
                       child: SizedBox(
-                        width: 30,
-                        height: 30,
+                        width: 37,
+                        height: 37,
                         child: Image.asset(
-                          'assets/aboutus.png',
+                          'assets/editprofile.png',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -122,10 +123,10 @@ class SettingsScreen extends StatelessWidget {
                     ),
                     child: Center(
                       child: SizedBox(
-                        width: 30,
-                        height: 30,
+                        width: 40,
+                        height: 40,
                         child: Image.asset(
-                          'assets/aboutus.png',
+                          'assets/pensp@3x.png',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -238,7 +239,7 @@ class SettingsScreen extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const ParentDoubtPage(),
+                                           const ParentsDoubtScreen(),
                                     ),
                                   );
                                 },
@@ -340,7 +341,7 @@ class SettingsScreen extends StatelessWidget {
                         width: 30,
                         height: 30,
                         child: Image.asset(
-                          'assets/aboutus.png',
+                          'assets/phone@2x.png',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -375,13 +376,13 @@ class SettingsScreen extends StatelessWidget {
                                     const Icon(Icons.arrow_forward_ios_rounded),
                                 color: const Color(0xFF48116A),
                                 onPressed: () {
-                                  //   Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) =>
-                                  //         const Contactus(),
-                                  //   ),
-                                  // );
+                                    Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const Contactus(),
+                                    ),
+                                  );
                                 },
                               ),
                             ],
@@ -411,7 +412,7 @@ class SettingsScreen extends StatelessWidget {
                         width: 30,
                         height: 30,
                         child: Image.asset(
-                          'assets/aboutus.png',
+                          'assets/tnc.png',
                           fit: BoxFit.cover,
                         ),
                       ),

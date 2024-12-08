@@ -264,7 +264,7 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                 borderRadius: BorderRadius.circular(22),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.50),
+                                    color: Colors.black.withOpacity(0.20),
                                     offset: const Offset(2, 2),
                                     blurRadius: 4,
                                   ),
@@ -277,27 +277,15 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                   hintText: 'Description',
                                   fillColor: Colors.white,
                                   filled: true,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(22),
-                                    borderSide: const BorderSide(
-                                      width: 1,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
+                                  
                                   contentPadding: const EdgeInsets.symmetric(
                                       vertical: 120, horizontal: 20),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(22),
-                                    borderSide: const BorderSide(
-                                      width: 1,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
+                                 
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(22),
                                     borderSide: const BorderSide(
                                       width: 1,
-                                      color: Colors.blue,
+                                      color: Color.fromARGB(255, 212, 211, 211),
                                     ),
                                   ),
                                 ),
@@ -308,7 +296,7 @@ class _MyAppState extends State<ParentsDoubtScreen> {
                                 handleImageSelection(formData.photo);
                               },
                               child: Padding(
-                                padding: const EdgeInsets.all(2.0),
+                                padding: const EdgeInsets.all(4.0),
                                 child: Container(
                                   width: constraints.maxWidth *
                                       0.2, // Responsive width

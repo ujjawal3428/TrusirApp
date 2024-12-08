@@ -300,13 +300,13 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
               const EdgeInsets.only(left: 10.0, right: 10, bottom: 10, top: 0),
           child: Row(
             children: [
-              Expanded(
+              const Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 20),
+                  padding:  EdgeInsets.only(left: 20.0, top: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                       Text(
                         'Current Month',
                         style: TextStyle(
                           fontSize: 20,
@@ -314,7 +314,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                           color: Colors.white,
                         ),
                       ),
-                      const Text(
+                      Text(
                         '24 Jan 2025 - Today',
                         style: TextStyle(
                           fontSize: 14,
@@ -322,35 +322,8 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      InkWell(
-                        child: Container(
-                          width: 102,
-                          height: 38,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color(0xFF045C19),
-                                Color(0xFF77D317),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'view report',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                     
+                    
                     ],
                   ),
                 ),

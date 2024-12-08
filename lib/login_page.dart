@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trusir/api.dart';
 import 'package:trusir/menu.dart';
 import 'package:trusir/otp_screen.dart';
-import 'package:http/http.dart' as http;
 
 // Custom class to handle responsive dimensions
 class ResponsiveDimensions {

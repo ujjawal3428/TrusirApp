@@ -639,10 +639,10 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               // Register Button
               Center(
                 child: Container(
-                  width: 388,
-                  height: 73,
+                   width: MediaQuery.of(context).size.width,
+                  height: 45,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(47),
+                    borderRadius: BorderRadius.circular(15),
                     gradient: const LinearGradient(
                       colors: [Color(0xFF045C19), Color(0xFF77D317)],
                     ),
