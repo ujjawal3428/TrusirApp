@@ -1,7 +1,73 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/api.dart';
 
-class AddNoticePage extends StatelessWidget {
-  const AddNoticePage({super.key});
+class AddNoticePage extends StatefulWidget {
+  final String? userID;
+  const AddNoticePage({super.key, required this.userID});
+
+  @override
+  State<AddNoticePage> createState() => _AddNoticePageState();
+}
+
+class _AddNoticePageState extends State<AddNoticePage> {
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+
+  Future<void> _onPost() async {
+    final prefs = await SharedPreferences.getInstance();
+    final teacherUserID = prefs.getString('userID');
+    final String currentDate =
+        DateTime.now().toIso8601String(); // ISO 8601 format
+
+    final payload = {
+      'title': _titleController.text,
+      'description': _descriptionController.text,
+      'posted_on': currentDate,
+      'to': '2ca5fb8b-a252-41d5-b6e4-2bbe039594bb',
+      'from': teacherUserID,
+    };
+
+    final url =
+        Uri.parse('$baseUrl/api/add-notice'); // Replace with your API URL
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(payload),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Success
+        print("Notice added successfully!");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Notice posted successfully!')),
+        );
+        Navigator.pop(context);
+      } else {
+        // Error
+        print("Failed to post notice: ${response.body}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to post notice: ${response.body}')),
+        );
+      }
+    } catch (e) {
+      print("Error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error occurred: $e')),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,32 +77,29 @@ class AddNoticePage extends StatelessWidget {
         backgroundColor: Colors.grey[50],
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 0.0),
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Color(0xFF48116A),
-                  size: 30,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+        title: Row(
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Color(0xFF48116A),
+                size: 30,
               ),
-              const SizedBox(width: 5),
-              const Text(
-                'Add Notice',
-                style: TextStyle(
-                  color: Color(0xFF48116A),
-                  fontSize: 22,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
-                ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            const SizedBox(width: 5),
+            const Text(
+              'Add Notice',
+              style: TextStyle(
+                color: Color(0xFF48116A),
+                fontSize: 22,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         toolbarHeight: 70,
       ),
@@ -45,104 +108,28 @@ class AddNoticePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Row for Back Button and Title
-            Row(
-              children: [
-                // Back Button
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Image.asset(
-                    'assets/back_button.png', // Replace with your back button image path
-                    width: 40,
-                    height: 40,
-                  ),
-                ),
-                const SizedBox(width: 10),
-
-                // Title Text
-                const Text(
-                  'Add Notice',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF4A148C),
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ],
-            ),
             const SizedBox(height: 50),
-
-            // Title Input Field with Background
-            Stack(
-              children: [
-                Image.asset(
-                  'titlebox.png', // Background image for text field
-                  fit: BoxFit.fill,
-                  width: double.infinity,
-                  height: 50,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Title',
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-
-            // Description Input Field with Background
-            Stack(
-              children: [
-                Image.asset(
-                  'descriptionbox.png', // Background image for description field
-                  fit: BoxFit.fill,
-                  width: double.infinity,
-                  height: 100,
-                ),
-                const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-                  child: TextField(
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      hintText: 'Description',
-                      border: InputBorder.none,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 400),
-
-            // Visibility Notice
-            const Center(
-              child: Text(
-                'This post will be only visible to the\nstudent you teach',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.red,
-                  fontFamily: 'Poppins',
-                ),
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(
+                labelText: 'Title',
+                border: OutlineInputBorder(),
               ),
             ),
-            const Spacer(),
-
-            // Post Button
+            const SizedBox(height: 20),
+            TextField(
+              controller: _descriptionController,
+              maxLines: 4,
+              decoration: const InputDecoration(
+                labelText: 'Description',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 20),
             Center(
-              child: GestureDetector(
-                onTap: _onpost,
-                child: Image.asset(
-                  'postbutton.png',
-                  fit: BoxFit.cover,
-                ),
+              child: ElevatedButton(
+                onPressed: _onPost,
+                child: const Text('Post Notice'),
               ),
             ),
           ],
@@ -150,9 +137,4 @@ class AddNoticePage extends StatelessWidget {
       ),
     );
   }
-}
-
-void _onpost() {
-  print("post button pressed");
-  // Implement the Enquire action here
 }
