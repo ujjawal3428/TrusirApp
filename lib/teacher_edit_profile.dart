@@ -286,36 +286,6 @@ class TeacherEditProfileScreenState extends State<TeacherEditProfileScreen> {
             const SizedBox(height: 15),
             buildInputField(
                 'Enter your school', schoolController, isLargeScreen),
-            const SizedBox(height: 15),
-            _buildDropdownField(
-              'Class',
-              selectedValue: classController.text,
-              onChanged: (value) {
-                setState(() {
-                  classController.text = value!;
-                });
-              },
-              items: [
-                '10th',
-                '11th',
-                '12th',
-              ],
-            ),
-            const SizedBox(height: 15),
-            _buildDropdownField(
-              'Subjects',
-              selectedValue: subjectController.text,
-              onChanged: (value) {
-                setState(() {
-                  subjectController.text = value!;
-                });
-              },
-              items: [
-                'Hindi',
-                'English',
-                'Maths',
-              ],
-            ),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
@@ -352,41 +322,41 @@ class TeacherEditProfileScreenState extends State<TeacherEditProfileScreen> {
     );
   }
 
-  Widget _buildDropdownField(
-    String hintText, {
-    String? selectedValue,
-    required ValueChanged<String?> onChanged,
-    required List<String> items,
-  }) {
-    return Container(
-      height: 58,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
-        ],
-      ),
-      child: DropdownButtonFormField<String>(
-        value: selectedValue,
-        onChanged: onChanged,
-        decoration: InputDecoration(
-          labelText: hintText,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-        ),
-        items: items
-            .map((item) => DropdownMenuItem(
-                  value: item,
-                  child: Text(item),
-                ))
-            .toList(),
-      ),
-    );
-  }
+  // Widget _buildDropdownField(
+  //   String hintText, {
+  //   String? selectedValue,
+  //   required ValueChanged<String?> onChanged,
+  //   required List<String> items,
+  // }) {
+  //   return Container(
+  //     height: 58,
+  //     width: double.infinity,
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       borderRadius: BorderRadius.circular(22),
+  //       border: Border.all(color: Colors.grey),
+  //       boxShadow: [
+  //         BoxShadow(
+  //             color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+  //       ],
+  //     ),
+  //     child: DropdownButtonFormField<String>(
+  //       value: selectedValue,
+  //       onChanged: onChanged,
+  //       decoration: InputDecoration(
+  //         labelText: hintText,
+  //         border: InputBorder.none,
+  //         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+  //       ),
+  //       items: items
+  //           .map((item) => DropdownMenuItem(
+  //                 value: item,
+  //                 child: Text(item),
+  //               ))
+  //           .toList(),
+  //     ),
+  //   );
+  // }
 
   Widget _buildTextFieldWithIcon(
     String hintText,

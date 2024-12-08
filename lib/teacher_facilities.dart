@@ -395,7 +395,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               color: cardColor,
                               borderRadius: BorderRadius.circular(15),
                               border: Border.all(
-                                color: borderColor,
+                                color: borderColor,  
                                 width: 1.5,
                               ),
                             ),
