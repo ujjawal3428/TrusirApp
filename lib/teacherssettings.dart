@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trusir/contactus.dart';
 import 'package:trusir/editprofilescreen.dart';
 import 'package:trusir/terms_and_conditions.dart';
 import 'package:trusir/about_us.dart';
@@ -228,13 +229,13 @@ class Teacherssettings extends StatelessWidget {
                                     const Icon(Icons.arrow_forward_ios_rounded),
                                 color: const Color(0xFF48116A),
                                 onPressed: () {
-                                  //   Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) =>
-                                  //         const Contactus(),
-                                  //   ),
-                                  // );
+                                    Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const Contactus(),
+                                    ),
+                                  );
                                 },
                               ),
                             ],
