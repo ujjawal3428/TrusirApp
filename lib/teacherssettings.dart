@@ -14,23 +14,11 @@ class Teacherssettings extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 1.0),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 1.0),
           child: Row(
             children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Color(0xFF48116A),
-                  size: 30,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              const SizedBox(width: 5),
-              const Text(
+              Text(
                 'Setting',
                 style: TextStyle(
                   color: Color(0xFF48116A),
