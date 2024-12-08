@@ -285,9 +285,9 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         crossAxisCount: constraints.maxWidth > 600 ? 4 : 3,
-                        crossAxisSpacing: 17,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 116 / 140,
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 15,
+                        childAspectRatio: 94 / 120,
                         children: [
                           buildTile(context, const Color(0xFFB3E5FC),
                               'assets/myprofile.png', 'My Profile', () {
@@ -335,95 +335,99 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                   ),
                 ),
                 Expanded(
-                  child: SizedBox(
-                    height: 340,
-                    child: GridView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 15,
-                        mainAxisSpacing: 15,
-                        childAspectRatio: 94 / 120,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: SizedBox(
+                      height: 340,
+                      child: GridView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 15,
+                          mainAxisSpacing: 15,
+                          childAspectRatio: 94 / 120,
+                        ),
+                        itemCount: studentprofile.length,
+                        itemBuilder: (context, index) {
+                          StudentProfile studentProfile = studentprofile[index];
+
+                          Color cardColor =
+                              cardColors[index % cardColors.length];
+
+                          final borderColor = HSLColor.fromColor(cardColor)
+                              .withLightness(0.95)
+                              .toColor();
+
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StudentProfileScreen(
+                                    name: studentProfile.name,
+                                    phone: studentProfile.phone,
+                                    subject: studentProfile.subject,
+                                    image: studentProfile.image,
+                                    userID: studentProfile.userID,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 94,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                color: cardColor,
+                                borderRadius: BorderRadius.circular(22),
+                                border: Border.all(
+                                  color: borderColor,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: cardColor,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: borderColor,
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      child: Image.network(
+                                        studentProfile.image,
+                                        width: 65,
+                                        height: 65,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12),
+                                    child: Text(
+                                      studentProfile.name,
+                                      textAlign: TextAlign.center,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      itemCount: studentprofile.length,
-                      itemBuilder: (context, index) {
-                        StudentProfile studentProfile = studentprofile[index];
-
-                        Color cardColor = cardColors[index % cardColors.length];
-
-                        final borderColor = HSLColor.fromColor(cardColor)
-                            .withLightness(0.95)
-                            .toColor();
-
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StudentProfileScreen(
-                                  name: studentProfile.name,
-                                  phone: studentProfile.phone,
-                                  subject: studentProfile.subject,
-                                  image: studentProfile.image,
-                                  userID: studentProfile.userID,
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            width: 94,
-                            height: 120,
-                            decoration: BoxDecoration(
-                              color: cardColor,
-                              borderRadius: BorderRadius.circular(22),
-                              border: Border.all(
-                                color: borderColor,
-                                width: 2,
-                              ),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: cardColor,
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                      color: borderColor,
-                                      width: 1.5,
-                                    ),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                    child: Image.network(
-                                      studentProfile.image,
-                                      width: 65,
-                                      height: 65,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  child: Text(
-                                    studentProfile.name,
-                                    textAlign: TextAlign.center,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
                     ),
                   ),
                 ),
