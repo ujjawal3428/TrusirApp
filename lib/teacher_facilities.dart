@@ -284,7 +284,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             );
                           }),
                           buildTile(context, const Color(0x80FFF59D),
-                              'assets/noticesp@3x.png', 'Notice', () {
+                              'assets/notice.png', 'Notice', () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -383,13 +383,24 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                ClipOval(
-                                  child: Image.network(
-                                    studentProfile.image,
-                                    width: 70,
-                                    height: 70,
-                                    
-                                    fit: BoxFit.cover,
+                                Container(
+                                   decoration: BoxDecoration(
+                              color: cardColor,
+                              borderRadius: BorderRadius.circular(22),
+                              border: Border.all(
+                                color: borderColor,
+                                width: 2,
+                              ),
+                            ),
+                                  child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(22.0),
+                                    child: Image.network(
+                                      studentProfile.image,
+                                      width: 65,
+                                      height: 65,
+                                      
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -399,7 +410,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                   child: Text(
                                     studentProfile.name,
                                     textAlign: TextAlign.center,
-                                    maxLines: 2,
+                                    maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                       fontSize: 12,
@@ -454,15 +465,15 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                 imagePath,
                 width: imageSize['width']! * scaleFactor,
                 height: imageSize['height']! * scaleFactor,
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
               ),
               const SizedBox(height: 4),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Text(
                   title,
                   textAlign: TextAlign.center,
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     fontFamily: 'Poppins',
