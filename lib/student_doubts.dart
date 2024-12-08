@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AddDoubt extends StatelessWidget {
+class StudentDoubts extends StatelessWidget {
   final List<Map<String, String>> doubtsList = [
     {"subject": "Mathematics", "date": "01/12/2024"},
     {"subject": "Physics", "date": "28/11/2024"},
@@ -9,7 +9,7 @@ class AddDoubt extends StatelessWidget {
     {"subject": "English", "date": "15/11/2024"},
   ];
 
-   AddDoubt({super.key});
+  StudentDoubts({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +61,12 @@ class AddDoubt extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                 
-                   Image.asset(
+                    Image.asset(
                       'assets/jpg@3x.png',
                       height: 30,
                       width: 30,
                     ),
                     const SizedBox(width: 15),
-                    
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,4 +101,3 @@ class AddDoubt extends StatelessWidget {
     );
   }
 }
-

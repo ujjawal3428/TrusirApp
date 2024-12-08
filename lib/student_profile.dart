@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/add_gk.dart';
-import 'package:trusir/adddoubt.dart';
+import 'package:trusir/student_doubts.dart';
 import 'package:trusir/editprofilescreen.dart';
 import 'package:trusir/notice.dart';
 import 'package:trusir/progress_report.dart';
@@ -466,7 +466,8 @@ class StudentProfileScreen extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => AddDoubt(),
+                                            builder: (context) =>
+                                                StudentDoubts(),
                                           ),
                                         );
                                       },
@@ -539,8 +540,7 @@ class StudentProfileScreen extends StatelessWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                 AddGK(),
+                                            builder: (context) => AddGK(),
                                           ),
                                         );
                                       },

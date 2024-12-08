@@ -313,6 +313,8 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                 'Hindi',
                 'English',
                 'Maths',
+                'Science',
+                'History',
               ],
             ),
             const SizedBox(height: 30),

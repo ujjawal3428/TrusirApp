@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trusir/student_doubt.dart';
+import 'package:trusir/parents_doubt.dart';
 
-class YourDoubtPage extends StatefulWidget {
-  const YourDoubtPage({super.key});
+class ParentDoubtPage extends StatefulWidget {
+  const ParentDoubtPage({super.key});
 
   @override
-  State<YourDoubtPage> createState() => _YourDoubtPageState();
+  State<ParentDoubtPage> createState() => _ParentDoubtPageState();
 }
 
-class _YourDoubtPageState extends State<YourDoubtPage> {
+class _ParentDoubtPageState extends State<ParentDoubtPage> {
   late Future<List<Doubt>> doubts;
 
   @override
@@ -27,7 +26,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
 
     final response = await http.get(
       Uri.parse(
-          'https://balvikasyojana.com:8899/api/view-doubts/$userID/student'), // Replace with your API endpoint
+          'https://balvikasyojana.com:8899/api/view-doubts/$userID/parent'), // Replace with your API endpoint
     );
 
     if (response.statusCode == 200) {
@@ -109,7 +108,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Course: ${doubt.course}'),
+                                    Text('Description: ${doubt.course}'),
                                     Text(
                                         'Created at: ${doubt.createdAt.toLocal()}'),
                                   ],
@@ -143,7 +142,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const StudentDoubtScreen()));
+                            builder: (context) => const ParentsDoubtScreen()));
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.5,
@@ -200,7 +199,7 @@ class Doubt {
     return Doubt(
       id: json['id'],
       title: json['title'],
-      course: json['course'],
+      course: json['description'],
       image: json['image'],
       createdAt: DateTime.parse(json['created_at']),
     );
