@@ -24,14 +24,14 @@ class Notice {
   }
 }
 
-class NoticeScreen extends StatefulWidget {
-  const NoticeScreen({super.key});
+class TeacherNoticeScreen extends StatefulWidget {
+  const TeacherNoticeScreen({super.key});
 
   @override
-  State<NoticeScreen> createState() => _NoticeScreenState();
+  State<TeacherNoticeScreen> createState() => _TeacherNoticeScreenState();
 }
 
-class _NoticeScreenState extends State<NoticeScreen> {
+class _TeacherNoticeScreenState extends State<TeacherNoticeScreen> {
   List<Notice> notices = [];
   bool isLoading = true;
   bool isLoadingMore = false;
