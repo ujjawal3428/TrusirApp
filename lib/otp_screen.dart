@@ -75,29 +75,34 @@ class _OTPScreenState extends State<OTPScreen> {
     String otp = otpControllers.map((controller) => controller.text).join();
     print("Entered OTP: $otp");
     await fetchUserData(phone);
-    // verifyOTP(phone, otp);
-    showVerificationDialog(context);
+    verifyOTP(phone, otp);
     // Handle OTP verification logic
   }
 
-  // Future<void> verifyOTP(String phone, String otp) async {
-  //   final url = Uri.parse(
-  //     '$otpapi/SMS/VERIFY3/91$phone/$otp',
-  //   );
+  Future<void> verifyOTP(String phone, String otp) async {
+    final url = Uri.parse(
+      '$otpapi/SMS/VERIFY3/91$phone/$otp',
+    );
+    try {
+      final response = await http.get(url);
 
-  //   try {
-  //     final response = await http.get(url);
-
-  //     if (response.statusCode == 200) {
-  //       print('OTP verified successfully: ${response.body}');
-  //       showVerificationDialog(context);
-  //     } else {
-  //       print('Failed to verify OTP: ${response.body}');
-  //     }
-  //   } catch (e) {
-  //     print('Error verifying OTP: $e');
-  //   }
-  // }
+      if (response.statusCode == 200) {
+        final responseBody = json.decode(response.body);
+        if (responseBody['Status'] == 'Success') {
+          print('OTP verified successfully: ${response.body}');
+          showVerificationDialog(context);
+        } else if (responseBody['Status'] == 'Error') {
+          print('Failed to verify OTP: ${responseBody['Details']}');
+        } else {
+          print('Unexpected response: ${response.body}');
+        }
+      } else {
+        print('Failed to verify OTP with status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error verifying OTP: $e');
+    }
+  }
 
   void showVerificationDialog(BuildContext context) {
     showDialog(

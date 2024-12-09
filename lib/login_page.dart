@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/menu.dart';
+import 'package:http/http.dart' as http;
+import 'package:trusir/api.dart';
 import 'package:trusir/otp_screen.dart';
 
 // Custom class to handle responsive dimensions
@@ -88,20 +90,8 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
           setState(() {
             phonenum = _phonecontroller.text;
           });
-          // sendOTP(phonenum);
+          sendOTP(phonenum);
           storePhoneNo();
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('OTP Sent Successfully'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => OTPScreen(
-                        phonenum: phonenum,
-                      )));
         },
         child: Image.asset(
           'assets/send_otp.png',
@@ -112,35 +102,35 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     );
   }
 
-  // Future<void> sendOTP(String phoneNumber) async {
-  //   final url = Uri.parse(
-  //     '$otpapi/SMS/+91$phoneNumber/AUTOGEN3/Test',
-  //   );
+  Future<void> sendOTP(String phoneNumber) async {
+    final url = Uri.parse(
+      '$otpapi/SMS/+91$phoneNumber/AUTOGEN3/Test',
+    );
 
-  //   try {
-  //     final response = await http.get(url);
-  //     if (response.statusCode == 200) {
-  //       print('OTP sent successfully: ${response.body}');
-  //       storePhoneNo();
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         const SnackBar(
-  //           content: Text('OTP Sent Successfully'),
-  //           duration: Duration(seconds: 1),
-  //         ),
-  //       );
-  //       Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //               builder: (context) => OTPScreen(
-  //                     phonenum: phonenum,
-  //                   )));
-  //     } else {
-  //       print('Failed to send OTP: ${response.body}');
-  //     }
-  //   } catch (e) {
-  //     print('Error sending OTP: $e');
-  //   }
-  // }
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        print('OTP sent successfully: ${response.body}');
+        storePhoneNo();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('OTP Sent Successfully'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OTPScreen(
+                      phonenum: phonenum,
+                    )));
+      } else {
+        print('Failed to send OTP: ${response.body}');
+      }
+    } catch (e) {
+      print('Error sending OTP: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
