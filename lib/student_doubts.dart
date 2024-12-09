@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/student_doubt.dart';
 
-class StudentDoubts extends StatefulWidget {
-  const StudentDoubts({super.key});
+class StudentDoubtsPage extends StatefulWidget {
+  const StudentDoubtsPage({super.key});
 
   @override
-  State<StudentDoubts> createState() => _StudentDoubtsState();
+  State<StudentDoubtsPage> createState() => _StudentDoubtsPageState();
 }
 
-class _StudentDoubtsState extends State<StudentDoubts> {
+class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
   late Future<List<Doubt>> doubts;
 
   @override
@@ -20,12 +21,12 @@ class _StudentDoubtsState extends State<StudentDoubts> {
   }
 
   Future<List<Doubt>> fetchDoubts() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // final userID = prefs.getString('userID');
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getString('userID');
 
     final response = await http.get(
       Uri.parse(
-          'https://balvikasyojana.com:8899/api/view-doubts/2ca5fb8b-a252-41d5-b6e4-2bbe039594bb/student'), // Replace with your API endpoint
+          'https://balvikasyojana.com:8899/api/view-doubts/$userID/student'), // Replace with your API endpoint
     );
 
     if (response.statusCode == 200) {
@@ -59,7 +60,7 @@ class _StudentDoubtsState extends State<StudentDoubts> {
                       ),
                       const SizedBox(width: 22),
                       const Text(
-                        'Student Doubts',
+                        'Your Doubts',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -127,6 +128,51 @@ class _StudentDoubtsState extends State<StudentDoubts> {
                 ),
               ),
             ],
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const StudentDoubtScreen()));
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF045C19),
+                          Color(0xFF77D317),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Create Doubt',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

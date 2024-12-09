@@ -239,7 +239,7 @@ class SettingsScreen extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                           const ParentsDoubtScreen(),
+                                          const ParentsDoubtScreen(),
                                     ),
                                   );
                                 },
@@ -376,11 +376,10 @@ class SettingsScreen extends StatelessWidget {
                                     const Icon(Icons.arrow_forward_ios_rounded),
                                 color: const Color(0xFF48116A),
                                 onPressed: () {
-                                    Navigator.push(
+                                  Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const Contactus(),
+                                      builder: (context) => const Contactus(),
                                     ),
                                   );
                                 },

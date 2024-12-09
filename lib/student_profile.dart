@@ -97,14 +97,14 @@ class StudentProfileScreen extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Container(
-                             decoration: BoxDecoration(
-                              color: Colors.white10,
-                              borderRadius: BorderRadius.circular(22),
-                              border: Border.all(
-                                color: Colors.white12,
-                                width: 2,
+                              decoration: BoxDecoration(
+                                color: Colors.white10,
+                                borderRadius: BorderRadius.circular(22),
+                                border: Border.all(
+                                  color: Colors.white12,
+                                  width: 2,
+                                ),
                               ),
-                            ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(22),
                                 child: Image.network(
@@ -130,7 +130,6 @@ class StudentProfileScreen extends StatelessWidget {
                               padding: const EdgeInsets.only(
                                   top: 0, left: 4.0, right: 0.0),
                               child: Column(
-                                
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -141,7 +140,6 @@ class StudentProfileScreen extends StatelessWidget {
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 18,
-                                        
                                         fontFamily: 'Poppins',
                                         fontWeight: FontWeight.w700,
                                       ),
@@ -484,7 +482,7 @@ class StudentProfileScreen extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const StudentDoubts(),
+                                                const StudentDoubtsPage(),
                                           ),
                                         );
                                       },
