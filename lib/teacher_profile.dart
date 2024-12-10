@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 import 'api.dart'; // Assuming you've added your base URL here
 
 class TeacherProfileScreen extends StatefulWidget {
@@ -9,6 +10,14 @@ class TeacherProfileScreen extends StatefulWidget {
 
   @override
   TeacherProfileScreenState createState() => TeacherProfileScreenState();
+}
+
+Future<void> openDialer(String phoneNumber) async {
+  final Uri launchUri = Uri(
+    scheme: 'tel',
+    path: phoneNumber,
+  );
+  await launchUrl(launchUri);
 }
 
 class TeacherProfileScreenState extends State<TeacherProfileScreen> {
@@ -96,84 +105,88 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
                     itemBuilder: (context, index) {
                       final teacher = teachers[index];
 
-                      return Stack(
-                        clipBehavior: Clip.hardEdge,
-                        children: [
-                          Container(
-                            width: 180,
-                            height: 251,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.grey, width: 1),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Image from network
-                                Container(
-                                  width: 98,
-                                  height: 101,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(teacher.image),
-                                      fit: BoxFit.cover,
+                      return GestureDetector(
+                        onTap: () => openDialer(teacher.mobile),
+                        child: Stack(
+                          clipBehavior: Clip.hardEdge,
+                          children: [
+                            Container(
+                              width: 180,
+                              height: 251,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(20),
+                                border:
+                                    Border.all(color: Colors.grey, width: 1),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Image from network
+                                  Container(
+                                    width: 98,
+                                    height: 101,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(teacher.image),
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
-                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                ),
-                                const SizedBox(height: 10),
-                                // Name Text
-                                Text(
-                                  teacher.name,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                // Phone Number
-                                Text(
-                                  teacher.mobile,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          // Tag
-                          Positioned(
-                            top: -10,
-                            left: -30,
-                            child: Transform.rotate(
-                              angle: -0.785398,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 0, left: 0, right: 0),
-                                child: Container(
-                                  width: 150,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 25, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: Colors.purple.shade100,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    teacher.subject,
+                                  const SizedBox(height: 10),
+                                  // Name Text
+                                  Text(
+                                    teacher.name,
                                     style: const TextStyle(
-                                      color: Colors.white,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  // Phone Number
+                                  Text(
+                                    teacher.mobile,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // Tag
+                            Positioned(
+                              top: -10,
+                              left: -30,
+                              child: Transform.rotate(
+                                angle: -0.785398,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 0, left: 0, right: 0),
+                                  child: Container(
+                                    width: 150,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 25, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.purple.shade100,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      teacher.subject,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     },
                   ),

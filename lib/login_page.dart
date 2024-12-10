@@ -90,8 +90,30 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
           setState(() {
             phonenum = _phonecontroller.text;
           });
-          sendOTP(phonenum);
-          storePhoneNo();
+
+          if (phonenum.length < 10 || !RegExp(r'^[0-9]+$').hasMatch(phonenum)) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Enter a valid phone number'),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          } else {
+            // sendOTP(phonenum);
+            storePhoneNo();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('OTP Sent Successfully'),
+                duration: Duration(seconds: 1),
+              ),
+            );
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => OTPScreen(
+                          phonenum: phonenum,
+                        )));
+          }
         },
         child: Image.asset(
           'assets/send_otp.png',

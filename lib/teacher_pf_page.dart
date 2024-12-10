@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-
 import 'package:trusir/api.dart';
 import 'package:trusir/teacher_edit_profile.dart';
 
@@ -16,6 +15,7 @@ class Teacherpfpage extends StatefulWidget {
 class MyProfileScreenState extends State<Teacherpfpage> {
   String name = '';
   String age = '';
+  String dob = '';
   String gender = '';
   String address = '';
   String graduation = '';
@@ -31,6 +31,23 @@ class MyProfileScreenState extends State<Teacherpfpage> {
     fetchProfileData();
   }
 
+  int calculateAge(String dob) {
+    // Parse the DOB string to a DateTime object
+    DateTime dateOfBirth = DateTime.parse(dob);
+    DateTime today = DateTime.now();
+
+    // Calculate the age
+    int age = today.year - dateOfBirth.year;
+
+    // Check if the birthday has not yet occurred this year
+    if (today.month < dateOfBirth.month ||
+        (today.month == dateOfBirth.month && today.day < dateOfBirth.day)) {
+      age--;
+    }
+
+    return age;
+  }
+
   Future<void> fetchProfileData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userID = prefs.getString('userID');
@@ -43,7 +60,8 @@ class MyProfileScreenState extends State<Teacherpfpage> {
         final data = json.decode(response.body);
         setState(() {
           name = data['name'] ?? 'N/A';
-          age = data['age']?.toString() ?? 'N/A';
+          dob = data['DOB'];
+          age = calculateAge(dob).toString();
           gender = data['gender'] ?? 'N/A';
           address = data['address'] ?? 'N/A';
           graduation = data['graduation'] ?? 'N/A';

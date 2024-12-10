@@ -12,7 +12,7 @@ import 'package:trusir/parents_doubt.dart';
 import 'package:trusir/progress_report.dart';
 import 'package:trusir/setting.dart';
 import 'package:trusir/student_doubt.dart';
-import 'package:trusir/teacher_myprofile.dart';
+import 'package:trusir/teacher_profile.dart';
 import 'package:trusir/video_knowledge.dart';
 
 class Studentfacilities extends StatefulWidget {
