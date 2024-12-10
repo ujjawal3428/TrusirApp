@@ -41,35 +41,43 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 1.0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 5),
+              const Text(
+                'Student Doubt',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 22,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+        toolbarHeight: 70,
+      ),
       body: Stack(
         children: [
           Column(
             children: [
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 30),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        'assets/dikshaback@2x.png',
-                        width: 58,
-                        height: 58,
-                      ),
-                      const SizedBox(width: 22),
-                      const Text(
-                        'Your Doubts',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
               const SizedBox(height: 20),
               Expanded(
                 child: FutureBuilder<List<Doubt>>(
@@ -146,7 +154,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.5,
-                    height: 60,
+                    height: 30,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
                       gradient: const LinearGradient(
