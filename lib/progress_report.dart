@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
 import 'package:trusir/notificationhelper.dart';
 
@@ -41,6 +42,20 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     super.initState();
     _reports = fetchProgressReports();
     _requestNotificationPermission();
+    _loadDownloadedFiles();
+  }
+
+  Future<void> _loadDownloadedFiles() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedFiles = prefs.getString('downloadedReports') ?? '{}';
+    setState(() {
+      downloadedFiles = Map<String, String>.from(jsonDecode(savedFiles));
+    });
+  }
+
+  Future<void> _saveDownloadedFiles() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('downloadedReports', jsonEncode(downloadedFiles));
   }
 
   Future<void> _requestNotificationPermission() async {
@@ -136,6 +151,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
         _isDownloading = false;
         _downloadProgress = '';
       });
+      await _saveDownloadedFiles();
 
       showDownloadNotification(filename, filePath);
     } catch (e) {
@@ -302,11 +318,11 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
             children: [
               const Expanded(
                 child: Padding(
-                  padding:  EdgeInsets.only(left: 20.0, top: 20),
+                  padding: EdgeInsets.only(left: 20.0, top: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Text(
+                      Text(
                         'Current Month',
                         style: TextStyle(
                           fontSize: 20,
@@ -322,8 +338,6 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                           color: Colors.white,
                         ),
                       ),
-                     
-                    
                     ],
                   ),
                 ),

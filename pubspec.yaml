@@ -47,9 +47,12 @@ flutter:
     - assets/studentenquiry.png
     - assets/studentregisteration@4x.png
     - assets/call.png
+    - assets/cancelbutton.png
+    - assets/logoutbutton.png
     - assets/pamplate.png
     - assets/enquire.png
     - assets/studentenquiry2.png
+    - assets/wanna_logout.png
     - assets/back_button.png
     - assets/textfield.png
     - assets/Teacher_Enquiry2.png

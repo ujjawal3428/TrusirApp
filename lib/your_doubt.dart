@@ -60,7 +60,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                       ),
                       const SizedBox(width: 22),
                       const Text(
-                        'Student Doubts',
+                        'Your Doubts',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,

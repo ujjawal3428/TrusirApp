@@ -730,6 +730,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       ),
       child: TextField(
         controller: _phoneController,
+        keyboardType: TextInputType.phone,
+        maxLength: 10,
         enabled: widget.enablephonefield,
         decoration: InputDecoration(
           label: Text(hintText),
