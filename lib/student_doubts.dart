@@ -9,10 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-<<<<<<< HEAD
-=======
 import 'package:trusir/notificationhelper.dart';
->>>>>>> e342db4311d7a6ee35866ac0f0d8a9bdc955d38a
 
 class StudentDoubtsPage extends StatefulWidget {
   const StudentDoubtsPage({super.key});
