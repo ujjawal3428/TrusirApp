@@ -92,20 +92,30 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                     } else {
                       final doubts = snapshot.data!;
                       return ListView.builder(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.only(left: 15.0, right: 15),
                         itemCount: doubts.length,
                         itemBuilder: (context, index) {
                           final doubt = doubts[index];
+
+                          // Generate a unique color for each container using index
+                          final backgroundColor =
+                              Color((0xFFE3E4E8 + index * 0x000C00) % 0xFFFFFF)
+                                  .withOpacity(1.0);
+
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.yellow.shade100,
+                                color: backgroundColor,
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(doubt.image),
+                                leading: SizedBox(
+                                  height: 60,
+                                  width: 60,
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(doubt.image),
+                                  ),
                                 ),
                                 title: Text(
                                   doubt.title,
@@ -121,11 +131,53 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                                         'Created at: ${doubt.createdAt.toLocal()}'),
                                   ],
                                 ),
-                                trailing:
-                                    const Icon(Icons.arrow_forward_ios_rounded),
-                                onTap: () {
-                                  // Handle tap on a doubt
-                                },
+                                trailing: Column(
+                                  children: [
+                                    SizedBox(
+                                      height: 20,
+                                      width: 80,
+                                     child: ElevatedButton.icon(
+                                        
+                                        onPressed: () {
+                                          // Handle upload action
+                                        },
+                                        
+                                        icon:
+                                            const Icon(Icons.download, size: 17),
+                                        label: const Text("Download",
+                                            style: TextStyle(fontSize: 10)),
+                                        style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.all(0),
+                                          foregroundColor: Colors
+                                              .blue, // Set the button color
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        height:
+                                            8), // Small space between buttons
+                                    SizedBox(
+                                      height: 20,
+                                      width: 80,
+                                      child: ElevatedButton.icon(
+                                        
+                                        onPressed: () {
+                                          // Handle upload action
+                                        },
+                                        
+                                        icon:
+                                            const Icon(Icons.upload, size: 17),
+                                        label: const Text("Upload",
+                                            style: TextStyle(fontSize: 10)),
+                                        style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.all(0),
+                                          foregroundColor: Colors
+                                              .blue, // Set the button color
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           );
@@ -136,51 +188,6 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                 ),
               ),
             ],
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              color: Colors.white,
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const StudentDoubtScreen()));
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF045C19),
-                          Color(0xFF77D317),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Create Doubt',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontFamily: 'Poppins',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ),
         ],
       ),
