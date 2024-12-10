@@ -27,6 +27,7 @@ dependencies:
   table_calendar: 
   flutter_local_notifications:
   open_file:  
+  signature: ^5.5.0
   
 
 dev_dependencies:

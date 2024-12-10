@@ -221,7 +221,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Column(children: [
                 const SizedBox(
-                  height: 20,
+                  height: 5,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(18.0),
@@ -240,7 +240,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                         ),
                         const SizedBox(height: 20),
                         const Text(
-                          'Test Title',
+                          'Title',
                           style: TextStyle(
                             fontSize: 16,
                           ),
@@ -260,7 +260,9 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                           child: TextField(
                             controller: _titleController,
                             decoration: InputDecoration(
-                              hintText: 'Title',
+                              contentPadding: const EdgeInsets.only(left: 20),
+                              hintText: 'Type Here...',
+                              hintStyle: const TextStyle(color: Colors.grey),
                               fillColor: Colors.white,
                               filled: true,
                               border: OutlineInputBorder(
@@ -369,7 +371,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                           alignment: Alignment.topCenter,
                           child: Padding(
                             padding: const EdgeInsets.only(
-                              top: 40.0,
+                              top: 20.0,
                             ),
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -508,11 +510,128 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                 ]),
                           ),
                         ),
+                        const SizedBox(height: 10,),
+                        const DrawPad(),
                       ]),
                 ),
               ]),
             ),
           ],
         ));
+  }
+}
+
+
+class DrawPadPainter extends CustomPainter {
+  final List<Offset?> points;
+
+  DrawPadPainter(this.points);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.black
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 4.0;
+
+    for (int i = 0; i < points.length - 1; i++) {
+      if (points[i] != null && points[i + 1] != null) {
+        canvas.drawLine(points[i]!, points[i + 1]!, paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+}
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+
+
+class DrawPad extends StatefulWidget {
+  const DrawPad({super.key});
+
+  @override
+  _DrawPadState createState() => _DrawPadState();
+}
+class _DrawPadState extends State<DrawPad> {
+  final List<Offset?> _points = [];
+  bool _isDrawingEnabled = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Stack(
+        children: [
+          Container(
+            width: 300,
+            height: 150,
+            decoration: BoxDecoration(
+             
+              color: Colors.grey[50],
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: GestureDetector(
+              onPanUpdate: (details) {
+                if (_isDrawingEnabled) {
+                  setState(() {
+                    RenderBox box = context.findRenderObject() as RenderBox;
+                    final localPosition = box.globalToLocal(details.globalPosition);
+
+                    // Check if the point is within bounds
+                    if (localPosition.dx >= 0 &&
+                        localPosition.dx <= box.size.width &&
+                        localPosition.dy >= 0 &&
+                        localPosition.dy <= box.size.height) {
+                      _points.add(localPosition);
+                    }
+                  });
+                }
+              },
+              onPanEnd: (details) {
+                if (_isDrawingEnabled) {
+                  _points.add(null); // To break lines
+                }
+              },
+              child: CustomPaint(
+                painter: DrawPadPainter(_points),
+                size: Size.infinite,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 10,
+            child: TextButton(
+            
+              onPressed: () {
+                setState(() {
+                  _isDrawingEnabled = !_isDrawingEnabled;
+                });
+              },
+              child: Text(_isDrawingEnabled ? "Stop" : "Draw"),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 10,
+            child: TextButton(
+              onPressed: () {
+                setState(() {
+                  _points.clear();
+                });
+              },
+              child: const Text("Clear"),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
