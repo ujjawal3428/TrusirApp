@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/add_gk.dart';
+import 'package:trusir/attendance.dart';
 import 'package:trusir/student_doubts.dart';
-import 'package:trusir/editprofilescreen.dart';
 import 'package:trusir/progress_report.dart';
 import 'package:trusir/student_notice.dart';
 import 'package:trusir/test_series.dart';
@@ -260,7 +260,7 @@ class StudentProfileScreen extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const EditProfileScreen(),
+                                                const AttendancePage(),
                                           ),
                                         );
                                       },

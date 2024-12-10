@@ -4,14 +4,14 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/parents_doubt.dart';
 
-class ParentDoubtPage extends StatefulWidget {
-  const ParentDoubtPage({super.key});
+class ParentsDoubtsPage extends StatefulWidget {
+  const ParentsDoubtsPage({super.key});
 
   @override
-  State<ParentDoubtPage> createState() => _ParentDoubtPageState();
+  State<ParentsDoubtsPage> createState() => _ParentsDoubtsPageState();
 }
 
-class _ParentDoubtPageState extends State<ParentDoubtPage> {
+class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
   late Future<List<Doubt>> doubts;
 
   @override
@@ -60,7 +60,7 @@ class _ParentDoubtPageState extends State<ParentDoubtPage> {
                       ),
                       const SizedBox(width: 22),
                       const Text(
-                        'Your Doubts',
+                        'Parents Doubts',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,

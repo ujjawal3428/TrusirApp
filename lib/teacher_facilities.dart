@@ -3,11 +3,11 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
-import 'package:trusir/login_page.dart';
 import 'package:trusir/student_profile.dart';
 import 'package:trusir/teacher_notice.dart';
 import 'package:trusir/teacher_pf_page.dart';
 import 'package:trusir/teacherssettings.dart';
+import 'package:trusir/wanna_logout.dart';
 
 class StudentProfile {
   final String name;
@@ -111,16 +111,6 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
     });
   }
 
-  Future<void> logout(BuildContext context) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const TrusirLoginPage()),
-      (route) => false,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -141,7 +131,10 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
         actions: [
           InkWell(
             onTap: () {
-              logout(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const WanaLogout()),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 0, right: 20.0),

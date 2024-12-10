@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/attendance.dart';
 import 'package:trusir/extra_knowledge.dart';
-import 'package:trusir/login_page.dart';
 import 'package:trusir/profilepopup.dart';
 import 'package:trusir/test_series.dart';
 import 'package:trusir/fee_payment.dart';
@@ -14,6 +13,7 @@ import 'package:trusir/setting.dart';
 import 'package:trusir/student_doubt.dart';
 import 'package:trusir/teacher_profile.dart';
 import 'package:trusir/video_knowledge.dart';
+import 'package:trusir/wanna_logout.dart';
 
 class Studentfacilities extends StatefulWidget {
   const Studentfacilities({super.key});
@@ -48,16 +48,6 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
   void initState() {
     super.initState();
     fetchProfileData();
-  }
-
-  Future<void> logout(BuildContext context) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const TrusirLoginPage()),
-      (route) => false,
-    );
   }
 
   Future<void> fetchProfileData() async {
@@ -103,7 +93,12 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
         actions: [
           InkWell(
             onTap: () {
-              logout(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const WanaLogout(),
+                ),
+              );
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 0, right: 20.0),

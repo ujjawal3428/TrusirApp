@@ -1,7 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/login_page.dart';
 
 class WanaLogout extends StatelessWidget {
   const WanaLogout({super.key});
+
+  Future<void> logout(BuildContext context) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const TrusirLoginPage()),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,20 +28,22 @@ class WanaLogout extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Back Button
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context), // Navigates back on tap
-                    child: Image.asset(
-                      "assets/back_button.png", // Ensure this path is correct
-                      width: 58,
-                      height: 58,
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios_rounded,
+                      color: Color(0xFF48116A),
+                      size: 30,
                     ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
                   const SizedBox(height: 160),
 
                   // Online Payment Button
                   Center(
                     child: Image.asset(
-                      'logout.png',
+                      'assets/wanna_logout.png',
                       width: 200,
                       height: 200,
                     ),
@@ -54,9 +68,11 @@ class WanaLogout extends StatelessWidget {
                   // Cancel Button
                   Center(
                     child: GestureDetector(
-                      onTap: _onEnquire, // Calls _onEnquire on tap
+                      onTap: () {
+                        Navigator.pop(context);
+                      }, // Calls _onEnquire on tap
                       child: Image.asset(
-                        'cancelbutton.png',
+                        'assets/cancelbutton.png',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -66,9 +82,11 @@ class WanaLogout extends StatelessWidget {
                   // Logout Button
                   Center(
                     child: GestureDetector(
-                      onTap: _onEnquire, // Calls _onEnquire on tap
+                      onTap: () {
+                        logout(context);
+                      }, // Calls _onEnquire on tap
                       child: Image.asset(
-                        'logoutbutton.png',
+                        'assets/logoutbutton.png',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -80,11 +98,5 @@ class WanaLogout extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  // Define the function for handling actions
-  void _onEnquire() {
-    print("Enquiry action triggered");
-    // Add your action for the button here
   }
 }

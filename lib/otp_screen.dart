@@ -215,7 +215,7 @@ class _OTPScreenState extends State<OTPScreen> {
                       controller: otpControllers[index],
                       focusNode: focusNodes[index],
                       textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
+                      keyboardType: TextInputType.phone,
                       maxLength: 1,
                       decoration: const InputDecoration(
                         counterText: '',

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:trusir/app_localization.dart';
 import 'package:trusir/login_page.dart';
 import 'package:trusir/main_screen.dart';
 import 'package:trusir/teacher_main_screen.dart';
@@ -29,8 +30,21 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // Locale _locale = const Locale('en');
+
+  // void _changeLanguage(String languageCode) {
+  //   setState(() {
+  //     _locale = Locale(languageCode);
+  //   });
+  // }
 
   Future<Widget> getInitialPage() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -62,6 +76,10 @@ class MyApp extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const MaterialApp(
+            // locale: _locale,
+            // localizationsDelegates: const [
+            //   AppLocalizations.delegate,
+            // ],
             home: Scaffold(
               body: Center(child: CircularProgressIndicator()),
             ),
