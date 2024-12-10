@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/api.dart';
+import 'package:trusir/drawpad.dart';
 
 class StudentDoubts {
   String? title;
@@ -228,17 +229,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Center(
-                          child: Text(
-                            'Submit Your Doubt',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF48116A),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
+                       
                         const Text(
                           'Title',
                           style: TextStyle(
@@ -402,7 +393,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                           children: [
                                             Padding(
                                               padding: const EdgeInsets.only(
-                                                  top: 30),
+                                                  top: 15),
                                               child: formData.photo != null
                                                   ? Image.network(
                                                       width: 50,
@@ -410,12 +401,12 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                                       formData.photo!)
                                                   : Image.asset(
                                                       'assets/camera@3x.png',
-                                                      width: 46,
-                                                      height: 37,
+                                                      width: 30,
+                                                      height: 20,
                                                     ),
                                             ),
                                             const SizedBox(
-                                              height: 10,
+                                              height: 5,
                                             ),
                                             Center(
                                               child: Text(
@@ -424,12 +415,12 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                                     : 'Upload Image',
                                                 style: const TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 14,
+                                                  fontSize: 7,
                                                 ),
                                               ),
                                             ),
                                             const SizedBox(
-                                              height: 5,
+                                              height: 2,
                                             ),
                                             Center(
                                               child: Text(
@@ -438,7 +429,54 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                                     : 'Click Here',
                                                 style: const TextStyle(
                                                   color: Colors.black,
-                                                  fontSize: 10,
+                                                  fontSize: 5,
+                                                ),
+                                              ),
+                                            ),
+                                              Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 10),
+                                              child: formData.photo != null
+                                                  ? Image.network(
+                                                      width: 50,
+                                                      height: 50,
+                                                      formData.photo!)
+                                                  : GestureDetector(
+                                                    onTap: (){
+                                                    showDrawPad(context);
+                                                    },
+                                                    child: Image.asset(
+                                                        'assets/pin.png',
+                                                        width: 30,
+                                                        height: 25,
+                                                      ),
+                                                  ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Center(
+                                              child: Text(
+                                                formData.photo != null
+                                                    ? 'Image Uploaded'
+                                                    : 'Draw Image',
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 7,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 2,
+                                            ),
+                                            Center(
+                                              child: Text(
+                                                formData.photo != null
+                                                    ? ''
+                                                    : 'Click Here',
+                                                style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 5,
                                                 ),
                                               ),
                                             )
@@ -513,125 +551,12 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                         const SizedBox(
                           height: 10,
                         ),
-                        const DrawPad(),
+                        // const DrawPad(),
                       ]),
                 ),
               ]),
             ),
           ],
         ));
-  }
-}
-
-class DrawPadPainter extends CustomPainter {
-  final List<Offset?> points;
-
-  DrawPadPainter(this.points);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.black
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 4.0;
-
-    for (int i = 0; i < points.length - 1; i++) {
-      if (points[i] != null && points[i + 1] != null) {
-        canvas.drawLine(points[i]!, points[i + 1]!, paint);
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
-  }
-}
-
-@override
-bool shouldRepaint(CustomPainter oldDelegate) {
-  return true;
-}
-
-class DrawPad extends StatefulWidget {
-  const DrawPad({super.key});
-
-  @override
-  DrawPadState createState() => DrawPadState();
-}
-
-class DrawPadState extends State<DrawPad> {
-  final List<Offset?> _points = [];
-  bool _isDrawingEnabled = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        children: [
-          Container(
-            width: 300,
-            height: 150,
-            decoration: BoxDecoration(
-              color: Colors.grey[50],
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(22),
-            ),
-            child: GestureDetector(
-              onPanUpdate: (details) {
-                if (_isDrawingEnabled) {
-                  setState(() {
-                    RenderBox box = context.findRenderObject() as RenderBox;
-                    final localPosition =
-                        box.globalToLocal(details.globalPosition);
-
-                    // Check if the point is within bounds
-                    if (localPosition.dx >= 0 &&
-                        localPosition.dx <= box.size.width &&
-                        localPosition.dy >= 0 &&
-                        localPosition.dy <= box.size.height) {
-                      _points.add(localPosition);
-                    }
-                  });
-                }
-              },
-              onPanEnd: (details) {
-                if (_isDrawingEnabled) {
-                  _points.add(null); // To break lines
-                }
-              },
-              child: CustomPaint(
-                painter: DrawPadPainter(_points),
-                size: Size.infinite,
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 10,
-            child: TextButton(
-              onPressed: () {
-                setState(() {
-                  _isDrawingEnabled = !_isDrawingEnabled;
-                });
-              },
-              child: Text(_isDrawingEnabled ? "Stop" : "Draw"),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 10,
-            child: TextButton(
-              onPressed: () {
-                setState(() {
-                  _points.clear();
-                });
-              },
-              child: const Text("Clear"),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
