@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trusir/student_doubt.dart';
 
 class StudentDoubtsPage extends StatefulWidget {
   const StudentDoubtsPage({super.key});
@@ -136,14 +135,12 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                                     SizedBox(
                                       height: 20,
                                       width: 80,
-                                     child: ElevatedButton.icon(
-                                        
+                                      child: ElevatedButton.icon(
                                         onPressed: () {
                                           // Handle upload action
                                         },
-                                        
-                                        icon:
-                                            const Icon(Icons.download, size: 17),
+                                        icon: const Icon(Icons.download,
+                                            size: 17),
                                         label: const Text("Download",
                                             style: TextStyle(fontSize: 10)),
                                         style: ElevatedButton.styleFrom(
@@ -160,11 +157,9 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                                       height: 20,
                                       width: 80,
                                       child: ElevatedButton.icon(
-                                        
                                         onPressed: () {
                                           // Handle upload action
                                         },
-                                        
                                         icon:
                                             const Icon(Icons.upload, size: 17),
                                         label: const Text("Upload",

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/contactus.dart';
 import 'package:trusir/editprofilescreen.dart';
-import 'package:trusir/parents_doubt.dart';
+import 'package:trusir/parents_doubts.dart';
 import 'package:trusir/terms_and_conditions.dart';
 import 'package:trusir/about_us.dart';
 import 'package:trusir/your_doubt.dart';
@@ -239,7 +239,7 @@ class SettingsScreen extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          const ParentsDoubtScreen(),
+                                          const ParentsDoubtsPage(),
                                     ),
                                   );
                                 },
