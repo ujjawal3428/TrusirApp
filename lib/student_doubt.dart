@@ -22,7 +22,8 @@ class StudentDoubts {
 }
 
 class StudentDoubtScreen extends StatefulWidget {
-  const StudentDoubtScreen({super.key});
+  String? drawing;
+  StudentDoubtScreen({super.key, this.drawing});
 
   @override
   State<StudentDoubtScreen> createState() => _StudentDoubtScreenState();
@@ -40,6 +41,9 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   void initState() {
     super.initState();
     fetchCourses();
+    if (widget.drawing != null) {
+      formData.photo = widget.drawing;
+    }
   }
 
   Future<void> fetchCourses() async {
@@ -229,7 +233,6 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                       
                         const Text(
                           'Title',
                           style: TextStyle(
@@ -367,122 +370,137 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      handleImageSelection(formData.photo);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 10,
-                                          left: 2,
-                                          right: 2,
-                                          top: 2),
-                                      child: Container(
-                                        width: 150,
-                                        height: 133,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14.40),
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Colors.white54,
-                                                offset: Offset(2, 2),
-                                              )
-                                            ]),
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 15),
-                                              child: formData.photo != null
-                                                  ? Image.network(
-                                                      width: 50,
-                                                      height: 50,
-                                                      formData.photo!)
-                                                  : Image.asset(
-                                                      'assets/camera@3x.png',
-                                                      width: 30,
-                                                      height: 20,
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 10, left: 2, right: 2, top: 2),
+                                    child: Container(
+                                      width: 150,
+                                      height: 133,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(14.40),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Colors.white54,
+                                              offset: Offset(2, 2),
+                                            )
+                                          ]),
+                                      child: formData.photo != null
+                                          ? Column(
+                                              children: [
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 15),
+                                                    child: Image.network(
+                                                        width: 50,
+                                                        height: 50,
+                                                        formData.photo!)),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                const Center(
+                                                  child: Text(
+                                                    'Image Uploaded',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 7,
                                                     ),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Center(
-                                              child: Text(
-                                                formData.photo != null
-                                                    ? 'Image Uploaded'
-                                                    : 'Upload Image',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 7,
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 2,
-                                            ),
-                                            Center(
-                                              child: Text(
-                                                formData.photo != null
-                                                    ? ''
-                                                    : 'Click Here',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 5,
+                                                const SizedBox(
+                                                  height: 2,
                                                 ),
-                                              ),
-                                            ),
-                                              Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10),
-                                              child: formData.photo != null
-                                                  ? Image.network(
-                                                      width: 50,
-                                                      height: 50,
-                                                      formData.photo!)
-                                                  : GestureDetector(
-                                                    onTap: (){
-                                                    showDrawPad(context);
+                                              ],
+                                            )
+                                          : Column(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    handleImageSelection(
+                                                        formData.photo);
+                                                  },
+                                                  child: Column(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 15),
+                                                        child: Image.asset(
+                                                          'assets/camera@3x.png',
+                                                          width: 30,
+                                                          height: 20,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      const Center(
+                                                        child: Text(
+                                                          'Upload Image',
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 7,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 2,
+                                                      ),
+                                                      const Center(
+                                                        child: Text(
+                                                          'Click Here',
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 5,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                      showDrawPad(context);
                                                     },
                                                     child: Image.asset(
-                                                        'assets/pin.png',
-                                                        width: 30,
-                                                        height: 25,
-                                                      ),
+                                                      'assets/pin.png',
+                                                      width: 30,
+                                                      height: 25,
+                                                    ),
                                                   ),
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Center(
-                                              child: Text(
-                                                formData.photo != null
-                                                    ? 'Image Uploaded'
-                                                    : 'Draw Image',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 7,
                                                 ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 2,
-                                            ),
-                                            Center(
-                                              child: Text(
-                                                formData.photo != null
-                                                    ? ''
-                                                    : 'Click Here',
-                                                style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 5,
+                                                const SizedBox(
+                                                  height: 5,
                                                 ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
+                                                const Center(
+                                                  child: Text(
+                                                    'Draw Image',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 7,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 2,
+                                                ),
+                                                const Center(
+                                                  child: Text(
+                                                    'Click Here',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 5,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                     ),
                                   ),
                                   const SizedBox(

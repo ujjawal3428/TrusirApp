@@ -142,7 +142,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const StudentDoubtScreen()));
+                            builder: (context) => StudentDoubtScreen()));
                   },
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.5,

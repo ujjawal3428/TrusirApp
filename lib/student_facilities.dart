@@ -342,7 +342,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const StudentDoubtScreen(),
+                              builder: (context) => StudentDoubtScreen(),
                             ),
                           );
                         }),
