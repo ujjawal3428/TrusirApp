@@ -181,6 +181,37 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   }) async {
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
 
+    for (final teacher in teacherFormsData) {
+      if ([
+        teacher.teacherName,
+        teacher.fathersName,
+        teacher.mothersName,
+        teacher.gender,
+        teacher.dob,
+        teacher.school,
+        teacher.medium,
+        teacher.preferredclass,
+        teacher.subject,
+        teacher.state,
+        teacher.city,
+        teacher.area,
+        teacher.pincode,
+        teacher.caddress,
+        teacher.timeslot,
+        teacher.photoPath,
+        teacher.aadharFrontPath,
+        teacher.aadharBackPath,
+      ].any((field) => field == null || field.toString().isEmpty)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please fill all the fields to proceed.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return; // Stop execution if any field is invalid
+      }
+    }
+
     final Map<String, dynamic> payload = {
       "phone": phoneNum ?? _phoneController.text,
       "role": "teacher",
@@ -639,7 +670,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               // Register Button
               Center(
                 child: Container(
-                   width: MediaQuery.of(context).size.width,
+                  width: MediaQuery.of(context).size.width,
                   height: 45,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),

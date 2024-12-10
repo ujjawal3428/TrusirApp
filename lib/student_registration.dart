@@ -129,11 +129,43 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }) async {
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
 
+    // Validation step to check if all required fields are filled
+    for (final student in studentFormsData) {
+      if ([
+        student.studentName,
+        student.fathersName,
+        student.mothersName,
+        student.gender,
+        student.dob,
+        student.schoolName,
+        student.medium,
+        student.studentClass,
+        student.subject,
+        student.state,
+        student.city,
+        student.area,
+        student.pincode,
+        student.address,
+        student.timeslot,
+        student.photoPath,
+        student.aadharFrontPath,
+        student.aadharBackPath,
+      ].any((field) => field == null || field.toString().isEmpty)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please fill all the fields to proceed.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return; // Stop execution if any field is invalid
+      }
+    }
+
     final Map<String, dynamic> payload = {
       "phone": phoneNum ?? _phoneController.text,
       "number_of_students": numberOfStudents,
       "role": "student",
-      "data": studentForms.map((student) {
+      "data": studentFormsData.map((student) {
         return {
           "name": student.studentName,
           "father_name": student.fathersName,
@@ -150,7 +182,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           "area": student.area,
           "pincode": student.pincode,
           "address": student.address,
-          "time_slot": student.timeslot, // Update this dynamically if needed
+          "time_slot": student.timeslot,
           "profile": student.photoPath,
           "adhaar_front": student.aadharFrontPath,
           "adhaar_back": student.aadharBackPath,
@@ -159,22 +191,21 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       }).toList(),
     };
 
-    // Sending the POST request
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/api/register'), // Replace with your API endpoint
+        Uri.parse('$baseUrl/api/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(payload),
       );
 
       if (response.statusCode == 201) {
         print('Data posted successfully: ${response.body}');
-        print(payload);
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  SplashScreen(phone: phoneNum ?? _phoneController.text)),
+            builder: (context) =>
+                SplashScreen(phone: phoneNum ?? _phoneController.text),
+          ),
         );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -193,7 +224,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             duration: Duration(seconds: 1),
           ),
         );
-        print(payload);
       } else if (response.statusCode == 500) {
         print('Failed to post data: ${response.statusCode}, ${response.body}');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -202,11 +232,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             duration: Duration(seconds: 1),
           ),
         );
-        print(payload);
       }
     } catch (e) {
       print('Error occurred while posting data: $e');
-      print(payload);
     }
   }
 
@@ -410,7 +438,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         const SizedBox(height: 10),
                         Center(
                           child: Container(
-                             width: MediaQuery.of(context).size.width,
+                            width: MediaQuery.of(context).size.width,
                             height: 45,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),

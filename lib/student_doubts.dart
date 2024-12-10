@@ -26,7 +26,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
 
     final response = await http.get(
       Uri.parse(
-          'https://balvikasyojana.com:8899/api/view-doubts/$userID/student'), // Replace with your API endpoint
+          'https://balvikasyojana.com:8899/api/view-doubts/67de3d12-184a-4ee2-8dff-baf376700f52/student'), // Replace with your API endpoint
     );
 
     if (response.statusCode == 200) {
