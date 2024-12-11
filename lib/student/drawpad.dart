@@ -119,8 +119,8 @@ class DrawPadState extends State<DrawPad> {
           RepaintBoundary(
             key: _repaintBoundaryKey,
             child: Container(
-              width: 300,
-              height: MediaQuery.of(context).size.height * 0.3,
+              width: 700,
+              height: MediaQuery.of(context).size.height * 0.7,
               decoration: BoxDecoration(
                 color: Colors.grey[50],
                 border: Border.all(color: Colors.grey),
@@ -180,7 +180,7 @@ void showDrawPad(BuildContext context) {
         ),
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.height * 0.3,
+          height: MediaQuery.of(context).size.height * 0.7,
           child: const DrawPad(),
         ),
       );
