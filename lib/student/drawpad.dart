@@ -113,58 +113,66 @@ class DrawPadState extends State<DrawPad> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Stack(
-        children: [
-          RepaintBoundary(
-            key: _repaintBoundaryKey,
-            child: Container(
-              width: 700,
-              height: MediaQuery.of(context).size.height * 0.7,
-              decoration: BoxDecoration(
-                color: Colors.grey[50],
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: GestureDetector(
-                onPanUpdate: (details) {
-                  setState(() {
-                    RenderBox box = context.findRenderObject() as RenderBox;
-                    final localPosition =
-                        box.globalToLocal(details.globalPosition);
-                    _points.add(localPosition);
-                  });
-                },
-                onPanEnd: (details) => _points.add(null),
-                child: CustomPaint(
-                  painter: DrawPadPainter(_points),
-                  size: Size.infinite,
+    return Column(
+      children: [
+        const Text(
+          'Drawpad',
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+        Center(
+          child: Stack(
+            children: [
+              RepaintBoundary(
+                key: _repaintBoundaryKey,
+                child: Container(
+                  width: 700,
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: GestureDetector(
+                    onPanUpdate: (details) {
+                      setState(() {
+                        RenderBox box = context.findRenderObject() as RenderBox;
+                        final localPosition =
+                            box.globalToLocal(details.globalPosition);
+                        _points.add(localPosition);
+                      });
+                    },
+                    onPanEnd: (details) => _points.add(null),
+                    child: CustomPaint(
+                      painter: DrawPadPainter(_points),
+                      size: Size.infinite,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Positioned(
+                bottom: 0,
+                right: 10,
+                child: TextButton(
+                  onPressed: () => _uploadDrawing(context),
+                  child: const Text("Upload"),
+                ),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 10,
+                child: TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _points.clear();
+                    });
+                  },
+                  child: const Text("Clear"),
+                ),
+              ),
+            ],
           ),
-          Positioned(
-            bottom: 0,
-            right: 10,
-            child: TextButton(
-              onPressed: () => _uploadDrawing(context),
-              child: const Text("Upload"),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 10,
-            child: TextButton(
-              onPressed: () {
-                setState(() {
-                  _points.clear();
-                });
-              },
-              child: const Text("Clear"),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -180,7 +188,7 @@ void showDrawPad(BuildContext context) {
         ),
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.height * 0.7,
+          height: MediaQuery.of(context).size.height * 0.8,
           child: const DrawPad(),
         ),
       );
