@@ -705,27 +705,85 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     );
   }
 
-  Widget _buildTextField(String hintText,
-      {double height = 58, required ValueChanged<String> onChanged}) {
+  Widget _buildTextField(
+    String hintText, {
+    double height = 58,
+    required ValueChanged<String> onChanged,
+  }) {
     return Container(
       height: height,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: TextField(
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: 16, vertical: height == 126 ? 50 : 17),
+          isDense: true,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPhoneField(
+    String hintText,
+  ) {
+    return Container(
+      height: 58,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
               color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
         ],
       ),
       child: TextField(
-        onChanged: onChanged,
+        controller: _phoneController,
+        keyboardType: TextInputType.phone,
         decoration: InputDecoration(
-          label: Text(hintText),
-          border: InputBorder.none,
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+          isDense: true,
         ),
       ),
     );
@@ -743,10 +801,12 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
         ],
       ),
       child: DropdownButtonFormField<String>(
@@ -754,8 +814,24 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: hintText,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+          // Controls the gap for the floating label
+          isDense: true,
         ),
         items: items
             .map((item) => DropdownMenuItem(
@@ -763,33 +839,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                   child: Text(item),
                 ))
             .toList(),
-      ),
-    );
-  }
-
-  Widget _buildPhoneField(
-    String hintText,
-  ) {
-    return Container(
-      height: 58,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
-        ],
-      ),
-      child: TextField(
-        controller: _phoneController,
-        decoration: InputDecoration(
-          label: Text(hintText),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-        ),
       ),
     );
   }
@@ -803,30 +852,41 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     return Container(
       height: 58,
       width: 184,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
         ],
       ),
-      child: InkWell(
+      child: TextField(
+        readOnly: true, // Ensures the field is not editable
         onTap: onTap,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Text(value ?? hintText),
-              ),
-            ),
-            Icon(icon),
-          ],
+        decoration: InputDecoration(
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+          suffixIcon: Icon(icon),
+          isDense: true,
         ),
+        controller: TextEditingController(text: value ?? ''),
       ),
     );
   }

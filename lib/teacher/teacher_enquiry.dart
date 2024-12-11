@@ -203,36 +203,42 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
 
   Widget _buildTextFieldWithBackground(
       {required String hintText, required TextEditingController controllers}) {
-    return Stack(
-      children: [
-        Image.asset(
-          'assets/textfield.png',
-          fit: BoxFit.contain,
-          width: double.infinity,
-          height: 60,
-        ),
-        Positioned.fill(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: TextField(
-              controller: controllers,
-              textAlign: TextAlign.start,
-              decoration: InputDecoration(
-                labelText: hintText,
-                hintStyle: const TextStyle(
-                  fontFamily: 'Poppins-SemiBold',
-                  color: Color(0xFF7E7E7E),
-                ),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 10,
-                ),
-              ),
-            ),
+    return Container(
+      height: 58,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
           ),
+        ],
+      ),
+      child: TextField(
+        controller: controllers,
+        decoration: InputDecoration(
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+          isDense: true,
         ),
-      ],
+      ),
     );
   }
 
@@ -243,23 +249,10 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
   }) {
     return Row(
       children: [
-        Stack(
-          children: [
-            Image.asset(
-              'assets/checkbox.png',
-              width: 60,
-              height: 60,
-              fit: BoxFit.cover,
-            ),
-            Positioned.fill(
-              child: Checkbox(
-                value: value,
-                onChanged: onChanged,
-              ),
-            ),
-          ],
+        Checkbox(
+          value: value,
+          onChanged: onChanged,
         ),
-        const SizedBox(width: 10),
         Text(
           label,
           style: const TextStyle(
