@@ -233,6 +233,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Course: ${doubt.course}'),
+                          const SizedBox(height: 2),
                           Text(
                             'Status: ${doubt.status}',
                           ),

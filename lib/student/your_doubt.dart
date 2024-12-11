@@ -109,6 +109,10 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text('Course: ${doubt.course}'),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      'Status: ${doubt.status}',
+                                    ),
                                     Text(
                                         'Created at: ${doubt.createdAt.toLocal()}'),
                                   ],
@@ -186,6 +190,7 @@ class Doubt {
   final String course;
   final String image;
   final DateTime createdAt;
+  final String status;
 
   Doubt({
     required this.id,
@@ -193,6 +198,7 @@ class Doubt {
     required this.course,
     required this.image,
     required this.createdAt,
+    required this.status,
   });
 
   factory Doubt.fromJson(Map<String, dynamic> json) {
@@ -202,6 +208,7 @@ class Doubt {
       course: json['course'],
       image: json['image'],
       createdAt: DateTime.parse(json['created_at']),
+      status: json['status'] ?? 'N/A',
     );
   }
 }
