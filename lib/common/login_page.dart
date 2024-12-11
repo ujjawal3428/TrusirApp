@@ -25,7 +25,7 @@ class ResponsiveDimensions {
 
   // Image dimensions - can be adjusted as needed
   double get carouselImageHeight => safeHeight * 0.4;
-  double get carouselImageWidth => screenWidth * 0.8;
+  double get carouselImageWidth => screenWidth * 0.9;
   double get flagIconSize => screenWidth * 0.06;
 }
 
@@ -35,7 +35,7 @@ class TrusirLoginPage extends StatefulWidget {
 
   const TrusirLoginPage({
     super.key,
-    this.carouselImageHeightRatio = 0.4, // Default ratio can be adjusted
+    this.carouselImageHeightRatio = 0.4, 
   });
 
   @override
@@ -167,7 +167,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.grey.shade200,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -188,9 +188,9 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildHeader(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.08),
+                        SizedBox(height: responsive.safeHeight * 0.04),
                         _buildCarousel(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.06),
+                        SizedBox(height: responsive.safeHeight * 0.04),
                         _buildPageIndicators(responsive),
                         SizedBox(height: responsive.safeHeight * 0.04),
                         _buildPhoneInput(responsive),
@@ -212,25 +212,21 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        GestureDetector(
-          onTap: () {
-            showPopupDialog(context);
-          },
-          child: Container(
-            height: 30,
-            width: 54,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(8)),
-            child: const Center(
-              child: Text(
-                'Skip',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-          ),
-        ),
+      ElevatedButton(
+  onPressed: () {
+    showPopupDialog(context);
+  },
+  style: ElevatedButton.styleFrom( 
+    padding: const EdgeInsets.all(0),// Border color
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(12), // Border radius
+    ),
+  ),
+  child: const Text(
+    'Skip',
+    style: TextStyle(fontSize: 15),
+  ),
+),
         _buildLanguageDropdown(responsive),
       ],
     );
@@ -263,7 +259,8 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
 
   Widget _buildCarousel(ResponsiveDimensions responsive) {
     return SizedBox(
-      height: responsive.safeHeight * widget.carouselImageHeightRatio,
+    height: 400,
+    width: 600,
       child: PageView.builder(
         controller: _pageController,
         itemCount: pageContent.length,
@@ -290,7 +287,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                     fontFamily: 'Poppins',
                   ),
                 ),
-                SizedBox(height: responsive.safeHeight * 0.01),
+               
                 Text(
                   pageContent[index]['subtitle']!,
                   textAlign: TextAlign.center,
@@ -304,6 +301,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
               ],
               Expanded(
                 child: Image.asset(
+              
                   pageContent[index]['imagePath']!,
                   width: responsive.carouselImageWidth,
                   height: responsive.carouselImageHeight,

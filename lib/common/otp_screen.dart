@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/common/Enquiry.dart';
 import 'package:trusir/common/api.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:trusir/common/enquiry.dart';
 import 'package:trusir/common/login_splash_screen.dart';
 
 class OTPScreen extends StatefulWidget {
@@ -140,6 +140,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 'Your OTP has been verified!',
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -183,6 +184,7 @@ class _OTPScreenState extends State<OTPScreen> {
               const Text(
                 'Enter OTP',
                 style: TextStyle(
+                  fontFamily: 'Poppins',
                   fontSize: 35,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF48116A),
@@ -193,6 +195,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 'Enter the verification code we \njust sent on your phone number.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
+                  fontFamily: 'Poppins',
                   fontSize: 16,
                   color: Colors.redAccent,
                 ),
@@ -222,6 +225,7 @@ class _OTPScreenState extends State<OTPScreen> {
                         border: InputBorder.none,
                       ),
                       style: const TextStyle(
+                        fontFamily: 'Poppins',
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -246,6 +250,7 @@ class _OTPScreenState extends State<OTPScreen> {
               const Text(
                 'Resend OTP',
                 style: TextStyle(
+                  fontFamily: 'Poppins',
                   color: Color(0xFF48116A),
                   fontSize: 17,
                   fontWeight: FontWeight.w500,

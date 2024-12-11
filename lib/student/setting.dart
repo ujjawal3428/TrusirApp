@@ -63,43 +63,45 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Flexible(
-                    child: Container(
-                      height: 55,
-                      width: 306,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, top: 10, bottom: 10, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Edit Profile',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EditProfileScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 55,
+                        width: 306,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, top: 10, bottom: 10, right: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Edit Profile',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.arrow_forward_ios_rounded),
-                                color: const Color(0xFF48116A),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const EditProfileScreen(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
+                                IconButton(
+                                  icon: const Icon(
+                                      Icons.arrow_forward_ios_rounded),
+                                  color: const Color(0xFF48116A),
+                                  onPressed: () {},
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -134,46 +136,45 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Flexible(
-                    child: Container(
-                      height: 55,
-                      width: 306,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, top: 10, bottom: 10, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Your Doubts',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const YourDoubtPage(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 55,
+                        width: 306,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, top: 10, bottom: 10, right: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Your Doubts',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: IconButton(
+                                IconButton(
                                   icon: const Icon(
                                       Icons.arrow_forward_ios_rounded),
                                   color: const Color(0xFF48116A),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const YourDoubtPage(),
-                                      ),
-                                    );
-                                  },
+                                  onPressed: () {},
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -208,33 +209,9 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Flexible(
-                    child: Container(
-                      height: 55,
-                      width: 306,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, top: 10, bottom: 10, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Parents Doubts',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.arrow_forward_ios_rounded),
-                                color: const Color(0xFF48116A),
-                                onPressed: () {
+                    child: GestureDetector(
+                      onTap: (){
+                        
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -242,9 +219,37 @@ class SettingsScreen extends StatelessWidget {
                                           const ParentsDoubtsPage(),
                                     ),
                                   );
-                                },
-                              ),
-                            ],
+                      },
+                      child: Container(
+                        height: 55,
+                        width: 306,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, top: 10, bottom: 10, right: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Parents Doubts',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon:
+                                      const Icon(Icons.arrow_forward_ios_rounded),
+                                  color: const Color(0xFF48116A),
+                                 onPressed: (){},
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -279,42 +284,47 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Flexible(
-                    child: Container(
-                      height: 55,
-                      width: 306,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, top: 10, bottom: 10, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'About Us',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.arrow_forward_ios_rounded),
-                                color: const Color(0xFF48116A),
-                                onPressed: () {
-                                  Navigator.push(
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => const AboutUsPage(),
                                     ),
                                   );
-                                },
-                              ),
-                            ],
+                      },
+                      child: Container(
+                        height: 55,
+                        width: 306,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, top: 10, bottom: 10, right: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'About Us',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon:
+                                      const Icon(Icons.arrow_forward_ios_rounded),
+                                  color: const Color(0xFF48116A),
+                                  onPressed: () {
+                                    
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -349,42 +359,47 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Flexible(
-                    child: Container(
-                      height: 55,
-                      width: 306,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, top: 10, bottom: 10, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Contact Us',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.arrow_forward_ios_rounded),
-                                color: const Color(0xFF48116A),
-                                onPressed: () {
-                                  Navigator.push(
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => const Contactus(),
                                     ),
                                   );
-                                },
-                              ),
-                            ],
+                      },
+                      child: Container(
+                        height: 55,
+                        width: 306,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, top: 10, bottom: 10, right: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Contact Us',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon:
+                                      const Icon(Icons.arrow_forward_ios_rounded),
+                                  color: const Color(0xFF48116A),
+                                  onPressed: () {
+                                    
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -419,46 +434,48 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Flexible(
-                    child: Container(
-                      height: 55,
-                      width: 306,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, top: 10, bottom: 10, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Terms & Conditions',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: IconButton(
-                                  icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded),
-                                  color: const Color(0xFF48116A),
-                                  onPressed: () {
-                                    Navigator.push(
+                    child: GestureDetector(
+                      onTap: (){
+                         Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             const TermsAndConditionsPage(),
                                       ),
                                     );
+                      },
+                      child: Container(
+                        height: 55,
+                        width: 306,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: 20, top: 10, bottom: 10, right: 5),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Terms & Conditions',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                      Icons.arrow_forward_ios_rounded),
+                                  color: const Color(0xFF48116A),
+                                  onPressed: () {
+                                   
                                   },
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),

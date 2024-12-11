@@ -69,8 +69,8 @@ class EnquiryPage extends StatelessWidget {
               },
               child: Image.asset(
                 "assets/studentenquiry.png", // Ensure asset path is correct
-                width: 300,
-                height: 200,
+                width: 340,
+                height: 225,
               ),
             ),
 
@@ -86,8 +86,8 @@ class EnquiryPage extends StatelessWidget {
               },
               child: Image.asset(
                 "assets/teacherenquiry.png", // Ensure asset path is correct
-                width: 300,
-                height: 200,
+                width: 340,
+                height: 225,
               ),
             ),
             const SizedBox(

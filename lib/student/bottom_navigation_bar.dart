@@ -19,7 +19,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           image: const AssetImage('assets/bnbbg@4x.png'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
-            Colors.black.withOpacity(0.1),
+            Colors.white.withOpacity(0.6),
             BlendMode.darken,
           ),
         ),

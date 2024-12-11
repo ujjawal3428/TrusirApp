@@ -52,18 +52,18 @@ class StudentHomepage extends StatelessWidget {
                 const Text(
                   'Welcome To Trusir',
                   style: TextStyle(
-                    fontSize: 30,
-                    height: 1.1,
+                    fontSize: 34,
+                    height: 1.0,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Poppins',
                   ),
                 ),
-                const Divider(color: Colors.black, thickness: 2, endIndent: 50),
+                const Divider(color: Colors.black, thickness: 2, endIndent: 10),
                 const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 20,
                     height: 1.1,
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w400,
@@ -146,7 +146,7 @@ class StudentHomepage extends StatelessWidget {
                         child: Text(
                           'Get the Best Tutor for your child',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: 22,
                             fontWeight: FontWeight.w500,
                             height: 1,
                             color: Color(0xFF00081D),
@@ -164,7 +164,7 @@ class StudentHomepage extends StatelessWidget {
                         child: Text(
                           'Get the best learning support for your child',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             height: 1,
                             fontWeight: FontWeight.w400,
                             color: Color(0xFFBCBCBC),
@@ -182,7 +182,7 @@ class StudentHomepage extends StatelessWidget {
                         child: Text(
                           'For all your learning support needs such as homework, test, school project and examinations; we are here to give you the best support.',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             height: 1,
                             color: Colors.black,
                             fontWeight: FontWeight.w400,
@@ -201,7 +201,7 @@ class StudentHomepage extends StatelessWidget {
                           child: Text(
                             'The best tutors are here',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 20,
                               height: 1,
                               fontWeight: FontWeight.w500,
                               color: Color(0xFFBCBCBC),
@@ -219,7 +219,7 @@ class StudentHomepage extends StatelessWidget {
                         child: Text(
                           'Our tutors are seasoned professionals, screened and given relevant training on a monthly basis to deliver the excellent results you desire.',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 20,
                             height: 1,
                             color: Colors.black,
                             fontWeight: FontWeight.w400,

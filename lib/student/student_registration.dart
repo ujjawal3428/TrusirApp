@@ -734,7 +734,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         maxLength: 10,
         enabled: widget.enablephonefield,
         decoration: InputDecoration(
-          label: Text(hintText),
+          label: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(hintText)),
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
@@ -762,9 +764,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ],
       ),
       child: DropdownButtonFormField<String>(
+        
         value: selectedValue,
         onChanged: onChanged,
         decoration: InputDecoration(
+          
           labelText: hintText,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -821,37 +825,40 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       required String path,
       double width = 200,
       required displayPath}) {
-    return Container(
-      height: 58,
-      width: width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: displayPath == null
-                ? Text(placeholder, style: const TextStyle(color: Colors.grey))
-                : Image.network(
-                    displayPath,
-                    fit: BoxFit.fill,
-                  ),
-          ),
-          IconButton(
-            onPressed: () {
-              handleImageSelection(index, path);
-            },
-            icon: const Icon(Icons.upload_file),
-          ),
-        ],
+    return GestureDetector(
+      onTap: (){
+        handleImageSelection(index, path);
+      },
+      child: Container(
+        height: 58,
+        width: width,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: Colors.grey),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: displayPath == null
+                  ? Text(placeholder, style: const TextStyle(color: Colors.grey))
+                  : Image.network(
+                      displayPath,
+                      fit: BoxFit.fill,
+                    ),
+            ),
+            IconButton(
+              
+              icon: const Icon(Icons.upload_file), onPressed: () {  },
+            ),
+          ],
+        ),
       ),
     );
   }
