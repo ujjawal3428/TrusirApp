@@ -1,107 +1,350 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
 
   @override
-  AttendancePageState createState() => AttendancePageState();
+  State<AttendancePage> createState() => _AttendancePageState();
 }
 
-class AttendancePageState extends State<AttendancePage> {
-  late Map<DateTime, String> attendanceData; // To store attendance status
-  DateTime selectedDate = DateTime.now();
+class _AttendancePageState extends State<AttendancePage> {
+  DateTime _selectedDate = DateTime.now();
+  Map<int, String> _attendanceData = {}; // Day: Status
+  Map<String, int> _summaryData = {}; // Summary details
+  List<String> weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
+  DateTime get _firstDayOfMonth {
+    return DateTime(_selectedDate.year, _selectedDate.month, 1);
+  }
+
+  int get _daysInMonth {
+    return DateTime(_selectedDate.year, _selectedDate.month + 1, 0).day;
+  }
+
+  int get _startingWeekday {
+    return _firstDayOfMonth.weekday % 7; // Adjust for week starting Sunday
+  }
+
+  List<int> get _dates {
+    return List.generate(_daysInMonth, (index) => index + 1);
+  }
+
+  String get _monthYearString {
+    return "${getMonthName(_selectedDate.month)} ${_selectedDate.year}";
+  }
 
   @override
   void initState() {
     super.initState();
-    // Initialize attendance data (this will be fetched from API in real use case)
-    attendanceData = {
-      DateTime(2022, 12, 1): "present",
-      DateTime(2022, 12, 2): "absent",
-      DateTime(2022, 12, 3): "present",
-      DateTime(2022, 12, 4): "not_taken",
+    _fetchAttendanceData();
+  }
+
+  void _fetchAttendanceData() {
+    final month = _selectedDate.month;
+    final year = _selectedDate.year;
+
+    // Simulating an API request with the selected month and year
+    final apiResponse = {
+      "month": getMonthName(month), // Get month name based on selected date
+      "year": year,
+      "attendance": {
+        "01": "present",
+        "02": "absent",
+        "03": "absent",
+        "04": "present",
+        "05": "present",
+        "06": "absent",
+        "07": "present",
+        "08": "present",
+        "09": "present",
+        "10": "present",
+        "11": "present",
+        "12": "present",
+        "13": "absent",
+        "14": "present",
+        "15": "present",
+        "16": "present",
+        "17": "absent",
+        "18": "absent",
+        "19": "present",
+        "20": "absent",
+        "21": "present",
+        "22": "present",
+        "23": "present",
+        "24": "class_not_taken",
+        "25": "class_not_taken",
+        "26": "present",
+        "27": "present",
+        "28": "present",
+        "29": "present",
+        "30": "present",
+        "31": "present"
+      },
+      "summary": {
+        "total_classes_taken": 25,
+        "present": 21,
+        "absent": 4,
+        "class_not_taken": 2
+      }
     };
+
+    // Simulate API delay
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {
+        // Map the attendance data to the desired type
+        _attendanceData = (apiResponse["attendance"] as Map<String, dynamic>)
+            .map<int, String>(
+                (key, value) => MapEntry(int.parse(key), value as String));
+
+        // Convert summary data safely
+        _summaryData = Map<String, int>.from(apiResponse["summary"] as Map);
+      });
+    });
+  }
+
+  void _prevMonth() {
+    setState(() {
+      if (_selectedDate.month == 1) {
+        _selectedDate = DateTime(
+            _selectedDate.year - 1, 12); // Go to December of the previous year
+      } else {
+        _selectedDate = DateTime(_selectedDate.year, _selectedDate.month - 1);
+      }
+      _fetchAttendanceData();
+    });
+  }
+
+  void _nextMonth() {
+    setState(() {
+      if (_selectedDate.month == 12) {
+        _selectedDate = DateTime(
+            _selectedDate.year + 1, 1); // Go to January of the next year
+      } else {
+        _selectedDate = DateTime(_selectedDate.year, _selectedDate.month + 1);
+      }
+      _fetchAttendanceData();
+    });
+  }
+
+  String getMonthName(int month) {
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ];
+    return months[month - 1];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Attendance")),
-      body: Column(
-        children: [
-          TableCalendar(
-            firstDay: DateTime(2020, 1, 1),
-            lastDay: DateTime(2030, 1, 1),
-            focusedDay: selectedDate,
-            calendarBuilders: CalendarBuilders(
-              defaultBuilder: (context, date, _) {
-                String? status = attendanceData[date];
-                Color color;
-                switch (status) {
-                  case "present":
-                    color = Colors.green;
-                    break;
-                  case "absent":
-                    color = Colors.red;
-                    break;
-                  case "not_taken":
-                    color = Colors.grey;
-                    break;
-                  default:
-                    color = Colors.transparent;
-                }
-                return Container(
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${date.day}',
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Row(
             children: [
-              attendanceInfo("Total classes taken", "25", Colors.orange),
-              attendanceInfo("Present", "21", Colors.green),
-              attendanceInfo("Absent", "4", Colors.red),
-              attendanceInfo("Class not taken", "2", Colors.grey),
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 5),
+              const Text(
+                'Attendance',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 24,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ],
           ),
-          const Spacer(),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-            ),
-            child: const Text("Send Approval"),
-          ),
-        ],
+        ),
+        toolbarHeight: 70,
       ),
-    );
-  }
+      backgroundColor: Colors.grey.shade300,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Calendar Section
+              Container(
+                width: 386,
+                height: 450,
+                decoration: BoxDecoration(
+                  image: const DecorationImage(
+                    image: AssetImage('assets/whitebg@4x.png'),
+                    fit: BoxFit.cover,
+                  ),
+                  borderRadius: BorderRadius.circular(40),
+                ),
+                child: Column(
+                  children: [
+                    // Calendar Header
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.arrow_left),
+                            onPressed: _prevMonth,
+                          ),
+                          Text(
+                            _monthYearString,
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.arrow_right),
+                            onPressed: _nextMonth,
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Day Headers
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: weekdays
+                            .map((day) => Text(
+                                  day,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                    // Calendar Dates
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 7,
+                          childAspectRatio: 1.0,
+                        ),
+                        itemCount: _startingWeekday + _daysInMonth,
+                        itemBuilder: (context, index) {
+                          if (index < _startingWeekday) {
+                            return const SizedBox.shrink();
+                          }
+                          int date = _dates[index - _startingWeekday];
+                          String? attendanceStatus = _attendanceData[date];
+                          Color statusColor = attendanceStatus == "present"
+                              ? Colors.green
+                              : attendanceStatus == "absent"
+                                  ? Colors.red
+                                  : attendanceStatus == "class_not_taken"
+                                      ? Colors.grey
+                                      : Colors.transparent;
 
-  Widget attendanceInfo(String label, String count, Color color) {
-    return Column(
-      children: [
-        Text(
-          count,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedDate = DateTime(_selectedDate.year,
+                                    _selectedDate.month, date);
+                              });
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(4),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: _selectedDate.day == date
+                                        ? Colors.blueAccent
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    '$date',
+                                    style: TextStyle(
+                                      color: _selectedDate.day == date
+                                          ? Colors.white
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                                if (attendanceStatus != null)
+                                  CircleAvatar(
+                                    radius: 5,
+                                    backgroundColor: statusColor,
+                                  ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Attendance Summary
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Summary",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        Text(
+                            "Total Classes: ${_summaryData['total_classes_taken'] ?? 0}"),
+                        Text("Present: ${_summaryData['present'] ?? 0}"),
+                        Text("Absent: ${_summaryData['absent'] ?? 0}"),
+                        Text(
+                            "Class Not Taken: ${_summaryData['class_not_taken'] ?? 0}"),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Send Approval Text Button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Handle button press
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Approval Text Sent!"),
+                      ),
+                    );
+                  },
+                  child: const Text("Send Approval Text"),
+                ),
+              ),
+            ],
+          ),
         ),
-        Text(
-          label,
-          style: TextStyle(fontSize: 16, color: color),
-        ),
-      ],
+      ),
     );
   }
 }
