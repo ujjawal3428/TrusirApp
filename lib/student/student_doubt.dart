@@ -89,7 +89,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userID');
-    final url = Uri.parse('$baseUrl/api/add-parents-doubts/$userId');
+    final url = Uri.parse('$baseUrl/api/add-student-doubts/$userId');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
 
