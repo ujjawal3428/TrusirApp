@@ -62,10 +62,34 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   }
 
   Future<void> submitForm(BuildContext context) async {
+    // Fetch the entered data
+    formData.title = _titleController.text.trim();
+    formData.course = _courseController.text.trim();
+
+    // Validation: Check if any field is empty
+    if (formData.title == null || formData.title!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Title cannot be empty!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    if (formData.course == null || formData.course!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Description cannot be empty!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userID');
-    print(userId);
-    final url = Uri.parse('$baseUrl/api/add-student-doubts/$userId');
+    final url = Uri.parse('$baseUrl/api/add-parents-doubts/$userId');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
 

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -10,16 +9,15 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/notificationhelper.dart';
-import 'package:trusir/student/student_doubt.dart';
 
-class YourDoubtPage extends StatefulWidget {
-  const YourDoubtPage({super.key});
+class ParentsDoubtsPage extends StatefulWidget {
+  const ParentsDoubtsPage({super.key});
 
   @override
-  State<YourDoubtPage> createState() => _YourDoubtPageState();
+  State<ParentsDoubtsPage> createState() => _ParentsDoubtsPageState();
 }
 
-class _YourDoubtPageState extends State<YourDoubtPage> {
+class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
   late Future<List<Doubt>> doubts;
   bool isDownloading = false;
   String downloadProgress = '';
@@ -35,7 +33,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
 
   Future<void> _loadDownloadedFiles() async {
     final prefs = await SharedPreferences.getInstance();
-    final savedFiles = prefs.getString('downloadedDoubts') ?? '{}';
+    final savedFiles = prefs.getString('downloadedParentsDoubts') ?? '{}';
     setState(() {
       downloadedFiles = Map<String, String>.from(jsonDecode(savedFiles));
     });
@@ -43,7 +41,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
 
   Future<void> _saveDownloadedFiles() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('downloadedDoubts', jsonEncode(downloadedFiles));
+    prefs.setString('downloadedParentsDoubts', jsonEncode(downloadedFiles));
   }
 
   Future<void> _requestNotificationPermission() async {
@@ -143,7 +141,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
 
     final response = await http.get(
       Uri.parse(
-          'https://balvikasyojana.com:8899/api/view-doubts/$userID/student'), // Replace with your API endpoint
+          'https://balvikasyojana.com:8899/api/view-doubts/$userID/parent'), // Replace with your API endpoint
     );
 
     if (response.statusCode == 200) {
@@ -177,7 +175,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                       ),
                       const SizedBox(width: 22),
                       const Text(
-                        'Your Doubts',
+                        'Parents Doubts',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -275,51 +273,6 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
               ),
             ],
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              color: Colors.white,
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => StudentDoubtScreen()));
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF045C19),
-                          Color(0xFF77D317),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Create Doubt',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontFamily: 'Poppins',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -347,7 +300,7 @@ class Doubt {
     return Doubt(
       id: json['id'],
       title: json['title'],
-      course: json['course'],
+      course: json['description'],
       image: json['image'],
       createdAt:
           DateTime.parse(json['created_at']).toIso8601String().split('T')[0],

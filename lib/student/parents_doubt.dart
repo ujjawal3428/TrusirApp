@@ -23,14 +23,39 @@ class ParentsDoubtScreen extends StatefulWidget {
   const ParentsDoubtScreen({super.key});
 
   @override
-  State<ParentsDoubtScreen> createState() => _MyAppState();
+  State<ParentsDoubtScreen> createState() => ParentsDoubtScreenState();
 }
 
-class _MyAppState extends State<ParentsDoubtScreen> {
+class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   final ParentsDoubt formData = ParentsDoubt();
   Future<void> submitForm(BuildContext context) async {
+    // Fetch the entered data
+    formData.title = titleController.text.trim();
+    formData.description = descriptionController.text.trim();
+
+    // Validation: Check if any field is empty
+    if (formData.title == null || formData.title!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Title cannot be empty!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    if (formData.description == null || formData.description!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Description cannot be empty!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userID');
     final url = Uri.parse('$baseUrl/api/add-parents-doubts/$userId');

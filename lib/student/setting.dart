@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/common/contactus.dart';
 import 'package:trusir/student/editprofilescreen.dart';
-import 'package:trusir/student/parents_doubts.dart';
+import 'package:trusir/common/parents_doubts.dart';
 import 'package:trusir/common/terms_and_conditions.dart';
 import 'package:trusir/common/about_us.dart';
 import 'package:trusir/student/your_doubt.dart';
