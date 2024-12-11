@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -234,7 +233,10 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Course: ${doubt.course}'),
-                          Text('Created at: ${doubt.createdAt.toLocal()}'),
+                          Text(
+                            'Status: ${doubt.status}',
+                          ),
+                          Text('Posted on: ${doubt.createdAt.toLocal()}'),
                         ],
                       ),
                       trailing: Column(
@@ -303,6 +305,7 @@ class Doubt {
   final String course;
   final String image;
   final DateTime createdAt;
+  final String status;
 
   Doubt({
     required this.id,
@@ -310,6 +313,7 @@ class Doubt {
     required this.course,
     required this.image,
     required this.createdAt,
+    required this.status,
   });
 
   factory Doubt.fromJson(Map<String, dynamic> json) {
@@ -319,6 +323,7 @@ class Doubt {
       course: json['course'],
       image: json['image'],
       createdAt: DateTime.parse(json['created_at']),
+      status: json['status'] ?? 'N/A',
     );
   }
 }

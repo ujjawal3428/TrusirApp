@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:trusir/enquiry.dart';
+import 'package:trusir/common/enquiry.dart';
 import 'package:trusir/common/login_splash_screen.dart';
 
 class OTPScreen extends StatefulWidget {

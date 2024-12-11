@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trusir/Add_Notice.dart';
+import 'package:trusir/teacher/add_Notice.dart';
 import 'package:trusir/common/api.dart';
 
 class Notice {
