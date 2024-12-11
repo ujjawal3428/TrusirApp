@@ -237,7 +237,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                           Text(
                             'Status: ${doubt.status}',
                           ),
-                          Text('Posted on: ${doubt.createdAt.toLocal()}'),
+                          Text('Posted on: ${doubt.createdAt}'),
                         ],
                       ),
                       trailing: Column(
@@ -305,7 +305,7 @@ class Doubt {
   final String title;
   final String course;
   final String image;
-  final DateTime createdAt;
+  final String createdAt;
   final String status;
 
   Doubt({
@@ -323,7 +323,8 @@ class Doubt {
       title: json['title'],
       course: json['course'],
       image: json['image'],
-      createdAt: DateTime.parse(json['created_at']),
+      createdAt:
+          DateTime.parse(json['created_at']).toIso8601String().split('T')[0],
       status: json['status'] ?? 'N/A',
     );
   }
