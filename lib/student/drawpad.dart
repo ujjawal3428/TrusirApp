@@ -124,7 +124,7 @@ class DrawPadState extends State<DrawPad> {
               decoration: BoxDecoration(
                 color: Colors.grey[50],
                 border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: GestureDetector(
                 onPanUpdate: (details) {
@@ -176,7 +176,7 @@ void showDrawPad(BuildContext context) {
     builder: (context) {
       return Dialog(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
