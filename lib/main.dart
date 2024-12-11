@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:trusir/app_localization.dart';
-import 'package:trusir/login_page.dart';
-import 'package:trusir/main_screen.dart';
-import 'package:trusir/teacher_main_screen.dart';
+// import 'package:trusir/common/app_localization.dart';
+import 'package:trusir/common/login_page.dart';
+import 'package:trusir/student/main_screen.dart';
+import 'package:trusir/teacher/teacher_main_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:trusir/notificationhelper.dart';
+import 'package:trusir/common/notificationhelper.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
