@@ -628,7 +628,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 ],
               ),
               const SizedBox(height: 10),
-              _buildTimeSlotField(),
+              TimeSlotField(formData: formData),
               const SizedBox(height: 10),
 
               // Terms and Conditions Checkbox
@@ -801,12 +801,10 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: Colors.grey),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade200,
-            blurRadius: 4,
-            spreadRadius: 2,
-          ),
+              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
         ],
       ),
       child: DropdownButtonFormField<String>(
@@ -814,24 +812,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: hintText,
-          floatingLabelBehavior: FloatingLabelBehavior.auto,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(22),
-            borderSide: const BorderSide(color: Colors.grey),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(22),
-            borderSide: const BorderSide(color: Colors.grey),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(22),
-            borderSide: const BorderSide(color: Colors.grey),
-          ),
-
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
-          // Controls the gap for the floating label
-          isDense: true,
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
         ),
         items: items
             .map((item) => DropdownMenuItem(
@@ -893,86 +875,148 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
 
   Widget _buildFileUploadField(String placeholder,
       {required String path, double width = 200, required displayPath}) {
-    return Container(
-      height: 58,
-      width: width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
-        ],
+    return GestureDetector(
+      onTap: () {
+        handleImageSelection(path);
+      },
+      child: Container(
+        height: 58,
+        width: width,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: Colors.grey),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: displayPath == null
+                  ? Text(placeholder,
+                      style: const TextStyle(color: Colors.grey))
+                  : Image.network(
+                      displayPath,
+                      fit: BoxFit.fill,
+                    ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.upload_file),
+              onPressed: () {
+                handleImageSelection(path);
+              },
+            ),
+          ],
+        ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: displayPath == null
-                ? Text(placeholder, style: const TextStyle(color: Colors.grey))
-                : Image.network(
-                    displayPath,
-                    fit: BoxFit.fill,
-                  ),
+    );
+  }
+}
+
+class TimeSlotField extends StatefulWidget {
+  final TeacherRegistrationData
+      formData; // Assuming you have a FormData class with timeslot field
+
+  const TimeSlotField({super.key, required this.formData});
+
+  @override
+  TimeSlotFieldState createState() => TimeSlotFieldState();
+}
+
+class TimeSlotFieldState extends State<TimeSlotField> {
+  final List<String> morningSlots = ['8-9 AM', '9-10 AM'];
+  final List<String> afternoonSlots = ['2-3 PM'];
+  final List<String> eveningSlots = ['5-6 PM'];
+
+  final Set<String> selectedSlots = {};
+
+  void toggleSelection(String slot) {
+    setState(() {
+      if (selectedSlots.contains(slot)) {
+        selectedSlots.remove(slot);
+      } else {
+        selectedSlots.add(slot);
+      }
+      // Update the timeslot in the formData
+      widget.formData.timeslot = selectedSlots.join(", ");
+    });
+  }
+
+  Widget buildSlot(String slot) {
+    return GestureDetector(
+      onTap: () => toggleSelection(slot),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4.0),
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: selectedSlots.contains(slot)
+              ? Colors.grey[400]
+              : Colors.grey[200],
+          borderRadius: BorderRadius.circular(8.0),
+          border: Border.all(color: Colors.grey),
+        ),
+        child: Center(
+          child: Text(
+            slot,
+            style: TextStyle(
+              color: selectedSlots.contains(slot) ? Colors.white : Colors.black,
+              fontSize: 16.0,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          IconButton(
-            onPressed: () {
-              handleImageSelection(path);
-            },
-            icon: const Icon(Icons.upload_file),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget _buildTimeSlotField() {
-    final List<String> timeSlots = [
-      "06:00 AM - 07:00 AM",
-      "07:00 AM - 08:00 AM",
-      "08:00 AM - 09:00 AM",
-      "09:00 AM - 10:00 AM",
-      "10:00 AM - 11:00 AM",
-      "11:00 AM - 12:00 PM",
-      "12:00 PM - 01:00 PM",
-      "01:00 PM - 02:00 PM",
-      "02:00 PM - 03:00 PM",
-      "03:00 PM - 04:00 PM",
-      "04:00 PM - 05:00 PM",
-      "05:00 PM - 06:00 PM",
-      "06:00 PM - 07:00 PM",
-      "08:00 PM - 09:00 PM",
-      "09:00 PM - 10:00 PM",
-    ];
-
-    return Wrap(
-      direction: Axis.horizontal,
-      spacing: 10,
-      runSpacing: 10,
-      children: timeSlots.map((slot) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Checkbox(
-              value: selectedSlots.contains(slot),
-              onChanged: (value) {
-                setState(() {
-                  if (value ?? false) {
-                    selectedSlots.add(slot); // Add the selected slot
-                  } else {
-                    selectedSlots.remove(slot); // Remove the deselected slot
-                  }
-                  // Update the comma-separated string of selected slots
-                  formData.timeslot = selectedSlots.join(", ");
-                });
-              },
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.grey[50],
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Hours of Availability',
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
             ),
-            Text(slot),
-          ],
-        );
-      }).toList(),
+          ),
+          const SizedBox(height: 16.0),
+          const Text(
+            'Morning Hours',
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8.0),
+          Column(
+            children: morningSlots.map(buildSlot).toList(),
+          ),
+          const SizedBox(height: 16.0),
+          const Text(
+            'Afternoon Hours',
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8.0),
+          Column(
+            children: afternoonSlots.map(buildSlot).toList(),
+          ),
+          const SizedBox(height: 16.0),
+          const Text(
+            'Evening Hours',
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8.0),
+          Column(
+            children: eveningSlots.map(buildSlot).toList(),
+          ),
+        ],
+      ),
     );
   }
 }

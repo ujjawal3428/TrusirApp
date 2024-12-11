@@ -116,9 +116,16 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   // List to store selected slot strings for each student form
   final List<String> selectedSlotsString = [];
 
-  void updateSelectedSlots(int index) {
+  void updateSelectedSlots(int index, Set<String> slots) {
     setState(() {
-      selectedSlotsString[index] = selectedSlots[index].join(", ");
+      // Ensure the lists are large enough
+      if (selectedSlots.length <= index) {
+        selectedSlots.add({});
+        selectedSlotsString.add('');
+      }
+
+      selectedSlots[index] = slots;
+      selectedSlotsString[index] = slots.join(", ");
       studentForms[index].timeslot =
           selectedSlotsString[index]; // Assuming this field exists
     });
@@ -200,6 +207,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 
       if (response.statusCode == 201) {
         print('Data posted successfully: ${response.body}');
+        print(payload);
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -680,34 +688,59 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ),
         const Text('Time Slot:'),
         const SizedBox(height: 10),
-        _buildTimeSlotField(index), // Pass index to handle each form's state
+        TimeSlotField(
+          index: index,
+          morningSlots: const ['8-9 AM', '9-10 AM'],
+          afternoonSlots: const ['2-3 PM'],
+          eveningSlots: const ['5-6 PM'],
+          onUpdate: updateSelectedSlots,
+        ),
+        // Pass index to handle each form's state
         const SizedBox(height: 10),
         // Add more fields as needed
       ],
     );
   }
 
-  Widget _buildTextField(String hintText,
-      {double height = 58, required ValueChanged<String> onChanged}) {
+  Widget _buildTextField(
+    String hintText, {
+    double height = 58,
+    required ValueChanged<String> onChanged,
+  }) {
     return Container(
       height: height,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
         ],
       ),
       child: TextField(
         onChanged: onChanged,
         decoration: InputDecoration(
-          label: Text(hintText),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: 16, vertical: height == 126 ? 50 : 17),
+          isDense: true,
         ),
       ),
     );
@@ -722,7 +755,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
         boxShadow: [
           BoxShadow(
               color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
@@ -731,15 +763,25 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       child: TextField(
         controller: _phoneController,
         keyboardType: TextInputType.phone,
-        maxLength: 10,
         enabled: widget.enablephonefield,
         decoration: InputDecoration(
-          label: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(hintText)),
-          border: InputBorder.none,
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+          isDense: true,
         ),
       ),
     );
@@ -764,11 +806,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ],
       ),
       child: DropdownButtonFormField<String>(
-        
         value: selectedValue,
         onChanged: onChanged,
         decoration: InputDecoration(
-          
           labelText: hintText,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -792,30 +832,41 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     return Container(
       height: 58,
       width: 184,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
         ],
       ),
-      child: InkWell(
+      child: TextField(
+        readOnly: true, // Ensures the field is not editable
         onTap: onTap,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                child: Text(value ?? hintText),
-              ),
-            ),
-            Icon(icon),
-          ],
+        decoration: InputDecoration(
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+          suffixIcon: Icon(icon),
+          isDense: true,
         ),
+        controller: TextEditingController(text: value ?? ''),
       ),
     );
   }
@@ -826,7 +877,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       double width = 200,
       required displayPath}) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         handleImageSelection(index, path);
       },
       child: Container(
@@ -847,79 +898,63 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: displayPath == null
-                  ? Text(placeholder, style: const TextStyle(color: Colors.grey))
+                  ? Text(placeholder,
+                      style: const TextStyle(color: Colors.grey))
                   : Image.network(
                       displayPath,
                       fit: BoxFit.fill,
                     ),
             ),
             IconButton(
-              
-              icon: const Icon(Icons.upload_file), onPressed: () {  },
+              icon: const Icon(Icons.upload_file),
+              onPressed: () {
+                handleImageSelection(index, path);
+              },
             ),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildTimeSlotField(int index) {
-   
-    if (selectedSlots.length <= index) {
-      selectedSlots.add({});
-      selectedSlotsString.add(""); 
-    }
-
-    return Wrap(
-      spacing: 10,
-      runSpacing: 10,
-      children: timeSlots.map((slot) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Checkbox(
-              value: selectedSlots[index].contains(slot),
-              onChanged: (value) {
-                setState(() {
-                  if (value ?? false) {
-                    selectedSlots[index].add(slot);
-                  } else {
-                    selectedSlots[index].remove(slot);
-                  }
-             
-                  updateSelectedSlots(index);
-                });
-              },
-            ),
-            Text(slot),
-          ],
-        );
-      }).toList(),
-    );
-  }
 }
-
 
 class TimeSlotField extends StatefulWidget {
-  const TimeSlotField({Key? key}) : super(key: key);
+  final int index;
+  final List<String> morningSlots;
+  final List<String> afternoonSlots;
+  final List<String> eveningSlots;
+  final void Function(int index, Set<String> selectedSlots) onUpdate;
+
+  const TimeSlotField({
+    super.key,
+    required this.index,
+    required this.morningSlots,
+    required this.afternoonSlots,
+    required this.eveningSlots,
+    required this.onUpdate,
+  });
 
   @override
-  _TimeSlotFieldState createState() => _TimeSlotFieldState();
+  TimeSlotFieldState createState() => TimeSlotFieldState();
 }
 
-class _TimeSlotFieldState extends State<TimeSlotField> {
-  final List<String> morningSlots = ['8-9 AM', '9-10 AM'];
-  final List<String> afternoonSlots = ['2-3 PM'];
-  final List<String> eveningSlots = ['5-6 PM'];
+class TimeSlotFieldState extends State<TimeSlotField> {
+  late final Set<String> selectedSlots;
 
-  final Set<String> selectedSlots = {};
+  @override
+  void initState() {
+    super.initState();
+    selectedSlots = {};
+  }
 
   void toggleSelection(String slot) {
     setState(() {
       if (selectedSlots.contains(slot)) {
         selectedSlots.remove(slot);
+        widget.onUpdate(widget.index, selectedSlots);
       } else {
         selectedSlots.add(slot);
+        widget.onUpdate(widget.index, selectedSlots);
       }
     });
   }
@@ -931,7 +966,9 @@ class _TimeSlotFieldState extends State<TimeSlotField> {
         margin: const EdgeInsets.symmetric(vertical: 4.0),
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: selectedSlots.contains(slot) ? Colors.grey[400] : Colors.grey[200],
+          color: selectedSlots.contains(slot)
+              ? Colors.grey[400]
+              : Colors.grey[200],
           borderRadius: BorderRadius.circular(8.0),
           border: Border.all(color: Colors.grey),
         ),
@@ -946,6 +983,23 @@ class _TimeSlotFieldState extends State<TimeSlotField> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildTimeSlotSection(String title, List<String> slots) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 8.0),
+        Column(
+          children: slots.map(buildSlot).toList(),
+        ),
+        const SizedBox(height: 16.0),
+      ],
     );
   }
 
@@ -965,54 +1019,9 @@ class _TimeSlotFieldState extends State<TimeSlotField> {
             ),
           ),
           const SizedBox(height: 16.0),
-          const Text(
-            'Morning Hours',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8.0),
-          Column(
-            children: morningSlots.map(buildSlot).toList(),
-          ),
-          const SizedBox(height: 16.0),
-          const Text(
-            'Afternoon Hours',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8.0),
-          Column(
-            children: afternoonSlots.map(buildSlot).toList(),
-          ),
-          const SizedBox(height: 16.0),
-          const Text(
-            'Evening Hours',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8.0),
-          Column(
-            children: eveningSlots.map(buildSlot).toList(),
-          ),
-          const SizedBox(height: 24.0),
-          ElevatedButton(
-            onPressed: () {
-              // Handle update action
-              showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
-                  title: const Text('Selected Slots'),
-                  content: Text(selectedSlots.isEmpty
-                      ? 'No slots selected.'
-                      : selectedSlots.join(', ')),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
-              );
-            },
-            child: const Text('Update'),
-          ),
+          buildTimeSlotSection('Morning Hours', widget.morningSlots),
+          buildTimeSlotSection('Afternoon Hours', widget.afternoonSlots),
+          buildTimeSlotSection('Evening Hours', widget.eveningSlots),
         ],
       ),
     );
