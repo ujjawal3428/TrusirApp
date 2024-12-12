@@ -417,7 +417,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                               offset: Offset(2, 2),
                                             )
                                           ]),
-                                      child: formData.photo != 'null'
+                                      child: formData.photo != null
                                           ? const Center(
                                               child: Text(
                                                 'File Uploaded',
