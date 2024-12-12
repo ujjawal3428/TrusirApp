@@ -24,11 +24,17 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
-        title: const Padding(
-          padding: EdgeInsets.only(left: 1.0),
+        title:  Padding(
+          padding: const EdgeInsets.only(left: 1.0),
           child: Row(
             children: [
-              Text(
+               IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: Color(0xFF48116A)),
+          onPressed: (){ Navigator.pop(context);
+          }
+        ),
+              const Text(
                 'Setting',
                 style: TextStyle(
                   color: Color(0xFF48116A),
@@ -87,27 +93,22 @@ class SettingsScreen extends StatelessWidget {
                           color: Colors.grey.shade100,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 20, top: 10, bottom: 10, right: 5),
+                        child: const Padding(
+                          padding: EdgeInsets.only(
+                              left: 20, top: 10, bottom: 10, right: 10),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
+                                Text(
                                   'Edit Profile',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
                                 ),
-                                IconButton(
-                                  icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded),
-                                  color: const Color(0xFF48116A),
-                                  onPressed: () {},
-                                ),
+                                Icon(Icons.arrow_forward_ios_rounded),
                               ],
                             ),
                           ),
@@ -175,12 +176,7 @@ class SettingsScreen extends StatelessWidget {
                                     fontSize: 16,
                                   ),
                                 ),
-                                IconButton(
-                                  icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded),
-                                  color: const Color(0xFF48116A),
-                                  onPressed: () {},
-                                ),
+                                Icon(Icons.arrow_forward_ios_rounded),
                               ],
                             ),
                           ),
@@ -250,12 +246,7 @@ class SettingsScreen extends StatelessWidget {
                                     fontSize: 16,
                                   ),
                                 ),
-                                IconButton(
-                                  icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded),
-                                  color: const Color(0xFF48116A),
-                                  onPressed: () {},
-                                ),
+                                Icon(Icons.arrow_forward_ios_rounded),
                               ],
                             ),
                           ),
@@ -323,12 +314,7 @@ class SettingsScreen extends StatelessWidget {
                                     fontSize: 16,
                                   ),
                                 ),
-                                IconButton(
-                                  icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded),
-                                  color: const Color(0xFF48116A),
-                                  onPressed: () {},
-                                ),
+                               Icon(Icons.arrow_forward_ios_rounded),
                               ],
                             ),
                           ),
@@ -396,12 +382,7 @@ class SettingsScreen extends StatelessWidget {
                                     fontSize: 16,
                                   ),
                                 ),
-                                IconButton(
-                                  icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded),
-                                  color: const Color(0xFF48116A),
-                                  onPressed: () {},
-                                ),
+                                Icon(Icons.arrow_forward_ios_rounded),
                               ],
                             ),
                           ),
@@ -470,12 +451,7 @@ class SettingsScreen extends StatelessWidget {
                                     fontSize: 16,
                                   ),
                                 ),
-                                IconButton(
-                                  icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded),
-                                  color: const Color(0xFF48116A),
-                                  onPressed: () {},
-                                ),
+                               Icon(Icons.arrow_forward_ios_rounded),
                               ],
                             ),
                           ),

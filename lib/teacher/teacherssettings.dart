@@ -3,6 +3,7 @@ import 'package:trusir/common/contactus.dart';
 import 'package:trusir/teacher/teacher_edit_profile.dart';
 import 'package:trusir/common/terms_and_conditions.dart';
 import 'package:trusir/common/about_us.dart';
+import 'package:trusir/teacher/teacher_facilities.dart';
 
 class Teacherssettings extends StatelessWidget {
   const Teacherssettings({super.key});
@@ -14,11 +15,24 @@ class Teacherssettings extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
-        title: const Padding(
-          padding: EdgeInsets.only(left: 1.0),
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 1.0),
           child: Row(
             children: [
-              Text(
+              IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: Color(0xFF48116A)),
+          onPressed: () { 
+             Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const TeacherFacilities(),
+                                    ),
+                                  );
+  }),
+              const Text(
                 'Setting',
                 style: TextStyle(
                   color: Color(0xFF48116A),
@@ -61,43 +75,46 @@ class Teacherssettings extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Flexible(
-                    child: Container(
-                      height: 55,
-                      width: 306,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, top: 10, bottom: 10, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Edit Profile',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.arrow_forward_ios_rounded),
-                                color: const Color(0xFF48116A),
-                                onPressed: () {
-                                  Navigator.push(
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           const TeacherEditProfileScreen(),
                                     ),
                                   );
-                                },
-                              ),
-                            ],
+                      },
+                      child: Container(
+                        height: 55,
+                        width: 306,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.only(
+                              left: 20, top: 10, bottom: 10, right: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Edit Profile',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                               
+                                       Icon(Icons.arrow_forward_ios_rounded, 
+                               color:  Color(0xFF48116A),
+                                      ),
+                               ], 
+                                 
+      
+                            ),
                           ),
                         ),
                       ),
@@ -132,42 +149,43 @@ class Teacherssettings extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Flexible(
-                    child: Container(
-                      height: 55,
-                      width: 306,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, top: 10, bottom: 10, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'About Us',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.arrow_forward_ios_rounded),
-                                color: const Color(0xFF48116A),
-                                onPressed: () {
-                                  Navigator.push(
+                    child: GestureDetector(
+                      onTap: (){
+                         Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => const AboutUsPage(),
                                     ),
                                   );
-                                },
-                              ),
-                            ],
+                      },
+                      child: Container(
+                        height: 55,
+                        width: 306,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child:const Padding(
+                          padding: EdgeInsets.only(
+                              left: 20, top: 10, bottom: 10, right: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                               Text(
+                                  'About Us',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                
+                                Icon(Icons.arrow_forward_ios_rounded, 
+                                 color:  Color(0xFF48116A),
+                                        ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -202,42 +220,43 @@ class Teacherssettings extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Flexible(
-                    child: Container(
-                      height: 55,
-                      width: 306,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, top: 10, bottom: 10, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Contact Us',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              IconButton(
-                                icon:
-                                    const Icon(Icons.arrow_forward_ios_rounded),
-                                color: const Color(0xFF48116A),
-                                onPressed: () {
-                                  Navigator.push(
+                    child: GestureDetector(
+                      onTap: (){
+                         Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => const Contactus(),
                                     ),
                                   );
-                                },
-                              ),
-                            ],
+                      },
+                      child: Container(
+                        height: 55,
+                        width: 306,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.only(
+                              left: 20, top: 10, bottom: 10, right: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                               Text(
+                                  'Contact Us',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                
+                                 Icon(Icons.arrow_forward_ios_rounded, 
+                                   color:  Color(0xFF48116A),
+                                          ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -272,46 +291,43 @@ class Teacherssettings extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Flexible(
-                    child: Container(
-                      height: 55,
-                      width: 306,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 20, top: 10, bottom: 10, right: 5),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Terms & Conditions',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: IconButton(
-                                  icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded),
-                                  color: const Color(0xFF48116A),
-                                  onPressed: () {
-                                    Navigator.push(
+                    child: GestureDetector(
+                      onTap: (){
+                         Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             const TermsAndConditionsPage(),
                                       ),
                                     );
-                                  },
+                      },
+                      child: Container(
+                        height: 55,
+                        width: 306,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.only(
+                              left: 20, top: 10, bottom: 10, right: 10),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                               Text(
+                                  'Terms & Conditions',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                Icon(Icons.arrow_forward_ios_rounded, 
+                                   color:  Color(0xFF48116A),
+                                          ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

@@ -176,18 +176,22 @@ class StudentProfileScreen extends StatelessWidget {
                             onPressed: () {
                               // Handle button press
                             },
-                            child: const Padding(
+                            child: Padding(
                               padding:
-                                  EdgeInsets.only(left: 5, bottom: 9, right: 5),
+                                  const EdgeInsets.only(left: 5, bottom: 9, right: 5),
                               child: Align(
                                 alignment: Alignment.bottomRight,
-                                child: Text(
-                                  'View Profile',
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Poppins',
+                                child: InkWell(
+                                  onTap: (){
+                                  },
+                                  child:const Text(
+                                    'View Profile',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Poppins',
+                                    ),
                                   ),
                                 ),
                               ),

@@ -257,7 +257,7 @@ class _AttendancePageState extends State<AttendancePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.grey[50],
+          backgroundColor: Colors.grey[200],
           elevation: 0,
           automaticallyImplyLeading: false,
           title: Padding(
@@ -286,155 +286,212 @@ class _AttendancePageState extends State<AttendancePage> {
                 ),
               ],
             ),
+          
           ),
           toolbarHeight: 70,
         ),
+        
         backgroundColor: Colors.grey.shade300,
-        body: Center(
-            child: SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-              // Calendar Section
-              Padding(
-                padding: const EdgeInsets.only(left: 14.0, right: 14),
-                child: Container(
-                  width: 386,
-                  height: 400,
-                  decoration: BoxDecoration(
-                    image: const DecorationImage(
-                      image: AssetImage('assets/whitebg@4x.png'),
-                      fit: BoxFit.cover,
+        body: SingleChildScrollView(
+            child: Column(
+                children: [
+          // Calendar Section
+          Padding(
+            padding: const EdgeInsets.only(top: 30, left : 14.0, right: 14),
+            child: Container(
+
+              width: 386,
+              height: 350,
+              decoration: BoxDecoration(
+              color: Colors.white70,
+                borderRadius: BorderRadius.circular(20),
+                 boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5), // Shadow color
+                  spreadRadius: 1, // Spread radius
+                  blurRadius: 8,   // Blur radius
+                  offset: const Offset(0, 3), // Only apply shadow on the bottom
+                ),
+              ],
+              ),
+              child: Column(
+                children: [
+                  // Calendar Header
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_left),
+                          onPressed: _prevMonth,
+                        ),
+                        Text(
+                          _monthYearString,
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_right),
+                          onPressed: _nextMonth,
+                        ),
+                        const SizedBox(width: 20,),
+                        const Text('Today',
+                        style: TextStyle(fontFamily: 'Poppins',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                         color: Color(0xFF48116A),),)
+                      ],
                     ),
-                    borderRadius: BorderRadius.circular(40),
                   ),
-                  child: Column(
-                    children: [
-                      // Calendar Header
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.arrow_left),
-                              onPressed: _prevMonth,
-                            ),
-                            Text(
-                              _monthYearString,
-                              style: const TextStyle(fontSize: 20),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.arrow_right),
-                              onPressed: _nextMonth,
-                            ),
-                          ],
-                        ),
+                  // Day Headers
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: weekdays
+                          .map((day) => Text(
+                                day,
+                                style: const TextStyle(
+                                  color: Color(0xFF48116A),
+                                    fontWeight: FontWeight.bold),
+                              ))
+                          .toList(),
+                    ),
+                  ),
+                  // Calendar Dates
+                  Expanded(
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 7,
+                        childAspectRatio: 1.0,
                       ),
-                      // Day Headers
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: weekdays
-                              .map((day) => Text(
-                                    day,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ))
-                              .toList(),
-                        ),
-                      ),
-                      // Calendar Dates
-                      Expanded(
-                        child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 7,
-                            childAspectRatio: 1.0,
-                          ),
-                          itemCount: _startingWeekday + _daysInMonth,
-                          itemBuilder: (context, index) {
-                            if (index < _startingWeekday) {
-                              return const SizedBox.shrink();
-                            }
-                            int day = index - _startingWeekday + 1;
-                            String status = _attendanceData[day] ?? "no_data";
-                            return GestureDetector(
-                              onTap: () {
-                                _showAttendanceDialog(day, status);
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: status == "present"
-                                      ? Colors.green
-                                      : status == "absent"
-                                          ? Colors.red
-                                          : Colors.grey[400],
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '$day',
-                                    style: TextStyle(
-                                      color: status == "no_data"
-                                          ? Colors.black
-                                          : Colors.white,
-                                    ),
-                                  ),
+                      itemCount: _startingWeekday + _daysInMonth,
+                      itemBuilder: (context, index) {
+                        if (index < _startingWeekday) {
+                          return const SizedBox.shrink();
+                        }
+                        int day = index - _startingWeekday + 1;
+                        String status = _attendanceData[day] ?? "no_data";
+                        return GestureDetector(
+                          onTap: () {
+                            _showAttendanceDialog(day, status);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: status == "present"
+                                  ? Colors.green
+                                  : status == "absent"
+                                      ? Colors.red
+                                      : Colors.grey[400],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '$day',
+                                style: TextStyle(
+                                  color: status == "no_data"
+                                      ? Colors.black
+                                      : Colors.white,
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // Attendance Summary Section
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                _buildSummaryCard('Total Classes Taken',
+                    _summaryData['total_classes_taken'], Colors.yellow),
+                _buildSummaryCard(
+                    'Present', _summaryData['present'], Colors.green),
+                _buildSummaryCard(
+                    'Absent', _summaryData['absent'], Colors.red),
+                _buildSummaryCard('Class not taken',
+                    _summaryData['class_not_taken'], Colors.grey.shade200),  
+              ],
+            ),
+          ),
+           const SizedBox(height: 50,),
+                     Padding(
+                       padding: const EdgeInsets.only(left: 10.0, right: 10),
+                       child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFF045C19), Color(0xFF77D317)],
+                                ),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                },
+                                child: const Text(
+                                  'Send Approval',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                              ),
+                            ),
+                     ),
+        ])
+        )
+        );
+  }
+
+  Widget _buildSummaryCard(
+    String title,
+    int? count,
+    Color color,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 5.0, top: 5),
+      child: Container(
+        width: 400,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: Row(
+            children: [
+              Container(
+                height: 39,
+                width: 38,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                child: Center(
+                  child: Text(
+                    ' $count',
+                    style: const TextStyle(color: Colors.black, fontSize: 20),
                   ),
                 ),
               ),
-              // Attendance Summary Section
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildSummaryCard('Total Classes Taken',
-                        _summaryData['total_classes_taken']),
-                    _buildSummaryCard('Present', _summaryData['present']),
-                    _buildSummaryCard('Absent', _summaryData['absent']),
-                    _buildSummaryCard(
-                        'Class not taken', _summaryData['class_not_taken']),
-                  ],
-                ),
+              const SizedBox(
+                width: 10,
               ),
-            ]))));
-  }
-
-  Widget _buildSummaryCard(String title, int? count) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      width: 100,
-      height: 150,
-      decoration: BoxDecoration(
-        color: const Color(0xFF48116A),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
+              Text(
+                ' $title',
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            '$count',
-            style: const TextStyle(color: Colors.white, fontSize: 20),
-          ),
-        ],
+        ),
       ),
     );
   }

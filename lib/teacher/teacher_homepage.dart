@@ -53,18 +53,18 @@ class Teacherhomepage extends StatelessWidget {
                 const Text(
                   'Welcome To Trusir',
                   style: TextStyle(
-                    fontSize: 30,
-                    height: 1.1,
+                     fontSize: 34,
+                    height: 1.0,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Poppins',
                   ),
                 ),
-                const Divider(color: Colors.black, thickness: 2, endIndent: 50),
+                const Divider(color: Colors.black, thickness: 2, endIndent: 10),
                 const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping male and female teaching service.',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 20,
                     fontFamily: 'Poppins',
                     color: Color(0xFF001241),
                     height: 1.1,

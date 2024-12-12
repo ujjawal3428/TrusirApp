@@ -63,7 +63,7 @@ class WanaLogout extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 190),
+                  const SizedBox(height: 50),
 
                   // Cancel Button
                   Center(

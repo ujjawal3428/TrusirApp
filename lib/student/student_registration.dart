@@ -896,16 +896,20 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 }
 
 class TimeSlotField extends StatefulWidget {
-  const TimeSlotField({super.key});
+  final TeacherRegistrationDataformData;
+  
+  final dynamic formData; // Assuming you have a FormData class with timeslot field
+
+  const TimeSlotField({super.key, required this.formData, this.TeacherRegistrationDataformData});
 
   @override
   TimeSlotFieldState createState() => TimeSlotFieldState();
 }
 
 class TimeSlotFieldState extends State<TimeSlotField> {
-  final List<String> morningSlots = ['8-9 AM', '9-10 AM'];
-  final List<String> afternoonSlots = ['2-3 PM'];
-  final List<String> eveningSlots = ['5-6 PM'];
+  final List<String> morningSlots = ['8-9 AM', '9-10 AM','10-11 AM','11-12 PM'];
+  final List<String> afternoonSlots = ['12-1 PM', '1-2 PM','2-3 PM','3-4 PM', '4-5PM'];
+  final List<String> eveningSlots = ['5-6 PM','6-7 PM','7-8 PM'];
 
   final Set<String> selectedSlots = {};
 
@@ -916,6 +920,8 @@ class TimeSlotFieldState extends State<TimeSlotField> {
       } else {
         selectedSlots.add(slot);
       }
+      // Update the timeslot in the formData
+      widget.formData.timeslot = selectedSlots.join(", ");
     });
   }
 
@@ -923,11 +929,11 @@ class TimeSlotFieldState extends State<TimeSlotField> {
     return GestureDetector(
       onTap: () => toggleSelection(slot),
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4.0),
-        padding: const EdgeInsets.all(16.0),
+        margin: const EdgeInsets.symmetric(horizontal: 5,vertical: 4.0),
+        padding: const EdgeInsets.all(9.0),
         decoration: BoxDecoration(
           color: selectedSlots.contains(slot)
-              ? Colors.grey[400]
+              ? const Color.fromARGB(255, 127, 0, 195)
               : Colors.grey[200],
           borderRadius: BorderRadius.circular(8.0),
           border: Border.all(color: Colors.grey),
@@ -954,11 +960,13 @@ class TimeSlotFieldState extends State<TimeSlotField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+           Text(
             'Hours of Availability',
             style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
+              fontFamily: 'Poppins',
+              fontSize: 20.0,
+              color: Colors.purple.shade900,
+              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 16.0),
@@ -967,8 +975,11 @@ class TimeSlotFieldState extends State<TimeSlotField> {
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8.0),
-          Column(
-            children: morningSlots.map(buildSlot).toList(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: morningSlots.map(buildSlot).toList(),
+            ),
           ),
           const SizedBox(height: 16.0),
           const Text(
@@ -976,8 +987,11 @@ class TimeSlotFieldState extends State<TimeSlotField> {
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8.0),
-          Column(
-            children: afternoonSlots.map(buildSlot).toList(),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: afternoonSlots.map(buildSlot).toList(),
+            ),
           ),
           const SizedBox(height: 16.0),
           const Text(
@@ -985,30 +999,11 @@ class TimeSlotFieldState extends State<TimeSlotField> {
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8.0),
-          Column(
-            children: eveningSlots.map(buildSlot).toList(),
-          ),
-          const SizedBox(height: 24.0),
-          ElevatedButton(
-            onPressed: () {
-              // Handle update action
-              showDialog(
-                context: context,
-                builder: (_) => AlertDialog(
-                  title: const Text('Selected Slots'),
-                  content: Text(selectedSlots.isEmpty
-                      ? 'No slots selected.'
-                      : selectedSlots.join(', ')),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('OK'),
-                    ),
-                  ],
-                ),
-              );
-            },
-            child: const Text('Update'),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: eveningSlots.map(buildSlot).toList(),
+            ),
           ),
         ],
       ),

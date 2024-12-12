@@ -37,6 +37,31 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   String _downloadProgress = '';
   Map<String, String> downloadedFiles = {};
 
+   final List<Color> containerColors = [
+    const Color(0xFFF5F5F5), 
+    const Color(0xFFE8F4F8), 
+    const Color.fromARGB(255, 224, 216, 203),  
+    const Color(0xFFF3E5F5),  
+    const Color(0xFFE8F5E9), 
+  ];
+
+  final List<List<Color>> circleColors = [
+    [const Color(0xFFA5D6A7), const Color(0xFFFFB74D)],  
+    [const Color(0xFF90CAF9), const Color.fromARGB(207, 244, 143, 177)],  
+    [const Color(0xFFCE93D8), const Color(0xFF80CBC4)], 
+    [const Color(0xFFFFCC80), const Color(0xFF9FA8DA)],  
+    [const Color(0xFFB39DDB), const Color(0xFF81C784)],  
+  ];
+
+  // Add this method to get colors based on index
+  Color getContainerColor(int index) {
+    return containerColors[index % containerColors.length];
+  }
+
+  List<Color> getCircleColors(int index) {
+    return circleColors[index % circleColors.length];
+  }
+
   @override
   void initState() {
     super.initState();
@@ -241,23 +266,26 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                   final reports = snapshot.data!;
                   // Store the fetched data in _loadedReports
                   _loadedReports = reports;
+                  
                   return Column(
-                    children: _loadedReports
-                        .map((report) => _buildPreviousMonthCard(
-                              subject: report['subject'],
-                              date: report['date'],
-                              time: report['time'],
-                              marks: report['marks'],
-                              reportUrl: report['report'],
-                            ))
-                        .toList(),
-                  );
+                     children: List.generate(_loadedReports.length, (index) {
+          final report = _loadedReports[index];
+          return _buildPreviousMonthCard(
+            subject: report['subject'],
+            date: report['date'],
+            time: report['time'],
+            marks: report['marks'],
+            reportUrl: report['report'],
+            cardColors: 'color',
+            index: index,
+          );
+                
                 }
-              },
+            ));}},
             ),
             TextButton(
               onPressed:
-                  _loadMoreReports, // Call the _loadMoreReports method when clicked
+                  _loadMoreReports, 
               child: const Text('Load More...'),
             ),
           ],
@@ -384,9 +412,11 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     required String time,
     required String marks,
     required String reportUrl,
+    required String cardColors, required int index,
   }) {
     String filename = '${subject}_report_$date.jpg';
     bool isDownloaded = downloadedFiles.containsKey(filename);
+     List<Color> currentCircleColors = getCircleColors(index);
 
     return Padding(
       padding: const EdgeInsets.only(left: 18.0, right: 18, top: 0, bottom: 10),
@@ -394,7 +424,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
         width: 386,
         height: 136,
         decoration: BoxDecoration(
-          color: Colors.purple.shade50,
+           color: getContainerColor(index),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Stack(
@@ -403,6 +433,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
               top: -30,
               left: -35,
               child: Image.asset(
+                 color: currentCircleColors[0],
                 'assets/circleleft.png',
                 width: 160,
                 height: 160,
@@ -412,6 +443,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
               bottom: -42,
               right: -40,
               child: Image.asset(
+                color: currentCircleColors[0],
                 'assets/circleright.png',
                 width: 160,
                 height: 160,

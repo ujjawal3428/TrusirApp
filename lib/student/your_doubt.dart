@@ -243,7 +243,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
         ),
         toolbarHeight: 70,
       ),
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey.shade200,
       body: Column(
         children: [
           SingleChildScrollView(
@@ -338,38 +338,36 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
           ),
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.all(16.0),
-            child: Center(
-              child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => StudentDoubtScreen()));
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color(0xFF045C19),
-                        Color(0xFF77D317),
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
+            padding: const EdgeInsets.only(top:12, left: 16.0, right: 16),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => StudentDoubtScreen()));
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.9,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFF045C19),
+                      Color(0xFF77D317),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  child: const Center(
-                    child: Text(
-                      'Create Doubt',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontFamily: 'Poppins',
-                      ),
+                ),
+                child: const Center(
+                  child: Text(
+                    'Create Doubt',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontFamily: 'Poppins',
                     ),
                   ),
                 ),
