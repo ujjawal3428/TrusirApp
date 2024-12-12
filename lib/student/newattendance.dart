@@ -53,8 +53,9 @@ class _AttendancePageState extends State<AttendancePage> {
           _attendanceData = (dataForMonth['attendance'] as Map<String, dynamic>)
               .map<int, String>(
                   (key, value) => MapEntry(int.parse(key), value));
+          _summaryData = (dataForMonth['summary'] as Map<String, dynamic>)
+              .map<String, int>((key, value) => MapEntry(key, value));
         });
-        _updateSummary(); // Update summary after fetching data
       } else {
         print('No data available for month: $month, year: $year');
       }
@@ -78,10 +79,10 @@ class _AttendancePageState extends State<AttendancePage> {
 
   Future<void> _submitAttendance(
       {required int day, required String status}) async {
-    final url = Uri.parse('https://trusirapi.onrender.com/attendance/update');
+    final url = Uri.parse('https://trusirapi.onrender.com/attendance');
     final payload = {
       "year": _selectedDate.year.toString(),
-      "month": _selectedDate.month.toString(),
+      "month": _selectedDate.month.toString().padLeft(2, '0'),
       "date": day.toString().padLeft(2, '0'),
       "status": status,
     };
@@ -96,7 +97,6 @@ class _AttendancePageState extends State<AttendancePage> {
       if (response.statusCode == 200) {
         setState(() {
           _attendanceData[day] = status;
-          _updateSummary(); // Update summary after submitting data
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Attendance updated successfully!")),
@@ -137,33 +137,6 @@ class _AttendancePageState extends State<AttendancePage> {
     });
   }
 
-  void _updateSummary() {
-    int totalClassesTaken = 0;
-    int presentCount = 0;
-    int absentCount = 0;
-    int classNotTakenCount = 0;
-
-    _attendanceData.forEach((_, status) {
-      totalClassesTaken++;
-      if (status == 'present') {
-        presentCount++;
-      } else if (status == 'absent') {
-        absentCount++;
-      } else if (status == 'class_not_taken') {
-        classNotTakenCount++;
-      }
-    });
-
-    setState(() {
-      _summaryData = {
-        'total_classes_taken': totalClassesTaken,
-        'present': presentCount,
-        'absent': absentCount,
-        'class_not_taken': classNotTakenCount,
-      };
-    });
-  }
-
   String getMonthName(int month) {
     const months = [
       "January",
@@ -182,8 +155,8 @@ class _AttendancePageState extends State<AttendancePage> {
     return months[month - 1];
   }
 
-  void _showAttendanceDialog(int day, String status) {
-    String selectedStatus = status; // Default value
+  void _showAttendanceDialog(int day) {
+    String selectedStatus = "present"; // Default value
 
     showDialog(
       context: context,
@@ -203,7 +176,7 @@ class _AttendancePageState extends State<AttendancePage> {
                     selectedStatus = value!;
                   });
                   Navigator.of(context).pop();
-                  _showAttendanceDialog(day, "present"); // Refresh dialog
+                  _showAttendanceDialog(day); // Refresh dialog
                 },
               ),
               RadioListTile<String>(
@@ -215,7 +188,7 @@ class _AttendancePageState extends State<AttendancePage> {
                     selectedStatus = value!;
                   });
                   Navigator.of(context).pop();
-                  _showAttendanceDialog(day, "absent"); // Refresh dialog
+                  _showAttendanceDialog(day); // Refresh dialog
                 },
               ),
               RadioListTile<String>(
@@ -227,8 +200,7 @@ class _AttendancePageState extends State<AttendancePage> {
                     selectedStatus = value!;
                   });
                   Navigator.of(context).pop();
-                  _showAttendanceDialog(
-                      day, "class_not_taken"); // Refresh dialog
+                  _showAttendanceDialog(day); // Refresh dialog
                 },
               ),
             ],
@@ -363,7 +335,7 @@ class _AttendancePageState extends State<AttendancePage> {
                             String status = _attendanceData[day] ?? "no_data";
                             return GestureDetector(
                               onTap: () {
-                                _showAttendanceDialog(day, status);
+                                _showAttendanceDialog(day);
                               },
                               child: Container(
                                 margin: const EdgeInsets.all(4),
