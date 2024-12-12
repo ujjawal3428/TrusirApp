@@ -21,9 +21,9 @@ class TestSeriesScreen extends StatefulWidget {
 
 class _TestSeriesScreenState extends State<TestSeriesScreen> {
   List<dynamic> testSeriesList = [];
-  bool _isDownloading = false;
+  final bool _isDownloading = false;
   bool hasData = true;
-  String _downloadProgress = '';
+  final String _downloadProgress = '';
   final url = "$baseUrl/api/test-series";
 
   // Map to store downloaded file paths for questions and answers
@@ -118,39 +118,26 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   Future<void> _downloadFile(String url, String filename) async {
     setState(() {
       _requestPermissions();
-      _isDownloading = true;
-      _downloadProgress = '0%';
     });
 
     try {
-      final filePath = await _getAppSpecificDownloadPath(filename);
+      // Infer file extension from the URL or content type
+      String fileExtension = _getFileExtensionFromUrl(url);
+      String finalFilename = '$filename$fileExtension';
+
+      final filePath = await _getAppSpecificDownloadPath(finalFilename);
 
       final dio = Dio();
-      await dio.download(
-        url,
-        filePath,
-        onReceiveProgress: (received, total) {
-          if (total != -1) {
-            setState(() {
-              _downloadProgress =
-                  '${(received / total * 100).toStringAsFixed(0)}%';
-            });
-          }
-        },
-      );
+      await dio.download(url, filePath);
 
       setState(() {
+        downloadedFiles[finalFilename] = filePath;
         downloadedFiles[filename] = filePath;
-        _isDownloading = false;
-        _downloadProgress = '';
       });
       await _saveDownloadedFiles();
-      showDownloadNotification(filename, filePath);
+      showDownloadNotification(finalFilename, filePath);
     } catch (e) {
-      setState(() {
-        _isDownloading = false;
-        _downloadProgress = '';
-      });
+      setState(() {});
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -159,6 +146,21 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         ),
       );
     }
+  }
+
+// Function to infer file extension from the URL
+  String _getFileExtensionFromUrl(String url) {
+    final extension = url.split('.').last;
+    if (extension == 'pdf') {
+      return '.pdf';
+    } else if (extension == 'docx') {
+      return '.docx';
+    } else if (extension == 'jpg' || extension == 'jpeg') {
+      return '.jpg';
+    } else if (extension == 'png') {
+      return '.png';
+    }
+    return ''; // Default, in case we can't determine the extension
   }
 
   Future<void> _openFile(String filename) async {
@@ -287,9 +289,9 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
                                 // Calculate filenames for questions and answers
                                 String questionFilename =
-                                    'question_${test['test_name']}.jpg';
+                                    'question_${test['test_name']}';
                                 String answerFilename =
-                                    'answer_${test['test_name']}.jpg';
+                                    'answer_${test['test_name']}';
 
                                 // Check if the files are downloaded
                                 bool isQuestionDownloaded = downloadedFiles

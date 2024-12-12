@@ -1,6 +1,6 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:trusir/common/api.dart';
@@ -25,13 +25,13 @@ class _AddtestseriesState extends State<Addtestseries> {
     return prefs.getString('userID'); // Retrieve 'userID' from storage
   }
 
-  Future<String> uploadImage(XFile imageFile) async {
+  Future<String> uploadFile(String filePath, String fileType) async {
     final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri);
+    final request = http.MultipartRequest('POST', uri); // Correct HTTP method
 
-    // Add the image file to the request
-    request.files
-        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
+    // Add the file to the request with the correct field name
+    request.files.add(await http.MultipartFile.fromPath(
+        'photo', filePath)); // Field name is 'photo'
 
     // Send the request
     final response = await request.send();
@@ -48,45 +48,70 @@ class _AddtestseriesState extends State<Addtestseries> {
         return 'null';
       }
     } else {
-      print('Failed to upload image: ${response.statusCode}');
+      print('Failed to upload file: ${response.statusCode}');
       return 'null';
     }
   }
 
-  Future<void> handleImageSelection(String? path, bool quest) async {
+  Future<String?> handleFileSelection(BuildContext context) async {
     try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile =
-          await picker.pickImage(source: ImageSource.gallery);
+      // Use FilePicker to select a file
+      final result = await FilePicker.platform.pickFiles();
 
-      if (pickedFile != null) {
-        // Upload the image and get the path
-        final uploadedPath = await uploadImage(pickedFile);
+      if (result != null && result.files.single.path != null) {
+        final filePath = result.files.single.path!;
+        final fileName = result.files.single.name;
+
+        // Determine file type (use "document" for docx/pdf, "photo" for images)
+        final fileType = fileName.endsWith('.jpg') ||
+                fileName.endsWith('.jpeg') ||
+                fileName.endsWith('.png')
+            ? 'photo'
+            : 'document';
+
+        // Upload the file and get the path
+        final uploadedPath = await uploadFile(filePath, fileType);
+
         if (uploadedPath != 'null') {
-          setState(() {
-            // Example: Update the first student's photo path
-            if (quest) {
-              question = uploadedPath;
-            } else {
-              answer = uploadedPath;
-            }
-            //)
-          });
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Image Uploaded Successfully!'),
+              content: Text('File Uploaded Successfully!'),
               duration: Duration(seconds: 1),
             ),
           );
-          print('Image uploaded successfully: $uploadedPath');
+          print('File uploaded successfully: $uploadedPath');
+          return uploadedPath;
         } else {
-          print('Failed to upload the image.');
+          print('Failed to upload the file.');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Failed to upload the file.(Only upload pdf, docx and image)'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+          return null;
         }
       } else {
-        print('No image selected.');
+        print('No file selected.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No file selected'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        return null;
       }
     } catch (e) {
-      print('Error during image selection: $e');
+      print('Error during file selection: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Failed to Upload file.(Only upload pdf, docx and image)'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return null;
     }
   }
 
@@ -255,8 +280,9 @@ class _AddtestseriesState extends State<Addtestseries> {
                           width: 150,
                           child: ElevatedButton.icon(
                             onPressed: () {
-                              handleImageSelection(question,
-                                  true); // Here, implement the file picker logic for questions
+                              setState(() async {
+                                question = await handleFileSelection(context);
+                              }); // Here, implement the file picker logic for questions
                             },
                             icon: const Icon(Icons.upload_file),
                             label: const Text(
@@ -272,7 +298,9 @@ class _AddtestseriesState extends State<Addtestseries> {
                           width: 150,
                           child: ElevatedButton.icon(
                             onPressed: () {
-                              handleImageSelection(answer, false);
+                              setState(() async {
+                                answer = await handleFileSelection(context);
+                              });
                             },
                             icon: const Icon(Icons.upload_file),
                             label: const Text(

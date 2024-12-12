@@ -24,6 +24,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
   bool isDownloading = false;
   String downloadProgress = '';
   Map<String, String> downloadedFiles = {};
+  String extension = '';
 
   @override
   void initState() {
@@ -35,7 +36,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
 
   Future<void> _loadDownloadedFiles() async {
     final prefs = await SharedPreferences.getInstance();
-    final savedFiles = prefs.getString('downloadedDoubts') ?? '{}';
+    final savedFiles = prefs.getString('yourDownloadedDoubts') ?? '{}';
     setState(() {
       downloadedFiles = Map<String, String>.from(jsonDecode(savedFiles));
     });
@@ -43,7 +44,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
 
   Future<void> _saveDownloadedFiles() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('downloadedDoubts', jsonEncode(downloadedFiles));
+    prefs.setString('yourDownloadedDoubts', jsonEncode(downloadedFiles));
   }
 
   Future<void> _requestNotificationPermission() async {
@@ -94,7 +95,11 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
     });
 
     try {
-      final filePath = await _getAppSpecificDownloadPath(filename);
+      // Infer file extension from the URL or content type
+      String fileExtension = _getFileExtensionFromUrl(url);
+      String finalFilename = '$filename$fileExtension';
+
+      final filePath = await _getAppSpecificDownloadPath(finalFilename);
 
       final dio = Dio();
       await dio.download(
@@ -111,12 +116,13 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
       );
 
       setState(() {
+        downloadedFiles[finalFilename] = filePath;
         downloadedFiles[filename] = filePath;
         isDownloading = false;
         downloadProgress = '';
       });
       await _saveDownloadedFiles();
-      showDownloadNotification(filename, filePath);
+      showDownloadNotification(finalFilename, filePath);
     } catch (e) {
       setState(() {
         isDownloading = false;
@@ -129,6 +135,51 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
           duration: const Duration(seconds: 3),
         ),
       );
+    }
+  }
+
+// Function to infer file extension from the URL
+  String _getFileExtensionFromUrl(String url) {
+    setState(() {
+      extension = url.split('.').last;
+    });
+    if (extension == 'pdf') {
+      return '.pdf';
+    } else if (extension == 'docx') {
+      return '.docx';
+    } else if (extension == 'jpg' || extension == 'jpeg') {
+      return '.jpg';
+    } else if (extension == 'png') {
+      return '.png';
+    }
+    return ''; // Default, in case we can't determine the extension
+  }
+
+  IconData _getIconForFile(String extension) {
+    if (extension == 'pdf') {
+      return Icons.picture_as_pdf;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Icons.description;
+    } else if (extension == 'jpeg' ||
+        extension == 'jpg' ||
+        extension == 'png') {
+      return Icons.image;
+    } else {
+      return Icons.insert_drive_file; // Default icon for unknown file types
+    }
+  }
+
+  Color _getIconColorForFile(String extension) {
+    if (extension == 'pdf') {
+      return Colors.red;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Colors.blue;
+    } else if (extension == 'png' ||
+        extension == 'jpg' ||
+        extension == 'jpeg') {
+      return Colors.green;
+    } else {
+      return Colors.grey; // Default color for unknown file types
     }
   }
 
@@ -157,162 +208,164 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      body: Stack(
-        children: [
-          Column(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Row(
             children: [
-              InkWell(
-                onTap: () {
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
                   Navigator.pop(context);
                 },
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 30),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        'assets/dikshaback@2x.png',
-                        width: 58,
-                        height: 58,
-                      ),
-                      const SizedBox(width: 22),
-                      const Text(
-                        'Your Doubts',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: FutureBuilder<List<Doubt>>(
-                  future: doubts,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No doubts available.'));
-                    } else {
-                      final doubts = snapshot.data!;
-                      return ListView.builder(
-                        padding: const EdgeInsets.all(10.0),
-                        itemCount: doubts.length,
-                        itemBuilder: (context, index) {
-                          final doubt = doubts[index];
-                          final filename =
-                              '${doubt.course}_doubt_${doubt.createdAt}.jpg';
-                          final isDownloaded =
-                              downloadedFiles.containsKey(filename);
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.yellow.shade100,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(doubt.image),
-                                ),
-                                title: Text(
-                                  doubt.title,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Course: ${doubt.course}'),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      'Status: ${doubt.status}',
-                                    ),
-                                    Text('Posted on: ${doubt.createdAt}'),
-                                  ],
-                                ),
-                                trailing: SizedBox(
-                                  height: 20,
-                                  width: 80,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      if (isDownloaded) {
-                                        _openFile(filename);
-                                      } else {
-                                        _downloadFile(doubt.image, filename);
-                                      }
-                                    },
-                                    icon: Icon(
-                                      isDownloaded
-                                          ? Icons.open_in_new
-                                          : Icons.download,
-                                      size: 17,
-                                    ),
-                                    label: Text(
-                                      isDownloaded ? "Open" : "Download",
-                                      style: const TextStyle(fontSize: 10),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.all(0),
-                                      foregroundColor: Colors.blue,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }
-                  },
+              const SizedBox(width: 5),
+              const Text(
+                'Your Doubts',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 24,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ],
           ),
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              color: Colors.white,
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => StudentDoubtScreen()));
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF045C19),
-                          Color(0xFF77D317),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+        ),
+        toolbarHeight: 70,
+      ),
+      backgroundColor: Colors.grey.shade300,
+      body: Column(
+        children: [
+          SingleChildScrollView(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.79,
+              child: FutureBuilder<List<Doubt>>(
+                future: doubts,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No doubts available.'));
+                  } else {
+                    final doubts = snapshot.data!;
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(10.0),
+                      itemCount: doubts.length,
+                      itemBuilder: (context, index) {
+                        final doubt = doubts[index];
+                        final filename =
+                            '${doubt.course}_your_doubt_${doubt.createdAt}';
+                        final isDownloaded =
+                            downloadedFiles.containsKey(filename);
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.yellow.shade100,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: ListTile(
+                              leading: Icon(
+                                _getIconForFile(extension),
+                                color: _getIconColorForFile(extension),
+                              ),
+                              title: Text(
+                                doubt.title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Course: ${doubt.course}'),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'Status: ${doubt.status}',
+                                  ),
+                                  Text('Posted on: ${doubt.createdAt}'),
+                                ],
+                              ),
+                              trailing: SizedBox(
+                                height: 20,
+                                width: 80,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    if (isDownloaded) {
+                                      _openFile(filename);
+                                    } else {
+                                      _downloadFile(doubt.image, filename);
+                                    }
+                                  },
+                                  icon: Icon(
+                                    isDownloaded
+                                        ? Icons.open_in_new
+                                        : Icons.download,
+                                    size: 17,
+                                  ),
+                                  label: Text(
+                                    isDownloaded ? "Open" : "Download",
+                                    style: const TextStyle(fontSize: 10),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.all(0),
+                                    foregroundColor: Colors.blue,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+          ),
+          Container(
+            color: Colors.white,
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => StudentDoubtScreen()));
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xFF045C19),
+                        Color(0xFF77D317),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                    child: const Center(
-                      child: Text(
-                        'Create Doubt',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontFamily: 'Poppins',
-                        ),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Create Doubt',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontFamily: 'Poppins',
                       ),
                     ),
                   ),

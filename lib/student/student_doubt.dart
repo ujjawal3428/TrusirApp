@@ -174,15 +174,35 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
           return uploadedPath;
         } else {
           print('Failed to upload the file.');
-          return 'null';
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Failed to upload the file.(Only upload pdf, docx and image)'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+          return null;
         }
       } else {
         print('No file selected.');
-        return 'null';
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No file selected'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        return null;
       }
     } catch (e) {
       print('Error during file selection: $e');
-      return 'null';
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Failed to Upload file.(Only upload pdf, docx and image)'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return null;
     }
   }
 

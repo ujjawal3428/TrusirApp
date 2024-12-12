@@ -22,6 +22,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
   bool isDownloading = false;
   String downloadProgress = '';
   Map<String, String> downloadedFiles = {};
+  String extension = '';
 
   @override
   void initState() {
@@ -33,7 +34,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
 
   Future<void> _loadDownloadedFiles() async {
     final prefs = await SharedPreferences.getInstance();
-    final savedFiles = prefs.getString('downloadedDoubts') ?? '{}';
+    final savedFiles = prefs.getString('downloadedStudentDoubts') ?? '{}';
     setState(() {
       downloadedFiles = Map<String, String>.from(jsonDecode(savedFiles));
     });
@@ -41,7 +42,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
 
   Future<void> _saveDownloadedFiles() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('downloadedDoubts', jsonEncode(downloadedFiles));
+    prefs.setString('downloadedStudentDoubts', jsonEncode(downloadedFiles));
   }
 
   Future<void> _requestNotificationPermission() async {
@@ -92,7 +93,11 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
     });
 
     try {
-      final filePath = await _getAppSpecificDownloadPath(filename);
+      // Infer file extension from the URL or content type
+      String fileExtension = _getFileExtensionFromUrl(url);
+      String finalFilename = '$filename$fileExtension';
+
+      final filePath = await _getAppSpecificDownloadPath(finalFilename);
 
       final dio = Dio();
       await dio.download(
@@ -109,12 +114,13 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
       );
 
       setState(() {
+        downloadedFiles[finalFilename] = filePath;
         downloadedFiles[filename] = filePath;
         isDownloading = false;
         downloadProgress = '';
       });
       await _saveDownloadedFiles();
-      showDownloadNotification(filename, filePath);
+      showDownloadNotification(finalFilename, filePath);
     } catch (e) {
       setState(() {
         isDownloading = false;
@@ -127,6 +133,51 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
           duration: const Duration(seconds: 3),
         ),
       );
+    }
+  }
+
+// Function to infer file extension from the URL
+  String _getFileExtensionFromUrl(String url) {
+    setState(() {
+      extension = url.split('.').last;
+    });
+    if (extension == 'pdf') {
+      return '.pdf';
+    } else if (extension == 'docx') {
+      return '.docx';
+    } else if (extension == 'jpg' || extension == 'jpeg') {
+      return '.jpg';
+    } else if (extension == 'png') {
+      return '.png';
+    }
+    return ''; // Default, in case we can't determine the extension
+  }
+
+  IconData _getIconForFile(String extension) {
+    if (extension == 'pdf') {
+      return Icons.picture_as_pdf;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Icons.description;
+    } else if (extension == 'jpeg' ||
+        extension == 'jpg' ||
+        extension == 'png') {
+      return Icons.image;
+    } else {
+      return Icons.insert_drive_file; // Default icon for unknown file types
+    }
+  }
+
+  Color _getIconColorForFile(String extension) {
+    if (extension == 'pdf') {
+      return Colors.red;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Colors.blue;
+    } else if (extension == 'png' ||
+        extension == 'jpg' ||
+        extension == 'jpeg') {
+      return Colors.green;
+    } else {
+      return Colors.grey; // Default color for unknown file types
     }
   }
 
@@ -205,7 +256,8 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
               itemCount: doubts.length,
               itemBuilder: (context, index) {
                 final doubt = doubts[index];
-                final filename = '${doubt.course}_doubt_${doubt.createdAt}.jpg';
+                final filename =
+                    '${doubt.course}_student_doubt_${doubt.createdAt}';
                 final isDownloaded = downloadedFiles.containsKey(filename);
 
                 return Padding(
@@ -216,12 +268,9 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: ListTile(
-                      leading: SizedBox(
-                        height: 60,
-                        width: 60,
-                        child: CircleAvatar(
-                          backgroundImage: NetworkImage(doubt.image),
-                        ),
+                      leading: Icon(
+                        _getIconForFile(extension),
+                        color: _getIconColorForFile(extension),
                       ),
                       title: Text(
                         doubt.title,

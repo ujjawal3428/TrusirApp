@@ -1,7 +1,7 @@
 import 'dart:convert';
+import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 
@@ -85,13 +85,13 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
     }
   }
 
-  Future<String> uploadImage(XFile imageFile) async {
+  Future<String> uploadFile(String filePath, String fileType) async {
     final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri);
+    final request = http.MultipartRequest('POST', uri); // Correct HTTP method
 
-    // Add the image file to the request
-    request.files
-        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
+    // Add the file to the request with the correct field name
+    request.files.add(await http.MultipartFile.fromPath(
+        'photo', filePath)); // Field name is 'photo'
 
     // Send the request
     final response = await request.send();
@@ -108,41 +108,70 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
         return 'null';
       }
     } else {
-      print('Failed to upload image: ${response.statusCode}');
+      print('Failed to upload file: ${response.statusCode}');
       return 'null';
     }
   }
 
-  Future<void> handleImageSelection(String? path) async {
+  Future<String?> handleFileSelection(BuildContext context) async {
     try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile =
-          await picker.pickImage(source: ImageSource.gallery);
+      // Use FilePicker to select a file
+      final result = await FilePicker.platform.pickFiles();
 
-      if (pickedFile != null) {
-        // Upload the image and get the path
-        final uploadedPath = await uploadImage(pickedFile);
+      if (result != null && result.files.single.path != null) {
+        final filePath = result.files.single.path!;
+        final fileName = result.files.single.name;
+
+        // Determine file type (use "document" for docx/pdf, "photo" for images)
+        final fileType = fileName.endsWith('.jpg') ||
+                fileName.endsWith('.jpeg') ||
+                fileName.endsWith('.png')
+            ? 'photo'
+            : 'document';
+
+        // Upload the file and get the path
+        final uploadedPath = await uploadFile(filePath, fileType);
+
         if (uploadedPath != 'null') {
-          setState(() {
-            // Example: Update the first student's photo path
-            formData.photo = uploadedPath;
-            //)
-          });
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Image Uploaded Successfully!'),
+              content: Text('File Uploaded Successfully!'),
               duration: Duration(seconds: 1),
             ),
           );
-          print('Image uploaded successfully: $uploadedPath');
+          print('File uploaded successfully: $uploadedPath');
+          return uploadedPath;
         } else {
-          print('Failed to upload the image.');
+          print('Failed to upload the file.');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Failed to upload the file.(Only upload pdf, docx and image)'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+          return null;
         }
       } else {
-        print('No image selected.');
+        print('No file selected.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No file selected'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        return null;
       }
     } catch (e) {
-      print('Error during image selection: $e');
+      print('Error during file selection: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Failed to Upload file.(Only upload pdf, docx and image)'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return null;
     }
   }
 
@@ -316,7 +345,10 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                handleImageSelection(formData.photo);
+                                setState(() async {
+                                  formData.photo =
+                                      await handleFileSelection(context);
+                                });
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
