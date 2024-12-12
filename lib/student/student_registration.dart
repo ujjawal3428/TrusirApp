@@ -734,9 +734,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         maxLength: 10,
         enabled: widget.enablephonefield,
         decoration: InputDecoration(
-          label: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(hintText)),
+          label: Align(alignment: Alignment.centerLeft, child: Text(hintText)),
           border: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
@@ -764,11 +762,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ],
       ),
       child: DropdownButtonFormField<String>(
-        
         value: selectedValue,
         onChanged: onChanged,
         decoration: InputDecoration(
-          
           labelText: hintText,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -819,14 +815,14 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       ),
     );
   }
-  
+
   Widget _buildFileUploadField(String placeholder,
       {required int index,
       required String path,
       double width = 200,
       required displayPath}) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         handleImageSelection(index, path);
       },
       child: Container(
@@ -847,15 +843,16 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: displayPath == null
-                  ? Text(placeholder, style: const TextStyle(color: Colors.grey))
+                  ? Text(placeholder,
+                      style: const TextStyle(color: Colors.grey))
                   : Image.network(
                       displayPath,
                       fit: BoxFit.fill,
                     ),
             ),
             IconButton(
-              
-              icon: const Icon(Icons.upload_file), onPressed: () {  },
+              icon: const Icon(Icons.upload_file),
+              onPressed: () {},
             ),
           ],
         ),
@@ -864,10 +861,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }
 
   Widget _buildTimeSlotField(int index) {
-   
     if (selectedSlots.length <= index) {
       selectedSlots.add({});
-      selectedSlotsString.add(""); 
+      selectedSlotsString.add("");
     }
 
     return Wrap(
@@ -886,7 +882,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   } else {
                     selectedSlots[index].remove(slot);
                   }
-             
+
                   updateSelectedSlots(index);
                 });
               },
@@ -899,15 +895,14 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }
 }
 
-
 class TimeSlotField extends StatefulWidget {
-  const TimeSlotField({Key? key}) : super(key: key);
+  const TimeSlotField({super.key});
 
   @override
-  _TimeSlotFieldState createState() => _TimeSlotFieldState();
+  TimeSlotFieldState createState() => TimeSlotFieldState();
 }
 
-class _TimeSlotFieldState extends State<TimeSlotField> {
+class TimeSlotFieldState extends State<TimeSlotField> {
   final List<String> morningSlots = ['8-9 AM', '9-10 AM'];
   final List<String> afternoonSlots = ['2-3 PM'];
   final List<String> eveningSlots = ['5-6 PM'];
@@ -931,7 +926,9 @@ class _TimeSlotFieldState extends State<TimeSlotField> {
         margin: const EdgeInsets.symmetric(vertical: 4.0),
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: selectedSlots.contains(slot) ? Colors.grey[400] : Colors.grey[200],
+          color: selectedSlots.contains(slot)
+              ? Colors.grey[400]
+              : Colors.grey[200],
           borderRadius: BorderRadius.circular(8.0),
           border: Border.all(color: Colors.grey),
         ),

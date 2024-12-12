@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
@@ -25,7 +27,7 @@ class _AttendancePageState extends State<AttendancePage> {
     return _firstDayOfMonth.weekday % 7; // Adjust for week starting Sunday
   }
 
-  List<int> get _dates {
+  List<int> get dates {
     return List.generate(_daysInMonth, (index) => index + 1);
   }
 
@@ -43,63 +45,36 @@ class _AttendancePageState extends State<AttendancePage> {
     final month = _selectedDate.month;
     final year = _selectedDate.year;
 
-    // Simulating an API request with the selected month and year
-    final apiResponse = {
-      "month": getMonthName(month), // Get month name based on selected date
-      "year": year,
-      "attendance": {
-        "01": "present",
-        "02": "absent",
-        "03": "absent",
-        "04": "present",
-        "05": "present",
-        "06": "absent",
-        "07": "present",
-        "08": "present",
-        "09": "present",
-        "10": "present",
-        "11": "present",
-        "12": "present",
-        "13": "absent",
-        "14": "present",
-        "15": "present",
-        "16": "present",
-        "17": "absent",
-        "18": "absent",
-        "19": "present",
-        "20": "absent",
-        "21": "present",
-        "22": "present",
-        "23": "present",
-        "24": "class_not_taken",
-        "25": "class_not_taken",
-        "26": "present",
-        "27": "present",
-        "28": "present",
-        "29": "present",
-        "30": "present",
-        "31": "present"
-      },
-      "summary": {
-        "total_classes_taken": 25,
-        "present": 21,
-        "absent": 4,
-        "class_not_taken": 2
+    fetchAttendanceData(month, year).then((apiResponse) {
+      final monthKey = month.toString();
+      if (apiResponse.containsKey(monthKey)) {
+        final dataForMonth = apiResponse[monthKey] as Map<String, dynamic>;
+        setState(() {
+          _attendanceData = (dataForMonth['attendance'] as Map<String, dynamic>)
+              .map<int, String>(
+                  (key, value) => MapEntry(int.parse(key), value));
+          _summaryData = (dataForMonth['summary'] as Map<String, dynamic>)
+              .map<String, int>((key, value) => MapEntry(key, value));
+        });
+      } else {
+        print('No data available for month: $month, year: $year');
       }
-    };
-
-    // Simulate API delay
-    Future.delayed(const Duration(milliseconds: 500), () {
-      setState(() {
-        // Map the attendance data to the desired type
-        _attendanceData = (apiResponse["attendance"] as Map<String, dynamic>)
-            .map<int, String>(
-                (key, value) => MapEntry(int.parse(key), value as String));
-
-        // Convert summary data safely
-        _summaryData = Map<String, int>.from(apiResponse["summary"] as Map);
-      });
+    }).catchError((error) {
+      print("Error fetching attendance data: $error");
     });
+  }
+
+  Future<Map<String, dynamic>> fetchAttendanceData(int month, int year) async {
+    final url = Uri.parse(
+        'https://trusirapi.onrender.com/attendance?year=$year&month=$month');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load attendance data');
+    }
   }
 
   void _prevMonth() {
@@ -110,6 +85,8 @@ class _AttendancePageState extends State<AttendancePage> {
       } else {
         _selectedDate = DateTime(_selectedDate.year, _selectedDate.month - 1);
       }
+      print(_selectedDate.year);
+      print(_selectedDate.month);
       _fetchAttendanceData();
     });
   }
@@ -147,46 +124,46 @@ class _AttendancePageState extends State<AttendancePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey[50],
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Color(0xFF48116A),
-                  size: 30,
+        appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Color(0xFF48116A),
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              const SizedBox(width: 5),
-              const Text(
-                'Attendance',
-                style: TextStyle(
-                  color: Color(0xFF48116A),
-                  fontSize: 24,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
+                const SizedBox(width: 5),
+                const Text(
+                  'Attendance',
+                  style: TextStyle(
+                    color: Color(0xFF48116A),
+                    fontSize: 24,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+          toolbarHeight: 70,
         ),
-        toolbarHeight: 70,
-      ),
-      backgroundColor: Colors.grey.shade300,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
+        backgroundColor: Colors.grey.shade300,
+        body: Center(
+            child: SingleChildScrollView(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
               // Calendar Section
               Padding(
                 padding: const EdgeInsets.only(left: 14.0, right: 14),
@@ -250,49 +227,32 @@ class _AttendancePageState extends State<AttendancePage> {
                             if (index < _startingWeekday) {
                               return const SizedBox.shrink();
                             }
-                            int date = _dates[index - _startingWeekday];
-                            String? attendanceStatus = _attendanceData[date];
-                            Color statusColor = attendanceStatus == "present"
-                                ? Colors.green
-                                : attendanceStatus == "absent"
-                                    ? Colors.red
-                                    : attendanceStatus == "class_not_taken"
-                                        ? Colors.grey
-                                        : Colors.transparent;
-                
+                            int day = index - _startingWeekday + 1;
+                            String status = _attendanceData[day] ?? "no_data";
                             return GestureDetector(
                               onTap: () {
-                                setState(() {
-                                  _selectedDate = DateTime(_selectedDate.year,
-                                      _selectedDate.month, date);
-                                });
+                                // Handle attendance status on tap
                               },
-                              child: Column(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.all(4),
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: _selectedDate.day == date
-                                          ? Colors.blueAccent
-                                          : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Text(
-                                      '$date',
-                                      style: TextStyle(
-                                        color: _selectedDate.day == date
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
+                              child: Container(
+                                margin: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                  color: status == "present"
+                                      ? Colors.green
+                                      : status == "absent"
+                                          ? Colors.red
+                                          : Colors.grey[400],
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '$day',
+                                    style: TextStyle(
+                                      color: status == "no_data"
+                                          ? Colors.black
+                                          : Colors.white,
                                     ),
                                   ),
-                                  if (attendanceStatus != null)
-                                    CircleAvatar(
-                                      radius: 5,
-                                      backgroundColor: statusColor,
-                                    ),
-                                ],
+                                ),
                               ),
                             );
                           },
@@ -302,107 +262,48 @@ class _AttendancePageState extends State<AttendancePage> {
                   ),
                 ),
               ),
-
-              // Attendance Summary
-             Padding(
-                padding: const EdgeInsets.all(16.0),
-                child:  Expanded(
-                  child: SizedBox(
-                    height: 150,
-                    width: 350,
-                    child: Column(
-                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                color: Colors.yellow,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-
-                                ),
-                                child: const Center(child: Text("25")),
-                              ),
-                              const SizedBox(width: 10,),
-                              const Text('Total Classes'),
-                            ],
-                          ),
-                          const SizedBox(height: 5,),
-                          Row(
-                            children: [
-                              Container(
-                                color: Colors.green,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-
-                                ),
-                                child: const Center(child: Text("24")),
-                              ),
-                              const SizedBox(width: 10,),
-                              const Text('Present'),
-                            ],
-                          ),
-                           const SizedBox(height: 5,),
-                          Row(
-                            children: [
-                              Container(
-                                color: Colors.red,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-
-                                ),
-                                child: const Center(child: Text("4")),
-                              ),
-                              const SizedBox(width: 10,),
-                              const Text('Absent'),
-                            ],
-                          ),
-                           const SizedBox(height: 5,),
-                          Row(
-                            children: [
-                              Container(
-                                color: Colors.grey.shade300,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-
-                                ),
-                                child: const Center(child: Text("2")),
-                              ),
-                              const SizedBox(width: 10,),
-                              const Text('Class not taken'),
-                            ],
-                          ),
-                         ],
-                    ),
-                  
-                  ),)
+              // Attendance Summary Section
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildSummaryCard('Total Classes Taken',
+                        _summaryData['total_classes_taken']),
+                    _buildSummaryCard('Present', _summaryData['present']),
+                    _buildSummaryCard('Absent', _summaryData['absent']),
+                    _buildSummaryCard(
+                        'Class not taken', _summaryData['class_not_taken']),
+                  ],
                 ),
+              ),
+            ]))));
+  }
 
-                 const SizedBox(height: 10),
-                        Center(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 45,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF045C19), Color(0xFF77D317)],
-                              ),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                 ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Approval Text Sent!"),
-                      ),
-                    );
-                              },
-                              child: const Text(
-                                'Send Approval',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                            ),
-                          ),
-                        )]))));
-              
-  }}
+  Widget _buildSummaryCard(String title, int? count) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      width: 100,
+      height: 150,
+      decoration: BoxDecoration(
+        color: const Color(0xFF48116A),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '$count',
+            style: const TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
+}
