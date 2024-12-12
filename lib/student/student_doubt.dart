@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -116,13 +117,13 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
     }
   }
 
-  Future<String> uploadImage(XFile imageFile) async {
+  Future<String> uploadFile(String filePath, String fileType) async {
     final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri);
+    final request = http.MultipartRequest('POST', uri); // Correct HTTP method
 
-    // Add the image file to the request
-    request.files
-        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
+    // Add the file to the request with the correct field name
+    request.files.add(await http.MultipartFile.fromPath(
+        'photo', filePath)); // Field name is 'photo'
 
     // Send the request
     final response = await request.send();
@@ -139,41 +140,50 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
         return 'null';
       }
     } else {
-      print('Failed to upload image: ${response.statusCode}');
+      print('Failed to upload file: ${response.statusCode}');
       return 'null';
     }
   }
 
-  Future<void> handleImageSelection(String? path) async {
+  Future<String?> handleFileSelection(BuildContext context) async {
     try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile =
-          await picker.pickImage(source: ImageSource.gallery);
+      // Use FilePicker to select a file
+      final result = await FilePicker.platform.pickFiles();
 
-      if (pickedFile != null) {
-        // Upload the image and get the path
-        final uploadedPath = await uploadImage(pickedFile);
+      if (result != null && result.files.single.path != null) {
+        final filePath = result.files.single.path!;
+        final fileName = result.files.single.name;
+
+        // Determine file type (use "document" for docx/pdf, "photo" for images)
+        final fileType = fileName.endsWith('.jpg') ||
+                fileName.endsWith('.jpeg') ||
+                fileName.endsWith('.png')
+            ? 'photo'
+            : 'document';
+
+        // Upload the file and get the path
+        final uploadedPath = await uploadFile(filePath, fileType);
+
         if (uploadedPath != 'null') {
-          setState(() {
-            // Example: Update the first student's photo path
-            formData.photo = uploadedPath;
-            //)
-          });
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Images Uploaded Successfully!'),
+              content: Text('File Uploaded Successfully!'),
               duration: Duration(seconds: 1),
             ),
           );
-          print('Image uploaded successfully: $uploadedPath');
+          print('File uploaded successfully: $uploadedPath');
+          return uploadedPath;
         } else {
-          print('Failed to upload the image.');
+          print('Failed to upload the file.');
+          return 'null';
         }
       } else {
-        print('No image selected.');
+        print('No file selected.');
+        return 'null';
       }
     } catch (e) {
-      print('Error during image selection: $e');
+      print('Error during file selection: $e');
+      return 'null';
     }
   }
 
@@ -408,40 +418,25 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                               offset: Offset(2, 2),
                                             )
                                           ]),
-                                      child: formData.photo != null
-                                          ? Column(
-                                              children: [
-                                                Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 15),
-                                                    child: Image.network(
-                                                        width: 50,
-                                                        height: 50,
-                                                        formData.photo!)),
-                                                const SizedBox(
-                                                  height: 5,
+                                      child: formData.photo != 'null'
+                                          ? const Center(
+                                              child: Text(
+                                                'File Uploaded',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 7,
                                                 ),
-                                                const Center(
-                                                  child: Text(
-                                                    'Image Uploaded',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 7,
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 2,
-                                                ),
-                                              ],
+                                              ),
                                             )
                                           : Column(
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
-                                                    handleImageSelection(
-                                                        formData.photo);
+                                                    setState(() async {
+                                                      formData.photo =
+                                                          await handleFileSelection(
+                                                              context);
+                                                    });
                                                   },
                                                   child: Column(
                                                     children: [

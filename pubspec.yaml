@@ -29,6 +29,7 @@ dependencies:
   open_file:  
   signature: ^5.5.0
   path:
+  file_picker:
 dev_dependencies:
   flutter_test:
     sdk: flutter
