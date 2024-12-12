@@ -11,7 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/notificationhelper.dart';
 
 class StudentDoubtsPage extends StatefulWidget {
-  const StudentDoubtsPage({super.key});
+  final String userID;
+  const StudentDoubtsPage({super.key, required this.userID});
 
   @override
   State<StudentDoubtsPage> createState() => _StudentDoubtsPageState();
@@ -189,12 +190,9 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
   }
 
   Future<List<Doubt>> fetchDoubts() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userID = prefs.getString('userID');
-
     final response = await http.get(
       Uri.parse(
-          'https://balvikasyojana.com:8899/api/view-doubts/$userID/student'), // Replace with your API endpoint
+          'https://balvikasyojana.com:8899/api/view-doubts/${widget.userID}/student'), // Replace with your API endpoint
     );
 
     if (response.statusCode == 200) {

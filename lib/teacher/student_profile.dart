@@ -483,7 +483,9 @@ class StudentProfileScreen extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const StudentDoubtsPage(),
+                                                StudentDoubtsPage(
+                                              userID: userID,
+                                            ),
                                           ),
                                         );
                                       },
@@ -557,7 +559,9 @@ class StudentProfileScreen extends StatelessWidget {
                                           context,
                                           MaterialPageRoute(
                                             builder: (context) =>
-                                                const ParentsDoubtsPage(),
+                                                ParentsDoubtsPage(
+                                              userID: userID,
+                                            ),
                                           ),
                                         );
                                       },

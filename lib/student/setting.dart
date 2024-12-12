@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/contactus.dart';
 import 'package:trusir/student/editprofilescreen.dart';
 import 'package:trusir/common/parents_doubts.dart';
@@ -7,7 +8,14 @@ import 'package:trusir/common/about_us.dart';
 import 'package:trusir/student/your_doubt.dart';
 
 class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+  SettingsScreen({super.key});
+
+  String userID = '';
+
+  Future<void> fetchuserID() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userID = prefs.getString('userID')!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -210,15 +218,15 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(width: 10),
                   Flexible(
                     child: GestureDetector(
-                      onTap: (){
-                        
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ParentsDoubtsPage(),
-                                    ),
-                                  );
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ParentsDoubtsPage(
+                              userID: userID,
+                            ),
+                          ),
+                        );
                       },
                       child: Container(
                         height: 55,
@@ -243,10 +251,10 @@ class SettingsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 IconButton(
-                                  icon:
-                                      const Icon(Icons.arrow_forward_ios_rounded),
+                                  icon: const Icon(
+                                      Icons.arrow_forward_ios_rounded),
                                   color: const Color(0xFF48116A),
-                                 onPressed: (){},
+                                  onPressed: () {},
                                 ),
                               ],
                             ),
@@ -285,13 +293,13 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(width: 10),
                   Flexible(
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const AboutUsPage(),
-                                    ),
-                                  );
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AboutUsPage(),
+                          ),
+                        );
                       },
                       child: Container(
                         height: 55,
@@ -316,12 +324,10 @@ class SettingsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 IconButton(
-                                  icon:
-                                      const Icon(Icons.arrow_forward_ios_rounded),
+                                  icon: const Icon(
+                                      Icons.arrow_forward_ios_rounded),
                                   color: const Color(0xFF48116A),
-                                  onPressed: () {
-                                    
-                                  },
+                                  onPressed: () {},
                                 ),
                               ],
                             ),
@@ -360,13 +366,13 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(width: 10),
                   Flexible(
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const Contactus(),
-                                    ),
-                                  );
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Contactus(),
+                          ),
+                        );
                       },
                       child: Container(
                         height: 55,
@@ -391,12 +397,10 @@ class SettingsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 IconButton(
-                                  icon:
-                                      const Icon(Icons.arrow_forward_ios_rounded),
+                                  icon: const Icon(
+                                      Icons.arrow_forward_ios_rounded),
                                   color: const Color(0xFF48116A),
-                                  onPressed: () {
-                                    
-                                  },
+                                  onPressed: () {},
                                 ),
                               ],
                             ),
@@ -435,14 +439,14 @@ class SettingsScreen extends StatelessWidget {
                   const SizedBox(width: 10),
                   Flexible(
                     child: GestureDetector(
-                      onTap: (){
-                         Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const TermsAndConditionsPage(),
-                                      ),
-                                    );
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const TermsAndConditionsPage(),
+                          ),
+                        );
                       },
                       child: Container(
                         height: 55,
@@ -470,9 +474,7 @@ class SettingsScreen extends StatelessWidget {
                                   icon: const Icon(
                                       Icons.arrow_forward_ios_rounded),
                                   color: const Color(0xFF48116A),
-                                  onPressed: () {
-                                   
-                                  },
+                                  onPressed: () {},
                                 ),
                               ],
                             ),

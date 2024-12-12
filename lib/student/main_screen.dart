@@ -18,7 +18,8 @@ class MainScreenState extends State<MainScreen> {
   final List<Widget> pages = [
     const Studentfacilities(), // Home page (Student Facilities)
     const NewCoursePage(), // Placeholder for Courses
-    const SettingsScreen(),
+
+    SettingsScreen(),
   ];
 
   // Function to handle bottom navigation item taps

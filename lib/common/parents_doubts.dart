@@ -11,7 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/notificationhelper.dart';
 
 class ParentsDoubtsPage extends StatefulWidget {
-  const ParentsDoubtsPage({super.key});
+  final String userID;
+  const ParentsDoubtsPage({super.key, required this.userID});
 
   @override
   State<ParentsDoubtsPage> createState() => _ParentsDoubtsPageState();
