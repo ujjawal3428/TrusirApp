@@ -188,163 +188,221 @@ class _AttendancePageState extends State<AttendancePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Calendar Section
-              Container(
-                width: 386,
-                height: 450,
-                decoration: BoxDecoration(
-                  image: const DecorationImage(
-                    image: AssetImage('assets/whitebg@4x.png'),
-                    fit: BoxFit.cover,
+              Padding(
+                padding: const EdgeInsets.only(left: 14.0, right: 14),
+                child: Container(
+                  width: 386,
+                  height: 400,
+                  decoration: BoxDecoration(
+                    image: const DecorationImage(
+                      image: AssetImage('assets/whitebg@4x.png'),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(40),
                   ),
-                  borderRadius: BorderRadius.circular(40),
-                ),
-                child: Column(
-                  children: [
-                    // Calendar Header
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.arrow_left),
-                            onPressed: _prevMonth,
-                          ),
-                          Text(
-                            _monthYearString,
-                            style: const TextStyle(fontSize: 20),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.arrow_right),
-                            onPressed: _nextMonth,
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Day Headers
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: weekdays
-                            .map((day) => Text(
-                                  day,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ))
-                            .toList(),
-                      ),
-                    ),
-                    // Calendar Dates
-                    Expanded(
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 7,
-                          childAspectRatio: 1.0,
+                  child: Column(
+                    children: [
+                      // Calendar Header
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.arrow_left),
+                              onPressed: _prevMonth,
+                            ),
+                            Text(
+                              _monthYearString,
+                              style: const TextStyle(fontSize: 20),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.arrow_right),
+                              onPressed: _nextMonth,
+                            ),
+                          ],
                         ),
-                        itemCount: _startingWeekday + _daysInMonth,
-                        itemBuilder: (context, index) {
-                          if (index < _startingWeekday) {
-                            return const SizedBox.shrink();
-                          }
-                          int date = _dates[index - _startingWeekday];
-                          String? attendanceStatus = _attendanceData[date];
-                          Color statusColor = attendanceStatus == "present"
-                              ? Colors.green
-                              : attendanceStatus == "absent"
-                                  ? Colors.red
-                                  : attendanceStatus == "class_not_taken"
-                                      ? Colors.grey
-                                      : Colors.transparent;
-
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _selectedDate = DateTime(_selectedDate.year,
-                                    _selectedDate.month, date);
-                              });
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.all(4),
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: _selectedDate.day == date
-                                        ? Colors.blueAccent
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    '$date',
-                                    style: TextStyle(
+                      ),
+                      // Day Headers
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: weekdays
+                              .map((day) => Text(
+                                    day,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                      // Calendar Dates
+                      Expanded(
+                        child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 7,
+                            childAspectRatio: 1.0,
+                          ),
+                          itemCount: _startingWeekday + _daysInMonth,
+                          itemBuilder: (context, index) {
+                            if (index < _startingWeekday) {
+                              return const SizedBox.shrink();
+                            }
+                            int date = _dates[index - _startingWeekday];
+                            String? attendanceStatus = _attendanceData[date];
+                            Color statusColor = attendanceStatus == "present"
+                                ? Colors.green
+                                : attendanceStatus == "absent"
+                                    ? Colors.red
+                                    : attendanceStatus == "class_not_taken"
+                                        ? Colors.grey
+                                        : Colors.transparent;
+                
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedDate = DateTime(_selectedDate.year,
+                                      _selectedDate.month, date);
+                                });
+                              },
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.all(4),
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
                                       color: _selectedDate.day == date
-                                          ? Colors.white
-                                          : Colors.black,
+                                          ? Colors.blueAccent
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      '$date',
+                                      style: TextStyle(
+                                        color: _selectedDate.day == date
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                if (attendanceStatus != null)
-                                  CircleAvatar(
-                                    radius: 5,
-                                    backgroundColor: statusColor,
-                                  ),
-                              ],
-                            ),
-                          );
-                        },
+                                  if (attendanceStatus != null)
+                                    CircleAvatar(
+                                      radius: 5,
+                                      backgroundColor: statusColor,
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
 
               // Attendance Summary
-              Padding(
+             Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                child:  Expanded(
+                  child: SizedBox(
+                    height: 150,
+                    width: 350,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Summary",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                        Text(
-                            "Total Classes: ${_summaryData['total_classes_taken'] ?? 0}"),
-                        Text("Present: ${_summaryData['present'] ?? 0}"),
-                        Text("Absent: ${_summaryData['absent'] ?? 0}"),
-                        Text(
-                            "Class Not Taken: ${_summaryData['class_not_taken'] ?? 0}"),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+                         children: [
+                          Row(
+                            children: [
+                              Container(
+                                color: Colors.yellow,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
 
-              // Send Approval Text Button
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Handle button press
-                    ScaffoldMessenger.of(context).showSnackBar(
+                                ),
+                                child: const Center(child: Text("25")),
+                              ),
+                              const SizedBox(width: 10,),
+                              const Text('Total Classes'),
+                            ],
+                          ),
+                          const SizedBox(height: 5,),
+                          Row(
+                            children: [
+                              Container(
+                                color: Colors.green,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+
+                                ),
+                                child: const Center(child: Text("24")),
+                              ),
+                              const SizedBox(width: 10,),
+                              const Text('Present'),
+                            ],
+                          ),
+                           const SizedBox(height: 5,),
+                          Row(
+                            children: [
+                              Container(
+                                color: Colors.red,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+
+                                ),
+                                child: const Center(child: Text("4")),
+                              ),
+                              const SizedBox(width: 10,),
+                              const Text('Absent'),
+                            ],
+                          ),
+                           const SizedBox(height: 5,),
+                          Row(
+                            children: [
+                              Container(
+                                color: Colors.grey.shade300,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+
+                                ),
+                                child: const Center(child: Text("2")),
+                              ),
+                              const SizedBox(width: 10,),
+                              const Text('Class not taken'),
+                            ],
+                          ),
+                         ],
+                    ),
+                  
+                  ),)
+                ),
+
+                 const SizedBox(height: 10),
+                        Center(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 45,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              gradient: const LinearGradient(
+                                colors: [Color(0xFF045C19), Color(0xFF77D317)],
+                              ),
+                            ),
+                            child: TextButton(
+                              onPressed: () {
+                                 ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text("Approval Text Sent!"),
                       ),
                     );
-                  },
-                  child: const Text("Send Approval Text"),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+                              },
+                              child: const Text(
+                                'Send Approval',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                            ),
+                          ),
+                        )]))));
+              
+  }}
