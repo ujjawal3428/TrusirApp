@@ -153,7 +153,8 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
     return ''; // Default, in case we can't determine the extension
   }
 
-  IconData _getIconForFile(String extension) {
+  IconData _getIconForFile(String url) {
+    extension = url.split('.').last;
     if (extension == 'pdf') {
       return Icons.picture_as_pdf;
     } else if (extension == 'docx' || extension == 'doc') {
@@ -167,7 +168,8 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
     }
   }
 
-  Color _getIconColorForFile(String extension) {
+  Color _getIconColorForFile(String url) {
+    extension = url.split('.').last;
     if (extension == 'pdf') {
       return Colors.red;
     } else if (extension == 'docx' || extension == 'doc') {
@@ -269,8 +271,8 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                     ),
                     child: ListTile(
                       leading: Icon(
-                        _getIconForFile(extension),
-                        color: _getIconColorForFile(extension),
+                        _getIconForFile(doubt.image),
+                        color: _getIconColorForFile(doubt.image),
                       ),
                       title: Text(
                         doubt.title,

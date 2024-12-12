@@ -138,9 +138,8 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
 
 // Function to infer file extension from the URL
   String _getFileExtensionFromUrl(String url) {
-    setState(() {
-      extension = url.split('.').last;
-    });
+    extension = url.split('.').last;
+
     if (extension == 'pdf') {
       return '.pdf';
     } else if (extension == 'docx') {
@@ -153,7 +152,8 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
     return ''; // Default, in case we can't determine the extension
   }
 
-  IconData _getIconForFile(String extension) {
+  IconData _getIconForFile(String url) {
+    extension = url.split('.').last;
     if (extension == 'pdf') {
       return Icons.picture_as_pdf;
     } else if (extension == 'docx' || extension == 'doc') {
@@ -167,7 +167,8 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
     }
   }
 
-  Color _getIconColorForFile(String extension) {
+  Color _getIconColorForFile(String url) {
+    extension = url.split('.').last;
     if (extension == 'pdf') {
       return Colors.red;
     } else if (extension == 'docx' || extension == 'doc') {
@@ -258,6 +259,9 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
                               '${doubt.course}_parent_doubt_${doubt.createdAt}';
                           final isDownloaded =
                               downloadedFiles.containsKey(filename);
+
+                          // Determine file extension for this item
+
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Container(
@@ -267,8 +271,8 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
                               ),
                               child: ListTile(
                                 leading: Icon(
-                                  _getIconForFile(extension),
-                                  color: _getIconColorForFile(extension),
+                                  _getIconForFile(doubt.image),
+                                  color: _getIconColorForFile(doubt.image),
                                 ),
                                 title: Text(
                                   doubt.title,
