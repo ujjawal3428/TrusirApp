@@ -385,6 +385,9 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     required String marks,
     required String reportUrl,
   }) {
+    String filename = '${subject}_report_$date.jpg';
+    bool isDownloaded = downloadedFiles.containsKey(filename);
+
     return Padding(
       padding: const EdgeInsets.only(left: 18.0, right: 18, top: 0, bottom: 10),
       child: Container(
@@ -477,26 +480,24 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                   ),
                   child: TextButton(
                     onPressed: () {
-                      String filename = '${subject}_report_$date.jpg';
-
-                      if (downloadedFiles.containsKey(filename)) {
+                      if (isDownloaded) {
                         _openFile(filename);
                       } else {
                         _downloadFile(reportUrl, filename);
                       }
                     },
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          'Download Report',
-                          style: TextStyle(
+                          isDownloaded ? 'Open Report' : 'Download Report',
+                          style: const TextStyle(
                             color: Colors.black,
                           ),
                         ),
-                        SizedBox(width: 8),
+                        const SizedBox(width: 8),
                         Icon(
-                          Icons.download,
+                          isDownloaded ? Icons.open_in_new : Icons.download,
                           color: Colors.black,
                           size: 19,
                         ),

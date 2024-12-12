@@ -284,6 +284,19 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                   .map<Widget>((entry) {
                                 int index = entry.key;
                                 var test = entry.value;
+
+                                // Calculate filenames for questions and answers
+                                String questionFilename =
+                                    'question_${test['test_name']}.jpg';
+                                String answerFilename =
+                                    'answer_${test['test_name']}.jpg';
+
+                                // Check if the files are downloaded
+                                bool isQuestionDownloaded = downloadedFiles
+                                    .containsKey(questionFilename);
+                                bool isAnswerDownloaded =
+                                    downloadedFiles.containsKey(answerFilename);
+
                                 return Padding(
                                   padding: const EdgeInsets.only(
                                     top: 16.0,
@@ -375,20 +388,14 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                             children: [
                                               InkWell(
                                                 onTap: () {
-                                                  String filename =
-                                                      'question_${test['test_name']}.jpg';
-                                                  if (downloadedFiles
-                                                      .containsKey(filename)) {
-                                                    // Open the file if it already exists
-                                                    _openFile(filename);
+                                                  if (isQuestionDownloaded) {
+                                                    _openFile(questionFilename);
                                                   } else {
-                                                    // Download the file if it doesn't exist
                                                     if (test['question'] !=
                                                         null) {
                                                       _downloadFile(
-                                                        test['question'],
-                                                        filename,
-                                                      );
+                                                          test['question'],
+                                                          questionFilename);
                                                     } else {
                                                       ScaffoldMessenger.of(
                                                               context)
@@ -426,7 +433,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        'Questions',
+                                                        'Question',
                                                         style: TextStyle(
                                                           color: Colors
                                                               .indigo.shade900,
@@ -435,8 +442,10 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                                       ),
                                                       const SizedBox(width: 8),
                                                       Icon(
-                                                        Icons
-                                                            .file_download_rounded,
+                                                        isQuestionDownloaded
+                                                            ? Icons.open_in_new
+                                                            : Icons
+                                                                .file_download_rounded,
                                                         color: Colors
                                                             .indigo.shade900,
                                                         size: 16,
@@ -448,20 +457,14 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                               const SizedBox(width: 20),
                                               InkWell(
                                                 onTap: () {
-                                                  String filename =
-                                                      'answer_${test['test_name']}.jpg';
-                                                  if (downloadedFiles
-                                                      .containsKey(filename)) {
-                                                    // Open the file if it already exists
-                                                    _openFile(filename);
+                                                  if (isAnswerDownloaded) {
+                                                    _openFile(answerFilename);
                                                   } else {
-                                                    // Download the file if it doesn't exist
                                                     if (test['answer'] !=
                                                         null) {
                                                       _downloadFile(
-                                                        test['answer'],
-                                                        filename,
-                                                      );
+                                                          test['answer'],
+                                                          answerFilename);
                                                     } else {
                                                       ScaffoldMessenger.of(
                                                               context)
@@ -499,7 +502,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        'Answers',
+                                                        'Answer',
                                                         style: TextStyle(
                                                           color: Colors
                                                               .indigo.shade900,
@@ -508,8 +511,10 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                                                       ),
                                                       const SizedBox(width: 8),
                                                       Icon(
-                                                        Icons
-                                                            .file_download_rounded,
+                                                        isAnswerDownloaded
+                                                            ? Icons.open_in_new
+                                                            : Icons
+                                                                .file_download_rounded,
                                                         color: Colors
                                                             .indigo.shade900,
                                                         size: 16,
