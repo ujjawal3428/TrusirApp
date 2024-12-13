@@ -790,27 +790,45 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     );
   }
 
-  Widget _buildTextField(String hintText,
-      {double height = 58, required ValueChanged<String> onChanged}) {
+   Widget _buildTextField(
+    String hintText, {
+    double height = 58,
+    required ValueChanged<String> onChanged,
+  }) {
     return Container(
       height: height,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
         boxShadow: [
           BoxShadow(
-              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
         ],
       ),
       child: TextField(
         onChanged: onChanged,
         decoration: InputDecoration(
-          label: Text(hintText),
-          border: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding: EdgeInsets.symmetric(
+              horizontal: 16, vertical: height == 126 ? 50 : 17),
+          isDense: true,
         ),
       ),
     );
@@ -825,7 +843,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
         boxShadow: [
           BoxShadow(
               color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
@@ -834,13 +851,24 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       child: TextField(
         controller: _phoneController,
         keyboardType: TextInputType.phone,
-        maxLength: 10,
-        enabled: widget.enablephonefield,
         decoration: InputDecoration(
-          label: Align(alignment: Alignment.centerLeft, child: Text(hintText)),
-          border: InputBorder.none,
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+          isDense: true,
         ),
       ),
     );
