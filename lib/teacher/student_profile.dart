@@ -6,6 +6,7 @@ import 'package:trusir/teacher/student_doubts.dart';
 import 'package:trusir/student/progress_report.dart';
 import 'package:trusir/teacher/student_notice.dart';
 import 'package:trusir/common/test_series.dart';
+import 'package:trusir/teacher/student_profile_page.dart';
 
 class StudentProfileScreen extends StatelessWidget {
   final String name;
@@ -177,14 +178,26 @@ class StudentProfileScreen extends StatelessWidget {
                               // Handle button press
                             },
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 5, bottom: 9, right: 5),
+                              padding: const EdgeInsets.only(
+                                  left: 5, bottom: 9, right: 5),
                               child: Align(
                                 alignment: Alignment.bottomRight,
                                 child: InkWell(
-                                  onTap: (){
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            StudentProfilePage(
+                                          name: name,
+                                          phone: phone,
+                                          profile: image,
+                                          subject: subject,
+                                        ),
+                                      ),
+                                    );
                                   },
-                                  child:const Text(
+                                  child: const Text(
                                     'View Profile',
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 255, 255, 255),
@@ -231,46 +244,46 @@ class StudentProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Flexible(
-                          child: Container(
-                            height: 55,
-                            width: 306,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, top: 10, bottom: 10, right: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Student Attendance',
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const AttendancePage(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 55,
+                              width: 306,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.only(
+                                    left: 20, top: 10, bottom: 10, right: 5),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Student Attendance',
+                                        style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                          Icons.arrow_forward_ios_rounded),
-                                      color: const Color(0xFF48116A),
-                                      iconSize: 20,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const AttendancePage(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                      Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Color(0xFF48116A),
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -305,46 +318,47 @@ class StudentProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Flexible(
-                          child: Container(
-                            height: 55,
-                            width: 306,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, top: 10, bottom: 10, right: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Test Series',
-                                      style: TextStyle(
-                                        fontFamily: 'Poppins',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const TestSeriesScreen(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 55,
+                              width: 306,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.only(
+                                    left: 20, top: 10, bottom: 10, right: 5),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Test Series',
+                                        style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                          Icons.arrow_forward_ios_rounded),
-                                      color: const Color(0xFF48116A),
-                                      iconSize: 20,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const TestSeriesScreen(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                      Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Color(0xFF48116A),
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -379,46 +393,47 @@ class StudentProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Flexible(
-                          child: Container(
-                            height: 55,
-                            width: 306,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, top: 10, bottom: 10, right: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Progress Report',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Poppins',
-                                        fontSize: 16,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ProgressReportPage(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 55,
+                              width: 306,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.only(
+                                    left: 20, top: 10, bottom: 10, right: 5),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Progress Report',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: 'Poppins',
+                                          fontSize: 16,
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                          Icons.arrow_forward_ios_rounded),
-                                      color: const Color(0xFF48116A),
-                                      iconSize: 20,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const ProgressReportPage(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                      Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Color(0xFF48116A),
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -453,48 +468,48 @@ class StudentProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Flexible(
-                          child: Container(
-                            height: 55,
-                            width: 306,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, top: 10, bottom: 10, right: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Student Doubts',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Poppins',
-                                        fontSize: 16,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StudentDoubtsPage(
+                                    userID: userID,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 55,
+                              width: 306,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.only(
+                                    left: 20, top: 10, bottom: 10, right: 5),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Student Doubts',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: 'Poppins',
+                                          fontSize: 16,
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                          Icons.arrow_forward_ios_rounded),
-                                      color: const Color(0xFF48116A),
-                                      iconSize: 20,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                StudentDoubtsPage(
-                                              userID: userID,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                      Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Color(0xFF48116A),
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -529,48 +544,48 @@ class StudentProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Flexible(
-                          child: Container(
-                            height: 55,
-                            width: 306,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, top: 10, bottom: 10, right: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Parents Doubts',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Poppins',
-                                        fontSize: 16,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ParentsDoubtsPage(
+                                    userID: userID,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 55,
+                              width: 306,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.only(
+                                    left: 20, top: 10, bottom: 10, right: 5),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Parents Doubts',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: 'Poppins',
+                                          fontSize: 16,
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                          Icons.arrow_forward_ios_rounded),
-                                      color: const Color(0xFF48116A),
-                                      iconSize: 20,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                ParentsDoubtsPage(
-                                              userID: userID,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                      Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Color(0xFF48116A),
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -605,45 +620,46 @@ class StudentProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Flexible(
-                          child: Container(
-                            height: 55,
-                            width: 306,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, top: 10, bottom: 10, right: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'General Knowledge',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                        fontFamily: 'Poppins',
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AddGK(),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 55,
+                              width: 306,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.only(
+                                    left: 20, top: 10, bottom: 10, right: 5),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'General Knowledge',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                          fontFamily: 'Poppins',
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                          Icons.arrow_forward_ios_rounded),
-                                      color: const Color(0xFF48116A),
-                                      iconSize: 20,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => AddGK(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                      Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Color(0xFF48116A),
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -678,47 +694,47 @@ class StudentProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 10),
                         Flexible(
-                          child: Container(
-                            height: 55,
-                            width: 306,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 20, top: 10, bottom: 10, right: 5),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      'Notice',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                        fontFamily: 'Poppins',
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => StudentNoticeScreen(
+                                          studentuserID: userID,
+                                        )),
+                              );
+                            },
+                            child: Container(
+                              height: 55,
+                              width: 306,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.only(
+                                    left: 20, top: 10, bottom: 10, right: 5),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Notice',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                          fontFamily: 'Poppins',
+                                        ),
                                       ),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(
-                                          Icons.arrow_forward_ios_rounded),
-                                      color: const Color(0xFF48116A),
-                                      iconSize: 20,
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  StudentNoticeScreen(
-                                                    studentuserID: userID,
-                                                  )),
-                                        );
-                                      },
-                                    ),
-                                  ],
+                                      Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Color(0xFF48116A),
+                                        size: 20,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

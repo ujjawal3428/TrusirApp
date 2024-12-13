@@ -208,36 +208,44 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[200],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 5),
+              const Text(
+                'Parents Doubts',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 24,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+        toolbarHeight: 70,
+      ),
       backgroundColor: Colors.grey.shade100,
       body: Stack(
         children: [
           Column(
             children: [
-              InkWell(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20.0, top: 30),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        'assets/dikshaback@2x.png',
-                        width: 58,
-                        height: 58,
-                      ),
-                      const SizedBox(width: 22),
-                      const Text(
-                        'Parents Doubts',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
               const SizedBox(height: 20),
               Expanded(
                 child: FutureBuilder<List<Doubt>>(
