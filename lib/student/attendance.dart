@@ -319,9 +319,11 @@ class _AttendancePageState extends State<AttendancePage> {
             child: Column(children: [
           // Calendar Section
           Padding(
-            padding: const EdgeInsets.only(top: 30, left: 14.0, right: 14),
+            padding:
+                const EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 15),
             child: Container(
-              width: 386,
+              padding: const EdgeInsets.all(10),
+              width: 360,
               height: 360,
               decoration: BoxDecoration(
                 color: Colors.white70,
@@ -361,9 +363,6 @@ class _AttendancePageState extends State<AttendancePage> {
                           icon: const Icon(Icons.arrow_forward_ios_outlined),
                           onPressed: _nextMonth,
                         ),
-                        const SizedBox(
-                          width: 20,
-                        ),
                         TextButton(
                             onPressed: () {
                               setState(() {
@@ -375,7 +374,6 @@ class _AttendancePageState extends State<AttendancePage> {
                               'Today',
                               style: TextStyle(
                                 fontFamily: 'Poppins',
-                                fontWeight: FontWeight.bold,
                                 fontSize: 18,
                                 color: Color(0xFF48116A),
                               ),
@@ -387,13 +385,15 @@ class _AttendancePageState extends State<AttendancePage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: weekdays
-                          .map((day) => Text(
-                                day,
-                                style: const TextStyle(
-                                    color: Color(0xFF48116A),
-                                    fontWeight: FontWeight.bold),
+                          .map((day) => Center(
+                                child: Text(
+                                  day,
+                                  style: const TextStyle(
+                                      color: Color(0xFF48116A),
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ))
                           .toList(),
                     ),
@@ -426,7 +426,7 @@ class _AttendancePageState extends State<AttendancePage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 color: status == "no_data"
-                                    ? Colors.white
+                                    ? Colors.transparent
                                     : Colors.yellow,
                               ),
                               child: Container(
@@ -511,10 +511,10 @@ class _AttendancePageState extends State<AttendancePage> {
     Color color,
   ) {
     return Padding(
-      padding: const EdgeInsets.only(left: 5.0, top: 5),
+      padding: const EdgeInsets.only(left: 0),
       child: Container(
         width: 400,
-        height: 40,
+        height: 58,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
         ),
@@ -523,16 +523,17 @@ class _AttendancePageState extends State<AttendancePage> {
           child: Row(
             children: [
               Container(
-                height: 39,
-                width: 38,
+                height: 42,
+                width: 42,
                 decoration: BoxDecoration(
                   color: color,
                   borderRadius: BorderRadius.circular(7),
                 ),
                 child: Center(
                   child: Text(
+                    textAlign: TextAlign.justify,
                     ' $count',
-                    style: const TextStyle(color: Colors.black, fontSize: 17),
+                    style: const TextStyle(color: Colors.black54, fontSize: 17),
                   ),
                 ),
               ),
