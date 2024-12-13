@@ -37,20 +37,45 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   String _downloadProgress = '';
   Map<String, String> downloadedFiles = {};
 
-   final List<Color> containerColors = [
-    const Color(0xFFF5F5F5), 
-    const Color(0xFFE8F4F8), 
-    const Color.fromARGB(255, 224, 216, 203),  
-    const Color(0xFFF3E5F5),  
-    const Color(0xFFE8F5E9), 
+  final List<Color> containerColors = [
+    Colors.lightBlue.shade50,
+    Colors.lightGreen.shade50,
+    Colors.amber.shade50,
+    Colors.pink.shade50,
+    Colors.lime.shade50,
+    Colors.orange.shade50,
+    Colors.teal.shade50,
   ];
 
   final List<List<Color>> circleColors = [
-    [const Color(0xFFA5D6A7), const Color(0xFFFFB74D)],  
-    [const Color(0xFF90CAF9), const Color.fromARGB(207, 244, 143, 177)],  
-    [const Color(0xFFCE93D8), const Color(0xFF80CBC4)], 
-    [const Color(0xFFFFCC80), const Color(0xFF9FA8DA)],  
-    [const Color(0xFFB39DDB), const Color(0xFF81C784)],  
+    [
+      Colors.lightBlue.shade200,
+      Colors.lightBlue.shade200,
+    ],
+    [
+      Colors.lightGreen.shade200,
+      Colors.lightGreen.shade200,
+    ],
+    [
+      Colors.amber.shade200,
+      Colors.amber.shade200,
+    ],
+    [
+      Colors.pink.shade200,
+      Colors.pink.shade200,
+    ],
+    [
+      Colors.lime.shade200,
+      Colors.lime.shade200,
+    ],
+    [
+      Colors.orange.shade200,
+      Colors.orange.shade200,
+    ],
+    [
+      Colors.teal.shade200,
+      Colors.teal.shade200,
+    ],
   ];
 
   // Add this method to get colors based on index
@@ -266,26 +291,25 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                   final reports = snapshot.data!;
                   // Store the fetched data in _loadedReports
                   _loadedReports = reports;
-                  
+
                   return Column(
-                     children: List.generate(_loadedReports.length, (index) {
-          final report = _loadedReports[index];
-          return _buildPreviousMonthCard(
-            subject: report['subject'],
-            date: report['date'],
-            time: report['time'],
-            marks: report['marks'],
-            reportUrl: report['report'],
-            cardColors: 'color',
-            index: index,
-          );
-                
+                      children: List.generate(_loadedReports.length, (index) {
+                    final report = _loadedReports[index];
+                    return _buildPreviousMonthCard(
+                      subject: report['subject'],
+                      date: report['date'],
+                      time: report['time'],
+                      marks: report['marks'],
+                      reportUrl: report['report'],
+                      cardColors: 'color',
+                      index: index,
+                    );
+                  }));
                 }
-            ));}},
+              },
             ),
             TextButton(
-              onPressed:
-                  _loadMoreReports, 
+              onPressed: _loadMoreReports,
               child: const Text('Load More...'),
             ),
           ],
@@ -412,11 +436,12 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     required String time,
     required String marks,
     required String reportUrl,
-    required String cardColors, required int index,
+    required String cardColors,
+    required int index,
   }) {
     String filename = '${subject}_report_$date.jpg';
     bool isDownloaded = downloadedFiles.containsKey(filename);
-     List<Color> currentCircleColors = getCircleColors(index);
+    List<Color> currentCircleColors = getCircleColors(index);
 
     return Padding(
       padding: const EdgeInsets.only(left: 18.0, right: 18, top: 0, bottom: 10),
@@ -424,7 +449,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
         width: 386,
         height: 136,
         decoration: BoxDecoration(
-           color: getContainerColor(index),
+          color: getContainerColor(index),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Stack(
@@ -433,7 +458,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
               top: -30,
               left: -35,
               child: Image.asset(
-                 color: currentCircleColors[0],
+                color: currentCircleColors[0],
                 'assets/circleleft.png',
                 width: 160,
                 height: 160,
