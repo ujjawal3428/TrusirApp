@@ -13,7 +13,8 @@ import 'package:trusir/common/api.dart';
 import 'package:trusir/common/notificationhelper.dart';
 
 class TestSeriesScreen extends StatefulWidget {
-  const TestSeriesScreen({super.key});
+  final String? userID;
+  const TestSeriesScreen({super.key, required this.userID});
 
   @override
   State<TestSeriesScreen> createState() => _TestSeriesScreenState();
@@ -86,11 +87,9 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   }
 
   Future<void> fetchTestSeries() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userID = prefs.getString('userID');
     try {
       final response = await http
-          .get(Uri.parse('$url/$userID?page=1&data_per_page=2'))
+          .get(Uri.parse('$url/${widget.userID}?page=1&data_per_page=2'))
           .timeout(const Duration(seconds: 10));
       if (response.statusCode == 200) {
         final newData = json.decode(response.body);
