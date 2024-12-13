@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -112,6 +113,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 
   // List to store selected slots for each student form
   final List<Set<String>> selectedSlots = [];
+  String? uploadedPath;
 
   // List to store selected slot strings for each student form
   final List<String> selectedSlotsString = [];
@@ -238,6 +240,96 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     }
   }
 
+  Future<String> uploadFile(String filePath, String fileType) async {
+    final uri = Uri.parse('$baseUrl/api/upload-profile');
+    final request = http.MultipartRequest('POST', uri); // Correct HTTP method
+
+    // Add the file to the request with the correct field name
+    request.files.add(await http.MultipartFile.fromPath(
+        'photo', filePath)); // Field name is 'photo'
+
+    // Send the request
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      // Parse the response to extract the download URL
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse.containsKey('download_url')) {
+        return jsonResponse['download_url'] as String;
+      } else {
+        print('Download URL not found in the response.');
+        return 'null';
+      }
+    } else {
+      print('Failed to upload file: ${response.statusCode}');
+      return 'null';
+    }
+  }
+
+  Future<String?> handleFileSelection(BuildContext context) async {
+    try {
+      // Use FilePicker to select a file
+      final result = await FilePicker.platform.pickFiles();
+      if (result != null && result.files.single.path != null) {
+        final filePath = result.files.single.path!;
+        final fileName = result.files.single.name;
+
+        // Determine file type (use "document" for docx/pdf, "photo" for images)
+        final fileType = fileName.endsWith('.jpg') ||
+                fileName.endsWith('.jpeg') ||
+                fileName.endsWith('.png')
+            ? 'photo'
+            : 'document';
+
+        // Upload the file and get the path
+        uploadedPath = await uploadFile(filePath, fileType);
+
+        if (uploadedPath != 'null') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('File Uploaded Successfully!'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+
+          print('File uploaded successfully: $uploadedPath');
+          return uploadedPath;
+        } else {
+          print('Failed to upload the file.');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Failed to upload the file.(Only upload pdf, docx and image)'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+          return null;
+        }
+      } else {
+        print('No file selected.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No file selected'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        return null;
+      }
+    } catch (e) {
+      print('Error during file selection: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Failed to Upload file.(Only upload pdf, docx and image)'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return null;
+    }
+  }
+
   Future<String> uploadImage(XFile imageFile) async {
     final uri = Uri.parse('$baseUrl/api/upload-profile');
     final request = http.MultipartRequest('POST', uri);
@@ -266,7 +358,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     }
   }
 
-  Future<void> handleImageSelection(int index, String? path) async {
+  Future<void> handleImageSelection(String? path, int index) async {
     try {
       final ImagePicker picker = ImagePicker();
       final XFile? pickedFile =
@@ -274,17 +366,14 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 
       if (pickedFile != null) {
         // Upload the image and get the path
-        final uploadedPath = await uploadImage(pickedFile);
-        if (uploadedPath != 'null') {
+        final newuploadedPath = await uploadImage(pickedFile);
+        if (newuploadedPath != 'null') {
           setState(() {
             // Example: Update the first student's photo path
             if (path == 'profilephoto') {
-              studentForms[index].photoPath = uploadedPath;
-            } else if (path == 'aadharfront') {
-              studentForms[index].aadharFrontPath = uploadedPath;
-            } else if (path == 'aadharback') {
-              studentForms[index].aadharBackPath = uploadedPath;
+              studentForms[index].photoPath = newuploadedPath;
             }
+            //')
             //)
           });
           ScaffoldMessenger.of(context).showSnackBar(
@@ -635,11 +724,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField('Upload Image',
-                width: 200,
-                index: index,
-                path: 'profilephoto',
-                displayPath: studentForms[index].photoPath),
+            _buildFileUploadField('Upload Image', onTap: () {
+              handleImageSelection('profilephoto', index);
+            }, width: 200, displayPath: studentForms[index].photoPath),
           ],
         ),
         const SizedBox(height: 10),
@@ -653,11 +740,18 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField('Upload Image',
-                width: 200,
-                index: index,
-                path: 'aadharfront',
-                displayPath: studentForms[index].aadharFrontPath),
+            _buildFileUploadField('Upload File', onTap: () {
+              setState(() async {
+                uploadedPath = await handleFileSelection(context);
+              });
+              if (uploadedPath != 'null') {
+                setState(() {
+                  // Example: Update the first student's photo path
+                  studentForms[index].aadharFrontPath = uploadedPath;
+                  //)
+                });
+              }
+            }, width: 200, displayPath: studentForms[index].aadharFrontPath),
           ],
         ),
         const SizedBox(height: 10),
@@ -671,16 +765,25 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField('Upload Image',
-                width: 200,
-                index: index,
-                path: 'aadharback',
-                displayPath: studentForms[index].aadharBackPath),
+            _buildFileUploadField('Upload File', onTap: () {
+              setState(() async {
+                uploadedPath = await handleFileSelection(context);
+              });
+              if (uploadedPath != 'null') {
+                setState(() {
+                  // Example: Update the first student's photo path
+                  studentForms[index].aadharBackPath = uploadedPath;
+                  //)
+                });
+              }
+            }, width: 200, displayPath: studentForms[index].aadharBackPath),
           ],
         ),
         const Text('Time Slot:'),
         const SizedBox(height: 10),
-        _buildTimeSlotField(index), // Pass index to handle each form's state
+        TimeSlotField(
+          formData: studentForms[index],
+        ), // Pass index to handle each form's state
         const SizedBox(height: 10),
         // Add more fields as needed
       ],
@@ -817,14 +920,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }
 
   Widget _buildFileUploadField(String placeholder,
-      {required int index,
-      required String path,
-      double width = 200,
-      required displayPath}) {
+      {required VoidCallback onTap, double width = 200, required displayPath}) {
     return GestureDetector(
-      onTap: () {
-        handleImageSelection(index, path);
-      },
+      onTap: onTap,
       child: Container(
         height: 58,
         width: width,
@@ -850,66 +948,45 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       fit: BoxFit.fill,
                     ),
             ),
-            IconButton(
-              icon: const Icon(Icons.upload_file),
-              onPressed: () {},
+            const Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: Icon(Icons.upload_file),
             ),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildTimeSlotField(int index) {
-    if (selectedSlots.length <= index) {
-      selectedSlots.add({});
-      selectedSlotsString.add("");
-    }
-
-    return Wrap(
-      spacing: 10,
-      runSpacing: 10,
-      children: timeSlots.map((slot) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Checkbox(
-              value: selectedSlots[index].contains(slot),
-              onChanged: (value) {
-                setState(() {
-                  if (value ?? false) {
-                    selectedSlots[index].add(slot);
-                  } else {
-                    selectedSlots[index].remove(slot);
-                  }
-
-                  updateSelectedSlots(index);
-                });
-              },
-            ),
-            Text(slot),
-          ],
-        );
-      }).toList(),
-    );
-  }
 }
 
 class TimeSlotField extends StatefulWidget {
-  final TeacherRegistrationDataformData;
-  
-  final dynamic formData; // Assuming you have a FormData class with timeslot field
+  final dynamic
+      formData; // Assuming you have a FormData class with timeslot field
 
-  const TimeSlotField({super.key, required this.formData, this.TeacherRegistrationDataformData});
+  const TimeSlotField({
+    super.key,
+    required this.formData,
+  });
 
   @override
   TimeSlotFieldState createState() => TimeSlotFieldState();
 }
 
 class TimeSlotFieldState extends State<TimeSlotField> {
-  final List<String> morningSlots = ['8-9 AM', '9-10 AM','10-11 AM','11-12 PM'];
-  final List<String> afternoonSlots = ['12-1 PM', '1-2 PM','2-3 PM','3-4 PM', '4-5PM'];
-  final List<String> eveningSlots = ['5-6 PM','6-7 PM','7-8 PM'];
+  final List<String> morningSlots = [
+    '8-9 AM',
+    '9-10 AM',
+    '10-11 AM',
+    '11-12 PM'
+  ];
+  final List<String> afternoonSlots = [
+    '12-1 PM',
+    '1-2 PM',
+    '2-3 PM',
+    '3-4 PM',
+    '4-5PM'
+  ];
+  final List<String> eveningSlots = ['5-6 PM', '6-7 PM', '7-8 PM'];
 
   final Set<String> selectedSlots = {};
 
@@ -929,7 +1006,7 @@ class TimeSlotFieldState extends State<TimeSlotField> {
     return GestureDetector(
       onTap: () => toggleSelection(slot),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5,vertical: 4.0),
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4.0),
         padding: const EdgeInsets.all(9.0),
         decoration: BoxDecoration(
           color: selectedSlots.contains(slot)
@@ -960,7 +1037,7 @@ class TimeSlotFieldState extends State<TimeSlotField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text(
+          Text(
             'Hours of Availability',
             style: TextStyle(
               fontFamily: 'Poppins',

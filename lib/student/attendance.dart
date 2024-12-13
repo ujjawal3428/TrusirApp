@@ -45,6 +45,10 @@ class _AttendancePageState extends State<AttendancePage> {
     final month = _selectedDate.month;
     final year = _selectedDate.year;
 
+    setState(() {
+      _attendanceData.clear(); // Clear old data before fetching new data
+    });
+
     fetchAttendanceData(month, year).then((apiResponse) {
       final monthKey = month.toString();
       if (apiResponse.containsKey(monthKey)) {
@@ -111,6 +115,27 @@ class _AttendancePageState extends State<AttendancePage> {
     }
   }
 
+  void _navigateToYearMonthPicker(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => YearMonthPicker(
+          selectedYear: _selectedDate.year,
+          selectedMonth: _selectedDate.month,
+        ),
+      ),
+    );
+
+    if (result != null) {
+      setState(() {
+        _selectedDate =
+            DateTime(result['year'], result['month'], _selectedDate.day);
+        _fetchAttendanceData();
+        _updateSummary();
+      });
+    }
+  }
+
   void _prevMonth() {
     setState(() {
       if (_selectedDate.month == 1) {
@@ -166,18 +191,18 @@ class _AttendancePageState extends State<AttendancePage> {
 
   String getMonthName(int month) {
     const months = [
-      "January",
-      "February",
-      "March",
-      "April",
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
       "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December"
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
     ];
     return months[month - 1];
   }
@@ -286,33 +311,30 @@ class _AttendancePageState extends State<AttendancePage> {
                 ),
               ],
             ),
-          
           ),
           toolbarHeight: 70,
         ),
-        
         backgroundColor: Colors.grey.shade300,
         body: SingleChildScrollView(
-            child: Column(
-                children: [
+            child: Column(children: [
           // Calendar Section
           Padding(
-            padding: const EdgeInsets.only(top: 30, left : 14.0, right: 14),
+            padding: const EdgeInsets.only(top: 30, left: 14.0, right: 14),
             child: Container(
-
               width: 386,
-              height: 350,
+              height: 360,
               decoration: BoxDecoration(
-              color: Colors.white70,
+                color: Colors.white70,
                 borderRadius: BorderRadius.circular(20),
-                 boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5), // Shadow color
-                  spreadRadius: 1, // Spread radius
-                  blurRadius: 8,   // Blur radius
-                  offset: const Offset(0, 3), // Only apply shadow on the bottom
-                ),
-              ],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5), // Shadow color
+                    spreadRadius: 1, // Spread radius
+                    blurRadius: 8, // Blur radius
+                    offset:
+                        const Offset(0, 3), // Only apply shadow on the bottom
+                  ),
+                ],
               ),
               child: Column(
                 children: [
@@ -320,26 +342,44 @@ class _AttendancePageState extends State<AttendancePage> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
-                      
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.arrow_left),
+                          icon: const Icon(Icons.arrow_back_ios_outlined),
                           onPressed: _prevMonth,
                         ),
                         Text(
                           _monthYearString,
-                          style: const TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 17),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.arrow_right),
+                            icon:
+                                const Icon(Icons.keyboard_arrow_down_outlined),
+                            onPressed: () {
+                              _navigateToYearMonthPicker(context);
+                            }),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_forward_ios_outlined),
                           onPressed: _nextMonth,
                         ),
-                        const SizedBox(width: 20,),
-                        const Text('Today',
-                        style: TextStyle(fontFamily: 'Poppins',
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                         color: Color(0xFF48116A),),)
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedDate = DateTime.now();
+                                _fetchAttendanceData();
+                              });
+                            },
+                            child: const Text(
+                              'Today',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Color(0xFF48116A),
+                              ),
+                            )),
                       ],
                     ),
                   ),
@@ -352,7 +392,7 @@ class _AttendancePageState extends State<AttendancePage> {
                           .map((day) => Text(
                                 day,
                                 style: const TextStyle(
-                                  color: Color(0xFF48116A),
+                                    color: Color(0xFF48116A),
                                     fontWeight: FontWeight.bold),
                               ))
                           .toList(),
@@ -360,46 +400,64 @@ class _AttendancePageState extends State<AttendancePage> {
                   ),
                   // Calendar Dates
                   Expanded(
-                    child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 7,
-                        childAspectRatio: 1.0,
-                      ),
-                      itemCount: _startingWeekday + _daysInMonth,
-                      itemBuilder: (context, index) {
-                        if (index < _startingWeekday) {
-                          return const SizedBox.shrink();
-                        }
-                        int day = index - _startingWeekday + 1;
-                        String status = _attendanceData[day] ?? "no_data";
-                        return GestureDetector(
-                          onTap: () {
-                            _showAttendanceDialog(day, status);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: status == "present"
-                                  ? Colors.green
-                                  : status == "absent"
-                                      ? Colors.red
-                                      : Colors.grey[400],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Text(
-                                '$day',
-                                style: TextStyle(
-                                  color: status == "no_data"
-                                      ? Colors.black
-                                      : Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 7,
+                                childAspectRatio: 0.5,
+                                mainAxisExtent: 45),
+                        itemCount: _startingWeekday + _daysInMonth,
+                        itemBuilder: (context, index) {
+                          if (index < _startingWeekday) {
+                            return const SizedBox.shrink();
+                          }
+                          int day = index - _startingWeekday + 1;
+                          bool isToday = day == DateTime.now().day &&
+                              _selectedDate.month == DateTime.now().month &&
+                              _selectedDate.year == DateTime.now().year;
+                          String status = _attendanceData[day] ?? "no_data";
+                          return GestureDetector(
+                            onTap: () {
+                              _showAttendanceDialog(day, status);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: status == "no_data"
+                                    ? Colors.white
+                                    : Colors.yellow,
+                              ),
+                              child: Container(
+                                margin: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                    color: status == "present"
+                                        ? Colors.green
+                                        : status == "absent"
+                                            ? Colors.red
+                                            : Colors.grey[400],
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                        color: isToday
+                                            ? const Color(0xFF48116A)
+                                            : Colors.white,
+                                        width: isToday ? 3 : 0)),
+                                child: Center(
+                                  child: Text(
+                                    '$day',
+                                    style: TextStyle(
+                                      color: status == "no_data"
+                                          ? Colors.black
+                                          : Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -415,39 +473,36 @@ class _AttendancePageState extends State<AttendancePage> {
                     _summaryData['total_classes_taken'], Colors.yellow),
                 _buildSummaryCard(
                     'Present', _summaryData['present'], Colors.green),
-                _buildSummaryCard(
-                    'Absent', _summaryData['absent'], Colors.red),
+                _buildSummaryCard('Absent', _summaryData['absent'], Colors.red),
                 _buildSummaryCard('Class not taken',
-                    _summaryData['class_not_taken'], Colors.grey.shade200),  
+                    _summaryData['class_not_taken'], Colors.grey.shade400),
               ],
             ),
           ),
-           const SizedBox(height: 50,),
-                     Padding(
-                       padding: const EdgeInsets.only(left: 10.0, right: 10),
-                       child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              height: 45,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                gradient: const LinearGradient(
-                                  colors: [Color(0xFF045C19), Color(0xFF77D317)],
-                                ),
-                              ),
-                              child: TextButton(
-                                onPressed: () {
-                                },
-                                child: const Text(
-                                  'Send Approval',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                              ),
-                            ),
-                     ),
-        ])
-        )
-        );
+          const SizedBox(
+            height: 50,
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 10.0, right: 10),
+          //   child: Container(
+          //     width: MediaQuery.of(context).size.width,
+          //     height: 45,
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(15),
+          //       gradient: const LinearGradient(
+          //         colors: [Color(0xFF045C19), Color(0xFF77D317)],
+          //       ),
+          //     ),
+          //     child: TextButton(
+          //       onPressed: () {},
+          //       child: const Text(
+          //         'Send Approval',
+          //         style: TextStyle(color: Colors.white, fontSize: 20),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+        ])));
   }
 
   Widget _buildSummaryCard(
@@ -477,7 +532,7 @@ class _AttendancePageState extends State<AttendancePage> {
                 child: Center(
                   child: Text(
                     ' $count',
-                    style: const TextStyle(color: Colors.black, fontSize: 20),
+                    style: const TextStyle(color: Colors.black, fontSize: 17),
                   ),
                 ),
               ),
@@ -492,6 +547,45 @@ class _AttendancePageState extends State<AttendancePage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class YearMonthPicker extends StatelessWidget {
+  final int selectedYear;
+  final int selectedMonth;
+
+  const YearMonthPicker(
+      {super.key, required this.selectedYear, required this.selectedMonth});
+
+  @override
+  Widget build(BuildContext context) {
+    final int currentYear = DateTime.now().year;
+    final List<int> years =
+        List.generate(currentYear - 2000 + 1, (index) => 2000 + index);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Select Year and Month'),
+      ),
+      body: ListView.builder(
+        itemCount: years.length,
+        itemBuilder: (context, index) {
+          int year = years[index];
+          return ExpansionTile(
+            title: Text('$year'),
+            children: List.generate(12, (monthIndex) {
+              return ListTile(
+                title: Text('Month: ${monthIndex + 1}'),
+                onTap: () {
+                  Navigator.pop(
+                      context, {'year': year, 'month': monthIndex + 1});
+                },
+              );
+            }),
+          );
+        },
       ),
     );
   }

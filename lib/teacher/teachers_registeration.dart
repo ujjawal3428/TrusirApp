@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -89,6 +90,96 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   String? phoneNum;
 
   Set<String> selectedSlots = {}; // Store selected time slots
+  String? uploadedPath;
+  Future<String> uploadFile(String filePath, String fileType) async {
+    final uri = Uri.parse('$baseUrl/api/upload-profile');
+    final request = http.MultipartRequest('POST', uri); // Correct HTTP method
+
+    // Add the file to the request with the correct field name
+    request.files.add(await http.MultipartFile.fromPath(
+        'photo', filePath)); // Field name is 'photo'
+
+    // Send the request
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      // Parse the response to extract the download URL
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse.containsKey('download_url')) {
+        return jsonResponse['download_url'] as String;
+      } else {
+        print('Download URL not found in the response.');
+        return 'null';
+      }
+    } else {
+      print('Failed to upload file: ${response.statusCode}');
+      return 'null';
+    }
+  }
+
+  Future<String?> handleFileSelection(BuildContext context) async {
+    try {
+      // Use FilePicker to select a file
+      final result = await FilePicker.platform.pickFiles();
+      if (result != null && result.files.single.path != null) {
+        final filePath = result.files.single.path!;
+        final fileName = result.files.single.name;
+
+        // Determine file type (use "document" for docx/pdf, "photo" for images)
+        final fileType = fileName.endsWith('.jpg') ||
+                fileName.endsWith('.jpeg') ||
+                fileName.endsWith('.png')
+            ? 'photo'
+            : 'document';
+
+        // Upload the file and get the path
+        uploadedPath = await uploadFile(filePath, fileType);
+
+        if (uploadedPath != 'null') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('File Uploaded Successfully!'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+
+          print('File uploaded successfully: $uploadedPath');
+          return uploadedPath;
+        } else {
+          print('Failed to upload the file.');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Failed to upload the file.(Only upload pdf, docx and image)'),
+              duration: Duration(seconds: 1),
+            ),
+          );
+          return null;
+        }
+      } else {
+        print('No file selected.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No file selected'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        return null;
+      }
+    } catch (e) {
+      print('Error during file selection: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Failed to Upload file.(Only upload pdf, docx and image)'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return null;
+    }
+  }
 
   Future<String> uploadImage(XFile imageFile) async {
     final uri = Uri.parse('$baseUrl/api/upload-profile');
@@ -568,10 +659,9 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
-                  _buildFileUploadField('Upload Image',
-                      width: 200,
-                      path: 'profilephoto',
-                      displayPath: formData.photoPath),
+                  _buildFileUploadField('Upload Image', width: 200, onTap: () {
+                    handleImageSelection('profilephoto');
+                  }, displayPath: formData.photoPath),
                 ],
               ),
               const SizedBox(height: 10),
@@ -586,10 +676,18 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
-                  _buildFileUploadField('Upload Image',
-                      width: 200,
-                      path: 'aadharfront',
-                      displayPath: formData.aadharFrontPath),
+                  _buildFileUploadField('Upload File', width: 200, onTap: () {
+                    setState(() async {
+                      uploadedPath = await handleFileSelection(context);
+                    });
+                    if (uploadedPath != 'null') {
+                      setState(() {
+                        // Example: Update the first student's photo path
+                        formData.aadharFrontPath = uploadedPath;
+                        //)
+                      });
+                    }
+                  }, displayPath: formData.aadharFrontPath),
                 ],
               ),
               const SizedBox(height: 10),
@@ -603,10 +701,18 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
-                  _buildFileUploadField('Upload Image',
-                      width: 200,
-                      path: 'aadharback',
-                      displayPath: formData.aadharBackPath),
+                  _buildFileUploadField('Upload File', width: 200, onTap: () {
+                    setState(() async {
+                      uploadedPath = await handleFileSelection(context);
+                    });
+                    if (uploadedPath != 'null') {
+                      setState(() {
+                        // Example: Update the first student's photo path
+                        formData.aadharBackPath = uploadedPath;
+                        //)
+                      });
+                    }
+                  }, displayPath: formData.aadharBackPath),
                 ],
               ),
               const SizedBox(height: 10),
@@ -621,10 +727,9 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
-                  _buildFileUploadField('Upload Image',
-                      width: 200,
-                      path: 'signature',
-                      displayPath: formData.signaturePath),
+                  _buildFileUploadField('Upload Image', onTap: () {
+                    handleImageSelection('signature');
+                  }, width: 200, displayPath: formData.signaturePath),
                 ],
               ),
               const SizedBox(height: 10),
@@ -874,11 +979,11 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   }
 
   Widget _buildFileUploadField(String placeholder,
-      {required String path, double width = 200, required displayPath}) {
+      {double width = 200,
+      required displayPath,
+      required VoidCallback? onTap}) {
     return GestureDetector(
-      onTap: () {
-        handleImageSelection(path);
-      },
+      onTap: onTap,
       child: Container(
         height: 58,
         width: width,
@@ -904,11 +1009,9 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       fit: BoxFit.fill,
                     ),
             ),
-            IconButton(
-              icon: const Icon(Icons.upload_file),
-              onPressed: () {
-                handleImageSelection(path);
-              },
+            const Padding(
+              padding: EdgeInsets.only(right: 15),
+              child: Icon(Icons.upload_file),
             ),
           ],
         ),
@@ -928,9 +1031,20 @@ class TimeSlotField extends StatefulWidget {
 }
 
 class TimeSlotFieldState extends State<TimeSlotField> {
-  final List<String> morningSlots = ['8-9 AM', '9-10 AM','10-11 AM','11-12 PM'];
-  final List<String> afternoonSlots = ['12-1 PM', '1-2 PM','2-3 PM','3-4 PM', '4-5PM'];
-  final List<String> eveningSlots = ['5-6 PM','6-7 PM','7-8 PM'];
+  final List<String> morningSlots = [
+    '8-9 AM',
+    '9-10 AM',
+    '10-11 AM',
+    '11-12 PM'
+  ];
+  final List<String> afternoonSlots = [
+    '12-1 PM',
+    '1-2 PM',
+    '2-3 PM',
+    '3-4 PM',
+    '4-5PM'
+  ];
+  final List<String> eveningSlots = ['5-6 PM', '6-7 PM', '7-8 PM'];
 
   final Set<String> selectedSlots = {};
 
@@ -950,7 +1064,7 @@ class TimeSlotFieldState extends State<TimeSlotField> {
     return GestureDetector(
       onTap: () => toggleSelection(slot),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5,vertical: 4.0),
+        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4.0),
         padding: const EdgeInsets.all(9.0),
         decoration: BoxDecoration(
           color: selectedSlots.contains(slot)
@@ -981,7 +1095,7 @@ class TimeSlotFieldState extends State<TimeSlotField> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text(
+          Text(
             'Hours of Availability',
             style: TextStyle(
               fontFamily: 'Poppins',

@@ -21,17 +21,16 @@ class Teacherssettings extends StatelessWidget {
           child: Row(
             children: [
               IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Color(0xFF48116A)),
-          onPressed: () { 
-             Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const TeacherFacilities(),
-                                    ),
-                                  );
-  }),
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                      color: Color(0xFF48116A)),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TeacherFacilities(),
+                      ),
+                    );
+                  }),
               const Text(
                 'Setting',
                 style: TextStyle(
@@ -76,14 +75,14 @@ class Teacherssettings extends StatelessWidget {
                   const SizedBox(width: 10),
                   Flexible(
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const TeacherEditProfileScreen(),
-                                    ),
-                                  );
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const TeacherEditProfileScreen(),
+                          ),
+                        );
                       },
                       child: Container(
                         height: 55,
@@ -107,13 +106,11 @@ class Teacherssettings extends StatelessWidget {
                                     fontSize: 16,
                                   ),
                                 ),
-                               
-                                       Icon(Icons.arrow_forward_ios_rounded, 
-                               color:  Color(0xFF48116A),
-                                      ),
-                               ], 
-                                 
-      
+                                Padding(
+                                  padding: EdgeInsets.only(right: 15),
+                                  child: Icon(Icons.arrow_forward_ios_rounded),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -150,13 +147,13 @@ class Teacherssettings extends StatelessWidget {
                   const SizedBox(width: 10),
                   Flexible(
                     child: GestureDetector(
-                      onTap: (){
-                         Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const AboutUsPage(),
-                                    ),
-                                  );
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AboutUsPage(),
+                          ),
+                        );
                       },
                       child: Container(
                         height: 55,
@@ -165,7 +162,7 @@ class Teacherssettings extends StatelessWidget {
                           color: Colors.grey.shade100,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child:const Padding(
+                        child: const Padding(
                           padding: EdgeInsets.only(
                               left: 20, top: 10, bottom: 10, right: 10),
                           child: Align(
@@ -173,17 +170,17 @@ class Teacherssettings extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                               Text(
+                                Text(
                                   'About Us',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
                                 ),
-                                
-                                Icon(Icons.arrow_forward_ios_rounded, 
-                                 color:  Color(0xFF48116A),
-                                        ),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 15),
+                                  child: Icon(Icons.arrow_forward_ios_rounded),
+                                ),
                               ],
                             ),
                           ),
@@ -221,13 +218,13 @@ class Teacherssettings extends StatelessWidget {
                   const SizedBox(width: 10),
                   Flexible(
                     child: GestureDetector(
-                      onTap: (){
-                         Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const Contactus(),
-                                    ),
-                                  );
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Contactus(),
+                          ),
+                        );
                       },
                       child: Container(
                         height: 55,
@@ -244,17 +241,17 @@ class Teacherssettings extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                               Text(
+                                Text(
                                   'Contact Us',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
                                 ),
-                                
-                                 Icon(Icons.arrow_forward_ios_rounded, 
-                                   color:  Color(0xFF48116A),
-                                          ),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 15),
+                                  child: Icon(Icons.arrow_forward_ios_rounded),
+                                ),
                               ],
                             ),
                           ),
@@ -292,14 +289,14 @@ class Teacherssettings extends StatelessWidget {
                   const SizedBox(width: 10),
                   Flexible(
                     child: GestureDetector(
-                      onTap: (){
-                         Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const TermsAndConditionsPage(),
-                                      ),
-                                    );
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const TermsAndConditionsPage(),
+                          ),
+                        );
                       },
                       child: Container(
                         height: 55,
@@ -316,16 +313,17 @@ class Teacherssettings extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                               Text(
+                                Text(
                                   'Terms & Conditions',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
                                 ),
-                                Icon(Icons.arrow_forward_ios_rounded, 
-                                   color:  Color(0xFF48116A),
-                                          ),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 15),
+                                  child: Icon(Icons.arrow_forward_ios_rounded),
+                                ),
                               ],
                             ),
                           ),
