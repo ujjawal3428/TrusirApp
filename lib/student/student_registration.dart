@@ -742,7 +742,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField('Upload Image', onTap: () {
+            _buildFileUploadField(
+                studentForms[index].photoPath == null
+                    ? 'Upload Image'
+                    : 'Update Image', onTap: () {
               handleImageSelection('profilephoto', index);
             }, width: 200, displayPath: studentForms[index].photoPath),
           ],
@@ -758,7 +761,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField('Upload File', onTap: () {
+            _buildFileUploadField(
+                studentForms[index].aadharFrontPath == null
+                    ? 'Upload File'
+                    : 'Update File', onTap: () {
               setState(() async {
                 uploadedPath = await handleFileSelection(context);
               });
@@ -783,7 +789,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField('Upload File', onTap: () {
+            _buildFileUploadField(
+                studentForms[index].aadharBackPath == null
+                    ? 'Upload File'
+                    : 'Update File', onTap: () {
               setState(() async {
                 uploadedPath = await handleFileSelection(context);
               });

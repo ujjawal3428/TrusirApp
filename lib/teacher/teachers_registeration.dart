@@ -677,7 +677,11 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
-                  _buildFileUploadField('Upload Image', width: 200, onTap: () {
+                  _buildFileUploadField(
+                      formData.photoPath == null
+                          ? 'Upload Image'
+                          : 'Update Image',
+                      width: 200, onTap: () {
                     handleImageSelection('profilephoto');
                   }, displayPath: formData.photoPath),
                 ],
@@ -694,7 +698,11 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
-                  _buildFileUploadField('Upload File', width: 200, onTap: () {
+                  _buildFileUploadField(
+                      formData.aadharFrontPath == null
+                          ? 'Upload File'
+                          : 'Update File',
+                      width: 200, onTap: () {
                     setState(() async {
                       uploadedPath = await handleFileSelection(context);
                     });
@@ -719,7 +727,11 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
-                  _buildFileUploadField('Upload File', width: 200, onTap: () {
+                  _buildFileUploadField(
+                      formData.aadharBackPath == null
+                          ? 'Upload File'
+                          : 'Update File',
+                      width: 200, onTap: () {
                     setState(() async {
                       uploadedPath = await handleFileSelection(context);
                     });
@@ -745,7 +757,10 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       style: TextStyle(fontSize: 14),
                     ),
                   ),
-                  _buildFileUploadField('Upload Image', onTap: () {
+                  _buildFileUploadField(
+                      formData.signaturePath == null
+                          ? 'Upload Image'
+                          : 'Update Image', onTap: () {
                     handleImageSelection('signature');
                   }, width: 200, displayPath: formData.signaturePath),
                 ],
