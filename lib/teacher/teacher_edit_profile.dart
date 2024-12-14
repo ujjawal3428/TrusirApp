@@ -132,12 +132,30 @@ class TeacherEditProfileScreenState extends State<TeacherEditProfileScreen> {
           print('Image uploaded successfully: $uploadedPath');
         } else {
           print('Failed to upload the image.');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to upload Image'),
+              duration: Duration(seconds: 1),
+            ),
+          );
         }
       } else {
         print('No image selected.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No image selected'),
+            duration: Duration(seconds: 1),
+          ),
+        );
       }
     } catch (e) {
       print('Error during image selection: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error during image selection: $e'),
+          duration: const Duration(seconds: 1),
+        ),
+      );
     }
   }
 

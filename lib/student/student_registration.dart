@@ -385,12 +385,30 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           print('Image uploaded successfully: $uploadedPath');
         } else {
           print('Failed to upload the image.');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to upload the image.'),
+              duration: Duration(seconds: 1),
+            ),
+          );
         }
       } else {
         print('No image selected.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No image selected.'),
+            duration: Duration(seconds: 1),
+          ),
+        );
       }
     } catch (e) {
       print('Error during image selection: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error during image selection: $e'),
+          duration: const Duration(seconds: 1),
+        ),
+      );
     }
   }
 
@@ -790,7 +808,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     );
   }
 
-   Widget _buildTextField(
+  Widget _buildTextField(
     String hintText, {
     double height = 58,
     required ValueChanged<String> onChanged,
