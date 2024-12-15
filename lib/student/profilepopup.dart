@@ -8,7 +8,7 @@ import 'package:trusir/student/my_profile.dart';
 import 'package:trusir/student/popup_splash_screen.dart';
 
 class ProfilePopup extends StatefulWidget {
-  const ProfilePopup({super.key});
+  const ProfilePopup({Key? key}) : super(key: key);
 
   @override
   State<ProfilePopup> createState() => _ProfilePopupState();
@@ -41,15 +41,13 @@ class _ProfilePopupState extends State<ProfilePopup> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            PopUpSplashScreen(userId: selectedProfile!['userID']),
+        builder: (context) => PopUpSplashScreen(userId: selectedProfile!['userID']),
       ),
       (route) => false,
     );
   }
 
-  Future<void> fetchDataAndStoreInSharedPreferences(
-      Map<String, dynamic> profile) async {
+  Future<void> fetchDataAndStoreInSharedPreferences(Map<String, dynamic> profile) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? savedProfiles = prefs.getString('profiles');
     if (savedProfiles != null) {
@@ -59,8 +57,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
     } else {
       String? phonenum = prefs.getString('phone_number');
       try {
-        final response =
-            await http.get(Uri.parse('$baseUrl/api/users/$phonenum'));
+        final response = await http.get(Uri.parse('$baseUrl/api/users/$phonenum'));
         if (response.statusCode == 200) {
           final responseData = json.decode(response.body);
           if (responseData['success'] == true) {
@@ -69,8 +66,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
               prefs.setString('profiles', profiles!);
               if (responseData['data'].isNotEmpty && selectedProfile == null) {
                 selectedProfile = responseData['data'][0];
-                prefs.setString(
-                    'selectedProfile', json.encode(selectedProfile));
+                prefs.setString('selectedProfile', json.encode(selectedProfile));
               }
             });
           }
@@ -100,6 +96,79 @@ class _ProfilePopupState extends State<ProfilePopup> {
     );
   }
 
+  Widget _buildProfileHeader() {
+    return Container(
+      
+      padding: const EdgeInsets.all(7),
+      decoration: BoxDecoration(
+        color: Colors.purple.shade50,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Hero(
+            tag: 'profile_image',
+            child: CircleAvatar(
+              radius: 40,
+              backgroundImage: selectedProfile?['profile'] != null
+                  ? NetworkImage(selectedProfile!['profile'])
+                  : const AssetImage('assets/rakesh@3x.png') as ImageProvider,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  selectedProfile?['name'] ?? 'Your Name',
+                  style: const TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.purple,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Class: ${selectedProfile?['class'] ?? 'N/A'}',
+                  style: TextStyle(
+                     fontFamily: 'Poppins',
+                    fontSize: 14,
+                    color: Colors.grey[800],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MyProfileScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  ),
+                  child: const Text(
+                    'View Profile',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return profiles != null
@@ -111,221 +180,137 @@ class _ProfilePopupState extends State<ProfilePopup> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 26.0),
                   child: Container(
-                    height: 500,
-                    color: Colors.white,
-                    child: FutureBuilder(
-                      future: getProfiles(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text("Error: ${snapshot.error}"));
-                        } else {
-                          List<Map<String, dynamic>> data =
-                              snapshot.data as List<Map<String, dynamic>>;
-
-                          return Stack(children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                // Top Section
-                                Container(
-                                  padding: const EdgeInsets.all(24),
-                                  child: Row(
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 35,
-                                        backgroundImage:
-                                            selectedProfile?['profile'] != null
-                                                ? NetworkImage(
-                                                    selectedProfile!['profile'])
-                                                : const AssetImage(
-                                                        'assets/rakesh@3x.png')
-                                                    as ImageProvider,
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              selectedProfile?['name'] ??
-                                                  'Your Name',
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              'Class: ${selectedProfile?['class']}',
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.grey[700],
-                                              ),
-                                            ),
-                                            const SizedBox(height: 6),
-                                            SizedBox(
-                                              height: 25,
-                                              width: 80,
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            const MyProfileScreen()),
-                                                  );
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      Colors.purple,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                  ),
-                                                ),
-                                                child: const Text(
-                                                  'View',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 15,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                          Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.all(0),
+                child: IconButton(
+                                    icon: const Icon(Icons.close, color: Colors.grey),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: 10.0,
-                                    right: 10,
-                                  ),
-                                  child: Container(
-                                    height: 230,
-                                    width: double.infinity,
-                                    color: Colors.grey[100],
-                                    child: ListView.builder(
-                                      itemCount: data.length,
-                                      itemBuilder: (context, index) {
-                                        return Column(
-                                          children: [
-                                            ListTile(
-                                              contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 0),
-                                              title: Text(data[index]['name']),
-                                              subtitle: Text(
-                                                  'Class: ${data[index]['class']}'),
-                                              leading: CircleAvatar(
-                                                radius: 18,
-                                                backgroundImage: data[index]
-                                                            ['profile'] !=
-                                                        null
-                                                    ? NetworkImage(
-                                                        data[index]['profile'])
-                                                    : const NetworkImage(
-                                                        'https://via.placeholder.com/150'),
-                                              ),
-                                              onTap: () async {
-                                                setState(() {
-                                                  // Remove the selected profile from its current position
-                                                  final selected =
-                                                      data.removeAt(index);
-                                                  // Insert it at the top of the list
-                                                  data.insert(0, selected);
-                                                  // Update the selectedProfile to the newly selected one
-                                                  selectedProfile = selected;
-                                                });
-
-                                                // Save the reordered list and selected profile
-                                                final SharedPreferences prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-                                                prefs.setString('profiles',
-                                                    json.encode(data));
-                                                prefs.setString(
-                                                    'selectedProfile',
-                                                    json.encode(
-                                                        selectedProfile!));
-
-                                                await saveSelectedProfile(
-                                                    selectedProfile!);
-                                              },
-                                            ),
-                                            Divider(
-                                              color: Colors.grey[300],
-                                              thickness: 1,
-                                              height: 1,
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(18.0),
-                                      child: Container(
-                                        width: 80,
-                                        height: 26,
-                                        decoration: BoxDecoration(
-                                          border:
-                                              Border.all(color: Colors.black),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: TextButton(
-                                          style: TextButton.styleFrom(
-                                            padding: EdgeInsets.zero,
-                                            minimumSize: Size.zero,
-                                            tapTargetSize: MaterialTapTargetSize
-                                                .shrinkWrap,
-                                          ),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            logout(context);
-                                          },
-                                          child: const Center(
-                                            child: Text('Sign Out',
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 12,
-                                                )),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+              ),
+            ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: _buildProfileHeader(),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Container(
+                            height: 300,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            Positioned(
-                              top: 2,
-                              right: 4,
-                              child: IconButton(
-                                icon: const Icon(Icons.close),
+                            child: FutureBuilder(
+                              future: getProfiles(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const Center(child: CircularProgressIndicator());
+                                } else if (snapshot.hasError) {
+                                  return Center(child: Text("Error: ${snapshot.error}"));
+                                } else {
+                                  List<Map<String, dynamic>> data =
+                                      snapshot.data as List<Map<String, dynamic>>;
+
+                                  return ListView.separated(
+                                    itemCount: data.length,
+                                    separatorBuilder: (context, index) => const Divider(
+                                      color: Colors.white,
+                                      height: 1,
+                                    ),
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        contentPadding: const EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                          vertical: 8,
+                                        ),
+                                        leading: CircleAvatar(
+                                          radius: 25,
+                                          backgroundImage: data[index]['profile'] != null
+                                              ? NetworkImage(data[index]['profile'])
+                                              : const NetworkImage(
+                                                  'https://via.placeholder.com/150'),
+                                        ),
+                                        title: Text(
+                                          data[index]['name'],
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          'Class: ${data[index]['class']}',
+                                          style: TextStyle(
+                                            color: Colors.grey[700],
+                                          ),
+                                        ),
+                                        onTap: () async {
+                                          setState(() {
+                                            final selected = data.removeAt(index);
+                                            data.insert(0, selected);
+                                            selectedProfile = selected;
+                                          });
+
+                                          final SharedPreferences prefs =
+                                              await SharedPreferences.getInstance();
+                                          prefs.setString('profiles', json.encode(data));
+                                          prefs.setString(
+                                              'selectedProfile', json.encode(selectedProfile!));
+
+                                          await saveSelectedProfile(selectedProfile!);
+                                        },
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Spacer(),
+                              ElevatedButton(
                                 onPressed: () {
                                   Navigator.pop(context);
+                                  logout(context);
                                 },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                                  foregroundColor: Colors.red,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 4,
+                                  ),
+                                ),
+                                child: const Text('Sign Out'),
                               ),
-                            ),
-                          ]);
-                        }
-                      },
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -334,6 +319,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
           )
         : const Scaffold(
             backgroundColor: Colors.white30,
-            body: Center(child: CircularProgressIndicator()));
+            body: Center(child: CircularProgressIndicator()),
+          );
   }
 }
