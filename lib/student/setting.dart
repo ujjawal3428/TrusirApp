@@ -22,6 +22,7 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.grey[50],
         elevation: 0,
         title: Padding(

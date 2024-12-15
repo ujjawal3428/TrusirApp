@@ -5,25 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as path;
 import 'package:trusir/common/api.dart';
 import 'package:trusir/student/student_doubt.dart';
 
 class DrawPadPainter extends CustomPainter {
-  final List<Offset?> points;
+  final List<DrawPoint> points;
 
   DrawPadPainter(this.points);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.black
-      ..strokeCap = StrokeCap.round
-      ..strokeWidth = 4.0;
-
     for (int i = 0; i < points.length - 1; i++) {
-      if (points[i] != null && points[i + 1] != null) {
-        canvas.drawLine(points[i]!, points[i + 1]!, paint);
+      if (points[i].offset != null && points[i + 1].offset != null) {
+        final paint = Paint()
+          ..color = points[i].color
+          ..strokeCap = StrokeCap.round
+          ..strokeWidth = points[i].strokeWidth;
+        canvas.drawLine(points[i].offset!, points[i + 1].offset!, paint);
       }
     }
   }
@@ -34,71 +33,165 @@ class DrawPadPainter extends CustomPainter {
   }
 }
 
+class DrawPoint {
+  final Offset? offset;
+  final Color color;
+  final double strokeWidth;
+
+  DrawPoint(this.offset, this.color, this.strokeWidth);
+}
+
+class ColorPickerDialog extends StatelessWidget {
+  final Color currentColor;
+  final ValueChanged<Color> onColorSelected;
+
+  static const List<Color> colorOptions = [
+    Colors.black,
+    Colors.red,
+    Colors.pink,
+    Colors.purple,
+    Colors.deepPurple,
+    Colors.indigo,
+    Colors.blue,
+    Colors.lightBlue,
+    Colors.cyan,
+    Colors.teal,
+    Colors.green,
+    Colors.lightGreen,
+    Colors.lime,
+    Colors.yellow,
+    Colors.amber,
+    Colors.orange,
+    Colors.deepOrange,
+    Colors.brown,
+    Colors.grey,
+    Colors.blueGrey,
+  ];
+
+  const ColorPickerDialog({
+    super.key,
+    required this.currentColor,
+    required this.onColorSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Select Color'),
+      content: SizedBox(
+        width: 300,
+        height: 300,
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+          ),
+          itemCount: colorOptions.length,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                onColorSelected(colorOptions[index]);
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colorOptions[index],
+                  border: Border.all(
+                    color: currentColor == colorOptions[index]
+                        ? Colors.white
+                        : Colors.grey,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
 class DrawPad extends StatefulWidget {
-  const DrawPad({super.key});
+  const DrawPad({Key? key}) : super(key: key);
 
   @override
   DrawPadState createState() => DrawPadState();
 }
 
 class DrawPadState extends State<DrawPad> {
-  final List<Offset?> _points = [];
+  final List<DrawPoint> _points = [];
   final GlobalKey _repaintBoundaryKey = GlobalKey();
+  Color _currentColor = Colors.black;
+  double _strokeWidth = 4.0;
+  bool _isEraser = false;
 
-  Future<String> uploadImage(File imageFile) async {
-    final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri);
+  Future<String> _uploadImage(File imageFile) async {
+    try {
+      final uri = Uri.parse('$baseUrl/api/upload-profile');
+      final request = http.MultipartRequest('POST', uri);
 
-    // Add the image file to the request
-    request.files
-        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
+      request.files.add(
+        await http.MultipartFile.fromPath('photo', imageFile.path),
+      );
 
-    // Send the request
-    final response = await request.send();
+      final response = await request.send();
 
-    if (response.statusCode == 201) {
-      // Parse the response to extract the download URL
-      final responseBody = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+      if (response.statusCode == 201) {
+        final responseBody = await response.stream.bytesToString();
+        final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
 
-      if (jsonResponse.containsKey('download_url')) {
-        return jsonResponse['download_url'] as String;
+        return jsonResponse['download_url'] ?? 'null';
       } else {
-        print('Download URL not found in the response.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Upload failed: ${response.statusCode}')),
+        );
         return 'null';
       }
-    } else {
-      print('Failed to upload image: ${response.statusCode}');
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error uploading image: $e')),
+      );
       return 'null';
     }
   }
 
   Future<void> _uploadDrawing(BuildContext context) async {
     try {
-      final boundary = _repaintBoundaryKey.currentContext!.findRenderObject()
-          as RenderRepaintBoundary;
+      final boundary = _repaintBoundaryKey.currentContext?.findRenderObject()
+          as RenderRepaintBoundary?;
+      if (boundary == null) throw Exception("Boundary not found");
+
       final image = await boundary.toImage(pixelRatio: 3.0);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      final imageBytes = byteData!.buffer.asUint8List();
+      
+      if (byteData == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to convert image')),
+        );
+        return;
+      }
 
-      // Save the image to a temporary file
+      final imageBytes = byteData.buffer.asUint8List();
+
       final tempDir = await getTemporaryDirectory();
-      final filePath = join(tempDir.path, 'drawing.png');
+      final filePath = path.join(tempDir.path, 'drawing.png');
       final file = File(filePath)..writeAsBytesSync(imageBytes);
 
-      // Upload the image using the provided method
-      final downloadUrl = await uploadImage(file);
+      final downloadUrl = await _uploadImage(file);
 
       if (downloadUrl != 'null') {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Uploaded successfully!')),
         );
         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => StudentDoubtScreen(
-                      drawing: downloadUrl,
-                    )));
+          context,
+          MaterialPageRoute(
+            builder: (context) => StudentDoubtScreen(drawing: downloadUrl),
+          ),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to upload drawing')),
@@ -113,85 +206,166 @@ class DrawPadState extends State<DrawPad> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text(
-          'Drawpad',
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-        ),
-        Center(
-          child: Stack(
-            children: [
-              RepaintBoundary(
-                key: _repaintBoundaryKey,
-                child: Container(
-                  width: 700,
-                  height: MediaQuery.of(context).size.height * 0.7,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: GestureDetector(
-                    onPanUpdate: (details) {
-                      setState(() {
-                        RenderBox box = context.findRenderObject() as RenderBox;
-                        final localPosition =
-                            box.globalToLocal(details.globalPosition);
-                        _points.add(localPosition);
-                      });
-                    },
-                    onPanEnd: (details) => _points.add(null),
-                    child: CustomPaint(
-                      painter: DrawPadPainter(_points),
-                      size: Size.infinite,
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Row(
+          children: [
+             IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            const Text('Draw Pad',
+                  style: TextStyle(fontFamily: 'Poppins')),
+          ],
+        )),
+      body: Column(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                // Left sidebar with tool buttons
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.brush),
+                      color: _isEraser ? Colors.grey : _currentColor,
+                      onPressed: () => setState(() => _isEraser = false),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.circle_outlined),
+                      color: _isEraser ? Colors.red : Colors.grey,
+                      onPressed: () => setState(() => _isEraser = true),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.color_lens),
+                      onPressed: () async {
+                        await showDialog(
+                          context: context,
+                          builder: (context) => ColorPickerDialog(
+                            currentColor: _currentColor,
+                            onColorSelected: (color) {
+                              setState(() => _currentColor = color);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                // Drawing canvas
+                Expanded(
+                  child: RepaintBoundary(
+                    key: _repaintBoundaryKey,
+                    child: Container(
+                      margin: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[50],
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: GestureDetector(
+                        onPanUpdate: (details) {
+                          setState(() {
+                            final box = _repaintBoundaryKey.currentContext
+                                ?.findRenderObject() as RenderBox?;
+                            if (box == null) return;
+
+                            final localPosition =
+                                box.globalToLocal(details.globalPosition);
+                            if (localPosition.dx >= 0 &&
+                                localPosition.dy >= 0 &&
+                                localPosition.dx <= box.size.width &&
+                                localPosition.dy <= box.size.height) {
+                              _points.add(DrawPoint(
+                                localPosition,
+                                _isEraser ? Colors.grey[50]! : _currentColor,
+                                _strokeWidth,
+                              ));
+                            }
+                          });
+                        },
+                        onPanEnd: (details) =>
+                            _points.add(DrawPoint(null, _currentColor, _strokeWidth)),
+                        child: CustomPaint(
+                          painter: DrawPadPainter(_points),
+                          size: Size.infinite,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 10,
-                child: TextButton(
-                  onPressed: () => _uploadDrawing(context),
-                  child: const Text("Upload"),
+                // Stroke width slider
+                RotatedBox(
+                  quarterTurns: 1,
+                  child: Slider(
+                    value: _strokeWidth,
+                    min: 1.0,
+                    max: 20.0,
+                    divisions: 19,
+                    label: _strokeWidth.round().toString(),
+                    onChanged: (value) => setState(() => _strokeWidth = value),
+                  ),
                 ),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 10,
-                child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _points.clear();
-                    });
-                  },
+              ],
+            ),
+          ),
+          // Bottom buttons
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () => setState(() => _points.clear()),
                   child: const Text("Clear"),
                 ),
-              ),
-            ],
+                ElevatedButton(
+                  onPressed: _points.isEmpty 
+                    ? null 
+                    : () => _uploadDrawing(context),
+                  child: const Text("Upload"),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
 void showDrawPad(BuildContext context) {
-  showDialog(
-    barrierColor: Colors.white,
-    context: context,
-    builder: (context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.height * 0.8,
-          child: const DrawPad(),
-        ),
-      );
-    },
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const DrawPad(),
+    ),
   );
+}
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const DrawPad(),
+    );
+  }
 }
