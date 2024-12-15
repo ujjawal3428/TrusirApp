@@ -115,7 +115,7 @@ class ColorPickerDialog extends StatelessWidget {
 }
 
 class DrawPad extends StatefulWidget {
-  const DrawPad({Key? key}) : super(key: key);
+  const DrawPad({super.key});
 
   @override
   DrawPadState createState() => DrawPadState();
@@ -166,7 +166,7 @@ class DrawPadState extends State<DrawPad> {
 
       final image = await boundary.toImage(pixelRatio: 3.0);
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      
+
       if (byteData == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Failed to convert image')),
@@ -208,10 +208,10 @@ class DrawPadState extends State<DrawPad> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          children: [
-             IconButton(
+          automaticallyImplyLeading: false,
+          title: Row(
+            children: [
+              IconButton(
                 icon: const Icon(
                   Icons.arrow_back_ios_rounded,
                   color: Color(0xFF48116A),
@@ -221,10 +221,9 @@ class DrawPadState extends State<DrawPad> {
                   Navigator.pop(context);
                 },
               ),
-            const Text('Draw Pad',
-                  style: TextStyle(fontFamily: 'Poppins')),
-          ],
-        )),
+              const Text('Draw Pad', style: TextStyle(fontFamily: 'Poppins')),
+            ],
+          )),
       body: Column(
         children: [
           Expanded(
@@ -292,8 +291,8 @@ class DrawPadState extends State<DrawPad> {
                             }
                           });
                         },
-                        onPanEnd: (details) =>
-                            _points.add(DrawPoint(null, _currentColor, _strokeWidth)),
+                        onPanEnd: (details) => _points
+                            .add(DrawPoint(null, _currentColor, _strokeWidth)),
                         child: CustomPaint(
                           painter: DrawPadPainter(_points),
                           size: Size.infinite,
@@ -328,9 +327,8 @@ class DrawPadState extends State<DrawPad> {
                   child: const Text("Clear"),
                 ),
                 ElevatedButton(
-                  onPressed: _points.isEmpty 
-                    ? null 
-                    : () => _uploadDrawing(context),
+                  onPressed:
+                      _points.isEmpty ? null : () => _uploadDrawing(context),
                   child: const Text("Upload"),
                 ),
               ],
