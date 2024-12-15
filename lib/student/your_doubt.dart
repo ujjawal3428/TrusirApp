@@ -9,6 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/common/api.dart';
 import 'package:trusir/common/notificationhelper.dart';
 import 'package:trusir/student/student_doubt.dart';
 
@@ -196,7 +197,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
 
     final response = await http.get(
       Uri.parse(
-          'https://balvikasyojana.com:8899/api/view-doubts/$userID/student'), // Replace with your API endpoint
+          '$baseUrl/api/view-doubts/$userID/student'), // Replace with your API endpoint
     );
 
     if (response.statusCode == 200) {
@@ -338,7 +339,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
           ),
           Container(
             color: Colors.white,
-            padding: const EdgeInsets.only(top:12, left: 16.0, right: 16),
+            padding: const EdgeInsets.only(top: 12, left: 16.0, right: 16),
             child: InkWell(
               onTap: () {
                 Navigator.push(

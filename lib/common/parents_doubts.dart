@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/common/api.dart';
 import 'package:trusir/common/notificationhelper.dart';
 
 class ParentsDoubtsPage extends StatefulWidget {
@@ -194,7 +195,7 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
 
     final response = await http.get(
       Uri.parse(
-          'https://balvikasyojana.com:8899/api/view-doubts/$userID/parent'), // Replace with your API endpoint
+          '$baseUrl/api/view-doubts/$userID/parent'), // Replace with your API endpoint
     );
 
     if (response.statusCode == 200) {

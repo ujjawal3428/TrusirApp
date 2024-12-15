@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/common/api.dart';
 import 'package:trusir/common/notificationhelper.dart';
 
 class StudentDoubtsPage extends StatefulWidget {
@@ -192,7 +193,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
   Future<List<Doubt>> fetchDoubts() async {
     final response = await http.get(
       Uri.parse(
-          'https://balvikasyojana.com:8899/api/view-doubts/${widget.userID}/student'), // Replace with your API endpoint
+          '$baseUrl/api/view-doubts/${widget.userID}/student'), // Replace with your API endpoint
     );
 
     if (response.statusCode == 200) {
