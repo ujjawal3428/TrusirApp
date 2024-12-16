@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
 
 import 'package:chewie/chewie.dart';
@@ -28,7 +29,8 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
       'title': 'Advanced Dart Techniques',
       'url':
           'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
-      'thumbnail': 'https://via.placeholder.com/300x169.png?text=Dart+Advanced',
+      'thumbnail':
+          'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
       'time': '10:45 AM',
       'description': 'description',
       'profile':
@@ -74,74 +76,65 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Color(0xFF48116A),
-                  size: 30,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Color(0xFF48116A),
+                size: 20,
               ),
-              const SizedBox(width: 20),
-              const Text(
-                'Video Knowledge',
-                style: TextStyle(
-                  color: Color(0xFF48116A),
-                  fontSize: 24,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            Expanded(
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  suffixIcon: const Icon(
+                    Icons.search,
+                    color: Colors.black87,
+                  ),
+                  hintText: 'Search videos',
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  hintStyle: TextStyle(
+                    color: Colors.black87,
+                    fontFamily: GoogleFonts.notoSans().fontFamily,
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         toolbarHeight: 70,
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 16, bottom: 12),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: Color(0xFF48116A),
-                ),
-                hintText: 'Search videos',
-                hintStyle: TextStyle(
-                  color: Colors.grey.shade400,
-                  fontFamily: 'Poppins',
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(0),
-                ),
-              ),
-            ),
-          ),
+          const CategoriesList(),
+          const SizedBox(height: 10),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  if (constraints.maxWidth > 800) {
-                    return WideScreenLayout(videos: _filteredVideos);
-                  } else {
-                    return MobileLayout(videos: _filteredVideos);
-                  }
-                },
-              ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth > 800) {
+                  return WideScreenLayout(videos: _filteredVideos);
+                } else {
+                  return MobileLayout(videos: _filteredVideos);
+                }
+              },
             ),
           ),
         ],
@@ -158,6 +151,8 @@ class MobileLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      padding: EdgeInsets.zero,
       itemCount: videos.length,
       itemBuilder: (context, index) {
         return VideoCard(
@@ -202,6 +197,65 @@ class WideScreenLayout extends StatelessWidget {
   }
 }
 
+class CategoriesList extends StatefulWidget {
+  const CategoriesList({super.key});
+
+  @override
+  CategoriesListState createState() => CategoriesListState();
+}
+
+class CategoriesListState extends State<CategoriesList> {
+  // List of categories
+  final List<String> categories = [
+    'English',
+    'Hindi',
+    'Maths',
+    'Science',
+    'History',
+    'GK'
+  ];
+
+  // Currently selected category
+  int selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(categories.length, (index) {
+          bool isSelected = selectedIndex == index;
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
+            child: Container(
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.black : Colors.grey[200],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                categories[index],
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+}
+
 class VideoCard extends StatelessWidget {
   final Uri videoUrl;
   final String title;
@@ -227,11 +281,17 @@ class VideoCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => VideoPlayerScreen(videoUrl: videoUrl),
+              builder: (context) => VideoPlayerScreen(
+                videoUrl: videoUrl,
+                title: title,
+                description: description,
+              ),
             ),
           );
         },
         child: Card(
+          margin: EdgeInsets.zero,
+          elevation: 1,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(0.0),
           ),
@@ -248,7 +308,7 @@ class VideoCard extends StatelessWidget {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        color: Colors.grey[300],
+                        color: Colors.white,
                         child: const Center(
                           child: Icon(
                             Icons.error,
@@ -278,23 +338,22 @@ class VideoCard extends StatelessWidget {
                               backgroundColor: Colors.grey[300],
                             ),
                             const SizedBox(width: 8.0),
-                            RichText(
-                              text: TextSpan(
-                                text: title,
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 17,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                ),
+                            Text(
+                              title,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: GoogleFonts.notoSans().fontFamily,
+                                fontSize: 17,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
                               ),
-                            ),
+                            )
                           ],
                         ),
                         Text(
                           uploadTime,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
+                          style: TextStyle(
+                            fontFamily: GoogleFonts.notoSans().fontFamily,
                             fontSize: 12.0,
                             color: Colors.grey,
                           ),
@@ -306,8 +365,8 @@ class VideoCard extends StatelessWidget {
                       description,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontFamily: 'Poppins',
+                      style: TextStyle(
+                        fontFamily: GoogleFonts.notoSans().fontFamily,
                         fontSize: 14.0,
                         fontWeight: FontWeight.w400,
                         color: Colors.grey,
@@ -324,8 +383,14 @@ class VideoCard extends StatelessWidget {
 
 class VideoPlayerScreen extends StatefulWidget {
   final Uri videoUrl;
+  final String title;
+  final String description;
 
-  const VideoPlayerScreen({super.key, required this.videoUrl});
+  const VideoPlayerScreen(
+      {super.key,
+      required this.videoUrl,
+      required this.title,
+      required this.description});
 
   @override
   State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
@@ -348,43 +413,25 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           _chewieController = ChewieController(
             videoPlayerController: _videoPlayerController,
             autoPlay: true,
+            allowPlaybackSpeedChanging: true,
             looping: false,
             aspectRatio: _videoPlayerController.value.aspectRatio,
             allowedScreenSleep: false,
+            showControlsOnInitialize: true,
+            materialSeekButtonFadeDuration: const Duration(milliseconds: 100),
+            materialSeekButtonSize: 30,
+            hideControlsTimer: const Duration(seconds: 2),
             autoInitialize: true,
-            additionalOptions: (context) {
-              return [
-                OptionItem(
-                  onTap: () => _showCustomOption(),
-                  iconData: Icons.info_outline,
-                  title: 'Info',
-                ),
-              ];
-            },
-            subtitle: Subtitles([]),
-            subtitleBuilder: (context, subtitle) => Container(
-              padding: const EdgeInsets.all(10.0),
-              color: Colors.black45,
-              child: Text(
-                subtitle,
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
+            draggableProgressBar: true,
             materialProgressColors: ChewieProgressColors(
               playedColor: Colors.red,
-              handleColor: Colors.redAccent,
+              handleColor: Colors.white,
               bufferedColor: Colors.grey,
               backgroundColor: Colors.black,
             ),
           );
         });
       });
-  }
-
-  void _showCustomOption() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Custom option clicked")),
-    );
   }
 
   @override
@@ -397,6 +444,16 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
+        title: Text(
+          widget.title,
+          style: const TextStyle(color: Colors.white),
+        ),
+        elevation: 0,
+      ),
       body: Center(
         child: _chewieController != null &&
                 _chewieController!.videoPlayerController.value.isInitialized

@@ -15,7 +15,7 @@ class _AttendancePageState extends State<AttendancePage> {
   Map<int, String> _attendanceData = {}; // Day: Status
   Map<String, int> _summaryData = {}; // Summary details
   List<String> weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-  String? course = 'English\n[8-9 AM]\n';
+  String? course = 'English [8-9 AM]\n';
   List<String> _courses = [];
   List<String> combinedItems = [];
   final List<String> timeSlots = [
@@ -86,7 +86,7 @@ class _AttendancePageState extends State<AttendancePage> {
     for (final course in courses) {
       for (final slot in timeSlots) {
         dropdownItems
-            .add('$course\n[$slot]\n'); // Pair course with each time slot
+            .add('$course [$slot]\n'); // Pair course with each time slot
       }
     }
     return dropdownItems;
@@ -403,26 +403,22 @@ class _AttendancePageState extends State<AttendancePage> {
                         IconButton(
                           icon: const Icon(
                             Icons.arrow_back_ios_outlined,
-                            size: 20,
+                            size: 15,
                           ),
                           onPressed: _prevMonth,
                         ),
-                        Text(
-                          _monthYearString,
-                          style: const TextStyle(fontSize: 17),
-                        ),
-                        IconButton(
-                            icon: const Icon(
-                              Icons.keyboard_arrow_down_outlined,
-                              size: 20,
-                            ),
+                        TextButton(
                             onPressed: () {
                               _navigateToYearMonthPicker(context);
-                            }),
+                            },
+                            child: Text(
+                              _monthYearString,
+                              style: const TextStyle(fontSize: 17),
+                            )),
                         IconButton(
                           icon: const Icon(
                             Icons.arrow_forward_ios_outlined,
-                            size: 20,
+                            size: 15,
                           ),
                           onPressed: _nextMonth,
                         ),
@@ -595,9 +591,8 @@ Widget _buildDropdownField(
   required ValueChanged<String?> onChanged,
   required List<String> items,
 }) {
-  return SizedBox(
-    height: 50,
-    width: 100,
+  return ConstrainedBox(
+    constraints: const BoxConstraints(maxWidth: 150),
     child: DropdownButtonFormField<String>(
       isExpanded: true,
       value: selectedValue,
@@ -610,7 +605,7 @@ Widget _buildDropdownField(
       items: items
           .map((item) => DropdownMenuItem(
                 value: item,
-                child: Text(item),
+                child: SizedBox(width: 200, child: Text(item)),
               ))
           .toList(),
     ),

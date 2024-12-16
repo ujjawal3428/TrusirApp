@@ -32,6 +32,7 @@ dependencies:
   file_picker:
   video_player: 
   chewie: 
+  google_fonts: 
 dev_dependencies:
   flutter_test:
     sdk: flutter
