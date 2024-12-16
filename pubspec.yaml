@@ -30,6 +30,7 @@ dependencies:
   signature: ^5.5.0
   path:
   file_picker:
+  video_player: ^2.9.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
