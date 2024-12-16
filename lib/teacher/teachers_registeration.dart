@@ -119,7 +119,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     }
   }
 
-  Future<String?> handleFileSelection(BuildContext context) async {
+  Future<void> handleFileSelection(BuildContext context, String path) async {
     try {
       // Use FilePicker to select a file
       final result = await FilePicker.platform.pickFiles();
@@ -144,9 +144,15 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               duration: Duration(seconds: 1),
             ),
           );
-
+          setState(() {
+            // Example: Update the first student's photo path
+            if (path == 'aadharFrontPath') {
+              formData.aadharFrontPath = uploadedPath;
+            } else if (path == 'aadharBackPath') {
+              formData.aadharBackPath = uploadedPath;
+            }
+          });
           print('File uploaded successfully: $uploadedPath');
-          return uploadedPath;
         } else {
           print('Failed to upload the file.');
           ScaffoldMessenger.of(context).showSnackBar(
@@ -156,7 +162,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               duration: Duration(seconds: 1),
             ),
           );
-          return null;
         }
       } else {
         print('No file selected.');
@@ -166,7 +171,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
             duration: Duration(seconds: 1),
           ),
         );
-        return null;
       }
     } catch (e) {
       print('Error during file selection: $e');
@@ -177,7 +181,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
           duration: Duration(seconds: 1),
         ),
       );
-      return null;
     }
   }
 
@@ -223,15 +226,9 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
             // Example: Update the first student's photo path
             if (path == 'profilephoto') {
               formData.photoPath = uploadedPath;
-            } else if (path == 'aadharfront') {
-              formData.aadharFrontPath = uploadedPath;
-            } else if (path == 'aadharback') {
-              formData.aadharBackPath = uploadedPath;
             } else if (path == 'signature') {
               formData.signaturePath = uploadedPath;
             }
-            //')
-            //)
           });
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -703,16 +700,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           ? 'Upload File'
                           : 'Update File',
                       width: 200, onTap: () {
-                    setState(() async {
-                      uploadedPath = await handleFileSelection(context);
-                    });
-                    if (uploadedPath != 'null') {
-                      setState(() {
-                        // Example: Update the first student's photo path
-                        formData.aadharFrontPath = uploadedPath;
-                        //)
-                      });
-                    }
+                    handleFileSelection(context, 'aadharFrontPath');
                   }, displayPath: formData.aadharFrontPath),
                 ],
               ),
@@ -732,16 +720,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           ? 'Upload File'
                           : 'Update File',
                       width: 200, onTap: () {
-                    setState(() async {
-                      uploadedPath = await handleFileSelection(context);
-                    });
-                    if (uploadedPath != 'null') {
-                      setState(() {
-                        // Example: Update the first student's photo path
-                        formData.aadharBackPath = uploadedPath;
-                        //)
-                      });
-                    }
+                    handleFileSelection(context, 'aadharBackPath');
                   }, displayPath: formData.aadharBackPath),
                 ],
               ),

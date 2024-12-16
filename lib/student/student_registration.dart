@@ -268,7 +268,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     }
   }
 
-  Future<String?> handleFileSelection(BuildContext context) async {
+  Future<void> handleFileSelection(
+      BuildContext context, int index, String path) async {
     try {
       // Use FilePicker to select a file
       final result = await FilePicker.platform.pickFiles();
@@ -293,9 +294,16 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               duration: Duration(seconds: 1),
             ),
           );
-
+          if (path == 'aadharFrontPath') {
+            setState(() {
+              studentForms[index].aadharFrontPath = uploadedPath;
+            });
+          } else {
+            setState(() {
+              studentForms[index].aadharBackPath = uploadedPath;
+            });
+          }
           print('File uploaded successfully: $uploadedPath');
-          return uploadedPath;
         } else {
           print('Failed to upload the file.');
           ScaffoldMessenger.of(context).showSnackBar(
@@ -305,7 +313,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               duration: Duration(seconds: 1),
             ),
           );
-          return null;
         }
       } else {
         print('No file selected.');
@@ -315,7 +322,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             duration: Duration(seconds: 1),
           ),
         );
-        return null;
       }
     } catch (e) {
       print('Error during file selection: $e');
@@ -326,7 +332,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           duration: Duration(seconds: 1),
         ),
       );
-      return null;
     }
   }
 
@@ -742,10 +747,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField(
-                studentForms[index].photoPath == null
-                    ? 'Upload Image'
-                    : 'Update Image', onTap: () {
+            _buildFileUploadField('Upload Image', isFile: false, onTap: () {
               handleImageSelection('profilephoto', index);
             }, width: 200, displayPath: studentForms[index].photoPath),
           ],
@@ -761,20 +763,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField(
-                studentForms[index].aadharFrontPath == null
-                    ? 'Upload File'
-                    : 'Update File', onTap: () {
-              setState(() async {
-                uploadedPath = await handleFileSelection(context);
-              });
-              if (uploadedPath != 'null') {
-                setState(() {
-                  // Example: Update the first student's photo path
-                  studentForms[index].aadharFrontPath = uploadedPath;
-                  //)
-                });
-              }
+            _buildFileUploadField('Upload File', isFile: true, onTap: () {
+              handleFileSelection(context, index, 'aadharFrontPath');
             }, width: 200, displayPath: studentForms[index].aadharFrontPath),
           ],
         ),
@@ -789,20 +779,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            _buildFileUploadField(
-                studentForms[index].aadharBackPath == null
-                    ? 'Upload File'
-                    : 'Update File', onTap: () {
-              setState(() async {
-                uploadedPath = await handleFileSelection(context);
-              });
-              if (uploadedPath != 'null') {
-                setState(() {
-                  // Example: Update the first student's photo path
-                  studentForms[index].aadharBackPath = uploadedPath;
-                  //)
-                });
-              }
+            _buildFileUploadField('Upload File', isFile: true, onTap: () {
+              handleFileSelection(context, index, 'aadharBackPath');
             }, width: 200, displayPath: studentForms[index].aadharBackPath),
           ],
         ),
@@ -975,7 +953,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }
 
   Widget _buildFileUploadField(String placeholder,
-      {required VoidCallback onTap, double width = 200, required displayPath}) {
+      {required VoidCallback onTap,
+      double width = 200,
+      required displayPath,
+      required bool isFile}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -995,13 +976,18 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: displayPath == null
-                  ? Text(placeholder,
-                      style: const TextStyle(color: Colors.grey))
-                  : Image.network(
-                      displayPath,
-                      fit: BoxFit.fill,
-                    ),
+              child: isFile
+                  ? displayPath == null
+                      ? Text(placeholder,
+                          style: const TextStyle(color: Colors.grey))
+                      : const Icon(Icons.picture_as_pdf, color: Colors.grey)
+                  : displayPath == null
+                      ? Text(placeholder,
+                          style: const TextStyle(color: Colors.grey))
+                      : Image.network(
+                          displayPath,
+                          fit: BoxFit.fill,
+                        ),
             ),
             const Padding(
               padding: EdgeInsets.only(right: 15),
