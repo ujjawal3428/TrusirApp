@@ -13,18 +13,23 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
   final List<Map<String, String>> _videos = [
     {
       'title': 'Learn Flutter Basics',
-      'url': 'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
-      'thumbnail': 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg',
+      'url':
+          'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
+      'thumbnail':
+          'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg',
     },
     {
       'title': 'Advanced Dart Techniques',
-      'url': 'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
+      'url':
+          'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
       'thumbnail': 'https://via.placeholder.com/300x169.png?text=Dart+Advanced',
     },
     {
       'title': 'Understanding State Management',
-      'url': 'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
-      'thumbnail': 'https://via.placeholder.com/300x169.png?text=State+Management',
+      'url':
+          'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
+      'thumbnail':
+          'https://via.placeholder.com/300x169.png?text=State+Management',
     },
   ];
 
@@ -92,7 +97,7 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.only(top: 16, bottom: 12),
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
@@ -106,14 +111,14 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
                   fontFamily: 'Poppins',
                 ),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(18.0),
+                  borderRadius: BorderRadius.circular(0),
                 ),
               ),
             ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 0),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   if (constraints.maxWidth > 800) {
@@ -145,6 +150,7 @@ class MobileLayout extends StatelessWidget {
           videoUrl: videos[index]['url']!,
           title: videos[index]['title']!,
           thumbnailUrl: videos[index]['thumbnail']!,
+          description: 'lorem adkjs sakndnsand sdldsd lkdsl dlsl lorem adkjs sakndnsand sdldsd lkdsl dlsl lorem adkjs sakndnsand sdldsd lkdsl dlsl', channelPicUrl: '', uploadTime: '9:45 AM',
         );
       },
     );
@@ -171,6 +177,7 @@ class WideScreenLayout extends StatelessWidget {
           videoUrl: videos[index]['url']!,
           title: videos[index]['title']!,
           thumbnailUrl: videos[index]['thumbnail']!,
+          description: '', channelPicUrl: '', uploadTime: '',
         );
       },
     );
@@ -181,69 +188,115 @@ class VideoCard extends StatelessWidget {
   final String videoUrl;
   final String title;
   final String thumbnailUrl;
+  final String description;
+  final String channelPicUrl;
+  final String uploadTime;
 
   const VideoCard({
     super.key,
     required this.videoUrl,
     required this.title,
     required this.thumbnailUrl,
+    required this.description,
+    required this.channelPicUrl,
+    required this.uploadTime,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VideoPlayerScreen(videoUrl: videoUrl),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VideoPlayerScreen(videoUrl: videoUrl),
+            ),
+          );
+        },
+        child: Card(
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(0.0),
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      AspectRatio(
+        aspectRatio: 16 / 9,
+        child: ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(0.0)),
+          child: Image.network(
+            thumbnailUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                color: Colors.grey[300],
+                child: const Center(
+                  child: Icon(
+                    Icons.error,
+                    size: 50.0,
+                    color: Colors.black54,
+                  ),
+                ),
+              );
+            },
           ),
-        );
-      },
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
         ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12.0)),
-                child: Image.network(
-                  thumbnailUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child: Icon(
-                          Icons.error,
-                          size: 50.0,
-                          color: Colors.black54,
-                        ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 16.0,
+                      backgroundImage: NetworkImage(channelPicUrl), // Channel picture
+                      backgroundColor: Colors.grey[300],
+                    ),
+                    const SizedBox(width: 8.0),
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
-              ),
+                Text(
+                  uploadTime,
+                  style: const TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 12.0,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontFamily: 'Poppins',
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                ),
+            const SizedBox(height: 8.0),
+            Text(
+              description,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 14.0,
+                fontWeight: FontWeight.w400,
+                color: Colors.grey,
               ),
             ),
           ],
         ),
       ),
-    );
+    ],
+  ),
+)
+);
   }
 }
 
