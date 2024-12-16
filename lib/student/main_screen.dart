@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/student/bottom_navigation_bar.dart';
-import 'package:trusir/student/newcourse.dart';
+import 'package:trusir/student/course.dart';
 import 'package:trusir/student/setting.dart';
 import 'package:trusir/student/student_facilities.dart';
 
@@ -32,6 +32,7 @@ class MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       body: Stack(
         children: [
           Padding(

@@ -29,6 +29,7 @@ class TeacherMainScreenState extends State<TeacherMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       body: Stack(
         children: [
           Padding(

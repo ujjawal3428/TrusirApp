@@ -73,7 +73,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         backgroundColor: Colors.grey[100],
         elevation: 0,
@@ -117,8 +117,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return Padding(
-              padding: const EdgeInsets.only(
-                  left: 20.0, right: 20, bottom: 5, top: 10),
+              padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
               child: Column(children: [
                 GestureDetector(
                   onTap: () {

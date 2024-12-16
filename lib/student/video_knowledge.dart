@@ -323,21 +323,21 @@ class VideoCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
+                        CircleAvatar(
+                          radius: 22,
+                          backgroundImage:
+                              NetworkImage(channelPicUrl), // Channel picture
+                          backgroundColor: Colors.grey[300],
+                        ),
+                        const SizedBox(width: 8.0),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            CircleAvatar(
-                              radius: 16.0,
-                              backgroundImage: NetworkImage(
-                                  channelPicUrl), // Channel picture
-                              backgroundColor: Colors.grey[300],
-                            ),
-                            const SizedBox(width: 8.0),
                             Text(
                               title,
                               overflow: TextOverflow.ellipsis,
@@ -347,28 +347,28 @@ class VideoCard extends StatelessWidget {
                                 color: Colors.black,
                                 fontWeight: FontWeight.w700,
                               ),
-                            )
+                            ),
+                            const SizedBox(height: 5.0),
+                            Text(
+                              description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontFamily: GoogleFonts.notoSans().fontFamily,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey,
+                              ),
+                            ),
                           ],
-                        ),
-                        Text(
-                          uploadTime,
-                          style: TextStyle(
-                            fontFamily: GoogleFonts.notoSans().fontFamily,
-                            fontSize: 12.0,
-                            color: Colors.grey,
-                          ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8.0),
                     Text(
-                      description,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                      uploadTime,
                       style: TextStyle(
                         fontFamily: GoogleFonts.notoSans().fontFamily,
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.w400,
+                        fontSize: 12.0,
                         color: Colors.grey,
                       ),
                     ),
