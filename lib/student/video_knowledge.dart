@@ -9,6 +9,49 @@ class VideoKnowledge extends StatefulWidget {
 }
 
 class _VideoKnowledgeState extends State<VideoKnowledge> {
+  final TextEditingController _searchController = TextEditingController();
+  final List<Map<String, String>> _videos = [
+    {
+      'title': 'Learn Flutter Basics',
+      'url': 'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
+      'thumbnail': 'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg',
+    },
+    {
+      'title': 'Advanced Dart Techniques',
+      'url': 'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
+      'thumbnail': 'https://via.placeholder.com/300x169.png?text=Dart+Advanced',
+    },
+    {
+      'title': 'Understanding State Management',
+      'url': 'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
+      'thumbnail': 'https://via.placeholder.com/300x169.png?text=State+Management',
+    },
+  ];
+
+  List<Map<String, String>> _filteredVideos = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredVideos = _videos;
+    _searchController.addListener(_filterVideos);
+  }
+
+  void _filterVideos() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredVideos = _videos
+          .where((video) => video['title']!.toLowerCase().contains(query))
+          .toList();
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,33 +89,62 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
         ),
         toolbarHeight: 70,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth > 800) {
-              return const WideScreenLayout();
-            } else {
-              return const MobileLayout();
-            }
-          },
-        ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: Color(0xFF48116A),
+                ),
+                hintText: 'Search videos',
+                hintStyle: TextStyle(
+                  color: Colors.grey.shade400,
+                  fontFamily: 'Poppins',
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth > 800) {
+                    return WideScreenLayout(videos: _filteredVideos);
+                  } else {
+                    return MobileLayout(videos: _filteredVideos);
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class MobileLayout extends StatelessWidget {
-  const MobileLayout({super.key});
+  final List<Map<String, String>> videos;
+
+  const MobileLayout({super.key, required this.videos});
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 10,
+      itemCount: videos.length,
       itemBuilder: (context, index) {
         return VideoCard(
-          videoUrl: 'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
-          title: 'Video $index: Watch and Learn',
+          videoUrl: videos[index]['url']!,
+          title: videos[index]['title']!,
+          thumbnailUrl: videos[index]['thumbnail']!,
         );
       },
     );
@@ -80,7 +152,9 @@ class MobileLayout extends StatelessWidget {
 }
 
 class WideScreenLayout extends StatelessWidget {
-  const WideScreenLayout({super.key});
+  final List<Map<String, String>> videos;
+
+  const WideScreenLayout({super.key, required this.videos});
 
   @override
   Widget build(BuildContext context) {
@@ -91,11 +165,12 @@ class WideScreenLayout extends StatelessWidget {
         mainAxisSpacing: 8.0,
         childAspectRatio: 16 / 9,
       ),
-      itemCount: 10,
+      itemCount: videos.length,
       itemBuilder: (context, index) {
         return VideoCard(
-          videoUrl: 'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
-          title: 'Video $index: Watch and Learn',
+          videoUrl: videos[index]['url']!,
+          title: videos[index]['title']!,
+          thumbnailUrl: videos[index]['thumbnail']!,
         );
       },
     );
@@ -105,11 +180,13 @@ class WideScreenLayout extends StatelessWidget {
 class VideoCard extends StatelessWidget {
   final String videoUrl;
   final String title;
+  final String thumbnailUrl;
 
   const VideoCard({
     super.key,
     required this.videoUrl,
     required this.title,
+    required this.thumbnailUrl,
   });
 
   @override
@@ -132,14 +209,23 @@ class VideoCard extends StatelessWidget {
           children: [
             AspectRatio(
               aspectRatio: 16 / 9,
-              child: Container(
-                color: Colors.grey[300],
-                child: const Center(
-                  child: Icon(
-                    Icons.play_circle_outline,
-                    size: 50.0,
-                    color: Colors.black54,
-                  ),
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12.0)),
+                child: Image.network(
+                  thumbnailUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: const Center(
+                        child: Icon(
+                          Icons.error,
+                          size: 50.0,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -148,8 +234,9 @@ class VideoCard extends StatelessWidget {
               child: Text(
                 title,
                 style: const TextStyle(
+                  fontFamily: 'Poppins',
                   fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),

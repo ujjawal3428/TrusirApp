@@ -6,142 +6,164 @@ class NewCoursePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        backgroundColor: Colors.grey[50],
-        elevation: 0,
+        backgroundColor: Colors.white,
+        elevation: 2,
         title: const Padding(
-          padding: EdgeInsets.only(left: 1.0),
-          child: Row(
-            children: [
-              Text(
-                'Courses',
-                style: TextStyle(
-                  color: Color(0xFF48116A),
-                  fontSize: 22,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            'Courses',
+            style: TextStyle(
+              color: Color(0xFF4A148C),
+              fontSize: 22,
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
+        centerTitle: true,
         toolbarHeight: 70,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Courses",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header Row
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Explore Courses",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
                   ),
-                ),
-                DropdownButton<String>(
-                  value: "New",
-                  onChanged: (String? newValue) {},
-                  items: <String>['New', 'Old', 'Watched']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              ],
+                  DropdownButton<String>(
+                    value: "New",
+                    icon: const Icon(Icons.arrow_drop_down, color: Colors.black54),
+                    underline: Container(height: 0),
+                    onChanged: (String? newValue) {},
+                    items: <String>['New', 'Popular', 'Watched']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: const TextStyle(color: Colors.black87),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Container(
-            margin: const EdgeInsets.all(16.0),
-            padding: const EdgeInsets.all(12.0),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(51, 0, 255, 187),
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade300,
-                  blurRadius: 6.0,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(8.0),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/gksp@3x.png'),
-                          fit: BoxFit.cover,
+            // Course Card
+            Container(
+              margin: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade200,
+                    blurRadius: 8.0,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      // Course Image
+                      Container(
+                        height: 70,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(10),
+                          image: const DecorationImage(
+                            image: AssetImage('assets/gksp@3x.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      // Course Details
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Advanced Flutter Course",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: const [
+                                Icon(Icons.calendar_today, size: 14, color: Colors.grey),
+                                SizedBox(width: 6),
+                                Text(
+                                  "Uploaded: 01 Dec 2024",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Timestamp
+                      const Text(
+                        '7:45 PM',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  // Enroll Button
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        backgroundColor: const Color(0xFF4A148C),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: const Text(
+                        "Enroll Now",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Course Name",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "Uploaded: 01 Dec 2024",
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Align(
-                 alignment: AlignmentDirectional.topEnd,
-                 child: Text(
-                  '7:45 PM'
-                 ),
-                ),
-                  ],
-                ),
-              
-               
-               
-              
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Enroll",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
