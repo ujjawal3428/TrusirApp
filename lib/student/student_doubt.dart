@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/student/drawpad.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StudentDoubts {
   String? title;
@@ -35,6 +36,14 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _courseController = TextEditingController();
   final StudentDoubts formData = StudentDoubts();
+
+  Future<void> openDialer(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
 
   @override
   void initState() {
@@ -144,7 +153,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
     }
   }
 
-  Future<String?> handleFileSelection(BuildContext context) async {
+  Future<void> handleFileSelection(BuildContext context) async {
     try {
       // Use FilePicker to select a file
       final result = await FilePicker.platform.pickFiles();
@@ -171,7 +180,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
             ),
           );
           print('File uploaded successfully: $uploadedPath');
-          return uploadedPath;
+          formData.photo = uploadedPath;
         } else {
           print('Failed to upload the file.');
           ScaffoldMessenger.of(context).showSnackBar(
@@ -181,7 +190,6 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
               duration: Duration(seconds: 1),
             ),
           );
-          return null;
         }
       } else {
         print('No file selected.');
@@ -191,7 +199,6 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
             duration: Duration(seconds: 1),
           ),
         );
-        return null;
       }
     } catch (e) {
       print('Error during file selection: $e');
@@ -202,7 +209,6 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
           duration: Duration(seconds: 1),
         ),
       );
-      return null;
     }
   }
 
@@ -451,11 +457,8 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                               children: [
                                                 GestureDetector(
                                                   onTap: () {
-                                                    setState(() async {
-                                                      formData.photo =
-                                                          await handleFileSelection(
-                                                              context);
-                                                    });
+                                                    handleFileSelection(
+                                                        context);
                                                   },
                                                   child: Column(
                                                     children: [
@@ -543,50 +546,56 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 10, left: 2, right: 2, top: 2),
-                                    child: Container(
-                                      width: 150,
-                                      height: 133,
-                                      decoration: BoxDecoration(
-                                          // border: Border.all(width: 1,color: Colors.grey),
-                                          borderRadius:
-                                              BorderRadius.circular(14.40),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.white54,
-                                              offset: Offset(2, 2),
-                                            )
-                                          ]),
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 30),
-                                            child: Image.asset(
-                                              'assets/phone@3x.png',
-                                              width: 46,
-                                              height: 37,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          const Center(
-                                            child: Text(
-                                              'Call Teacher',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14,
+                                  GestureDetector(
+                                    onTap: () {
+                                      openDialer('9797472922');
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 10,
+                                          left: 2,
+                                          right: 2,
+                                          top: 2),
+                                      child: Container(
+                                        width: 150,
+                                        height: 133,
+                                        decoration: BoxDecoration(
+                                            // border: Border.all(width: 1,color: Colors.grey),
+                                            borderRadius:
+                                                BorderRadius.circular(14.40),
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                color: Colors.white54,
+                                                offset: Offset(2, 2),
+                                              )
+                                            ]),
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 30),
+                                              child: Image.asset(
+                                                'assets/phone@3x.png',
+                                                width: 46,
+                                                height: 37,
                                               ),
                                             ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          const Center(
-                                            child: InkWell(
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            const Center(
+                                              child: Text(
+                                                'Call Teacher',
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            const Center(
                                               child: Text(
                                                 'Click here',
                                                 style: TextStyle(
@@ -594,9 +603,9 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                                   fontSize: 10,
                                                 ),
                                               ),
-                                            ),
-                                          )
-                                        ],
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),

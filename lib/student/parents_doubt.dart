@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ParentsDoubt {
   String? title;
@@ -30,6 +31,15 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   final ParentsDoubt formData = ParentsDoubt();
+
+  Future<void> openDialer(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
   Future<void> submitForm(BuildContext context) async {
     // Fetch the entered data
     formData.title = titleController.text.trim();
@@ -113,7 +123,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
     }
   }
 
-  Future<String?> handleFileSelection(BuildContext context) async {
+  Future<void> handleFileSelection(BuildContext context) async {
     try {
       // Use FilePicker to select a file
       final result = await FilePicker.platform.pickFiles();
@@ -140,7 +150,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
             ),
           );
           print('File uploaded successfully: $uploadedPath');
-          return uploadedPath;
+          formData.photo = uploadedPath;
         } else {
           print('Failed to upload the file.');
           ScaffoldMessenger.of(context).showSnackBar(
@@ -150,7 +160,6 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
               duration: Duration(seconds: 1),
             ),
           );
-          return null;
         }
       } else {
         print('No file selected.');
@@ -160,7 +169,6 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
             duration: Duration(seconds: 1),
           ),
         );
-        return null;
       }
     } catch (e) {
       print('Error during file selection: $e');
@@ -171,7 +179,6 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
           duration: Duration(seconds: 1),
         ),
       );
-      return null;
     }
   }
 
@@ -345,10 +352,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                setState(() async {
-                                  formData.photo =
-                                      await handleFileSelection(context);
-                                });
+                                handleFileSelection(context);
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(4.0),
@@ -513,70 +517,75 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                   width:
                                       MediaQuery.of(context).size.width * 0.03,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.all(
-                                      MediaQuery.of(context).size.width * 0.02),
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.2,
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(14.40),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.white54,
-                                          offset: Offset(2, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(1.0),
-                                      child: Center(
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: MediaQuery.of(context)
+                                GestureDetector(
+                                  onTap: () {
+                                    openDialer('9797472922');
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                        MediaQuery.of(context).size.width *
+                                            0.02),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.35,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.2,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(14.40),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.white54,
+                                            offset: Offset(2, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(1.0),
+                                        child: Center(
+                                          child: Column(
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: MediaQuery.of(context)
+                                                            .size
+                                                            .height *
+                                                        0.04),
+                                                child: Image.asset(
+                                                  'assets/phone@3x.png',
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.12,
+                                                  height: MediaQuery.of(context)
                                                           .size
                                                           .height *
-                                                      0.04),
-                                              child: Image.asset(
-                                                'assets/phone@3x.png',
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.12,
+                                                      0.05,
+                                                ),
+                                              ),
+                                              SizedBox(
                                                 height: MediaQuery.of(context)
                                                         .size
                                                         .height *
-                                                    0.05,
+                                                    0.015,
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.015,
-                                            ),
-                                            const Center(
-                                              child: Text(
-                                                'Call Teacher',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 14,
+                                              const Center(
+                                                child: Text(
+                                                  'Call Teacher',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 14,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.01,
-                                            ),
-                                            const Center(
-                                              child: InkWell(
+                                              SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.01,
+                                              ),
+                                              const Center(
                                                 child: Text(
                                                   'Click here',
                                                   style: TextStyle(
@@ -585,8 +594,8 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),

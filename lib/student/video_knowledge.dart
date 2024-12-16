@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'dart:async';
-import 'package:flutter/services.dart';
 
+import 'package:chewie/chewie.dart';
 
 class VideoKnowledge extends StatefulWidget {
   const VideoKnowledge({super.key});
@@ -162,7 +161,7 @@ class MobileLayout extends StatelessWidget {
       itemCount: videos.length,
       itemBuilder: (context, index) {
         return VideoCard(
-          videoUrl: videos[index]['url']!,
+          videoUrl: Uri.parse(videos[index]['url']!),
           title: videos[index]['title']!,
           thumbnailUrl: videos[index]['thumbnail']!,
           description: videos[index]['description']!,
@@ -191,7 +190,7 @@ class WideScreenLayout extends StatelessWidget {
       itemCount: videos.length,
       itemBuilder: (context, index) {
         return VideoCard(
-          videoUrl: videos[index]['url']!,
+          videoUrl: Uri.parse(videos[index]['url']!),
           title: videos[index]['title']!,
           thumbnailUrl: videos[index]['thumbnail']!,
           description: videos[index]['description']!,
@@ -204,7 +203,7 @@ class WideScreenLayout extends StatelessWidget {
 }
 
 class VideoCard extends StatelessWidget {
-  final String videoUrl;
+  final Uri videoUrl;
   final String title;
   final String thumbnailUrl;
   final String description;
@@ -323,9 +322,8 @@ class VideoCard extends StatelessWidget {
   }
 }
 
-
 class VideoPlayerScreen extends StatefulWidget {
-  final String videoUrl;
+  final Uri videoUrl;
 
   const VideoPlayerScreen({super.key, required this.videoUrl});
 
@@ -334,190 +332,76 @@ class VideoPlayerScreen extends StatefulWidget {
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  late VideoPlayerController _controller;
-  late Duration _currentPosition;
-  late Duration _totalDuration;
-  bool _showControls = true;
-  Timer? _hideControlsTimer;
-  bool _isLandscape = false;
+  late VideoPlayerController _videoPlayerController;
+  ChewieController? _chewieController;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
+    _initializePlayer();
+  }
+
+  void _initializePlayer() {
+    _videoPlayerController = VideoPlayerController.networkUrl(widget.videoUrl)
       ..initialize().then((_) {
         setState(() {
-          _totalDuration = _controller.value.duration;
+          _chewieController = ChewieController(
+            videoPlayerController: _videoPlayerController,
+            autoPlay: true,
+            looping: false,
+            aspectRatio: _videoPlayerController.value.aspectRatio,
+            allowedScreenSleep: false,
+            autoInitialize: true,
+            additionalOptions: (context) {
+              return [
+                OptionItem(
+                  onTap: () => _showCustomOption(),
+                  iconData: Icons.info_outline,
+                  title: 'Info',
+                ),
+              ];
+            },
+            subtitle: Subtitles([]),
+            subtitleBuilder: (context, subtitle) => Container(
+              padding: const EdgeInsets.all(10.0),
+              color: Colors.black45,
+              child: Text(
+                subtitle,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+            materialProgressColors: ChewieProgressColors(
+              playedColor: Colors.red,
+              handleColor: Colors.redAccent,
+              bufferedColor: Colors.grey,
+              backgroundColor: Colors.black,
+            ),
+          );
         });
-        _controller.play();
       });
+  }
 
-    _controller.addListener(() {
-      if (_controller.value.isInitialized) {
-        setState(() {
-          _currentPosition = _controller.value.position;
-        });
-      }
-    });
+  void _showCustomOption() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Custom option clicked")),
+    );
   }
 
   @override
   void dispose() {
-    _hideControlsTimer?.cancel();
-    _controller.dispose();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]); // Reset orientation to portrait when exiting
+    _videoPlayerController.dispose();
+    _chewieController?.dispose();
     super.dispose();
-  }
-
-  void _togglePlayPause() {
-    setState(() {
-      if (_controller.value.isPlaying) {
-        _controller.pause();
-      } else {
-        _controller.play();
-      }
-    });
-    _resetHideControlsTimer();
-  }
-
-  void _resetHideControlsTimer() {
-    _hideControlsTimer?.cancel();
-    setState(() {
-      _showControls = true;
-    });
-    _hideControlsTimer = Timer(const Duration(seconds: 3), () {
-      setState(() {
-        _showControls = false;
-      });
-    });
-  }
-
-  void _toggleScreenOrientation() {
-    setState(() {
-      _isLandscape = !_isLandscape;
-    });
-
-    if (_isLandscape) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeRight,
-        DeviceOrientation.landscapeLeft,
-      ]);
-    } else {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-      ]);
-    }
-  }
-
-  String _formatDuration(Duration duration) {
-    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
-        onTap: _resetHideControlsTimer,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            _controller.value.isInitialized
-                ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  )
-                : const Center(child: CircularProgressIndicator()),
-            AnimatedOpacity(
-              opacity: _showControls ? 1.0 : 0.0,
-              duration: const Duration(milliseconds: 300),
-              child: GestureDetector(
-                onTap: _togglePlayPause,
-                child: Container(
-                  color: Colors.black.withOpacity(0.3),
-                  alignment: Alignment.center,
-                  child: Icon(
-                    _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                    size: 60,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            if (_controller.value.isInitialized)
-              Positioned(
-                bottom: 10,
-                left: 10,
-                right: 10,
-                child: AnimatedOpacity(
-                  opacity: _showControls ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 300),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              _controller.seekTo(
-                                _controller.value.position - const Duration(seconds: 10),
-                              );
-                              _resetHideControlsTimer();
-                            },
-                            icon: const Icon(Icons.replay_10, color: Colors.white),
-                          ),
-                          Expanded(
-                            child: Slider(
-                              value: _currentPosition.inSeconds.toDouble(),
-                              max: _totalDuration.inSeconds.toDouble(),
-                              onChanged: (value) {
-                                _controller.seekTo(Duration(seconds: value.toInt()));
-                                _resetHideControlsTimer();
-                              },
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              _controller.seekTo(
-                                _controller.value.position + const Duration(seconds: 10),
-                              );
-                              _resetHideControlsTimer();
-                            },
-                            icon: const Icon(Icons.forward_10, color: Colors.white),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            _formatDuration(_currentPosition),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                         
-                          IconButton(
-                            onPressed: _toggleScreenOrientation,
-                            icon: Icon(
-                              _isLandscape
-                                  ? Icons.screen_rotation
-                                  : Icons.screen_rotation_alt,
-                              color: Colors.white,
-                            ),
-                          ),
-                           Text(
-                            _formatDuration(_totalDuration),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-          ],
-        ),
+      body: Center(
+        child: _chewieController != null &&
+                _chewieController!.videoPlayerController.value.isInitialized
+            ? Chewie(controller: _chewieController!)
+            : const CircularProgressIndicator(),
       ),
     );
   }
