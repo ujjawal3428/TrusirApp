@@ -15,7 +15,7 @@ class _AttendancePageState extends State<AttendancePage> {
   Map<int, String> _attendanceData = {}; // Day: Status
   Map<String, int> _summaryData = {}; // Summary details
   List<String> weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-  String? course = 'English\n(8-9 AM)';
+  String? course = 'English\n[8-9 AM]\n';
   List<String> _courses = [];
   List<String> combinedItems = [];
   final List<String> timeSlots = [
@@ -42,7 +42,6 @@ class _AttendancePageState extends State<AttendancePage> {
           setState(() {
             _courses = List<String>.from(data);
             combinedItems = generateDropdownItems(_courses, timeSlots);
-            print(generateDropdownItems(_courses, timeSlots));
           });
         }
       } else {
@@ -87,7 +86,7 @@ class _AttendancePageState extends State<AttendancePage> {
     for (final course in courses) {
       for (final slot in timeSlots) {
         dropdownItems
-            .add('$course\n($slot)'); // Pair course with each time slot
+            .add('$course\n[$slot]\n'); // Pair course with each time slot
       }
     }
     return dropdownItems;
@@ -331,6 +330,11 @@ class _AttendancePageState extends State<AttendancePage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -371,11 +375,10 @@ class _AttendancePageState extends State<AttendancePage> {
             child: Column(children: [
           // Calendar Section
           Padding(
-            padding:
-                const EdgeInsets.only(top: 30, left: 15, right: 15, bottom: 15),
+            padding: const EdgeInsets.only(top: 30, left: 15, bottom: 15),
             child: Container(
               padding: const EdgeInsets.all(10),
-              width: 360,
+              width: 380,
               height: 360,
               decoration: BoxDecoration(
                 color: Colors.white70,
@@ -398,7 +401,10 @@ class _AttendancePageState extends State<AttendancePage> {
                     child: Row(
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.arrow_back_ios_outlined),
+                          icon: const Icon(
+                            Icons.arrow_back_ios_outlined,
+                            size: 20,
+                          ),
                           onPressed: _prevMonth,
                         ),
                         Text(
@@ -406,13 +412,18 @@ class _AttendancePageState extends State<AttendancePage> {
                           style: const TextStyle(fontSize: 17),
                         ),
                         IconButton(
-                            icon:
-                                const Icon(Icons.keyboard_arrow_down_outlined),
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down_outlined,
+                              size: 20,
+                            ),
                             onPressed: () {
                               _navigateToYearMonthPicker(context);
                             }),
                         IconButton(
-                          icon: const Icon(Icons.arrow_forward_ios_outlined),
+                          icon: const Icon(
+                            Icons.arrow_forward_ios_outlined,
+                            size: 20,
+                          ),
                           onPressed: _nextMonth,
                         ),
                         _buildDropdownField('Course', selectedValue: course,
@@ -586,14 +597,15 @@ Widget _buildDropdownField(
 }) {
   return SizedBox(
     height: 50,
-    width: 110,
+    width: 100,
     child: DropdownButtonFormField<String>(
+      isExpanded: true,
       value: selectedValue,
       onChanged: onChanged,
       decoration: InputDecoration(
         labelText: hintText,
         border: InputBorder.none,
-        contentPadding: const EdgeInsets.only(left: 13),
+        contentPadding: const EdgeInsets.only(left: 0),
       ),
       items: items
           .map((item) => DropdownMenuItem(
