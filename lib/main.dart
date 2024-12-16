@@ -76,6 +76,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const MaterialApp(
+            debugShowCheckedModeBanner: false,
             // locale: _locale,
             // localizationsDelegates: const [
             //   AppLocalizations.delegate,
@@ -86,6 +87,7 @@ class _MyAppState extends State<MyApp> {
           );
         } else {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             home: snapshot.data,
           );
         }
