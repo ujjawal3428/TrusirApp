@@ -17,19 +17,31 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
           'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
       'thumbnail':
           'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg',
+      'time': '9:45 AM',
+      'description': 'description',
+      'profile':
+          'https://th.bing.com/th/id/OIP.XSZAFm-5JI7nriDLwZqRQQHaE7?rs=1&pid=ImgDetMain.jpg'
     },
     {
       'title': 'Advanced Dart Techniques',
       'url':
           'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
       'thumbnail': 'https://via.placeholder.com/300x169.png?text=Dart+Advanced',
+      'time': '10:45 AM',
+      'description': 'description',
+      'profile':
+          'https://th.bing.com/th/id/OIP.XSZAFm-5JI7nriDLwZqRQQHaE7?rs=1&pid=ImgDetMain.jpg'
     },
     {
       'title': 'Understanding State Management',
       'url':
           'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
       'thumbnail':
-          'https://via.placeholder.com/300x169.png?text=State+Management',
+          'https://th.bing.com/th/id/OIP.XSZAFm-5JI7nriDLwZqRQQHaE7?rs=1&pid=ImgDetMain.jpg',
+      'time': '9:45 PM',
+      'description': 'description',
+      'profile':
+          'https://th.bing.com/th/id/OIP.XSZAFm-5JI7nriDLwZqRQQHaE7?rs=1&pid=ImgDetMain.jpg'
     },
   ];
 
@@ -150,7 +162,9 @@ class MobileLayout extends StatelessWidget {
           videoUrl: videos[index]['url']!,
           title: videos[index]['title']!,
           thumbnailUrl: videos[index]['thumbnail']!,
-          description: 'lorem adkjs sakndnsand sdldsd lkdsl dlsl lorem adkjs sakndnsand sdldsd lkdsl dlsl lorem adkjs sakndnsand sdldsd lkdsl dlsl', channelPicUrl: '', uploadTime: '9:45 AM',
+          description: videos[index]['description']!,
+          channelPicUrl: videos[index]['profile']!,
+          uploadTime: videos[index]['time']!,
         );
       },
     );
@@ -177,7 +191,9 @@ class WideScreenLayout extends StatelessWidget {
           videoUrl: videos[index]['url']!,
           title: videos[index]['title']!,
           thumbnailUrl: videos[index]['thumbnail']!,
-          description: '', channelPicUrl: '', uploadTime: '',
+          description: videos[index]['description']!,
+          channelPicUrl: videos[index]['profile']!,
+          uploadTime: videos[index]['time']!,
         );
       },
     );
@@ -214,89 +230,93 @@ class VideoCard extends StatelessWidget {
           );
         },
         child: Card(
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(0.0),
-  ),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      AspectRatio(
-        aspectRatio: 16 / 9,
-        child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(0.0)),
-          child: Image.network(
-            thumbnailUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                color: Colors.grey[300],
-                child: const Center(
-                  child: Icon(
-                    Icons.error,
-                    size: 50.0,
-                    color: Colors.black54,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AspectRatio(
+                aspectRatio: 16 / 9,
+                child: ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(0.0)),
+                  child: Image.network(
+                    thumbnailUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: Icon(
+                            Icons.error,
+                            size: 50.0,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ),
-              );
-            },
-          ),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CircleAvatar(
-                      radius: 16.0,
-                      backgroundImage: NetworkImage(channelPicUrl), // Channel picture
-                      backgroundColor: Colors.grey[300],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              radius: 16.0,
+                              backgroundImage: NetworkImage(
+                                  channelPicUrl), // Channel picture
+                              backgroundColor: Colors.grey[300],
+                            ),
+                            const SizedBox(width: 8.0),
+                            RichText(
+                              text: TextSpan(
+                                text: title,
+                                style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 17,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          uploadTime,
+                          style: const TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 12.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8.0),
+                    const SizedBox(height: 8.0),
                     Text(
-                      title,
+                      description,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey,
                       ),
                     ),
                   ],
                 ),
-                Text(
-                  uploadTime,
-                  style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 12.0,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8.0),
-            Text(
-              description,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 14.0,
-                fontWeight: FontWeight.w400,
-                color: Colors.grey,
               ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  ),
-)
-);
+            ],
+          ),
+        ));
   }
 }
 

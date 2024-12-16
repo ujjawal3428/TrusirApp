@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:trusir/common/api.dart';
 
 class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
@@ -14,6 +15,43 @@ class _AttendancePageState extends State<AttendancePage> {
   Map<int, String> _attendanceData = {}; // Day: Status
   Map<String, int> _summaryData = {}; // Summary details
   List<String> weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+  String? course = 'English\n(8-9 AM)';
+  List<String> _courses = [];
+  List<String> combinedItems = [];
+  final List<String> timeSlots = [
+    '8-9 AM',
+    '9-10 AM',
+    '10-11 AM',
+    '11-12 PM',
+    '12-1 PM',
+    '1-2 PM',
+    '2-3 PM',
+    '3-4 PM',
+    '4-5PM',
+    '5-6 PM',
+    '6-7 PM',
+    '7-8 PM'
+  ];
+
+  Future<void> fetchCourses() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/my-course/testID'));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        if (mounted) {
+          setState(() {
+            _courses = List<String>.from(data);
+            combinedItems = generateDropdownItems(_courses, timeSlots);
+            print(generateDropdownItems(_courses, timeSlots));
+          });
+        }
+      } else {
+        throw Exception('Failed to load courses');
+      }
+    } catch (e) {
+      print('Error fetching courses: $e');
+    }
+  }
 
   DateTime get _firstDayOfMonth {
     return DateTime(_selectedDate.year, _selectedDate.month, 1);
@@ -39,6 +77,20 @@ class _AttendancePageState extends State<AttendancePage> {
   void initState() {
     super.initState();
     _fetchAttendanceData();
+    fetchCourses();
+  }
+
+  // Generate dropdown items by pairing courses with time slots
+  List<String> generateDropdownItems(
+      List<String> courses, List<String> timeSlots) {
+    final List<String> dropdownItems = [];
+    for (final course in courses) {
+      for (final slot in timeSlots) {
+        dropdownItems
+            .add('$course\n($slot)'); // Pair course with each time slot
+      }
+    }
+    return dropdownItems;
   }
 
   void _fetchAttendanceData() {
@@ -342,7 +394,7 @@ class _AttendancePageState extends State<AttendancePage> {
                 children: [
                   // Calendar Header
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(0),
                     child: Row(
                       children: [
                         IconButton(
@@ -363,21 +415,14 @@ class _AttendancePageState extends State<AttendancePage> {
                           icon: const Icon(Icons.arrow_forward_ios_outlined),
                           onPressed: _nextMonth,
                         ),
-                        TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _selectedDate = DateTime.now();
-                                _fetchAttendanceData();
-                              });
-                            },
-                            child: const Text(
-                              'Today',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 18,
-                                color: Color(0xFF48116A),
-                              ),
-                            )),
+                        _buildDropdownField('Course', selectedValue: course,
+                            onChanged: (value) {
+                          setState(() {
+                            course = value;
+                            _fetchAttendanceData();
+                            _updateSummary();
+                          });
+                        }, items: combinedItems),
                       ],
                     ),
                   ),
@@ -482,26 +527,6 @@ class _AttendancePageState extends State<AttendancePage> {
           const SizedBox(
             height: 50,
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 10.0, right: 10),
-          //   child: Container(
-          //     width: MediaQuery.of(context).size.width,
-          //     height: 45,
-          //     decoration: BoxDecoration(
-          //       borderRadius: BorderRadius.circular(15),
-          //       gradient: const LinearGradient(
-          //         colors: [Color(0xFF045C19), Color(0xFF77D317)],
-          //       ),
-          //     ),
-          //     child: TextButton(
-          //       onPressed: () {},
-          //       child: const Text(
-          //         'Send Approval',
-          //         style: TextStyle(color: Colors.white, fontSize: 20),
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ])));
   }
 
@@ -551,6 +576,33 @@ class _AttendancePageState extends State<AttendancePage> {
       ),
     );
   }
+}
+
+Widget _buildDropdownField(
+  String hintText, {
+  String? selectedValue,
+  required ValueChanged<String?> onChanged,
+  required List<String> items,
+}) {
+  return SizedBox(
+    height: 50,
+    width: 110,
+    child: DropdownButtonFormField<String>(
+      value: selectedValue,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: hintText,
+        border: InputBorder.none,
+        contentPadding: const EdgeInsets.only(left: 13),
+      ),
+      items: items
+          .map((item) => DropdownMenuItem(
+                value: item,
+                child: Text(item),
+              ))
+          .toList(),
+    ),
+  );
 }
 
 class YearMonthPicker extends StatelessWidget {

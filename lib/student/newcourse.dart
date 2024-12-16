@@ -31,7 +31,8 @@ class NewCoursePage extends StatelessWidget {
           children: [
             // Header Row
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -45,7 +46,8 @@ class NewCoursePage extends StatelessWidget {
                   ),
                   DropdownButton<String>(
                     value: "New",
-                    icon: const Icon(Icons.arrow_drop_down, color: Colors.black54),
+                    icon: const Icon(Icons.arrow_drop_down,
+                        color: Colors.black54),
                     underline: Container(height: 0),
                     onChanged: (String? newValue) {},
                     items: <String>['New', 'Popular', 'Watched']
@@ -97,11 +99,11 @@ class NewCoursePage extends StatelessWidget {
                       ),
                       const SizedBox(width: 16),
                       // Course Details
-                      Expanded(
+                      const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
+                            Text(
                               "Advanced Flutter Course",
                               style: TextStyle(
                                 fontSize: 16,
@@ -109,10 +111,11 @@ class NewCoursePage extends StatelessWidget {
                                 color: Colors.black87,
                               ),
                             ),
-                            const SizedBox(height: 6),
+                            SizedBox(height: 6),
                             Row(
-                              children: const [
-                                Icon(Icons.calendar_today, size: 14, color: Colors.grey),
+                              children: [
+                                Icon(Icons.calendar_today,
+                                    size: 14, color: Colors.grey),
                                 SizedBox(width: 6),
                                 Text(
                                   "Uploaded: 01 Dec 2024",
@@ -142,7 +145,8 @@ class NewCoursePage extends StatelessWidget {
                     alignment: Alignment.bottomRight,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
                         backgroundColor: const Color(0xFF4A148C),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
