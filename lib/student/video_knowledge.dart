@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'dart:async';
+import 'package:flutter/services.dart';
+
 
 class VideoKnowledge extends StatefulWidget {
   const VideoKnowledge({super.key});
@@ -320,6 +323,7 @@ class VideoCard extends StatelessWidget {
   }
 }
 
+
 class VideoPlayerScreen extends StatefulWidget {
   final String videoUrl;
 
@@ -331,50 +335,188 @@ class VideoPlayerScreen extends StatefulWidget {
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   late VideoPlayerController _controller;
+  late Duration _currentPosition;
+  late Duration _totalDuration;
+  bool _showControls = true;
+  Timer? _hideControlsTimer;
+  bool _isLandscape = false;
 
   @override
   void initState() {
     super.initState();
-    // ignore: deprecated_member_use
     _controller = VideoPlayerController.network(widget.videoUrl)
       ..initialize().then((_) {
-        setState(() {});
+        setState(() {
+          _totalDuration = _controller.value.duration;
+        });
         _controller.play();
       });
+
+    _controller.addListener(() {
+      if (_controller.value.isInitialized) {
+        setState(() {
+          _currentPosition = _controller.value.position;
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
+    _hideControlsTimer?.cancel();
     _controller.dispose();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]); // Reset orientation to portrait when exiting
     super.dispose();
+  }
+
+  void _togglePlayPause() {
+    setState(() {
+      if (_controller.value.isPlaying) {
+        _controller.pause();
+      } else {
+        _controller.play();
+      }
+    });
+    _resetHideControlsTimer();
+  }
+
+  void _resetHideControlsTimer() {
+    _hideControlsTimer?.cancel();
+    setState(() {
+      _showControls = true;
+    });
+    _hideControlsTimer = Timer(const Duration(seconds: 3), () {
+      setState(() {
+        _showControls = false;
+      });
+    });
+  }
+
+  void _toggleScreenOrientation() {
+    setState(() {
+      _isLandscape = !_isLandscape;
+    });
+
+    if (_isLandscape) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft,
+      ]);
+    } else {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+    }
+  }
+
+  String _formatDuration(Duration duration) {
+    final minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Video Player'),
-      ),
-      body: Center(
-        child: _controller.value.isInitialized
-            ? AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
-              )
-            : const CircularProgressIndicator(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            if (_controller.value.isPlaying) {
-              _controller.pause();
-            } else {
-              _controller.play();
-            }
-          });
-        },
-        child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+      body: GestureDetector(
+        onTap: _resetHideControlsTimer,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            _controller.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  )
+                : const Center(child: CircularProgressIndicator()),
+            AnimatedOpacity(
+              opacity: _showControls ? 1.0 : 0.0,
+              duration: const Duration(milliseconds: 300),
+              child: GestureDetector(
+                onTap: _togglePlayPause,
+                child: Container(
+                  color: Colors.black.withOpacity(0.3),
+                  alignment: Alignment.center,
+                  child: Icon(
+                    _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                    size: 60,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            if (_controller.value.isInitialized)
+              Positioned(
+                bottom: 10,
+                left: 10,
+                right: 10,
+                child: AnimatedOpacity(
+                  opacity: _showControls ? 1.0 : 0.0,
+                  duration: const Duration(milliseconds: 300),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _controller.seekTo(
+                                _controller.value.position - const Duration(seconds: 10),
+                              );
+                              _resetHideControlsTimer();
+                            },
+                            icon: const Icon(Icons.replay_10, color: Colors.white),
+                          ),
+                          Expanded(
+                            child: Slider(
+                              value: _currentPosition.inSeconds.toDouble(),
+                              max: _totalDuration.inSeconds.toDouble(),
+                              onChanged: (value) {
+                                _controller.seekTo(Duration(seconds: value.toInt()));
+                                _resetHideControlsTimer();
+                              },
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              _controller.seekTo(
+                                _controller.value.position + const Duration(seconds: 10),
+                              );
+                              _resetHideControlsTimer();
+                            },
+                            icon: const Icon(Icons.forward_10, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            _formatDuration(_currentPosition),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                         
+                          IconButton(
+                            onPressed: _toggleScreenOrientation,
+                            icon: Icon(
+                              _isLandscape
+                                  ? Icons.screen_rotation
+                                  : Icons.screen_rotation_alt,
+                              color: Colors.white,
+                            ),
+                          ),
+                           Text(
+                            _formatDuration(_totalDuration),
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
