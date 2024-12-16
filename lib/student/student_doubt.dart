@@ -444,14 +444,35 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                             )
                                           ]),
                                       child: formData.photo != null
-                                          ? const Center(
-                                              child: Text(
-                                                'File Uploaded',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 7,
+                                          ? Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Center(
+                                                  child: Image.network(
+                                                    width: 100,
+                                                    height: 100,
+                                                    formData.photo!,
+                                                    errorBuilder: (context,
+                                                            error,
+                                                            stackTrace) =>
+                                                        const Icon(
+                                                      Icons
+                                                          .picture_as_pdf_rounded,
+                                                      size: 50,
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                                const Center(
+                                                  child: Text(
+                                                    'File Uploaded',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 7,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             )
                                           : Column(
                                               children: [

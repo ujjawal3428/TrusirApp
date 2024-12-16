@@ -383,7 +383,13 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                                 ? Image.network(
                                                     width: 50,
                                                     height: 50,
-                                                    formData.photo!)
+                                                    formData.photo!,
+                                                    errorBuilder: (context,
+                                                            error,
+                                                            stackTrace) =>
+                                                        const Icon(Icons
+                                                            .picture_as_pdf_rounded),
+                                                  )
                                                 : Image.asset(
                                                     'assets/camera@3x.png',
                                                     width: 46,
