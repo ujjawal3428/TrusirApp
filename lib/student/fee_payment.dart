@@ -126,7 +126,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(width: 20),
+          const Spacer(),
           const Row(
             mainAxisSize: MainAxisSize.min,
             children: [

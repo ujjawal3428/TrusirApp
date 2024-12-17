@@ -40,6 +40,24 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
     await launchUrl(launchUri);
   }
 
+  Future<void> _launchWhatsApp(String phoneNumber, String message) async {
+    final Uri whatsappUri = Uri.parse(
+        "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
+
+    try {
+      final bool launched = await launchUrl(
+        whatsappUri,
+        mode: LaunchMode.externalApplication,
+      );
+
+      if (!launched) {
+        throw Exception('Could not launch WhatsApp');
+      }
+    } catch (e) {
+      print("Error launching WhatsApp: $e");
+    }
+  }
+
   Future<void> submitForm(BuildContext context) async {
     // Fetch the entered data
     formData.title = titleController.text.trim();
@@ -443,69 +461,74 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.all(
-                                      MediaQuery.of(context).size.width * 0.02),
-                                  child: Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.35,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.2,
-                                    decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(14.40),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.white54,
-                                          offset: Offset(2, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: MediaQuery.of(context)
+                                GestureDetector(
+                                  onTap: () {
+                                    _launchWhatsApp('919797472922', 'Hi');
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.all(
+                                        MediaQuery.of(context).size.width *
+                                            0.02),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.35,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.2,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(14.40),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Colors.white54,
+                                            offset: Offset(2, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.04),
+                                            child: Image.asset(
+                                              'assets/whatsapp@3x.png',
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.12,
+                                              height: MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  0.04),
-                                          child: Image.asset(
-                                            'assets/whatsapp@3x.png',
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.12,
+                                                  0.05,
+                                            ),
+                                          ),
+                                          SizedBox(
                                             height: MediaQuery.of(context)
                                                     .size
                                                     .height *
-                                                0.05,
+                                                0.015,
                                           ),
-                                        ),
-                                        SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.015,
-                                        ),
-                                        const Center(
-                                          child: Text(
-                                            'WhatsApp',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 14,
+                                          const Center(
+                                            child: Text(
+                                              'WhatsApp',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.01,
-                                        ),
-                                        const Center(
-                                          child: InkWell(
+                                          SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.01,
+                                          ),
+                                          const Center(
                                             child: Text(
                                               'Click here',
                                               style: TextStyle(
@@ -514,8 +537,8 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),

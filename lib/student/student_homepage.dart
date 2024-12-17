@@ -1,9 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/student/student_registration.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StudentHomepage extends StatelessWidget {
   final bool enablephone;
   const StudentHomepage({super.key, required this.enablephone});
+
+  Future<void> openDialer(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+  Future<void> _launchWhatsApp(String phoneNumber, String message) async {
+    final Uri whatsappUri = Uri.parse(
+        "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
+
+    try {
+      final bool launched = await launchUrl(
+        whatsappUri,
+        mode: LaunchMode.externalApplication,
+      );
+
+      if (!launched) {
+        throw Exception('Could not launch WhatsApp');
+      }
+    } catch (e) {
+      print("Error launching WhatsApp: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -402,7 +429,9 @@ class StudentHomepage extends StatelessWidget {
               height: 50,
               width: 50,
               child: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  _launchWhatsApp('919797472922', 'Hi');
+                },
                 child: Image.asset(
                   'assets/whatsapp@3x.png',
                 ),
@@ -416,7 +445,9 @@ class StudentHomepage extends StatelessWidget {
               height: 50,
               width: 50,
               child: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  openDialer('9797472922');
+                },
                 child: Image.asset(
                   'assets/call.png',
                 ),

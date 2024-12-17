@@ -1,8 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/teacher/teachers_registeration.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Teacherhomepage extends StatelessWidget {
   const Teacherhomepage({super.key});
+
+  Future<void> openDialer(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+  Future<void> _launchWhatsApp(String phoneNumber, String message) async {
+    final Uri whatsappUri = Uri.parse(
+        "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
+
+    try {
+      final bool launched = await launchUrl(
+        whatsappUri,
+        mode: LaunchMode.externalApplication,
+      );
+
+      if (!launched) {
+        throw Exception('Could not launch WhatsApp');
+      }
+    } catch (e) {
+      print("Error launching WhatsApp: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +80,7 @@ class Teacherhomepage extends StatelessWidget {
                 const Text(
                   'Welcome To Trusir',
                   style: TextStyle(
-                     fontSize: 34,
+                    fontSize: 34,
                     height: 1.0,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Poppins',
@@ -288,7 +315,9 @@ class Teacherhomepage extends StatelessWidget {
               height: 50,
               width: 50,
               child: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  _launchWhatsApp('919797472922', 'Hi');
+                },
                 child: Image.asset(
                   'assets/whatsapp@3x.png',
                 ),
@@ -302,7 +331,9 @@ class Teacherhomepage extends StatelessWidget {
               height: 50,
               width: 50,
               child: FloatingActionButton(
-                onPressed: () {},
+                onPressed: () {
+                  openDialer('9797472922');
+                },
                 child: Image.asset(
                   'assets/call.png',
                 ),

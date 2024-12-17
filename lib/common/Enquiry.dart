@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/student/student_enquiry.dart';
 import 'package:trusir/teacher/teacher_enquiry.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EnquiryPage extends StatelessWidget {
   const EnquiryPage({super.key});
 
-  void _openWhatsApp() {
-    print("WhatsApp tapped");
-    // Add WhatsApp implementation here, such as using url_launcher to open WhatsApp
+  Future<void> openDialer(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
   }
 
-  void _call() {
-    print("Call tapped");
-    // Add call functionality here, such as using url_launcher to initiate a phone call
+  Future<void> _launchWhatsApp(String phoneNumber, String message) async {
+    final Uri whatsappUri = Uri.parse(
+        "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
+
+    try {
+      final bool launched = await launchUrl(
+        whatsappUri,
+        mode: LaunchMode.externalApplication,
+      );
+
+      if (!launched) {
+        throw Exception('Could not launch WhatsApp');
+      }
+    } catch (e) {
+      print("Error launching WhatsApp: $e");
+    }
   }
 
   @override
@@ -113,7 +130,9 @@ class EnquiryPage extends StatelessWidget {
               children: [
                 // WhatsApp Button
                 GestureDetector(
-                  onTap: _openWhatsApp,
+                  onTap: () {
+                    _launchWhatsApp('919797472922', 'Hi');
+                  },
                   child: Image.asset(
                     'assets/whatsapp@3x.png',
                     width: 70,
@@ -124,7 +143,9 @@ class EnquiryPage extends StatelessWidget {
 
                 // Call Button
                 GestureDetector(
-                  onTap: _call,
+                  onTap: () {
+                    openDialer('9797472922');
+                  },
                   child: Image.asset(
                     'assets/call.png',
                     width: 80,
