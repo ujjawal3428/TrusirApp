@@ -247,6 +247,7 @@ class CategoriesListState extends State<CategoriesList> {
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
+                  overflow: TextOverflow.ellipsis,
               ),
             ),
           );
@@ -345,8 +346,9 @@ class VideoCard extends StatelessWidget {
                                 fontFamily: GoogleFonts.notoSans().fontFamily,
                                 fontSize: 17,
                                 color: Colors.black,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w600,
                               ),
+                            
                             ),
                             const SizedBox(height: 5.0),
                             Text(
@@ -359,6 +361,7 @@ class VideoCard extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                                 color: Colors.grey,
                               ),
+                            
                             ),
                           ],
                         ),
