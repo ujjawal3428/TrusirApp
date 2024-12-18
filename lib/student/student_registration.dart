@@ -115,7 +115,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   // List to store selected slots for each student form
   final List<Set<String>> selectedSlots = [];
   String? uploadedPath;
-  String extension = '';
 
   // List to store selected slot strings for each student form
   final List<String> selectedSlotsString = [];
@@ -296,7 +295,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               duration: Duration(seconds: 1),
             ),
           );
-
           if (path == 'aadharFrontPath') {
             setState(() {
               studentForms[index].aadharFrontPath = uploadedPath;
@@ -336,22 +334,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ),
       );
     }
-  }
-
-  String _getFileExtensionFromUrl(String url) {
-    setState(() {
-      extension = url.split('.').last;
-    });
-    if (extension == 'pdf') {
-      return '.pdf';
-    } else if (extension == 'docx') {
-      return '.docx';
-    } else if (extension == 'jpg' || extension == 'jpeg') {
-      return '.jpg';
-    } else if (extension == 'png') {
-      return '.png';
-    }
-    return ''; // Default, in case we can't determine the extension
   }
 
   Future<String> uploadImage(XFile imageFile) async {
