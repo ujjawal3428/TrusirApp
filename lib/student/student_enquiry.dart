@@ -130,12 +130,14 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
                   hintText: 'Student Name', controllers: _namecontroller),
               const SizedBox(height: 10),
               _buildTextFieldWithBackground(
-                  hintText: 'Class', controllers: _classcontroller),
+                  hintText: 'Class',
+                  controllers: _classcontroller,
+                  isClass: true),
               const SizedBox(height: 10),
               _buildTextFieldWithBackground(
                   hintText: 'City / Town', controllers: _citycontroller),
               const SizedBox(height: 10),
-              _buildTextFieldWithBackground(
+              _buildPinFieldWithBackground(
                   hintText: 'Pincode', controllers: _pincodecontroller),
               SizedBox(height: screenHeight * 0.05),
 
@@ -158,8 +160,10 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
     );
   }
 
-  Widget _buildTextFieldWithBackground(
-      {required String hintText, required TextEditingController controllers}) {
+  Widget _buildPinFieldWithBackground({
+    required String hintText,
+    required TextEditingController controllers,
+  }) {
     return Container(
       height: 58,
       width: double.infinity,
@@ -175,6 +179,62 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
         ],
       ),
       child: TextField(
+        textCapitalization: TextCapitalization.words,
+        controller: controllers,
+        keyboardType: TextInputType.number,
+        maxLength: 6,
+        buildCounter: (_,
+                {required currentLength, required isFocused, maxLength}) =>
+            null, // Hides counter
+        onChanged: (value) {
+          if (value.length == 6) {
+            FocusScope.of(context).unfocus(); // Dismiss keyboard after 6 digits
+          }
+        },
+        decoration: InputDecoration(
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          isDense: true,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFieldWithBackground(
+      {required String hintText,
+      required TextEditingController controllers,
+      bool isClass = false}) {
+    return Container(
+      height: 58,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: TextField(
+        textCapitalization: TextCapitalization.words,
+        keyboardType: isClass ? TextInputType.number : TextInputType.text,
         controller: controllers,
         decoration: InputDecoration(
           labelText: hintText,

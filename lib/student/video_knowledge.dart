@@ -233,11 +233,18 @@ class CategoriesListState extends State<CategoriesList> {
               });
             },
             child: Container(
-              margin:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+              margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8.0),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: isSelected ? Colors.black : Colors.grey[200],
+                gradient: LinearGradient(
+                  colors: isSelected
+                      ? [
+                          const Color(0xFFC22054),
+                          const Color(0xFF48116A),
+                        ]
+                      : [Colors.grey[200]!, Colors.grey[200]!],
+                ),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(

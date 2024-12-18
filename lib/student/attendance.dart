@@ -12,6 +12,7 @@ class AttendancePage extends StatefulWidget {
 
 class _AttendancePageState extends State<AttendancePage> {
   DateTime _selectedDate = DateTime.now();
+  int selectedIndex = 0;
   Map<int, String> _attendanceData = {}; // Day: Status
   Map<String, int> _summaryData = {}; // Summary details
   List<String> weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -31,6 +32,15 @@ class _AttendancePageState extends State<AttendancePage> {
     '5-6 PM',
     '6-7 PM',
     '7-8 PM'
+  ];
+
+  final List<String> categories = [
+    'English',
+    'Hindi',
+    'Maths',
+    'Science',
+    'History',
+    'GK'
   ];
 
   Future<void> fetchCourses() async {
@@ -373,9 +383,14 @@ class _AttendancePageState extends State<AttendancePage> {
         ),
         body: SingleChildScrollView(
             child: Column(children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 30.0, top: 10, right: 30),
+            child: _buildCourseList(),
+          ),
           // Calendar Section
           Padding(
-            padding: const EdgeInsets.only(top: 30, left: 15, bottom: 15),
+            padding:
+                const EdgeInsets.only(top: 10, left: 15, bottom: 15, right: 20),
             child: Container(
               padding: const EdgeInsets.all(10),
               width: 380,
@@ -422,14 +437,21 @@ class _AttendancePageState extends State<AttendancePage> {
                           ),
                           onPressed: _nextMonth,
                         ),
-                        _buildDropdownField('Course', selectedValue: course,
-                            onChanged: (value) {
-                          setState(() {
-                            course = value;
-                            _fetchAttendanceData();
-                            _updateSummary();
-                          });
-                        }, items: combinedItems),
+                        TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedDate = DateTime.now();
+                                _fetchAttendanceData();
+                              });
+                            },
+                            child: const Text(
+                              'Today',
+                              style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 18,
+                                color: Color(0xFF48116A),
+                              ),
+                            )),
                       ],
                     ),
                   ),
@@ -537,6 +559,52 @@ class _AttendancePageState extends State<AttendancePage> {
         ])));
   }
 
+  Widget _buildCourseList() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(categories.length, (index) {
+          bool isSelected = selectedIndex == index;
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedIndex = index;
+                _fetchAttendanceData();
+                _updateSummary();
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.black : Colors.grey[200],
+                gradient: LinearGradient(
+                  colors: isSelected
+                      ? [
+                          const Color(0xFFC22054),
+                          const Color(0xFF48116A),
+                        ]
+                      : [Colors.grey[200]!, Colors.grey[200]!],
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                categories[index],
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
   Widget _buildSummaryCard(
     String title,
     int? count,
@@ -583,33 +651,6 @@ class _AttendancePageState extends State<AttendancePage> {
       ),
     );
   }
-}
-
-Widget _buildDropdownField(
-  String hintText, {
-  String? selectedValue,
-  required ValueChanged<String?> onChanged,
-  required List<String> items,
-}) {
-  return ConstrainedBox(
-    constraints: const BoxConstraints(maxWidth: 150),
-    child: DropdownButtonFormField<String>(
-      isExpanded: true,
-      value: selectedValue,
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        labelText: hintText,
-        border: InputBorder.none,
-        contentPadding: const EdgeInsets.only(left: 0),
-      ),
-      items: items
-          .map((item) => DropdownMenuItem(
-                value: item,
-                child: SizedBox(width: 200, child: Text(item)),
-              ))
-          .toList(),
-    ),
-  );
 }
 
 class YearMonthPicker extends StatelessWidget {

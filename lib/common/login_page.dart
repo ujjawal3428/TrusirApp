@@ -382,6 +382,18 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                 Expanded(
                   child: TextField(
                     keyboardType: TextInputType.phone,
+                    maxLength: 10,
+                    buildCounter: (_,
+                            {required currentLength,
+                            required isFocused,
+                            maxLength}) =>
+                        null, // Hides counter
+                    onChanged: (value) {
+                      if (value.length == 10) {
+                        FocusScope.of(context)
+                            .unfocus(); // Dismiss keyboard after 6 digits
+                      }
+                    },
                     controller: _phonecontroller,
                     style: TextStyle(
                       fontSize: responsive.screenWidth * 0.04,

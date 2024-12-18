@@ -135,7 +135,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
 
               // Gender Selection
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   _buildGenderCheckbox(
                     label: "Male",
@@ -180,7 +180,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
               const SizedBox(height: 10),
 
               // Pincode Field
-              _buildTextFieldWithBackground(
+              _buildPinFieldWithBackground(
                   hintText: 'Pincode', controllers: widget._pincodecontroller),
               const SizedBox(height: 10),
 
@@ -242,21 +242,80 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
     );
   }
 
+  Widget _buildPinFieldWithBackground({
+    required String hintText,
+    required TextEditingController controllers,
+  }) {
+    return Container(
+      height: 58,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: TextField(
+        textCapitalization: TextCapitalization.words,
+        controller: controllers,
+        keyboardType: TextInputType.number,
+        maxLength: 6,
+        buildCounter: (_,
+                {required currentLength, required isFocused, maxLength}) =>
+            null, // Hides counter
+        onChanged: (value) {
+          if (value.length == 6) {
+            FocusScope.of(context).unfocus(); // Dismiss keyboard after 6 digits
+          }
+        },
+        decoration: InputDecoration(
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          isDense: true,
+        ),
+      ),
+    );
+  }
+
   Widget _buildGenderCheckbox({
     required String label,
     required bool value,
     required ValueChanged<bool?> onChanged,
   }) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Checkbox(
-          value: value,
-          onChanged: onChanged,
+        Transform.scale(
+          scale: 1.3,
+          child: Checkbox(
+            value: value,
+            onChanged: onChanged,
+          ),
         ),
         Text(
           label,
           style: const TextStyle(
             fontFamily: 'Poppins-SemiBold',
+            fontSize: 16,
             color: Color(0xFF7E7E7E),
           ),
         ),

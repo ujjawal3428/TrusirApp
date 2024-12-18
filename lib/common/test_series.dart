@@ -218,7 +218,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 5),
             const Addtestseries(),
             hasData == false
                 ? const Center(

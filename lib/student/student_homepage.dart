@@ -387,6 +387,7 @@ class StudentHomepage extends StatelessWidget {
               height: 50,
               width: 50,
               child: FloatingActionButton(
+                heroTag: 'whatsappButton', // Add unique tag
                 backgroundColor: Colors.transparent,
                 onPressed: () {
                   _launchWhatsApp('919797472922', 'Hi');
@@ -404,6 +405,7 @@ class StudentHomepage extends StatelessWidget {
               height: 50,
               width: 50,
               child: FloatingActionButton(
+                heroTag: 'callButton', // Add unique tag
                 backgroundColor: Colors.transparent,
                 onPressed: () {
                   openDialer('9797472922');

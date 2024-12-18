@@ -499,7 +499,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 },
                 items: List.generate(3, (index) => (index + 1).toString()),
               ),
-              const SizedBox(height: 20),
+
               // Dynamically Generated Forms
               ListView.builder(
                 shrinkWrap: true,
@@ -549,11 +549,32 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         ),
                         const SizedBox(height: 10),
                         // Registration Fee
-                        const Center(
-                          child: Text(
-                            '299/- Registration Fee',
-                            style: TextStyle(color: Colors.green, fontSize: 16),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: Text(
+                                '299/-',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 20.0,
+                                  color: Colors.purple.shade900,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ),
+                            Center(
+                              child: Text(
+                                ' Registration Fee',
+                                style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 20.0,
+                                  color: Colors.purple.shade900,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 10),
                         _buildRegisterButton(context)
@@ -574,7 +595,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         const SizedBox(height: 10),
         Text(
           'Student ${index + 1}',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
         const SizedBox(height: 10),
         _buildTextField('Student Name', onChanged: (value) {
@@ -718,10 +739,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Padding(
-              padding: EdgeInsets.only(right: 50),
+              padding: EdgeInsets.only(right: 60),
               child: Text(
                 'Profile Photo',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             _buildFileUploadField('Upload Image', isFile: false, onTap: () {
@@ -737,7 +758,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               padding: EdgeInsets.only(right: 19),
               child: Text(
                 'Aadhar Card Front',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             _buildFileUploadField('Upload File', isFile: true, onTap: () {
@@ -753,7 +774,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               padding: EdgeInsets.only(right: 20),
               child: Text(
                 'Aadhar Card Back',
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             _buildFileUploadField('Upload File', isFile: true, onTap: () {
@@ -906,6 +927,15 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         controller: _phoneController,
         textAlignVertical: TextAlignVertical.top,
         keyboardType: TextInputType.phone,
+        maxLength: 10,
+        buildCounter: (_,
+                {required currentLength, required isFocused, maxLength}) =>
+            null, // Hides counter
+        onChanged: (value) {
+          if (value.length == 10) {
+            FocusScope.of(context).unfocus(); // Dismiss keyboard after 6 digits
+          }
+        },
         decoration: InputDecoration(
           labelText: hintText,
           floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -1078,6 +1108,8 @@ class TimeSlotField extends StatefulWidget {
 
 class TimeSlotFieldState extends State<TimeSlotField> {
   final List<String> morningSlots = [
+    '6-7 AM',
+    '7-8 AM',
     '8-9 AM',
     '9-10 AM',
     '10-11 AM',

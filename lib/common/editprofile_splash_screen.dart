@@ -76,6 +76,10 @@ class EditSplashScreenState extends State<EditSplashScreen> {
           await prefs.setString('medium', responseData['medium']);
           await prefs.setString('state', responseData['state']);
           await prefs.setString('city', responseData['city']);
+          await prefs.setString(
+              'qualification', responseData['qualification'] ?? 'N/A');
+          await prefs.setString(
+              'experience', responseData['experience'] ?? 'N/A');
           await prefs.setString('address', responseData['address']);
           await prefs.setString('area', responseData['area']);
           await prefs.setString('pincode', responseData['pincode']);

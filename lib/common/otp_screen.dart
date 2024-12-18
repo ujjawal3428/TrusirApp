@@ -125,15 +125,32 @@ class _OTPScreenState extends State<OTPScreen> {
 
   void showVerificationDialog(BuildContext context) {
     showDialog(
-      barrierColor: Colors.transparent,
+      barrierColor: Colors.grey,
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            content: Image.asset('assets/otp_verified.png'));
+          backgroundColor: Colors.grey[50],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset('assets/check.png', height: 100, width: 100),
+              const SizedBox(height: 16),
+              Text(
+                'Your OTP has been verified!',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.purple.shade900,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
       },
     );
 

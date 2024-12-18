@@ -71,6 +71,7 @@ flutter:
     - assets/thanks_for_registration.png
     - assets/student_registration.png
     - assets/textbox.png
+    - assets/check.png
     - assets/onlinepayment.png
     - assets/offlinepayment.png
     - assets/topimage.png

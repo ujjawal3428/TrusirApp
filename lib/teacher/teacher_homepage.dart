@@ -257,6 +257,7 @@ class Teacherhomepage extends StatelessWidget {
                   }).toList(),
                 ),
                 const SizedBox(height: 20),
+                _buildRegistrationButton(context),
               ],
             ),
           ),
@@ -266,7 +267,10 @@ class Teacherhomepage extends StatelessWidget {
               left: 0,
               right: 0,
               bottom: 0,
-              child: _buildRegistrationButton(context)),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: _buildRegistrationButton(context),
+              )),
           Positioned(
             right: 13,
             top: MediaQuery.of(context).size.height * 0.5 - 28,
@@ -274,6 +278,7 @@ class Teacherhomepage extends StatelessWidget {
               height: 50,
               width: 50,
               child: FloatingActionButton(
+                heroTag: 'whatsappButton', // Add unique tag
                 backgroundColor: Colors.transparent,
                 onPressed: () {
                   _launchWhatsApp('919797472922', 'Hi');
@@ -291,6 +296,7 @@ class Teacherhomepage extends StatelessWidget {
               height: 50,
               width: 50,
               child: FloatingActionButton(
+                heroTag: 'callButton', // Add unique tag
                 backgroundColor: Colors.transparent,
                 onPressed: () {
                   openDialer('9797472922');

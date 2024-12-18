@@ -25,7 +25,8 @@ class Studentfacilities extends StatefulWidget {
 class _StudentfacilitiesState extends State<Studentfacilities> {
   String name = '';
   String profile = '';
-  String address = '';
+  String area = '';
+  String city = '';
   String phone = '';
   String userID = '';
 
@@ -56,7 +57,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
       userID = prefs.getString('userID')!;
       name = prefs.getString('name')!;
       profile = prefs.getString('profile')!;
-      address = prefs.getString('address')!;
+      area = prefs.getString('area')!;
+      city = prefs.getString('city')!;
       phone = prefs.getString('phone_number')!;
     });
   }
@@ -117,7 +119,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
         child: LayoutBuilder(
           builder: (context, constraints) {
             return Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
+              padding: const EdgeInsets.only(
+                  left: 20.0, right: 20, top: 10, bottom: 10),
               child: Column(children: [
                 GestureDetector(
                   onTap: () {
@@ -130,7 +133,6 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                     );
                   },
                   child: Container(
-                    height: 116,
                     width: constraints.maxWidth > 388
                         ? 388
                         : constraints.maxWidth - 40,
@@ -158,7 +160,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 20.0, top: 20),
+                            padding: const EdgeInsets.only(
+                                left: 20.0, top: 20, bottom: 20),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -173,13 +176,22 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5.0),
                                   child: Text(
-                                    address,
+                                    '$area,',
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
                                       fontFamily: 'Poppins',
                                       fontWeight: FontWeight.w500,
                                     ),
+                                  ),
+                                ),
+                                Text(
+                                  city,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontFamily: 'Poppins',
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 Padding(
