@@ -33,17 +33,12 @@ class _GKPageState extends State<GKPage> {
           padding: const EdgeInsets.only(left: 10.0),
           child: Row(
             children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Color(0xFF48116A),
-                  size: 30,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              const SizedBox(width: 5),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset('assets/back_button.png', height: 50)),
+              const SizedBox(width: 20),
               const Text(
                 'Courses',
                 style: TextStyle(

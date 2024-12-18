@@ -44,7 +44,6 @@ flutter:
   
   assets:
     - assets/girlimage@4x.png
-    - assets/otp_verified.png
     - assets/verify.png
     - assets/poster1.png
     - assets/sad_girl.png

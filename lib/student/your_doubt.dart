@@ -219,22 +219,17 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
           padding: const EdgeInsets.only(left: 10.0),
           child: Row(
             children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Color(0xFF48116A),
-                  size: 30,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              const SizedBox(width: 5),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset('assets/back_button.png', height: 50)),
+              const SizedBox(width: 20),
               const Text(
                 'Your Doubts',
                 style: TextStyle(
                   color: Color(0xFF48116A),
-                  fontSize: 24,
+                  fontSize: 25,
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w700,
                 ),

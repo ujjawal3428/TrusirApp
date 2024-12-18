@@ -44,22 +44,17 @@ class EnquiryPage extends StatelessWidget {
           padding: const EdgeInsets.only(left: 0.0),
           child: Row(
             children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Color(0xFF48116A),
-                  size: 25,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              const SizedBox(width: 5),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset('assets/back_button.png', height: 50)),
+              const SizedBox(width: 20),
               const Text(
                 'Enquiry',
                 style: TextStyle(
                   color: Color(0xFF48116A),
-                  fontSize: 20,
+                  fontSize: 25,
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w600,
                 ),

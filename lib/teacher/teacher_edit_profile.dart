@@ -213,46 +213,51 @@ class TeacherEditProfileScreenState extends State<TeacherEditProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.grey[50],
         elevation: 0,
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(
-            color: Color(0xFF48116A),
-            fontSize: 22,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        toolbarHeight: 70,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded,
-              color: Color(0xFF48116A)),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              _saveprofile(
-                name: nameController.text,
-                dob: dobController.text,
-                school: schoolController.text,
-                studentClass: classController.text,
-                subject: subjectController.text,
-                profile: profile!,
-                token: token!,
-              );
-            },
-            child: const Text(
-              'Save',
+        title: Row(
+          children: [
+            GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Image.asset('assets/back_button.png', height: 50)),
+            const SizedBox(width: 20),
+            const Text(
+              'Edit Profile',
               style: TextStyle(
                 color: Color(0xFF48116A),
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: 25,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
               ),
             ),
-          )
-        ],
+            const Spacer(),
+            TextButton(
+              onPressed: () {
+                _saveprofile(
+                  name: nameController.text,
+                  dob: dobController.text,
+                  school: schoolController.text,
+                  studentClass: classController.text,
+                  subject: subjectController.text,
+                  profile: profile!,
+                  token: token!,
+                );
+              },
+              child: const Text(
+                'Save',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            )
+          ],
+        ),
+        toolbarHeight: 70,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

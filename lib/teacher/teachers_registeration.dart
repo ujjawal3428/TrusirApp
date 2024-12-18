@@ -433,22 +433,12 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Back button at top left
-              Padding(
-                padding: const EdgeInsets.only(top: 15, left: 0),
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_rounded,
-                    color: Color(0xFF48116A),
-                    size: 30,
-                  ),
-                  onPressed: () {
+              GestureDetector(
+                  onTap: () {
                     Navigator.pop(context);
                   },
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
+                  child: Image.asset('assets/back_button.png', height: 50)),
+              const SizedBox(height: 20),
               // Top image
               Center(
                 child: Image.asset(

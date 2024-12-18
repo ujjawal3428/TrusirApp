@@ -84,16 +84,12 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
         title: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios_rounded,
-                color: Color(0xFF48116A),
-                size: 20,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
+            GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Image.asset('assets/back_button.png', height: 50)),
+            const SizedBox(width: 20),
             Expanded(
               child: TextField(
                 controller: _searchController,

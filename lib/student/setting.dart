@@ -5,6 +5,7 @@ import 'package:trusir/student/editprofilescreen.dart';
 import 'package:trusir/common/parents_doubts.dart';
 import 'package:trusir/common/terms_and_conditions.dart';
 import 'package:trusir/common/about_us.dart';
+import 'package:trusir/student/main_screen.dart';
 import 'package:trusir/student/your_doubt.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -29,17 +30,22 @@ class SettingsScreen extends StatelessWidget {
           padding: const EdgeInsets.only(left: 1.0),
           child: Row(
             children: [
-              IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                      color: Color(0xFF48116A)),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MainScreen(),
+                      ),
+                    );
+                  },
+                  child: Image.asset('assets/back_button.png', height: 50)),
+              const SizedBox(width: 20),
               const Text(
                 'Setting',
                 style: TextStyle(
                   color: Color(0xFF48116A),
-                  fontSize: 22,
+                  fontSize: 25,
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w700,
                 ),

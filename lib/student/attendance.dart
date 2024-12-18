@@ -305,7 +305,7 @@ class _AttendancePageState extends State<AttendancePage> {
                 },
               ),
               RadioListTile<String>(
-                title: const Text("Class Not Taken"),
+                title: const Text("Holiday"),
                 value: "class_not_taken",
                 groupValue: selectedStatus,
                 onChanged: (value) {
@@ -356,22 +356,17 @@ class _AttendancePageState extends State<AttendancePage> {
             padding: const EdgeInsets.only(left: 10.0),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_rounded,
-                    color: Color(0xFF48116A),
-                    size: 30,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                const SizedBox(width: 5),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Image.asset('assets/back_button.png', height: 50)),
+                const SizedBox(width: 20),
                 const Text(
                   'Attendance',
                   style: TextStyle(
                     color: Color(0xFF48116A),
-                    fontSize: 24,
+                    fontSize: 25,
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w700,
                   ),
@@ -384,7 +379,7 @@ class _AttendancePageState extends State<AttendancePage> {
         body: SingleChildScrollView(
             child: Column(children: [
           Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 10, right: 30),
+            padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
             child: _buildCourseList(),
           ),
           // Calendar Section
@@ -548,8 +543,8 @@ class _AttendancePageState extends State<AttendancePage> {
                 _buildSummaryCard(
                     'Present', _summaryData['present'], Colors.green),
                 _buildSummaryCard('Absent', _summaryData['absent'], Colors.red),
-                _buildSummaryCard('Class not taken',
-                    _summaryData['class_not_taken'], Colors.grey.shade400),
+                _buildSummaryCard('Holiday', _summaryData['class_not_taken'],
+                    Colors.grey.shade400),
               ],
             ),
           ),

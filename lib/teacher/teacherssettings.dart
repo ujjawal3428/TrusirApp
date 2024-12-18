@@ -3,7 +3,7 @@ import 'package:trusir/common/contactus.dart';
 import 'package:trusir/teacher/teacher_edit_profile.dart';
 import 'package:trusir/common/terms_and_conditions.dart';
 import 'package:trusir/common/about_us.dart';
-import 'package:trusir/teacher/teacher_facilities.dart';
+import 'package:trusir/teacher/teacher_main_screen.dart';
 
 class Teacherssettings extends StatelessWidget {
   const Teacherssettings({super.key});
@@ -20,17 +20,17 @@ class Teacherssettings extends StatelessWidget {
           padding: const EdgeInsets.only(left: 1.0),
           child: Row(
             children: [
-              IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                      color: Color(0xFF48116A)),
-                  onPressed: () {
-                    Navigator.push(
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const TeacherFacilities(),
+                        builder: (context) => const TeacherMainScreen(),
                       ),
                     );
-                  }),
+                  },
+                  child: Image.asset('assets/back_button.png', height: 50)),
+              const SizedBox(width: 20),
               const Text(
                 'Setting',
                 style: TextStyle(

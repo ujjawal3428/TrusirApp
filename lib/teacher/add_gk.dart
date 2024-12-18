@@ -111,21 +111,16 @@ class AddGK extends StatelessWidget {
           children: [
             Row(
               children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_rounded,
-                    color: Color(0xFF48116A),
-                    size: 30,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                const SizedBox(width: 5),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Image.asset('assets/back_button.png', height: 50)),
+                const SizedBox(width: 20),
                 const Text(
                   'Add GK',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF4A148C),
                     fontFamily: 'Poppins',

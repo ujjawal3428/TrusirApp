@@ -43,35 +43,20 @@ class StudentHomepage extends StatelessWidget {
             padding: const EdgeInsets.only(
               left: 16.0,
               right: 16.0,
-              top: 16.0,
-              bottom: 100.0,
+              top: 20.0,
+              bottom: 100,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'trusir',
-                      style: TextStyle(
-                        color: Colors.purple,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                    DropdownButton<String>(
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'English',
-                          child: Text('Language',
-                              style: TextStyle(fontFamily: 'Poppins')),
-                        ),
-                      ],
-                      onChanged: (value) {},
-                    ),
-                  ],
+                const Text(
+                  'trusir',
+                  style: TextStyle(
+                    color: Colors.purple,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Poppins',
+                  ),
                 ),
                 const SizedBox(height: 10),
 
@@ -340,7 +325,6 @@ class StudentHomepage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 15),
-
                 Wrap(
                   spacing: 5,
                   runSpacing: 6,

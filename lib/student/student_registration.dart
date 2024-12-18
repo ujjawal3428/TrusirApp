@@ -115,6 +115,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   // List to store selected slots for each student form
   final List<Set<String>> selectedSlots = [];
   String? uploadedPath;
+  String extension = '';
 
   // List to store selected slot strings for each student form
   final List<String> selectedSlotsString = [];
@@ -295,6 +296,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               duration: Duration(seconds: 1),
             ),
           );
+
           if (path == 'aadharFrontPath') {
             setState(() {
               studentForms[index].aadharFrontPath = uploadedPath;
@@ -334,6 +336,22 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ),
       );
     }
+  }
+
+  String _getFileExtensionFromUrl(String url) {
+    setState(() {
+      extension = url.split('.').last;
+    });
+    if (extension == 'pdf') {
+      return '.pdf';
+    } else if (extension == 'docx') {
+      return '.docx';
+    } else if (extension == 'jpg' || extension == 'jpeg') {
+      return '.jpg';
+    } else if (extension == 'png') {
+      return '.png';
+    }
+    return ''; // Default, in case we can't determine the extension
   }
 
   Future<String> uploadImage(XFile imageFile) async {
@@ -458,23 +476,12 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 15, left: 0),
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_rounded,
-                    color: Color(0xFF48116A),
-                    size: 30,
-                  ),
-                  onPressed: () {
+              GestureDetector(
+                  onTap: () {
                     Navigator.pop(context);
                   },
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              // Top image
+                  child: Image.asset('assets/back_button.png', height: 50)),
+              const SizedBox(height: 20), // Top image
               Center(
                 child: Image.asset(
                   'assets/studentregisteration@4x.png',
@@ -482,7 +489,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   height: 261,
                 ),
               ),
-              const SizedBox(height: 20),
               _buildPhoneField("Phone Number"),
               const SizedBox(
                 height: 20,
