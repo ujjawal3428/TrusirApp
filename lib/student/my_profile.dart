@@ -54,7 +54,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
     ];
 
     return Scaffold(
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Colors.grey[50],
         appBar: AppBar(
           backgroundColor: Colors.grey[50],
           elevation: 0,

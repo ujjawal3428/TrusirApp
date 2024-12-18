@@ -209,8 +209,9 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.grey[50],
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Padding(
@@ -242,7 +243,6 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
         ),
         toolbarHeight: 70,
       ),
-      backgroundColor: Colors.grey.shade100,
       body: Stack(
         children: [
           Column(

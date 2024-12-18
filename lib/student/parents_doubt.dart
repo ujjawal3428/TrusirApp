@@ -203,7 +203,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
@@ -237,35 +237,6 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
         ),
         toolbarHeight: 70,
       ),
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 16.0, right: 16.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            colors: [Colors.grey[300]!, Colors.white],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              formData.title = titleController.text;
-              formData.description = descriptionController.text;
-            });
-            submitForm(context);
-          },
-          elevation: 0, // To match the gradient
-          backgroundColor:
-              const Color(0xFF48116A), // Transparent for gradient to show
-          child: const Icon(
-            Icons.add, // Plus icon
-            color: Colors.white,
-            size: 50, // Icon size
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: LayoutBuilder(
         builder: (context, constraints) => Stack(
           children: [
@@ -273,15 +244,6 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(
-                      left: 15.0,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [],
-                    ),
-                  ),
                   Padding(
                     padding: const EdgeInsets.all(18.0),
                     child: Column(
@@ -353,16 +315,30 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                 controller: descriptionController,
                                 textAlignVertical: TextAlignVertical.top,
                                 decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 120, horizontal: 20),
                                   hintText: 'Description',
                                   fillColor: Colors.white,
                                   filled: true,
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 120, horizontal: 20),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(22),
+                                    borderSide: const BorderSide(
+                                      width: 1,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(22),
+                                    borderSide: const BorderSide(
+                                      width: 1,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(22),
                                     borderSide: const BorderSide(
                                       width: 1,
-                                      color: Color.fromARGB(255, 212, 211, 211),
+                                      color: Colors.blue,
                                     ),
                                   ),
                                 ),
@@ -379,14 +355,16 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                       0.2, // Responsive width
                                   height: 168,
                                   decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(14.40),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.white,
-                                          offset: Offset(2, 2),
-                                        )
-                                      ]),
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(14.40),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.50),
+                                        offset: const Offset(2, 2),
+                                        blurRadius: 4,
+                                      ),
+                                    ],
+                                  ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(1.0),
                                     child: Center(
@@ -476,12 +454,15 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                           MediaQuery.of(context).size.height *
                                               0.2,
                                       decoration: BoxDecoration(
+                                        color: Colors.white,
                                         borderRadius:
                                             BorderRadius.circular(14.40),
-                                        boxShadow: const [
+                                        boxShadow: [
                                           BoxShadow(
-                                            color: Colors.white54,
-                                            offset: Offset(2, 2),
+                                            color:
+                                                Colors.black.withOpacity(0.50),
+                                            offset: const Offset(2, 2),
+                                            blurRadius: 4,
                                           ),
                                         ],
                                       ),
@@ -561,12 +542,15 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                           MediaQuery.of(context).size.height *
                                               0.2,
                                       decoration: BoxDecoration(
+                                        color: Colors.white,
                                         borderRadius:
                                             BorderRadius.circular(14.40),
-                                        boxShadow: const [
+                                        boxShadow: [
                                           BoxShadow(
-                                            color: Colors.white54,
-                                            offset: Offset(2, 2),
+                                            color:
+                                                Colors.black.withOpacity(0.50),
+                                            offset: const Offset(2, 2),
+                                            blurRadius: 4,
                                           ),
                                         ],
                                       ),
@@ -633,7 +617,9 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                               ],
                             ),
                           ),
-                        )
+                        ),
+                        const SizedBox(height: 150),
+                        _buildSubmitButton(context)
                       ],
                     ),
                   ),
@@ -641,6 +627,26 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            formData.title = titleController.text;
+            formData.description = descriptionController.text;
+          });
+          submitForm(context);
+        },
+        child: Image.asset(
+          'assets/submit.png',
+          width: double.infinity,
+          height: 100,
+          fit: BoxFit.contain,
         ),
       ),
     );

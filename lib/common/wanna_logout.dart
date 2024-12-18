@@ -18,6 +18,7 @@ class WanaLogout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       body: Stack(
         children: [
           // Main content with padding and scroll view

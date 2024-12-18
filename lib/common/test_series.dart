@@ -34,7 +34,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   void initState() {
     super.initState();
     fetchTestSeries();
-    _requestNotificationPermission();
     _loadDownloadedFiles();
   }
 
@@ -117,6 +116,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   Future<void> _downloadFile(String url, String filename) async {
     setState(() {
       _requestPermissions();
+      _requestNotificationPermission();
     });
 
     try {
@@ -180,7 +180,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
@@ -214,335 +214,351 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         ),
         toolbarHeight: 70,
       ),
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 16.0, right: 16.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            colors: [Colors.grey[300]!, Colors.white],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Addtestseries(),
-              ),
-            );
-          },
-          elevation: 0, // To match the gradient
-          backgroundColor:
-              const Color(0xFF48116A), // Transparent for gradient to show
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 50,
-          ), // Plus icon
-          // Icon size
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      body: hasData == false
-          ? const Center(
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Text(
-                  'No tests available',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-            )
-          : Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Column(
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            const Addtestseries(),
+            hasData == false
+                ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Text(
+                        'No tests available',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  )
+                : Stack(
                     children: [
-                      if (_isDownloading)
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            children: [
-                              const CircularProgressIndicator(),
-                              const SizedBox(height: 10),
-                              Text(
-                                'Downloading: $_downloadProgress',
-                                style: const TextStyle(fontSize: 16),
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            if (_isDownloading)
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                  children: [
+                                    const CircularProgressIndicator(),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      'Downloading: $_downloadProgress',
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
+                            testSeriesList.isEmpty
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Column(
+                                    children: testSeriesList
+                                        .asMap()
+                                        .entries
+                                        .map<Widget>((entry) {
+                                      int index = entry.key;
+                                      var test = entry.value;
+
+                                      // Calculate filenames for questions and answers
+                                      String questionFilename =
+                                          'question_${test['test_name']}';
+                                      String answerFilename =
+                                          'answer_${test['test_name']}';
+
+                                      // Check if the files are downloaded
+                                      bool isQuestionDownloaded =
+                                          downloadedFiles
+                                              .containsKey(questionFilename);
+                                      bool isAnswerDownloaded = downloadedFiles
+                                          .containsKey(answerFilename);
+
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 16.0,
+                                          right: 16,
+                                          left: 16,
+                                        ),
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              1,
+                                          decoration: BoxDecoration(
+                                            color: containerColors[
+                                                index % containerColors.length],
+                                            borderRadius:
+                                                BorderRadius.circular(22),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                left: 10.0,
+                                                                right: 10,
+                                                                top: 10),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Text(
+                                                              test['test_name'],
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 18,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              test['subject'],
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 10),
+                                                            Text(
+                                                              test['date'],
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 14,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topRight,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 0),
+                                                        child: Column(
+                                                          children: [
+                                                            Text(
+                                                              test['time'],
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          14),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 10),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    InkWell(
+                                                      onTap: () {
+                                                        if (isQuestionDownloaded) {
+                                                          _openFile(
+                                                              questionFilename);
+                                                        } else {
+                                                          if (test[
+                                                                  'question'] !=
+                                                              null) {
+                                                            _downloadFile(
+                                                                test[
+                                                                    'question'],
+                                                                questionFilename);
+                                                          } else {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              const SnackBar(
+                                                                content: Text(
+                                                                    'Questions URL not available'),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2),
+                                                              ),
+                                                            );
+                                                          }
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.4,
+                                                        height: 37,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white,
+                                                          border: Border.all(
+                                                            color: Colors.indigo
+                                                                .shade900,
+                                                            width: 1.2,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(32),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              'Question',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .indigo
+                                                                    .shade900,
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                width: 8),
+                                                            Icon(
+                                                              isQuestionDownloaded
+                                                                  ? Icons
+                                                                      .open_in_new
+                                                                  : Icons
+                                                                      .file_download_rounded,
+                                                              color: Colors
+                                                                  .indigo
+                                                                  .shade900,
+                                                              size: 16,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 20),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        if (isAnswerDownloaded) {
+                                                          _openFile(
+                                                              answerFilename);
+                                                        } else {
+                                                          if (test['answer'] !=
+                                                              null) {
+                                                            _downloadFile(
+                                                                test['answer'],
+                                                                answerFilename);
+                                                          } else {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              const SnackBar(
+                                                                content: Text(
+                                                                    'Answers URL not available'),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2),
+                                                              ),
+                                                            );
+                                                          }
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.4,
+                                                        height: 37,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.white,
+                                                          border: Border.all(
+                                                            color: Colors
+                                                                .blue.shade900,
+                                                            width: 1.2,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(32),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              'Answer',
+                                                              style: TextStyle(
+                                                                color: Colors
+                                                                    .indigo
+                                                                    .shade900,
+                                                                fontSize: 16,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                width: 8),
+                                                            Icon(
+                                                              isAnswerDownloaded
+                                                                  ? Icons
+                                                                      .open_in_new
+                                                                  : Icons
+                                                                      .file_download_rounded,
+                                                              color: Colors
+                                                                  .indigo
+                                                                  .shade900,
+                                                              size: 16,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                            TextButton(
+                                onPressed: () {
+                                  fetchTestSeries();
+                                },
+                                child: const Text('Load More')),
+                          ],
                         ),
-                      testSeriesList.isEmpty
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : Column(
-                              children: testSeriesList
-                                  .asMap()
-                                  .entries
-                                  .map<Widget>((entry) {
-                                int index = entry.key;
-                                var test = entry.value;
-
-                                // Calculate filenames for questions and answers
-                                String questionFilename =
-                                    'question_${test['test_name']}';
-                                String answerFilename =
-                                    'answer_${test['test_name']}';
-
-                                // Check if the files are downloaded
-                                bool isQuestionDownloaded = downloadedFiles
-                                    .containsKey(questionFilename);
-                                bool isAnswerDownloaded =
-                                    downloadedFiles.containsKey(answerFilename);
-
-                                return Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 16.0,
-                                    right: 16,
-                                    left: 16,
-                                  ),
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 1,
-                                    decoration: BoxDecoration(
-                                      color: containerColors[
-                                          index % containerColors.length],
-                                      borderRadius: BorderRadius.circular(22),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10.0,
-                                                          right: 10,
-                                                          top: 10),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        test['test_name'],
-                                                        style: const TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        test['subject'],
-                                                        style: const TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                          height: 10),
-                                                      Text(
-                                                        test['date'],
-                                                        style: const TextStyle(
-                                                          fontSize: 14,
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topRight,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 0),
-                                                  child: Column(
-                                                    children: [
-                                                      Text(
-                                                        test['time'],
-                                                        style: const TextStyle(
-                                                            fontSize: 14),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  if (isQuestionDownloaded) {
-                                                    _openFile(questionFilename);
-                                                  } else {
-                                                    if (test['question'] !=
-                                                        null) {
-                                                      _downloadFile(
-                                                          test['question'],
-                                                          questionFilename);
-                                                    } else {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        const SnackBar(
-                                                          content: Text(
-                                                              'Questions URL not available'),
-                                                          duration: Duration(
-                                                              seconds: 2),
-                                                        ),
-                                                      );
-                                                    }
-                                                  }
-                                                },
-                                                child: Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.4,
-                                                  height: 37,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    border: Border.all(
-                                                      color: Colors
-                                                          .indigo.shade900,
-                                                      width: 1.2,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            32),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        'Question',
-                                                        style: TextStyle(
-                                                          color: Colors
-                                                              .indigo.shade900,
-                                                          fontSize: 16,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(width: 8),
-                                                      Icon(
-                                                        isQuestionDownloaded
-                                                            ? Icons.open_in_new
-                                                            : Icons
-                                                                .file_download_rounded,
-                                                        color: Colors
-                                                            .indigo.shade900,
-                                                        size: 16,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 20),
-                                              InkWell(
-                                                onTap: () {
-                                                  if (isAnswerDownloaded) {
-                                                    _openFile(answerFilename);
-                                                  } else {
-                                                    if (test['answer'] !=
-                                                        null) {
-                                                      _downloadFile(
-                                                          test['answer'],
-                                                          answerFilename);
-                                                    } else {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        const SnackBar(
-                                                          content: Text(
-                                                              'Answers URL not available'),
-                                                          duration: Duration(
-                                                              seconds: 2),
-                                                        ),
-                                                      );
-                                                    }
-                                                  }
-                                                },
-                                                child: Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.4,
-                                                  height: 37,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    border: Border.all(
-                                                      color:
-                                                          Colors.blue.shade900,
-                                                      width: 1.2,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            32),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        'Answer',
-                                                        style: TextStyle(
-                                                          color: Colors
-                                                              .indigo.shade900,
-                                                          fontSize: 16,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(width: 8),
-                                                      Icon(
-                                                        isAnswerDownloaded
-                                                            ? Icons.open_in_new
-                                                            : Icons
-                                                                .file_download_rounded,
-                                                        color: Colors
-                                                            .indigo.shade900,
-                                                        size: 16,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                      TextButton(
-                          onPressed: () {
-                            fetchTestSeries();
-                          },
-                          child: const Text('Load More')),
+                      ),
                     ],
                   ),
-                ),
-              ],
-            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -120,8 +120,9 @@ class LoginSplashScreenState extends State<LoginSplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      backgroundColor: Colors.grey[50],
+      body: const Center(
         child: CircularProgressIndicator(),
       ),
     );

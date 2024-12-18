@@ -207,7 +207,9 @@ class DrawPadState extends State<DrawPad> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
+          backgroundColor: Colors.grey[50],
           automaticallyImplyLeading: false,
           title: Row(
             children: [

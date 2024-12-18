@@ -210,7 +210,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     final isLargeScreen = screenWidth > 600;
 
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,

@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:trusir/common/registration_splash_screen.dart';
+import 'package:trusir/common/terms_and_conditions.dart';
 
 class StudentRegistrationData {
   String? studentName;
@@ -449,6 +450,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
       body: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Padding(
@@ -527,7 +529,13 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                             const Text('I agree with the '),
                             GestureDetector(
                               onTap: () {
-                                // Handle terms and conditions navigation here
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TermsAndConditionsPage(),
+                                  ),
+                                );
                               },
                               child: const Text(
                                 'Terms and Conditions',
@@ -548,38 +556,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        Center(
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 45,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              gradient: const LinearGradient(
-                                colors: [Color(0xFF045C19), Color(0xFF77D317)],
-                              ),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                agreeToTerms == true
-                                    ? postStudentData(
-                                        studentFormsData: studentForms)
-                                    : ScaffoldMessenger.of(context)
-                                        .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'Please Agree to Terms and Conditions'),
-                                          duration: Duration(seconds: 1),
-                                        ),
-                                      );
-                              },
-                              child: const Text(
-                                'Register',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 20),
-                              ),
-                            ),
-                          ),
-                        ),
+                        _buildRegisterButton(context)
                       ],
                     ),
             ],
@@ -731,7 +708,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ),
         const SizedBox(height: 10),
         // Full address
-        _buildTextField('Full Address', height: 126, onChanged: (value) {
+        _buildAddressField('Full Address', onChanged: (value) {
           studentForms[index].address = value;
         }),
         const SizedBox(height: 20),
@@ -784,14 +761,37 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             }, width: 200, displayPath: studentForms[index].aadharBackPath),
           ],
         ),
-        const Text('Time Slot:'),
-        const SizedBox(height: 10),
+        const SizedBox(height: 30),
+
         TimeSlotField(
           formData: studentForms[index],
         ), // Pass index to handle each form's state
         const SizedBox(height: 10),
         // Add more fields as needed
       ],
+    );
+  }
+
+  Widget _buildRegisterButton(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          agreeToTerms == true
+              ? postStudentData(studentFormsData: studentForms)
+              : ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please Agree to Terms and Conditions'),
+                    duration: Duration(seconds: 1),
+                  ),
+                );
+        },
+        child: Image.asset(
+          'assets/register.png',
+          width: double.infinity,
+          height: 100,
+          fit: BoxFit.contain,
+        ),
+      ),
     );
   }
 
@@ -815,6 +815,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ],
       ),
       child: TextField(
+        textAlignVertical: TextAlignVertical.top,
+        textCapitalization: TextCapitalization.values[1],
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: hintText,
@@ -839,6 +841,54 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     );
   }
 
+  Widget _buildAddressField(
+    String hintText, {
+    required ValueChanged<String> onChanged,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: TextField(
+        textCapitalization: TextCapitalization.sentences,
+        onChanged: onChanged,
+        maxLines: null, // Allows the text to wrap and grow vertically
+        textAlignVertical:
+            TextAlignVertical.top, // Ensures text starts from the top
+        decoration: InputDecoration(
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12, // Adjust vertical padding for better alignment
+          ),
+          isDense: true,
+        ),
+      ),
+    );
+  }
+
   Widget _buildPhoneField(
     String hintText,
   ) {
@@ -855,6 +905,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       ),
       child: TextField(
         controller: _phoneController,
+        textAlignVertical: TextAlignVertical.top,
         keyboardType: TextInputType.phone,
         decoration: InputDecoration(
           labelText: hintText,
@@ -891,7 +942,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
         boxShadow: [
           BoxShadow(
               color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
@@ -902,8 +952,22 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: hintText,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+          isDense: true,
         ),
         items: items
             .map((item) => DropdownMenuItem(
@@ -1074,7 +1138,7 @@ class TimeSlotFieldState extends State<TimeSlotField> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey[50],
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

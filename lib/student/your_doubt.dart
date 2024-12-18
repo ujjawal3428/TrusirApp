@@ -244,7 +244,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
         ),
         toolbarHeight: 70,
       ),
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Colors.grey[50],
       body: Column(
         children: [
           SingleChildScrollView(

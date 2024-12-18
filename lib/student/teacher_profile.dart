@@ -49,7 +49,7 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey[200],
+        backgroundColor: Colors.grey[50],
         appBar: AppBar(
           backgroundColor: Colors.grey[50],
           elevation: 0,
@@ -90,7 +90,7 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
                 // Display the teacher profiles in a grid view
                 Padding(
                   padding: const EdgeInsets.only(
-                      left: 20, right: 8, top: 8, bottom: 8),
+                      left: 20, right: 20, top: 20, bottom: 8),
                   child: GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),

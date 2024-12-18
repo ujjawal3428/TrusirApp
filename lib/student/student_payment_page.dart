@@ -6,6 +6,7 @@ class StudentPaymentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       body: Stack(
         children: [
           // Top Image (Student Payment Info) touching the top of the screen
@@ -21,7 +22,11 @@ class StudentPaymentPage extends StatelessWidget {
 
           // Main content below the top image
           Padding(
-            padding: const EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0), // Adjust padding to position content below the image
+            padding: const EdgeInsets.only(
+                top: 50.0,
+                left: 20.0,
+                right:
+                    20.0), // Adjust padding to position content below the image
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -36,10 +41,6 @@ class StudentPaymentPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 290),
 
-                
-
-              
-
                 // Online Payment Button
                 Center(
                   child: GestureDetector(
@@ -51,7 +52,7 @@ class StudentPaymentPage extends StatelessWidget {
                   ),
                 ),
 
-                  const SizedBox(height: 20),
+                const SizedBox(height: 20),
 
                 // Offline Payment Button
                 Center(

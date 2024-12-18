@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
-import 'package:trusir/student/drawpad.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StudentDoubts {
@@ -215,7 +214,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.grey.shade200,
+        backgroundColor: Colors.grey[100],
         appBar: AppBar(
           backgroundColor: Colors.grey[50],
           elevation: 0,
@@ -249,35 +248,6 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
           ),
           toolbarHeight: 70,
         ),
-        floatingActionButton: Container(
-          margin: const EdgeInsets.only(bottom: 16.0, right: 16.0),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              colors: [Colors.grey[300]!, Colors.white],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                formData.title = _titleController.text;
-              });
-              submitForm(context);
-            },
-            elevation: 0, // To match the gradient
-            backgroundColor:
-                const Color(0xFF48116A), // Transparent for gradient to show
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 50,
-            ), // Plus icon
-            // Icon size
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -314,7 +284,8 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                             decoration: InputDecoration(
                               contentPadding: const EdgeInsets.only(left: 20),
                               hintText: 'Type Here...',
-                              hintStyle: const TextStyle(color: Colors.grey),
+                              hintStyle: const TextStyle(
+                                  color: Colors.grey, fontSize: 17),
                               fillColor: Colors.white,
                               filled: true,
                               border: OutlineInputBorder(
@@ -349,7 +320,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                           },
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 15),
+                                horizontal: 15, vertical: 10),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               boxShadow: [
@@ -373,11 +344,11 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                   child: Text(
                                     _selectedCourse,
                                     style: TextStyle(
-                                      color: _selectedCourse ==
-                                              '-- Select Course --'
-                                          ? Colors.grey
-                                          : Colors.black,
-                                    ),
+                                        color: _selectedCourse ==
+                                                '-- Select Course --'
+                                            ? Colors.grey
+                                            : Colors.black,
+                                        fontSize: 17),
                                   ),
                                 ),
                                 Icon(
@@ -435,14 +406,18 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                       width: 150,
                                       height: 133,
                                       decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(14.40),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Colors.white54,
-                                              offset: Offset(2, 2),
-                                            )
-                                          ]),
+                                        borderRadius:
+                                            BorderRadius.circular(14.40),
+                                        color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.20),
+                                            offset: const Offset(2, 2),
+                                            blurRadius: 4,
+                                          ),
+                                        ],
+                                      ),
                                       child: formData.photo != null
                                           ? Column(
                                               mainAxisAlignment:
@@ -474,93 +449,50 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                                 ),
                                               ],
                                             )
-                                          : Column(
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    handleFileSelection(
-                                                        context);
-                                                  },
-                                                  child: Column(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(top: 15),
-                                                        child: Image.asset(
-                                                          'assets/camera@3x.png',
-                                                          width: 30,
-                                                          height: 20,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 5,
-                                                      ),
-                                                      const Center(
-                                                        child: Text(
-                                                          'Upload Image',
-                                                          style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 7,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 2,
-                                                      ),
-                                                      const Center(
-                                                        child: Text(
-                                                          'Click Here',
-                                                          style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 5,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 10),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                      showDrawPad(context);
-                                                    },
+                                          : GestureDetector(
+                                              onTap: () {
+                                                handleFileSelection(context);
+                                              },
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 15),
                                                     child: Image.asset(
-                                                      'assets/pin.png',
-                                                      width: 30,
-                                                      height: 25,
+                                                      'assets/camera@3x.png',
+                                                      width: 46,
+                                                      height: 37,
                                                     ),
                                                   ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                const Center(
-                                                  child: Text(
-                                                    'Draw Image',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 7,
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  const Center(
+                                                    child: Text(
+                                                      'Upload Image',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 14,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 2,
-                                                ),
-                                                const Center(
-                                                  child: Text(
-                                                    'Click Here',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 5,
-                                                    ),
+                                                  const SizedBox(
+                                                    height: 5,
                                                   ),
-                                                )
-                                              ],
+                                                  const Center(
+                                                    child: Text(
+                                                      'Click here',
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 10,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                     ),
                                   ),
@@ -581,25 +513,27 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                         width: 150,
                                         height: 133,
                                         decoration: BoxDecoration(
-                                            // border: Border.all(width: 1,color: Colors.grey),
-                                            borderRadius:
-                                                BorderRadius.circular(14.40),
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: Colors.white54,
-                                                offset: Offset(2, 2),
-                                              )
-                                            ]),
+                                          // border: Border.all(width: 1,color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(14.40),
+                                          color: Colors.white,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black
+                                                  .withOpacity(0.20),
+                                              offset: const Offset(2, 2),
+                                              blurRadius: 4,
+                                            ),
+                                          ],
+                                        ),
                                         child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 30),
-                                              child: Image.asset(
-                                                'assets/phone@3x.png',
-                                                width: 46,
-                                                height: 37,
-                                              ),
+                                            Image.asset(
+                                              'assets/phone@3x.png',
+                                              width: 46,
+                                              height: 37,
                                             ),
                                             const SizedBox(
                                               height: 10,
@@ -634,14 +568,33 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                           ),
                         ),
                         const SizedBox(
-                          height: 10,
+                          height: 300,
                         ),
-                        // const DrawPad(),
+                        _buildSubmitButton(context)
                       ]),
                 ),
               ]),
             ),
           ],
         ));
+  }
+
+  Widget _buildSubmitButton(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            formData.title = _titleController.text;
+          });
+          submitForm(context);
+        },
+        child: Image.asset(
+          'assets/submit.png',
+          width: double.infinity,
+          height: 100,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
   }
 }

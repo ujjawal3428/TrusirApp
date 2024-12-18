@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/login_page.dart';
 import 'package:trusir/common/registration_splash_screen.dart';
+import 'package:trusir/common/terms_and_conditions.dart';
 
 class TeacherRegistrationData {
   String? teacherName;
@@ -423,6 +424,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       body: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Padding(
@@ -652,13 +654,11 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               ),
               const SizedBox(height: 10),
               // Address fields
-              _buildTextField('Current Full Address', height: 126,
-                  onChanged: (value) {
+              _buildAddressField('Current Full Address', onChanged: (value) {
                 formData.caddress = value;
               }),
               const SizedBox(height: 10),
-              _buildTextField('Permanent Full Address', height: 126,
-                  onChanged: (value) {
+              _buildAddressField('Permanent Full Address', onChanged: (value) {
                 formData.paddress = value;
               }),
               const SizedBox(height: 20),
@@ -763,7 +763,12 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                   const Text('I agree with the '),
                   GestureDetector(
                     onTap: () {
-                      // Handle terms and conditions navigation here
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TermsAndConditionsPage(),
+                        ),
+                      );
                     },
                     child: const Text(
                       'Terms and Conditions',
@@ -785,38 +790,80 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               ),
               const SizedBox(height: 10),
               // Register Button
-              Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 45,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF045C19), Color(0xFF77D317)],
-                    ),
-                  ),
-                  child: TextButton(
-                    onPressed: () {
-                      formData.agreetoterms == true
-                          ? postTeacherData(teacherFormsData: [formData])
-                          : ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                    'Please Agree to Terms and Conditions'),
-                                duration: Duration(seconds: 1),
-                              ),
-                            );
-                    },
-                    child: const Text(
-                      'Register',
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
+              _buildRegisterButton(context),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRegisterButton(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          formData.agreetoterms == true
+              ? postTeacherData(teacherFormsData: [formData])
+              : ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Please Agree to Terms and Conditions'),
+                    duration: Duration(seconds: 1),
+                  ),
+                );
+        },
+        child: Image.asset(
+          'assets/register.png',
+          width: double.infinity,
+          height: 100,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddressField(
+    String hintText, {
+    required ValueChanged<String> onChanged,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: TextField(
+        textCapitalization: TextCapitalization.sentences,
+        onChanged: onChanged,
+        maxLines: null, // Allows the text to wrap and grow vertically
+        textAlignVertical:
+            TextAlignVertical.top, // Ensures text starts from the top
+        decoration: InputDecoration(
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12, // Adjust vertical padding for better alignment
+          ),
+          isDense: true,
         ),
       ),
     );
@@ -918,7 +965,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(color: Colors.grey),
         boxShadow: [
           BoxShadow(
               color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
@@ -929,8 +975,22 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: hintText,
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+          isDense: true,
         ),
         items: items
             .map((item) => DropdownMenuItem(

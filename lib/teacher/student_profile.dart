@@ -25,9 +25,9 @@ class StudentProfileScreen extends StatelessWidget {
 
   Widget _buildContent(BuildContext context, BoxConstraints constraints) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Colors.grey[50],
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Padding(

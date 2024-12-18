@@ -6,9 +6,9 @@ class NewCoursePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey[50],
         elevation: 2,
         title: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0),

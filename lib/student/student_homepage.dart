@@ -35,7 +35,7 @@ class StudentHomepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Colors.grey[50],
       body: Stack(
         children: [
           // Main Content
@@ -378,49 +378,7 @@ class StudentHomepage extends StatelessWidget {
             left: 0,
             right: 0,
             bottom: 0,
-            child: Container(
-              color: Colors.white,
-              padding: const EdgeInsets.all(10.0),
-              child: Center(
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StudentRegistrationPage(
-                          enablephonefield: enablephone,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xFF045C19),
-                          Color(0xFF77D317),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Registeration',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontFamily: 'Poppins'),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            child: _buildRegistrationButton(context),
           ),
           Positioned(
             right: 13,
@@ -429,6 +387,7 @@ class StudentHomepage extends StatelessWidget {
               height: 50,
               width: 50,
               child: FloatingActionButton(
+                backgroundColor: Colors.transparent,
                 onPressed: () {
                   _launchWhatsApp('919797472922', 'Hi');
                 },
@@ -445,6 +404,7 @@ class StudentHomepage extends StatelessWidget {
               height: 50,
               width: 50,
               child: FloatingActionButton(
+                backgroundColor: Colors.transparent,
                 onPressed: () {
                   openDialer('9797472922');
                 },
@@ -455,6 +415,29 @@ class StudentHomepage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildRegistrationButton(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const StudentRegistrationPage(
+                enablephonefield: true,
+              ),
+            ),
+          );
+        },
+        child: Image.asset(
+          'assets/registration.png',
+          width: double.infinity,
+          height: 100,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

@@ -114,9 +114,9 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        backgroundColor: Colors.grey[100],
+        backgroundColor: Colors.grey[50],
         elevation: 0,
         automaticallyImplyLeading: false,
         title: const Text(

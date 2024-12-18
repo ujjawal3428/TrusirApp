@@ -124,30 +124,15 @@ class _OTPScreenState extends State<OTPScreen> {
 
   void showVerificationDialog(BuildContext context) {
     showDialog(
+      barrierColor: Colors.transparent,
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.check_circle, color: Colors.pink, size: 60),
-              SizedBox(height: 16),
-              Text(
-                'Your OTP has been verified!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        );
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            content: Image.asset('assets/otp_verified.png'));
       },
     );
 
@@ -172,7 +157,30 @@ class _OTPScreenState extends State<OTPScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 0.0),
+          child: Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 25,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ),
+        toolbarHeight: 50,
+      ),
+      backgroundColor: Colors.grey[50],
       body: Padding(
         padding: const EdgeInsets.only(left: 24.0, right: 24, top: 150),
         child: SingleChildScrollView(
@@ -221,6 +229,8 @@ class _OTPScreenState extends State<OTPScreen> {
                       keyboardType: TextInputType.phone,
                       maxLength: 1,
                       decoration: const InputDecoration(
+                        contentPadding:
+                            EdgeInsets.only(left: 10, right: 10, top: 10),
                         counterText: '',
                         border: InputBorder.none,
                       ),
@@ -247,50 +257,36 @@ class _OTPScreenState extends State<OTPScreen> {
               const SizedBox(
                 height: 20,
               ),
-              const Text(
-                'Resend OTP',
-                style: TextStyle(
-                  fontFamily: 'Poppins',
-                  color: Color(0xFF48116A),
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              // const Text(
+              //   'Resend OTP',
+              //   style: TextStyle(
+              //     fontFamily: 'Poppins',
+              //     color: Color(0xFF48116A),
+              //     fontSize: 17,
+              //     fontWeight: FontWeight.w500,
+              //   ),
+              // ),
               const SizedBox(
-                height: 250,
+                height: 270,
               ),
-              GestureDetector(
-                onTap: () {
-                  onPost(widget.phonenum, context);
-                },
-                child: Container(
-                  width: 300,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color.fromARGB(255, 25, 220, 70),
-                        Color.fromARGB(255, 2, 120, 12),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Verify',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontFamily: 'Poppins'),
-                    ),
-                  ),
-                ),
-              ),
+              _buildVerifyButton(),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVerifyButton() {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          onPost(widget.phonenum, context);
+        },
+        child: Image.asset(
+          'assets/verify.png',
+          width: double.infinity,
+          fit: BoxFit.contain,
         ),
       ),
     );

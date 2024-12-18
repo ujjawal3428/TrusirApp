@@ -91,7 +91,6 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   void initState() {
     super.initState();
     _reports = fetchProgressReports();
-    _requestNotificationPermission();
     _loadDownloadedFiles();
   }
 
@@ -175,6 +174,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   Future<void> _downloadFile(String url, String filename) async {
     setState(() {
       _requestPermissions();
+      _requestNotificationPermission();
       _isDownloading = true;
       _downloadProgress = '0%';
     });
@@ -227,6 +227,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,

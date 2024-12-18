@@ -24,27 +24,27 @@ class _GKPageState extends State<GKPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: const Padding(
-          padding: EdgeInsets.only(left: 10.0),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10.0),
           child: Row(
             children: [
-              // IconButton(
-              //   icon: const Icon(
-              //     Icons.arrow_back_ios_rounded,
-              //     color: Color(0xFF48116A),
-              //     size: 30,
-              //   ),
-              //   onPressed: () {
-              //     Navigator.pop(context);
-              //   },
-              // ),
-              SizedBox(width: 5),
-              Text(
+              IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Color(0xFF48116A),
+                  size: 30,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              const SizedBox(width: 5),
+              const Text(
                 'Courses',
                 style: TextStyle(
                   color: Color(0xFF48116A),

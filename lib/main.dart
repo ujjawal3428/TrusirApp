@@ -75,14 +75,15 @@ class _MyAppState extends State<MyApp> {
       future: getInitialPage(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const MaterialApp(
+          return MaterialApp(
             debugShowCheckedModeBanner: false,
             // locale: _locale,
             // localizationsDelegates: const [
             //   AppLocalizations.delegate,
             // ],
             home: Scaffold(
-              body: Center(child: CircularProgressIndicator()),
+              backgroundColor: Colors.grey[50],
+              body: const Center(child: CircularProgressIndicator()),
             ),
           );
         } else {

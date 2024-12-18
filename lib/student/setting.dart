@@ -20,7 +20,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.grey[50],
@@ -91,7 +91,14 @@ class SettingsScreen extends StatelessWidget {
                         height: 55,
                         width: 306,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: Colors.grey.shade200,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.50),
+                              offset: const Offset(2, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Padding(
@@ -123,7 +130,7 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10),
               child: Row(
@@ -162,7 +169,14 @@ class SettingsScreen extends StatelessWidget {
                         height: 55,
                         width: 306,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: Colors.grey.shade200,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.50),
+                              offset: const Offset(2, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Padding(
@@ -194,7 +208,7 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10),
               child: Row(
@@ -235,7 +249,14 @@ class SettingsScreen extends StatelessWidget {
                         height: 55,
                         width: 306,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: Colors.grey.shade200,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.50),
+                              offset: const Offset(2, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Padding(
@@ -267,7 +288,7 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10),
               child: Row(
@@ -306,7 +327,14 @@ class SettingsScreen extends StatelessWidget {
                         height: 55,
                         width: 306,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: Colors.grey.shade200,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.50),
+                              offset: const Offset(2, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Padding(
@@ -338,7 +366,7 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10),
               child: Row(
@@ -377,7 +405,14 @@ class SettingsScreen extends StatelessWidget {
                         height: 55,
                         width: 306,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: Colors.grey.shade200,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.50),
+                              offset: const Offset(2, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Padding(
@@ -409,7 +444,7 @@ class SettingsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10),
               child: Row(
@@ -449,7 +484,14 @@ class SettingsScreen extends StatelessWidget {
                         height: 55,
                         width: 306,
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: Colors.grey.shade200,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.50),
+                              offset: const Offset(2, 2),
+                              blurRadius: 4,
+                            ),
+                          ],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Padding(

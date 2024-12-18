@@ -35,7 +35,7 @@ class TrusirLoginPage extends StatefulWidget {
 
   const TrusirLoginPage({
     super.key,
-    this.carouselImageHeightRatio = 0.4, 
+    this.carouselImageHeightRatio = 0.4,
   });
 
   @override
@@ -167,7 +167,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
+      backgroundColor: Colors.grey[50],
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -212,21 +212,21 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-      ElevatedButton(
-  onPressed: () {
-    showPopupDialog(context);
-  },
-  style: ElevatedButton.styleFrom( 
-    padding: const EdgeInsets.all(0),// Border color
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12), // Border radius
-    ),
-  ),
-  child: const Text(
-    'Skip',
-    style: TextStyle(fontSize: 15),
-  ),
-),
+        ElevatedButton(
+          onPressed: () {
+            showPopupDialog(context);
+          },
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.all(0), // Border color
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12), // Border radius
+            ),
+          ),
+          child: const Text(
+            'Skip',
+            style: TextStyle(fontSize: 15),
+          ),
+        ),
         _buildLanguageDropdown(responsive),
       ],
     );
@@ -259,8 +259,8 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
 
   Widget _buildCarousel(ResponsiveDimensions responsive) {
     return SizedBox(
-    height: 400,
-    width: 600,
+      height: 400,
+      width: 600,
       child: PageView.builder(
         controller: _pageController,
         itemCount: pageContent.length,
@@ -287,7 +287,6 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                     fontFamily: 'Poppins',
                   ),
                 ),
-               
                 Text(
                   pageContent[index]['subtitle']!,
                   textAlign: TextAlign.center,
@@ -301,7 +300,6 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
               ],
               Expanded(
                 child: Image.asset(
-              
                   pageContent[index]['imagePath']!,
                   width: responsive.carouselImageWidth,
                   height: responsive.carouselImageHeight,

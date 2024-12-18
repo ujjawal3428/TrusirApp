@@ -44,6 +44,8 @@ flutter:
   
   assets:
     - assets/girlimage@4x.png
+    - assets/otp_verified.png
+    - assets/verify.png
     - assets/poster1.png
     - assets/sad_girl.png
     - assets/whatsapp@3x.png
@@ -51,9 +53,14 @@ flutter:
     - assets/studentenquiry.png
     - assets/studentregisteration@4x.png
     - assets/call.png
+    - assets/registration.png
+    - assets/create_test.png
     - assets/cancelbutton.png
     - assets/logoutbutton.png
+    - assets/submit.png
+    - assets/pay_fee.png
     - assets/pamplate.png
+    - assets/register.png
     - assets/enquire.png
     - assets/studentenquiry2.png
     - assets/wanna_logout.png
@@ -72,7 +79,7 @@ flutter:
     - assets/g2@4x.png
     - assets/t1@3x.png
     - assets/t2.jpg
-    - assets/registration.png
+    - assets/Registration.png
     - assets/get_in_touch.png
     - assets/callimage@3x.png
     - assets/mailimage@3x.png

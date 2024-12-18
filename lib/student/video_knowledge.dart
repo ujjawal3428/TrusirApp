@@ -76,7 +76,7 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
@@ -247,7 +247,7 @@ class CategoriesListState extends State<CategoriesList> {
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
-                  overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           );
@@ -348,7 +348,6 @@ class VideoCard extends StatelessWidget {
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,
                               ),
-                            
                             ),
                             const SizedBox(height: 5.0),
                             Text(
@@ -361,7 +360,6 @@ class VideoCard extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                                 color: Colors.grey,
                               ),
-                            
                             ),
                           ],
                         ),

@@ -6,6 +6,7 @@ class Contactus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
@@ -125,9 +126,7 @@ class Contactus extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Center(
                 child: InkWell(
-                  onTap: () {
-                    
-                  },
+                  onTap: () {},
                   child: Container(
                     width: MediaQuery.of(context).size.width,
                     height: 50,

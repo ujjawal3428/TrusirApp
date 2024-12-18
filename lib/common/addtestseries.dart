@@ -179,42 +179,10 @@ class _AddtestseriesState extends State<Addtestseries> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      appBar: AppBar(
-        backgroundColor: Colors.grey[50],
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 1.0),
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_rounded,
-                  color: Color(0xFF48116A),
-                  size: 30,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              const SizedBox(width: 5),
-              const Text(
-                'Test Series',
-                style: TextStyle(
-                  color: Color(0xFF48116A),
-                  fontSize: 22,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-        ),
-        toolbarHeight: 70,
-      ),
-      body: Padding(
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.38,
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -225,11 +193,22 @@ class _AddtestseriesState extends State<Addtestseries> {
                 controller: _testNameController,
                 decoration: InputDecoration(
                   labelText: 'Test Name',
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(color: Colors.grey),
                   ),
-                  filled: true,
-                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+                  isDense: true,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -238,7 +217,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               // Subject Dropdown
               DropdownButtonFormField<String>(
                 value: selectedSubject,
@@ -249,12 +228,23 @@ class _AddtestseriesState extends State<Addtestseries> {
                   );
                 }).toList(),
                 decoration: InputDecoration(
-                  labelText: 'Select Subject',
+                  labelText: 'Subject',
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(color: Colors.grey),
                   ),
-                  filled: true,
-                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+                  isDense: true,
                 ),
                 onChanged: (String? value) {
                   setState(() {
@@ -268,7 +258,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -279,6 +269,10 @@ class _AddtestseriesState extends State<Addtestseries> {
                           height: 40,
                           width: 150,
                           child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 4,
+                              backgroundColor: Colors.white,
+                            ),
                             onPressed: () {
                               setState(() async {
                                 question = await handleFileSelection(context);
@@ -297,6 +291,10 @@ class _AddtestseriesState extends State<Addtestseries> {
                           height: 40,
                           width: 150,
                           child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 4,
+                              backgroundColor: Colors.white,
+                            ),
                             onPressed: () {
                               setState(() async {
                                 answer = await handleFileSelection(context);
@@ -311,34 +309,35 @@ class _AddtestseriesState extends State<Addtestseries> {
                         ),
                 ],
               ),
-              const SizedBox(height: 16),
-
+              const SizedBox(height: 20),
               // Submit Button
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _sendTestData(
-                      _testNameController.text,
-                      selectedSubject!,
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF48116A),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 14),
-                  child: Text(
-                    'Upload Test',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                ),
-              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: _buildCreateButton(context),
+              )
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCreateButton(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          if (_formKey.currentState!.validate()) {
+            _sendTestData(
+              _testNameController.text,
+              selectedSubject!,
+            );
+          }
+        },
+        child: Image.asset(
+          'assets/create_test.png',
+          width: double.infinity,
+          height: 100,
+          fit: BoxFit.contain,
         ),
       ),
     );
