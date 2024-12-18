@@ -151,7 +151,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
       body: LayoutBuilder(
         builder: (context, constraints) {
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
             child: Column(
               children: [
                 GestureDetector(
@@ -330,7 +330,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(5.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: SizedBox(
                       height: 340,
                       child: GridView.builder(
@@ -372,13 +372,20 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               width: 94,
                               height: 120,
                               decoration: BoxDecoration(
-                                color: cardColor,
-                                borderRadius: BorderRadius.circular(22),
-                                border: Border.all(
-                                  color: borderColor,
-                                  width: 2,
-                                ),
-                              ),
+                                  color: cardColor,
+                                  borderRadius: BorderRadius.circular(22),
+                                  border: Border.all(
+                                    color: borderColor,
+                                    width: 2,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.2),
+                                      spreadRadius: 3,
+                                      blurRadius: 15,
+                                      offset: const Offset(0, 10),
+                                    ),
+                                  ]),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -425,7 +432,6 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
               ],
             ),
           );
@@ -450,13 +456,20 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
           height: 140,
           width: 116,
           decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(22),
-            border: Border.all(
-              color: borderColor,
-              width: 2,
-            ),
-          ),
+              color: color,
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(
+                color: borderColor,
+                width: 2,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 3,
+                  blurRadius: 15,
+                  offset: const Offset(0, 10),
+                ),
+              ]),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

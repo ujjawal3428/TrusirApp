@@ -443,13 +443,20 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
         width: tileWidth,
         height: tileHeight,
         decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(
-            color: borderColor,
-            width: 2,
-          ),
-        ),
+            color: color,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: borderColor,
+              width: 2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.3),
+                spreadRadius: 3,
+                blurRadius: 15,
+                offset: const Offset(0, 10),
+              ),
+            ]),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

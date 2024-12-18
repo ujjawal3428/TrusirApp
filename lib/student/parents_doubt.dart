@@ -430,6 +430,35 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 20),
+                        _buildSubmitButton(context),
+                        const SizedBox(height: 20),
+                        const Row(
+                          children: [
+                            // Left divider
+                            Expanded(
+                              child: Divider(
+                                thickness: 1,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            // Text in the middle
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                "OR",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                            // Right divider
+                            Expanded(
+                              child: Divider(
+                                thickness: 1,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                         Align(
                           alignment: Alignment.topCenter,
                           child: Padding(
@@ -618,8 +647,6 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 150),
-                        _buildSubmitButton(context)
                       ],
                     ),
                   ),

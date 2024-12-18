@@ -815,8 +815,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ],
       ),
       child: TextField(
-        textAlignVertical: TextAlignVertical.top,
-        textCapitalization: TextCapitalization.values[1],
+        textCapitalization: TextCapitalization.words,
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: hintText,
@@ -859,7 +858,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ],
       ),
       child: TextField(
-        textCapitalization: TextCapitalization.sentences,
+        textCapitalization: TextCapitalization.words,
         onChanged: onChanged,
         maxLines: null, // Allows the text to wrap and grow vertically
         textAlignVertical:

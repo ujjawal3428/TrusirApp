@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/Enquiry.dart';
 import 'package:trusir/common/api.dart';
@@ -224,9 +225,10 @@ class _OTPScreenState extends State<OTPScreen> {
                     ),
                     child: TextField(
                       controller: otpControllers[index],
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       focusNode: focusNodes[index],
                       textAlign: TextAlign.center,
-                      keyboardType: TextInputType.phone,
+                      keyboardType: TextInputType.number,
                       maxLength: 1,
                       decoration: const InputDecoration(
                         contentPadding:
@@ -267,7 +269,7 @@ class _OTPScreenState extends State<OTPScreen> {
               //   ),
               // ),
               const SizedBox(
-                height: 270,
+                height: 240,
               ),
               _buildVerifyButton(),
             ],

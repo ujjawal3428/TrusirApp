@@ -568,7 +568,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                           ),
                         ),
                         const SizedBox(
-                          height: 300,
+                          height: 30,
                         ),
                         _buildSubmitButton(context)
                       ]),

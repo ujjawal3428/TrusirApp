@@ -175,36 +175,30 @@ class StudentProfileScreen extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              // Handle button press
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => StudentProfilePage(
+                                    name: name,
+                                    phone: phone,
+                                    profile: image,
+                                    subject: subject,
+                                  ),
+                                ),
+                              );
                             },
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 5, bottom: 9, right: 5),
+                            child: const Padding(
+                              padding:
+                                  EdgeInsets.only(left: 5, bottom: 9, right: 5),
                               child: Align(
                                 alignment: Alignment.bottomRight,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            StudentProfilePage(
-                                          name: name,
-                                          phone: phone,
-                                          profile: image,
-                                          subject: subject,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'View Profile',
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 255, 255, 255),
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Poppins',
-                                    ),
+                                child: Text(
+                                  'View Profile',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 255, 255, 255),
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Poppins',
                                   ),
                                 ),
                               ),
@@ -257,8 +251,15 @@ class StudentProfileScreen extends StatelessWidget {
                               height: 55,
                               width: 306,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
+                                color: Colors.grey.shade200,
                                 borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.50),
+                                    offset: const Offset(2, 2),
+                                    blurRadius: 4,
+                                  ),
+                                ],
                               ),
                               child: const Padding(
                                 padding: EdgeInsets.only(
@@ -332,7 +333,14 @@ class StudentProfileScreen extends StatelessWidget {
                               height: 55,
                               width: 306,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
+                                color: Colors.grey.shade200,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.50),
+                                    offset: const Offset(2, 2),
+                                    blurRadius: 4,
+                                  ),
+                                ],
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: const Padding(
@@ -407,7 +415,14 @@ class StudentProfileScreen extends StatelessWidget {
                               height: 55,
                               width: 306,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
+                                color: Colors.grey.shade200,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.50),
+                                    offset: const Offset(2, 2),
+                                    blurRadius: 4,
+                                  ),
+                                ],
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: const Padding(
@@ -483,7 +498,14 @@ class StudentProfileScreen extends StatelessWidget {
                               height: 55,
                               width: 306,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
+                                color: Colors.grey.shade200,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.50),
+                                    offset: const Offset(2, 2),
+                                    blurRadius: 4,
+                                  ),
+                                ],
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: const Padding(
@@ -559,7 +581,14 @@ class StudentProfileScreen extends StatelessWidget {
                               height: 55,
                               width: 306,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
+                                color: Colors.grey.shade200,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.50),
+                                    offset: const Offset(2, 2),
+                                    blurRadius: 4,
+                                  ),
+                                ],
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: const Padding(
@@ -633,7 +662,14 @@ class StudentProfileScreen extends StatelessWidget {
                               height: 55,
                               width: 306,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
+                                color: Colors.grey.shade200,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.50),
+                                    offset: const Offset(2, 2),
+                                    blurRadius: 4,
+                                  ),
+                                ],
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: const Padding(
@@ -708,7 +744,14 @@ class StudentProfileScreen extends StatelessWidget {
                               height: 55,
                               width: 306,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
+                                color: Colors.grey.shade200,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.50),
+                                    offset: const Offset(2, 2),
+                                    blurRadius: 4,
+                                  ),
+                                ],
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: const Padding(

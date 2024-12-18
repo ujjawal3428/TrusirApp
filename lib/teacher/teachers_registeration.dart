@@ -839,7 +839,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         ],
       ),
       child: TextField(
-        textCapitalization: TextCapitalization.sentences,
+        textCapitalization: TextCapitalization.words,
         onChanged: onChanged,
         maxLines: null, // Allows the text to wrap and grow vertically
         textAlignVertical:
@@ -889,6 +889,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         ],
       ),
       child: TextField(
+        textCapitalization: TextCapitalization.words,
         onChanged: onChanged,
         decoration: InputDecoration(
           labelText: hintText,
