@@ -56,6 +56,26 @@ class StudentRegistrationData {
   }
 }
 
+class Location {
+  final String name; // City name
+  final String state;
+  final String pincode;
+
+  Location({
+    required this.name,
+    required this.state,
+    required this.pincode,
+  });
+
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(
+      name: json['name'],
+      state: json['state'],
+      pincode: json['pincode'],
+    );
+  }
+}
+
 class StudentRegistrationPage extends StatefulWidget {
   final bool enablephonefield;
   const StudentRegistrationPage({super.key, required this.enablephonefield});
@@ -76,12 +96,27 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   bool agreeToTerms = false;
   final TextEditingController _phoneController = TextEditingController();
 
+  List<Location> locations = [];
+
+  // Selected values
+  String? selectedState;
+  String? selectedCity;
+  String? selectedPincode;
+
+  // Filtered lists
+  List<String> states = [];
+  List<String> cities = [];
+  List<String> pincodes = [];
+
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
     _loadPhoneNumber();
     updateStudentForms(1);
     numberOfStudents = '1';
+    fetchLocations();
   }
 
   // Load the phone number from SharedPreferences
@@ -93,6 +128,68 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       _phoneController.text = savedPhoneNumber;
       phoneNum = savedPhoneNumber; // Set the text field value
     }
+  }
+
+  Future<void> fetchLocations() async {
+    const String apiUrl = "https://admin.trusir.com/api/city";
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+
+        // Parse the data into a list of Location objects
+        locations = data.map((json) => Location.fromJson(json)).toList();
+
+        // Populate states list
+        setState(() {
+          states = locations.map((loc) => loc.state).toSet().toList();
+          isLoading = false;
+        });
+      } else {
+        throw Exception("Failed to load locations");
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Error: $e");
+    }
+  }
+
+  void onStateChanged(String? value, int index) {
+    setState(() {
+      selectedState = value;
+      studentForms[index].state = selectedState;
+      selectedCity = null;
+      selectedPincode = null;
+
+      // Filter cities by state
+      cities = locations
+          .where((loc) => loc.state == value)
+          .map((loc) => loc.name)
+          .toSet()
+          .toList();
+
+      // Clear pincodes
+      pincodes = [];
+    });
+  }
+
+  void onCityChanged(String? value, int index) {
+    setState(() {
+      selectedCity = value;
+      studentForms[index].city = selectedCity;
+      selectedPincode = null;
+
+      // Filter pincodes by city
+      pincodes = locations
+          .where((loc) => loc.name == value)
+          .map((loc) => loc.pincode)
+          .toSet()
+          .toList();
+    });
   }
 
   final List<String> timeSlots = [
@@ -668,24 +765,32 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         const SizedBox(height: 10),
         _buildDropdownField(
           'State',
-          selectedValue: studentForms[index].state,
+          selectedValue: selectedState,
           onChanged: (value) {
-            setState(() {
-              studentForms[index].state = value;
-            });
+            onStateChanged(value, index);
           },
-          items: ['UP', 'Bihar', 'Gujarat', 'Maharastra', 'Rajasthan', 'Delhi'],
+          items: states,
         ),
         const SizedBox(height: 10),
-        _buildDropdownField(
-          'City/Town',
-          selectedValue: studentForms[index].city,
-          onChanged: (value) {
-            setState(() {
-              studentForms[index].city = value;
-            });
+        GestureDetector(
+          onTap: () {
+            if (selectedState == null) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Please select a state first.'),
+                duration: Duration(seconds: 2),
+              ));
+            } else {
+              null;
+            }
           },
-          items: ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix'],
+          child: _buildDropdownField(
+            'City/Town',
+            selectedValue: selectedCity,
+            onChanged: (value) {
+              onCityChanged(value, index);
+            },
+            items: cities,
+          ),
         ),
         const SizedBox(height: 10),
         _buildDropdownField(
@@ -705,15 +810,33 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           ],
         ),
         const SizedBox(height: 10),
-        _buildDropdownField(
-          'Pincode',
-          selectedValue: studentForms[index].pincode,
-          onChanged: (value) {
-            setState(() {
-              studentForms[index].pincode = value;
-            });
+        GestureDetector(
+          onTap: () {
+            if (selectedState == null) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Please select a state first.'),
+                duration: Duration(seconds: 2),
+              ));
+            } else if (selectedCity == null) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('Please select a city first.'),
+                duration: Duration(seconds: 2),
+              ));
+            } else {
+              null;
+            }
           },
-          items: ['845401', '845437', '845456', '845422', '845435'],
+          child: _buildDropdownField(
+            'Pincode',
+            selectedValue: selectedPincode,
+            onChanged: (value) {
+              setState(() {
+                selectedPincode = value;
+                studentForms[index].pincode = selectedPincode;
+              });
+            },
+            items: pincodes,
+          ),
         ),
         const SizedBox(height: 10),
         // Full address

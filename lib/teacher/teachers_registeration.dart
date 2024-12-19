@@ -69,6 +69,26 @@ class TeacherRegistrationData {
   }
 }
 
+class Location {
+  final String name; // City name
+  final String state;
+  final String pincode;
+
+  Location({
+    required this.name,
+    required this.state,
+    required this.pincode,
+  });
+
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(
+      name: json['name'],
+      state: json['state'],
+      pincode: json['pincode'],
+    );
+  }
+}
+
 class TeacherRegistrationPage extends StatefulWidget {
   const TeacherRegistrationPage({super.key});
 
@@ -89,6 +109,20 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
 
   final TextEditingController _phoneController = TextEditingController();
   String? phoneNum;
+
+  List<Location> locations = [];
+
+  // Selected values
+  String? selectedState;
+  String? selectedCity;
+  String? selectedPincode;
+
+  // Filtered lists
+  List<String> states = [];
+  List<String> cities = [];
+  List<String> pincodes = [];
+
+  bool isLoading = true;
 
   Set<String> selectedSlots = {}; // Store selected time slots
   String? uploadedPath;
@@ -281,6 +315,69 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   void initState() {
     super.initState();
     _loadPhoneNumber();
+    fetchLocations();
+  }
+
+  Future<void> fetchLocations() async {
+    const String apiUrl = "https://admin.trusir.com/api/city";
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+
+        // Parse the data into a list of Location objects
+        locations = data.map((json) => Location.fromJson(json)).toList();
+
+        // Populate states list
+        setState(() {
+          states = locations.map((loc) => loc.state).toSet().toList();
+          isLoading = false;
+        });
+      } else {
+        throw Exception("Failed to load locations");
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      print("Error: $e");
+    }
+  }
+
+  void onStateChanged(String? value) {
+    setState(() {
+      selectedState = value;
+      formData.state = selectedState;
+      selectedCity = null;
+      selectedPincode = null;
+
+      // Filter cities by state
+      cities = locations
+          .where((loc) => loc.state == value)
+          .map((loc) => loc.name)
+          .toSet()
+          .toList();
+
+      // Clear pincodes
+      pincodes = [];
+    });
+  }
+
+  void onCityChanged(String? value) {
+    setState(() {
+      selectedCity = value;
+      formData.city = selectedCity;
+      selectedPincode = null;
+
+      // Filter pincodes by city
+      pincodes = locations
+          .where((loc) => loc.name == value)
+          .map((loc) => loc.pincode)
+          .toSet()
+          .toList();
+    });
   }
 
   Future<void> postTeacherData({
@@ -582,37 +679,32 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               const SizedBox(height: 10),
               _buildDropdownField(
                 'State',
-                selectedValue: formData.state,
+                selectedValue: selectedState,
                 onChanged: (value) {
-                  setState(() {
-                    formData.state = value;
-                  });
+                  onStateChanged(value);
                 },
-                items: [
-                  'UP',
-                  'Bihar',
-                  'Gujarat',
-                  'Maharastra',
-                  'Rajasthan',
-                  'Delhi'
-                ],
+                items: states,
               ),
               const SizedBox(height: 10),
-              _buildDropdownField(
-                'City/Town',
-                selectedValue: formData.city,
-                onChanged: (value) {
-                  setState(() {
-                    formData.city = value;
-                  });
+              GestureDetector(
+                onTap: () {
+                  if (selectedState == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please select a state first.'),
+                      duration: Duration(seconds: 2),
+                    ));
+                  } else {
+                    null;
+                  }
                 },
-                items: [
-                  'New York',
-                  'Los Angeles',
-                  'Chicago',
-                  'Houston',
-                  'Phoenix'
-                ],
+                child: _buildDropdownField(
+                  'City/Town',
+                  selectedValue: selectedCity,
+                  onChanged: (value) {
+                    onCityChanged(value);
+                  },
+                  items: cities,
+                ),
               ),
               const SizedBox(height: 10),
               _buildDropdownField(
@@ -632,15 +724,33 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 ],
               ),
               const SizedBox(height: 10),
-              _buildDropdownField(
-                'Pincode',
-                selectedValue: formData.pincode,
-                onChanged: (value) {
-                  setState(() {
-                    formData.pincode = value;
-                  });
+              GestureDetector(
+                onTap: () {
+                  if (selectedState == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please select a state first.'),
+                      duration: Duration(seconds: 2),
+                    ));
+                  } else if (selectedCity == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please select a city first.'),
+                      duration: Duration(seconds: 2),
+                    ));
+                  } else {
+                    null;
+                  }
                 },
-                items: ['845401', '845437', '845456', '845422', '845435'],
+                child: _buildDropdownField(
+                  'Pincode',
+                  selectedValue: selectedPincode,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPincode = value;
+                      formData.pincode = selectedPincode;
+                    });
+                  },
+                  items: pincodes,
+                ),
               ),
               const SizedBox(height: 10),
               // Address fields
