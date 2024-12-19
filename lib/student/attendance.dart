@@ -395,7 +395,7 @@ class _AttendancePageState extends State<AttendancePage> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.5), // Shadow color
+                    color: Colors.grey.withValues(alpha: 0.5), // Shadow color
                     spreadRadius: 1, // Spread radius
                     blurRadius: 8, // Blur radius
                     offset:

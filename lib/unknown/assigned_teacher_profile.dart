@@ -27,7 +27,7 @@ class AssigningTeacher extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFFC22054).withOpacity(0.5),
+                    color: const Color(0xFFC22054).withValues(alpha: 0.5),
                     blurRadius: 10.0,
                     spreadRadius: 5.0,
                     offset: const Offset(0, 4),

@@ -190,7 +190,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 15,
                           spreadRadius: 5,
                         ),
@@ -249,7 +249,6 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                         contentPadding:
                                             const EdgeInsets.symmetric(
                                           horizontal: 16,
-                                          
                                         ),
                                         leading: CircleAvatar(
                                           radius: 25,

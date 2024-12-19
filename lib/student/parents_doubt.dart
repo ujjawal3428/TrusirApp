@@ -251,7 +251,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                             borderRadius: BorderRadius.circular(22),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.50),
+                                color: Colors.black.withValues(alpha: 0.5),
                                 offset: const Offset(2, 2),
                                 blurRadius: 4,
                               ),
@@ -300,7 +300,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                 borderRadius: BorderRadius.circular(22),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.20),
+                                    color: Colors.black.withValues(alpha: 0.2),
                                     offset: const Offset(2, 2),
                                     blurRadius: 4,
                                   ),
@@ -354,7 +354,8 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                     borderRadius: BorderRadius.circular(14.40),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withOpacity(0.50),
+                                        color:
+                                            Colors.black.withValues(alpha: 0.5),
                                         offset: const Offset(2, 2),
                                         blurRadius: 4,
                                       ),
@@ -483,8 +484,8 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                             BorderRadius.circular(14.40),
                                         boxShadow: [
                                           BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.50),
+                                            color: Colors.black
+                                                .withValues(alpha: 0.5),
                                             offset: const Offset(2, 2),
                                             blurRadius: 4,
                                           ),
@@ -571,8 +572,8 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                             BorderRadius.circular(14.40),
                                         boxShadow: [
                                           BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.50),
+                                            color: Colors.black
+                                                .withValues(alpha: 0.5),
                                             offset: const Offset(2, 2),
                                             blurRadius: 4,
                                           ),

@@ -346,13 +346,13 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
           borderRadius: BorderRadius.circular(22),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFC22054).withOpacity(0.1),
+              color: const Color(0xFFC22054).withValues(alpha: 0.1),
               spreadRadius: 1,
               blurRadius: 10,
               offset: const Offset(-5, 5),
             ),
             BoxShadow(
-              color: const Color(0xFF48116A).withOpacity(0.5),
+              color: const Color(0xFF48116A).withValues(alpha: 0.5),
               spreadRadius: 1,
               blurRadius: 10,
               offset: const Offset(2, 4),

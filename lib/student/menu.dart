@@ -84,7 +84,7 @@ class PopupScreen extends StatelessWidget {
 void showPopupDialog(BuildContext context) {
   showDialog(
     context: context,
-    barrierColor: Colors.black.withOpacity(0.3),
+    barrierColor: Colors.black.withValues(alpha: 0.3),
     builder: (BuildContext context) {
       return const PopupScreen();
     },

@@ -179,7 +179,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                       borderRadius: BorderRadius.circular(22),
                       boxShadow: [
                         BoxShadow(
-                          color: const Color(0xFFC22054).withOpacity(0.2),
+                          color: const Color(0xFFC22054).withValues(alpha: 0.2),
                           spreadRadius: 3,
                           blurRadius: 15,
                           offset: const Offset(0, 10),
@@ -380,7 +380,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.2),
+                                      color: Colors.grey.withValues(alpha: 0.2),
                                       spreadRadius: 3,
                                       blurRadius: 15,
                                       offset: const Offset(0, 10),
@@ -464,7 +464,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
+                  color: Colors.grey.withValues(alpha: 0.3),
                   spreadRadius: 3,
                   blurRadius: 15,
                   offset: const Offset(0, 10),

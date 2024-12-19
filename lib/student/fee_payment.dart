@@ -179,7 +179,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                             borderRadius: BorderRadius.circular(22),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.25),
+                                color: Colors.black.withValues(alpha: 0.25),
                                 spreadRadius: 0,
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),

@@ -100,7 +100,7 @@ class SettingsScreen extends StatelessWidget {
                           color: Colors.grey.shade200,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.50),
+                              color: Colors.black.withValues(alpha: 0.5),
                               offset: const Offset(2, 2),
                               blurRadius: 4,
                             ),
@@ -178,7 +178,7 @@ class SettingsScreen extends StatelessWidget {
                           color: Colors.grey.shade200,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.50),
+                              color: Colors.black.withValues(alpha: 0.5),
                               offset: const Offset(2, 2),
                               blurRadius: 4,
                             ),
@@ -258,7 +258,7 @@ class SettingsScreen extends StatelessWidget {
                           color: Colors.grey.shade200,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.50),
+                              color: Colors.black.withValues(alpha: 0.5),
                               offset: const Offset(2, 2),
                               blurRadius: 4,
                             ),
@@ -336,7 +336,7 @@ class SettingsScreen extends StatelessWidget {
                           color: Colors.grey.shade200,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.50),
+                              color: Colors.black.withValues(alpha: 0.5),
                               offset: const Offset(2, 2),
                               blurRadius: 4,
                             ),
@@ -414,7 +414,7 @@ class SettingsScreen extends StatelessWidget {
                           color: Colors.grey.shade200,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.50),
+                              color: Colors.black.withValues(alpha: 0.5),
                               offset: const Offset(2, 2),
                               blurRadius: 4,
                             ),
@@ -493,7 +493,7 @@ class SettingsScreen extends StatelessWidget {
                           color: Colors.grey.shade200,
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.50),
+                              color: Colors.black.withValues(alpha: 0.5),
                               offset: const Offset(2, 2),
                               blurRadius: 4,
                             ),

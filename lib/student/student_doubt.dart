@@ -268,7 +268,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                             borderRadius: BorderRadius.circular(35),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.20),
+                                color: Colors.black.withValues(alpha: 0.2),
                                 offset: const Offset(2, 2),
                                 blurRadius: 4,
                               ),
@@ -320,7 +320,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                               color: Colors.white,
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.black.withOpacity(0.20),
+                                  color: Colors.black.withValues(alpha: 0.2),
                                   offset: const Offset(2, 2),
                                   blurRadius: 4,
                                 ),
@@ -406,8 +406,8 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                         color: Colors.white,
                                         boxShadow: [
                                           BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.20),
+                                            color: Colors.black
+                                                .withValues(alpha: 0.2),
                                             offset: const Offset(2, 2),
                                             blurRadius: 4,
                                           ),
@@ -515,7 +515,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                           boxShadow: [
                                             BoxShadow(
                                               color: Colors.black
-                                                  .withOpacity(0.20),
+                                                  .withValues(alpha: 0.2),
                                               offset: const Offset(2, 2),
                                               blurRadius: 4,
                                             ),

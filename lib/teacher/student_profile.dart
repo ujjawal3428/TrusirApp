@@ -82,7 +82,8 @@ class StudentProfileScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(22),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFC22054).withOpacity(0.2),
+                            color:
+                                const Color(0xFFC22054).withValues(alpha: 0.2),
                             spreadRadius: 3,
                             blurRadius: 15,
                             offset: const Offset(0, 10),
@@ -250,7 +251,7 @@ class StudentProfileScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.50),
+                                    color: Colors.black.withValues(alpha: 0.5),
                                     offset: const Offset(2, 2),
                                     blurRadius: 4,
                                   ),
@@ -331,7 +332,7 @@ class StudentProfileScreen extends StatelessWidget {
                                 color: Colors.grey.shade200,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.50),
+                                    color: Colors.black.withValues(alpha: 0.5),
                                     offset: const Offset(2, 2),
                                     blurRadius: 4,
                                   ),
@@ -413,7 +414,7 @@ class StudentProfileScreen extends StatelessWidget {
                                 color: Colors.grey.shade200,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.50),
+                                    color: Colors.black.withValues(alpha: 0.5),
                                     offset: const Offset(2, 2),
                                     blurRadius: 4,
                                   ),
@@ -496,7 +497,7 @@ class StudentProfileScreen extends StatelessWidget {
                                 color: Colors.grey.shade200,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.50),
+                                    color: Colors.black.withValues(alpha: 0.5),
                                     offset: const Offset(2, 2),
                                     blurRadius: 4,
                                   ),
@@ -579,7 +580,7 @@ class StudentProfileScreen extends StatelessWidget {
                                 color: Colors.grey.shade200,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.50),
+                                    color: Colors.black.withValues(alpha: 0.5),
                                     offset: const Offset(2, 2),
                                     blurRadius: 4,
                                   ),
@@ -660,7 +661,7 @@ class StudentProfileScreen extends StatelessWidget {
                                 color: Colors.grey.shade200,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.50),
+                                    color: Colors.black.withValues(alpha: 0.5),
                                     offset: const Offset(2, 2),
                                     blurRadius: 4,
                                   ),
@@ -742,7 +743,7 @@ class StudentProfileScreen extends StatelessWidget {
                                 color: Colors.grey.shade200,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withOpacity(0.50),
+                                    color: Colors.black.withValues(alpha: 0.5),
                                     offset: const Offset(2, 2),
                                     blurRadius: 4,
                                   ),
