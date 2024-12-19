@@ -793,22 +793,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           ),
         ),
         const SizedBox(height: 10),
-        _buildDropdownField(
-          'Mohalla/Area',
-          selectedValue: studentForms[index].area,
-          onChanged: (value) {
-            setState(() {
-              studentForms[index].area = value;
-            });
-          },
-          items: [
-            'Balua',
-            'Chandmari',
-            'Raja Bazar',
-            'Chhatauni',
-            'Lakshmipur'
-          ],
-        ),
+        _buildTextField('Mohalla/Area', onChanged: (value) {
+          studentForms[index].area = value;
+        }),
         const SizedBox(height: 10),
         GestureDetector(
           onTap: () {

@@ -707,22 +707,9 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 ),
               ),
               const SizedBox(height: 10),
-              _buildDropdownField(
-                'Mohalla/Area',
-                selectedValue: formData.area,
-                onChanged: (value) {
-                  setState(() {
-                    formData.area = value;
-                  });
-                },
-                items: [
-                  'Balua',
-                  'Chandmari',
-                  'Raja Bazar',
-                  'Chhatauni',
-                  'Lakshmipur'
-                ],
-              ),
+              _buildTextField('Mohalla/Area', onChanged: (value) {
+                formData.area = value;
+              }),
               const SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
