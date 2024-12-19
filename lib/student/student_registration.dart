@@ -30,6 +30,8 @@ class StudentRegistrationData {
   String? aadharFrontPath;
   String? aadharBackPath;
   bool? agreetoterms;
+  List<String> cities = [];
+  List<String> pins = [];
 
   Map<String, dynamic> toJson() {
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
@@ -98,15 +100,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 
   List<Location> locations = [];
 
-  // Selected values
-  String? selectedState;
-  String? selectedCity;
-  String? selectedPincode;
-
   // Filtered lists
   List<String> states = [];
-  List<String> cities = [];
-  List<String> pincodes = [];
 
   bool isLoading = true;
 
@@ -156,40 +151,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       });
       print("Error: $e");
     }
-  }
-
-  void onStateChanged(String? value, int index) {
-    setState(() {
-      selectedState = value;
-      studentForms[index].state = selectedState;
-      selectedCity = null;
-      selectedPincode = null;
-
-      // Filter cities by state
-      cities = locations
-          .where((loc) => loc.state == value)
-          .map((loc) => loc.name)
-          .toSet()
-          .toList();
-
-      // Clear pincodes
-      pincodes = [];
-    });
-  }
-
-  void onCityChanged(String? value, int index) {
-    setState(() {
-      selectedCity = value;
-      studentForms[index].city = selectedCity;
-      selectedPincode = null;
-
-      // Filter pincodes by city
-      pincodes = locations
-          .where((loc) => loc.name == value)
-          .map((loc) => loc.pincode)
-          .toSet()
-          .toList();
-    });
   }
 
   final List<String> timeSlots = [
@@ -765,16 +726,26 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         const SizedBox(height: 10),
         _buildDropdownField(
           'State',
-          selectedValue: selectedState,
+          selectedValue: studentForms[index].state,
           onChanged: (value) {
-            onStateChanged(value, index);
+            setState(() {
+              studentForms[index].state = value;
+              studentForms[index].city = null;
+              studentForms[index].pincode = null;
+
+              studentForms[index].cities = locations
+                  .where((loc) => loc.state == value)
+                  .map((loc) => loc.name)
+                  .toSet()
+                  .toList();
+            });
           },
           items: states,
         ),
         const SizedBox(height: 10),
         GestureDetector(
           onTap: () {
-            if (selectedState == null) {
+            if (studentForms[index].state == null) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Please select a state first.'),
                 duration: Duration(seconds: 2),
@@ -785,11 +756,19 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           },
           child: _buildDropdownField(
             'City/Town',
-            selectedValue: selectedCity,
+            selectedValue: studentForms[index].city,
             onChanged: (value) {
-              onCityChanged(value, index);
+              setState(() {
+                studentForms[index].city = value;
+                studentForms[index].pincode = null;
+                studentForms[index].pins = locations
+                    .where((loc) => loc.name == value)
+                    .map((loc) => loc.pincode)
+                    .toSet()
+                    .toList();
+              });
             },
-            items: cities,
+            items: studentForms[index].cities,
           ),
         ),
         const SizedBox(height: 10),
@@ -799,12 +778,12 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         const SizedBox(height: 10),
         GestureDetector(
           onTap: () {
-            if (selectedState == null) {
+            if (studentForms[index].state == null) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Please select a state first.'),
                 duration: Duration(seconds: 2),
               ));
-            } else if (selectedCity == null) {
+            } else if (studentForms[index].city == null) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Please select a city first.'),
                 duration: Duration(seconds: 2),
@@ -815,14 +794,13 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           },
           child: _buildDropdownField(
             'Pincode',
-            selectedValue: selectedPincode,
+            selectedValue: studentForms[index].pincode,
             onChanged: (value) {
               setState(() {
-                selectedPincode = value;
-                studentForms[index].pincode = selectedPincode;
+                studentForms[index].pincode = value;
               });
             },
-            items: pincodes,
+            items: studentForms[index].pins,
           ),
         ),
         const SizedBox(height: 10),

@@ -43,7 +43,6 @@ class TrusirLoginPage extends StatefulWidget {
 }
 
 class TrusirLoginPageState extends State<TrusirLoginPage> {
-  String? _selectedLanguage;
   final TextEditingController _phonecontroller = TextEditingController();
   final PageController _pageController = PageController();
   int _currentPage = 0;
@@ -118,6 +117,21 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
         child: Image.asset(
           'assets/send_otp.png',
           width: responsive.screenWidth,
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSkipButton(ResponsiveDimensions responsive) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          showPopupDialog(context);
+        },
+        child: Image.asset(
+          'assets/skipbutton.png',
+          height: 35,
           fit: BoxFit.contain,
         ),
       ),
@@ -210,50 +224,8 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
 
   Widget _buildHeader(ResponsiveDimensions responsive) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            showPopupDialog(context);
-          },
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.all(0), // Border color
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12), // Border radius
-            ),
-          ),
-          child: const Text(
-            'Skip',
-            style: TextStyle(fontSize: 15),
-          ),
-        ),
-        _buildLanguageDropdown(responsive),
-      ],
-    );
-  }
-
-  Widget _buildLanguageDropdown(ResponsiveDimensions responsive) {
-    return DropdownButton<String>(
-      value: _selectedLanguage,
-      hint: Text(
-        "Language",
-        style: TextStyle(fontSize: responsive.screenWidth * 0.04),
-      ),
-      items: <String>['Hindi', 'English']
-          .map<DropdownMenuItem<String>>((String language) {
-        return DropdownMenuItem<String>(
-          value: language,
-          child: Text(
-            language,
-            style: TextStyle(fontSize: responsive.screenWidth * 0.04),
-          ),
-        );
-      }).toList(),
-      onChanged: (String? newValue) {
-        setState(() {
-          _selectedLanguage = newValue;
-        });
-      },
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [_buildSkipButton(responsive)],
     );
   }
 

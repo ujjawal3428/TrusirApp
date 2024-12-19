@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trusir/student/main_screen.dart';
 
 class NewCoursePage extends StatelessWidget {
   const NewCoursePage({super.key});
@@ -8,19 +9,35 @@ class NewCoursePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.grey[50],
         elevation: 2,
-        title: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            'Courses',
-            style: TextStyle(
-              color: Color(0xFF4A148C),
-              fontSize: 22,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w600,
+        title: Row(
+          children: [
+            GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainScreen(),
+                    ),
+                  );
+                },
+                child: Image.asset('assets/back_button.png', height: 50)),
+            const SizedBox(width: 20),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: Text(
+                'Courses',
+                style: TextStyle(
+                  color: Color(0xFF4A148C),
+                  fontSize: 22,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
         toolbarHeight: 70,
       ),
@@ -56,8 +73,6 @@ class NewCoursePage extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(20),
-                              
-                                    
                               ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
@@ -83,7 +98,7 @@ class NewCoursePage extends StatelessWidget {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 12,
+                                    fontSize: 15,
                                   ),
                                 ),
                               ),
@@ -104,7 +119,7 @@ class NewCoursePage extends StatelessWidget {
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 12,
+                                    fontSize: 15,
                                   ),
                                 ),
                               ),
@@ -128,15 +143,8 @@ class NewCoursePage extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 12,
                                     decoration: TextDecoration.lineThrough,
+                                    decorationColor: Colors.grey,
                                     color: Colors.grey,
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Text(
-                                  '50% Discount',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.green,
                                   ),
                                 ),
                               ],
@@ -151,32 +159,8 @@ class NewCoursePage extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 10,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.grey,
-                                          blurRadius: 5,
-                                          offset: Offset(0, 4),
-                                        )
-                                      ],
-                                    color: const Color.fromARGB(148, 183, 41, 41),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: const Text(
-                                    'Book Demo',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 20,
@@ -184,12 +168,12 @@ class NewCoursePage extends StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     boxShadow: const [
-                                        BoxShadow(
-                                          color: Colors.grey,
-                                          blurRadius: 5,
-                                          offset: Offset(0, 4),
-                                        )
-                                      ],
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 5,
+                                        offset: Offset(0, 4),
+                                      )
+                                    ],
                                     color: const Color(0xFF4A148C),
                                     borderRadius: BorderRadius.circular(5),
                                   ),
