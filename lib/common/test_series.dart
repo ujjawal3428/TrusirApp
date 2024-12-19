@@ -114,18 +114,14 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   }
 
   Future<void> _downloadFile(String url, String filename) async {
-    setState(() {
-      _requestPermissions();
-      _requestNotificationPermission();
-    });
-
     try {
       // Infer file extension from the URL or content type
       String fileExtension = _getFileExtensionFromUrl(url);
       String finalFilename = '$filename$fileExtension';
 
       final filePath = await _getAppSpecificDownloadPath(finalFilename);
-
+      await _requestPermissions();
+      await _requestNotificationPermission();
       final dio = Dio();
       await dio.download(url, filePath);
 

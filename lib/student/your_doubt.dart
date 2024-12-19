@@ -31,7 +31,6 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
   void initState() {
     super.initState();
     doubts = fetchDoubts();
-    _requestNotificationPermission();
     _loadDownloadedFiles();
   }
 
@@ -90,7 +89,6 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
 
   Future<void> _downloadFile(String url, String filename) async {
     setState(() {
-      _requestPermissions();
       isDownloading = true;
       downloadProgress = '0%';
     });
@@ -101,7 +99,8 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
       String finalFilename = '$filename$fileExtension';
 
       final filePath = await _getAppSpecificDownloadPath(finalFilename);
-
+      await _requestPermissions();
+      await _requestNotificationPermission();
       final dio = Dio();
       await dio.download(
         url,
@@ -244,7 +243,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
         children: [
           SingleChildScrollView(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.79,
+              height: MediaQuery.of(context).size.height * 0.78,
               child: FutureBuilder<List<Doubt>>(
                 future: doubts,
                 builder: (context, snapshot) {
@@ -332,45 +331,25 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
               ),
             ),
           ),
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.only(top: 12, left: 16.0, right: 16),
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => StudentDoubtScreen()));
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: 40,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color(0xFF045C19),
-                      Color(0xFF77D317),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: const Center(
-                  child: Text(
-                    'Create Doubt',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+          _buildCreateButton(),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCreateButton() {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => StudentDoubtScreen()));
+        },
+        child: Image.asset(
+          'assets/create_doubt.png',
+          width: double.infinity,
+          height: 90,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

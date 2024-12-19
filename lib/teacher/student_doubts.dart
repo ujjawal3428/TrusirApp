@@ -30,7 +30,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
   void initState() {
     super.initState();
     doubts = fetchDoubts();
-    _requestNotificationPermission();
+
     _loadDownloadedFiles();
   }
 
@@ -89,7 +89,6 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
 
   Future<void> _downloadFile(String url, String filename) async {
     setState(() {
-      _requestPermissions();
       isDownloading = true;
       downloadProgress = '0%';
     });
@@ -100,7 +99,8 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
       String finalFilename = '$filename$fileExtension';
 
       final filePath = await _getAppSpecificDownloadPath(finalFilename);
-
+      await _requestPermissions();
+      await _requestNotificationPermission();
       final dio = Dio();
       await dio.download(
         url,

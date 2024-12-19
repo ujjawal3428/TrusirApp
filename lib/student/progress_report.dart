@@ -173,15 +173,14 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
 
   Future<void> _downloadFile(String url, String filename) async {
     setState(() {
-      _requestPermissions();
-      _requestNotificationPermission();
       _isDownloading = true;
       _downloadProgress = '0%';
     });
 
     try {
       final filePath = await _getAppSpecificDownloadPath(filename);
-
+      await _requestPermissions();
+      await _requestNotificationPermission();
       final dio = Dio();
       await dio.download(
         url,

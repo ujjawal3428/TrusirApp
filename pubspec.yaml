@@ -55,6 +55,7 @@ flutter:
     - assets/registration.png
     - assets/create_test.png
     - assets/cancelbutton.png
+    - assets/create_doubt.png
     - assets/logoutbutton.png
     - assets/submit.png
     - assets/pay_fee.png
