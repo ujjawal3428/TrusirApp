@@ -80,6 +80,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
@@ -110,7 +111,6 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
         toolbarHeight: 50,
       ),
       body: SingleChildScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Padding(
           padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
           child: Column(
