@@ -182,6 +182,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
+      resizeToAvoidBottomInset: true, // Adjust the layout when keyboard appears
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -196,6 +197,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                     vertical: responsive.verticalPadding,
                   ),
                   child: SingleChildScrollView(
+                    physics: const NeverScrollableScrollPhysics(),
                     keyboardDismissBehavior:
                         ScrollViewKeyboardDismissBehavior.onDrag,
                     child: Column(

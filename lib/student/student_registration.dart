@@ -509,6 +509,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
+      resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Padding(

@@ -281,7 +281,7 @@ class _OTPScreenState extends State<OTPScreen> {
               //   ),
               // ),
               const SizedBox(
-                height: 240,
+                height: 50,
               ),
               _buildVerifyButton(),
             ],
