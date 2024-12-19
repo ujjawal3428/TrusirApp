@@ -249,7 +249,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                         contentPadding:
                                             const EdgeInsets.symmetric(
                                           horizontal: 16,
-                                          vertical: 8,
+                                          
                                         ),
                                         leading: CircleAvatar(
                                           radius: 25,
