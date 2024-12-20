@@ -197,9 +197,6 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                     vertical: responsive.verticalPadding,
                   ),
                   child: SingleChildScrollView(
-                    physics: const NeverScrollableScrollPhysics(),
-                    keyboardDismissBehavior:
-                        ScrollViewKeyboardDismissBehavior.onDrag,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

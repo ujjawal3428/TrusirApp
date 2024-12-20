@@ -523,7 +523,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: SingleChildScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -1303,7 +1302,7 @@ class TimeSlotFieldState extends State<TimeSlotField> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey[50],
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

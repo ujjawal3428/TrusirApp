@@ -246,7 +246,6 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
         body: Stack(
           children: [
             SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Column(children: [
                 const SizedBox(
                   height: 5,

@@ -236,7 +236,6 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
         builder: (context, constraints) => Stack(
           children: [
             SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Column(
                 children: [
                   Padding(

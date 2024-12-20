@@ -197,7 +197,6 @@ class _OTPScreenState extends State<OTPScreen> {
       body: Padding(
         padding: const EdgeInsets.only(left: 24.0, right: 24, top: 150),
         child: SingleChildScrollView(
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           physics: const NeverScrollableScrollPhysics(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

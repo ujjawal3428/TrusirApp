@@ -511,7 +511,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       backgroundColor: Colors.grey.shade50,
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -860,7 +859,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           ],
         ),
         const SizedBox(height: 30),
-
         TimeSlotField(
           formData: studentForms[index],
         ), // Pass index to handle each form's state
