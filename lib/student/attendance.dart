@@ -93,7 +93,8 @@ class _AttendancePageState extends State<AttendancePage> {
   DateTime _selectedDate = DateTime.now();
   int selectedCourseIndex = 0;
   int selectedSlotIndex = 0;
-  Map<int, String> _attendanceData = {}; // Day: Status
+  Map<int, Map<String, String>> _attendanceData = {};
+  // Day: Status
   Map<String, int> _summaryData = {}; // Summary details
   List<String> weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
   List<Map<String, String>> slots = [];
@@ -192,13 +193,17 @@ class _AttendancePageState extends State<AttendancePage> {
 
 // Function to convert fetched attendance data into a hierarchical structure
   Map<String, dynamic> attendancedata(List<AttendanceRecord> records) {
-    Map<String, Map<String, Map<String, String>>> attendanceHierarchy = {};
+    // Define a hierarchical map to store attendance data
+    Map<String, Map<String, Map<String, Map<String, String>>>>
+        attendanceHierarchy = {};
 
     for (var record in records) {
       String year = record.year;
       String month = record.month;
       String date = record.date;
       String status = record.status;
+      String id =
+          record.id.toString(); // Convert id to a string for consistency
 
       // Ensure year exists in the map
       if (!attendanceHierarchy.containsKey(year)) {
@@ -210,8 +215,13 @@ class _AttendancePageState extends State<AttendancePage> {
         attendanceHierarchy[year]![month] = {};
       }
 
-      // Add the date and its status
-      attendanceHierarchy[year]![month]![date] = status;
+      // Ensure date exists in the map
+      if (!attendanceHierarchy[year]![month]!.containsKey(date)) {
+        attendanceHierarchy[year]![month]![date] = {};
+      }
+
+      // Add both id and status to the date map
+      attendanceHierarchy[year]![month]![date] = {"id": id, "status": status};
     }
     return attendanceHierarchy;
   }
@@ -233,31 +243,31 @@ class _AttendancePageState extends State<AttendancePage> {
     setState(() {
       _attendanceData.clear(); // Clear old data before fetching new data
     });
-    print(selectedslotID);
 
     attendanceconvert(month, year, selectedslotID).then((apiResponse) {
-      if (apiResponse == {} || !apiResponse.containsKey(year)) {
-        // No data for the year
+      if (apiResponse.isEmpty || !apiResponse.containsKey(year)) {
         _showNoDataMessage();
         return;
       }
 
       final monthKey = getMonthName(month);
-      if (apiResponse[year].containsKey(monthKey) == true) {
+      if (apiResponse[year].containsKey(monthKey)) {
         setState(() {
           _attendanceData =
               (apiResponse[year][monthKey] as Map<String, dynamic>)
-                  .map<int, String>(
-                      (key, value) => MapEntry(int.parse(key), value));
+                  .map<int, Map<String, String>>((date, idAndStatus) {
+            return MapEntry(
+                int.parse(date), idAndStatus as Map<String, String>);
+          });
         });
+
         _updateSummary(); // Update summary after fetching data
       } else {
-        // No data for the specific month
         _showNoDataMessage();
       }
     }).catchError((error) {
       print("Error fetching attendance data: $error");
-      _showNoDataMessage(); // Display an error message for unexpected issues
+      _showNoDataMessage();
     });
   }
 
@@ -270,27 +280,27 @@ class _AttendancePageState extends State<AttendancePage> {
     );
   }
 
-  Future<void> _submitAttendance(
-      {required int day, required String status}) async {
-    final url = Uri.parse('https://trusirapi.onrender.com/attendance/update');
+  Future<void> _submitAttendance({
+    required String id,
+    required String status,
+  }) async {
     final payload = {
-      "year": _selectedDate.year.toString(),
-      "month": _selectedDate.month.toString(),
-      "date": day.toString().padLeft(2, '0'),
       "status": status,
     };
 
     try {
       final response = await http.post(
-        url,
+        Uri.parse(
+            '$baseUrl/api/update-attendance/$id'), // Append the ID as a parameter to the URL
         headers: {"Content-Type": "application/json"},
         body: json.encode(payload),
       );
 
       if (response.statusCode == 200) {
         setState(() {
-          _attendanceData[day] = status;
-          _updateSummary(); // Update summary after submitting data
+          // Update the status locally
+          _fetchAttendanceData(selectedslotID);
+          _updateSummary(); // Update the summary
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Attendance updated successfully!")),
@@ -358,14 +368,19 @@ class _AttendancePageState extends State<AttendancePage> {
     int absentCount = 0;
     int classNotTakenCount = 0;
 
-    _attendanceData.forEach((_, status) {
-      totalClassesTaken++;
-      if (status == 'present') {
-        presentCount++;
-      } else if (status == 'absent') {
-        absentCount++;
-      } else if (status == 'No class') {
-        classNotTakenCount++;
+    _attendanceData.forEach((_, dateData) {
+      // Extract the status from the nested map
+      String? status = dateData['status'];
+
+      if (status != null) {
+        totalClassesTaken++;
+        if (status == 'present') {
+          presentCount++;
+        } else if (status == 'absent') {
+          absentCount++;
+        } else if (status == 'No class') {
+          classNotTakenCount++;
+        }
       }
     });
 
@@ -395,77 +410,6 @@ class _AttendancePageState extends State<AttendancePage> {
       "Dec"
     ];
     return months[month - 1];
-  }
-
-  void _showAttendanceDialog(int day, String status) {
-    String selectedStatus = status; // Default value
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-              "Update Attendance for $day ${getMonthName(_selectedDate.month)}"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              RadioListTile<String>(
-                title: const Text("Present"),
-                value: "present",
-                groupValue: selectedStatus,
-                onChanged: (value) {
-                  setState(() {
-                    selectedStatus = value!;
-                  });
-                  Navigator.of(context).pop();
-                  _showAttendanceDialog(day, "present"); // Refresh dialog
-                },
-              ),
-              RadioListTile<String>(
-                title: const Text("Absent"),
-                value: "absent",
-                groupValue: selectedStatus,
-                onChanged: (value) {
-                  setState(() {
-                    selectedStatus = value!;
-                  });
-                  Navigator.of(context).pop();
-                  _showAttendanceDialog(day, "absent"); // Refresh dialog
-                },
-              ),
-              RadioListTile<String>(
-                title: const Text("Holiday"),
-                value: "class_not_taken",
-                groupValue: selectedStatus,
-                onChanged: (value) {
-                  setState(() {
-                    selectedStatus = value!;
-                  });
-                  Navigator.of(context).pop();
-                  _showAttendanceDialog(
-                      day, "class_not_taken"); // Refresh dialog
-                },
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Cancel"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _submitAttendance(day: day, status: selectedStatus);
-              },
-              child: const Text("Submit"),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -602,22 +546,69 @@ class _AttendancePageState extends State<AttendancePage> {
                       child: GridView.builder(
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 7,
-                                childAspectRatio: 0.5,
-                                mainAxisExtent: 45),
+                          crossAxisCount: 7,
+                          childAspectRatio: 0.5,
+                          mainAxisExtent: 45,
+                        ),
                         itemCount: _startingWeekday + _daysInMonth,
                         itemBuilder: (context, index) {
                           if (index < _startingWeekday) {
                             return const SizedBox.shrink();
                           }
+
                           int day = index - _startingWeekday + 1;
                           bool isToday = day == DateTime.now().day &&
                               _selectedDate.month == DateTime.now().month &&
                               _selectedDate.year == DateTime.now().year;
-                          String status = _attendanceData[day] ?? "no_data";
+
+                          // Check if the day exists in _attendanceData and extract status
+                          Map<String, String>? attendanceInfo =
+                              _attendanceData[day];
+                          String? id = attendanceInfo?['id'];
+                          String status =
+                              attendanceInfo?['status'] ?? "no_data";
+
                           return GestureDetector(
                             onTap: () {
-                              _showAttendanceDialog(day, status);
+                              if (id != null) {
+                                // Show a dialog to update the status
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Update Attendance for $day"),
+                                    content: DropdownButton<String>(
+                                      value: status,
+                                      items: const [
+                                        DropdownMenuItem(
+                                            value: 'present',
+                                            child: Text('Present')),
+                                        DropdownMenuItem(
+                                            value: 'absent',
+                                            child: Text('Absent')),
+                                        DropdownMenuItem(
+                                            value: 'No class',
+                                            child: Text('No class')),
+                                      ],
+                                      onChanged: (newStatus) {
+                                        if (newStatus != null) {
+                                          _submitAttendance(
+                                                  id: id, status: newStatus)
+                                              .then((_) {
+                                            Navigator.pop(
+                                                context); // Close the dialog after updating
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text("No ID found for this date!")),
+                                );
+                              }
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -629,17 +620,19 @@ class _AttendancePageState extends State<AttendancePage> {
                               child: Container(
                                 margin: const EdgeInsets.all(2),
                                 decoration: BoxDecoration(
-                                    color: status == "present"
-                                        ? Colors.green
-                                        : status == "absent"
-                                            ? Colors.red
-                                            : Colors.grey[400],
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                        color: isToday
-                                            ? const Color(0xFF48116A)
-                                            : Colors.white,
-                                        width: isToday ? 3 : 0)),
+                                  color: status == "present"
+                                      ? Colors.green
+                                      : status == "absent"
+                                          ? Colors.red
+                                          : Colors.grey[400],
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: isToday
+                                        ? const Color(0xFF48116A)
+                                        : Colors.white,
+                                    width: isToday ? 3 : 0,
+                                  ),
+                                ),
                                 child: Center(
                                   child: Text(
                                     '$day',
@@ -802,7 +795,7 @@ class _AttendancePageState extends State<AttendancePage> {
                 child: Center(
                   child: Text(
                     textAlign: TextAlign.justify,
-                    ' $count',
+                    count == null ? '0' : ' $count ',
                     style: const TextStyle(color: Colors.black54, fontSize: 17),
                   ),
                 ),
