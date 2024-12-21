@@ -3,6 +3,85 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:trusir/common/api.dart';
 
+class AttendanceRecord {
+  final int id;
+  final String subjectID;
+  final String subjectName;
+  final String studentID;
+  final String teacherID;
+  final String year;
+  final String month;
+  final String date;
+  final String slotID;
+  final String status;
+
+  AttendanceRecord({
+    required this.id,
+    required this.subjectID,
+    required this.subjectName,
+    required this.studentID,
+    required this.teacherID,
+    required this.year,
+    required this.month,
+    required this.date,
+    required this.slotID,
+    required this.status,
+  });
+
+  factory AttendanceRecord.fromJson(Map<String, dynamic> json) {
+    return AttendanceRecord(
+      id: json['id'],
+      subjectID: json['subjectID'],
+      subjectName: json['subject_name'],
+      studentID: json['studentID'],
+      teacherID: json['teacherID'],
+      year: json['year'],
+      month: json['month'],
+      date: json['date'],
+      slotID: json['slotID'],
+      status: json['status'],
+    );
+  }
+}
+
+class Course {
+  final int id;
+  final String courseID;
+  final String courseName;
+  final String teacherName;
+  final String teacherID;
+  final String studentID;
+  final String image;
+  final String studentName;
+  final String timeSlot;
+
+  Course({
+    required this.id,
+    required this.courseID,
+    required this.courseName,
+    required this.teacherName,
+    required this.teacherID,
+    required this.studentID,
+    required this.image,
+    required this.studentName,
+    required this.timeSlot,
+  });
+
+  factory Course.fromJson(Map<String, dynamic> json) {
+    return Course(
+      id: json['id'],
+      courseID: json['courseID'],
+      courseName: json['courseName'],
+      teacherName: json['teacherName'],
+      teacherID: json['teacherID'],
+      studentID: json['StudentID'],
+      image: json['image'],
+      studentName: json['StudentName'],
+      timeSlot: json['timeSlot'],
+    );
+  }
+}
+
 class AttendancePage extends StatefulWidget {
   const AttendancePage({super.key});
 
@@ -12,53 +91,43 @@ class AttendancePage extends StatefulWidget {
 
 class _AttendancePageState extends State<AttendancePage> {
   DateTime _selectedDate = DateTime.now();
-  int selectedIndex = 0;
+  int selectedCourseIndex = 0;
+  int selectedSlotIndex = 0;
   Map<int, String> _attendanceData = {}; // Day: Status
   Map<String, int> _summaryData = {}; // Summary details
   List<String> weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-  String? course = 'English [8-9 AM]\n';
-  List<String> _courses = [];
-  List<String> combinedItems = [];
-  final List<String> timeSlots = [
-    '8-9 AM',
-    '9-10 AM',
-    '10-11 AM',
-    '11-12 PM',
-    '12-1 PM',
-    '1-2 PM',
-    '2-3 PM',
-    '3-4 PM',
-    '4-5PM',
-    '5-6 PM',
-    '6-7 PM',
-    '7-8 PM'
-  ];
+  List<Map<String, String>> slots = [];
+  String selectedslotID = '';
 
-  final List<String> categories = [
-    'English',
-    'Hindi',
-    'Maths',
-    'Science',
-    'History',
-    'GK'
-  ];
+  List<String> categories = [];
 
-  Future<void> fetchCourses() async {
-    try {
-      final response = await http.get(Uri.parse('$baseUrl/my-course/testID'));
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        if (mounted) {
-          setState(() {
-            _courses = List<String>.from(data);
-            combinedItems = generateDropdownItems(_courses, timeSlots);
-          });
-        }
-      } else {
-        throw Exception('Failed to load courses');
+  Future<List<Course>> fetchCourses() async {
+    final url = Uri.parse(
+        '$baseUrl/view-slots/bbf8bc48-19f2-4d73-9925-63a140e238ec'); // Replace with your API URL
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      print(data);
+      if (mounted) {
+        setState(() {
+          categories =
+              data.map((course) => course['courseName'] as String).toList();
+          slots = data.map((course) {
+            return {
+              'slotName': course['timeSlot'] as String,
+              'slotID': course['id'].toString(), // Assuming 'id' is the slotID
+            };
+          }).toList();
+        });
       }
-    } catch (e) {
-      print('Error fetching courses: $e');
+      setState(() {
+        selectedslotID = slots[0]['slotID']!;
+      });
+      print(selectedslotID);
+      return data.map((json) => Course.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch courses');
     }
   }
 
@@ -85,60 +154,120 @@ class _AttendancePageState extends State<AttendancePage> {
   @override
   void initState() {
     super.initState();
-    _fetchAttendanceData();
-    fetchCourses();
+    initializeData();
+  }
+
+  Future<void> initializeData() async {
+    try {
+      await fetchCourses(); // Wait for fetchCourses to complete
+      _fetchAttendanceData(
+          selectedslotID); // Call _fetchAttendanceData after fetchCourses
+    } catch (error) {
+      print('Error during initialization: $error');
+    }
+  }
+
+  Future<List<AttendanceRecord>> fetchAttendanceRecords({
+    required String year,
+    required String month,
+    required String slotID,
+  }) async {
+    final url = Uri.parse(
+        'https://admin.trusir.com/view-attendance/bbf8bc48-19f2-4d73-9925-63a140e238ec/$year/$month/$slotID');
+
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map((json) => AttendanceRecord.fromJson(json)).toList();
+      } else {
+        throw Exception(
+            'Failed to load attendance records. Status: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error fetching attendance records: $error');
+    }
+  }
+
+// Function to convert fetched attendance data into a hierarchical structure
+  Map<String, dynamic> attendancedata(List<AttendanceRecord> records) {
+    Map<String, Map<String, Map<String, String>>> attendanceHierarchy = {};
+
+    for (var record in records) {
+      String year = record.year;
+      String month = record.month;
+      String date = record.date;
+      String status = record.status;
+
+      // Ensure year exists in the map
+      if (!attendanceHierarchy.containsKey(year)) {
+        attendanceHierarchy[year] = {};
+      }
+
+      // Ensure month exists in the map
+      if (!attendanceHierarchy[year]!.containsKey(month)) {
+        attendanceHierarchy[year]![month] = {};
+      }
+
+      // Add the date and its status
+      attendanceHierarchy[year]![month]![date] = status;
+    }
+    return attendanceHierarchy;
+  }
+
+  Future<Map<String, dynamic>> attendanceconvert(
+      int month, String year, String slotID) async {
+    final mon = getMonthName(month);
+    final records =
+        await fetchAttendanceRecords(year: year, month: mon, slotID: slotID);
+    return attendancedata(records); // Return the hierarchical data
   }
 
   // Generate dropdown items by pairing courses with time slots
-  List<String> generateDropdownItems(
-      List<String> courses, List<String> timeSlots) {
-    final List<String> dropdownItems = [];
-    for (final course in courses) {
-      for (final slot in timeSlots) {
-        dropdownItems
-            .add('$course [$slot]\n'); // Pair course with each time slot
-      }
-    }
-    return dropdownItems;
-  }
 
-  void _fetchAttendanceData() {
+  void _fetchAttendanceData(String selectedslotID) {
     final month = _selectedDate.month;
-    final year = _selectedDate.year;
+    final year = _selectedDate.year.toString();
 
     setState(() {
       _attendanceData.clear(); // Clear old data before fetching new data
     });
+    print(selectedslotID);
 
-    fetchAttendanceData(month, year).then((apiResponse) {
-      final monthKey = month.toString();
-      if (apiResponse.containsKey(monthKey)) {
-        final dataForMonth = apiResponse[monthKey] as Map<String, dynamic>;
+    attendanceconvert(month, year, selectedslotID).then((apiResponse) {
+      if (apiResponse == {} || !apiResponse.containsKey(year)) {
+        // No data for the year
+        _showNoDataMessage();
+        return;
+      }
+
+      final monthKey = getMonthName(month);
+      if (apiResponse[year].containsKey(monthKey) == true) {
         setState(() {
-          _attendanceData = (dataForMonth['attendance'] as Map<String, dynamic>)
-              .map<int, String>(
-                  (key, value) => MapEntry(int.parse(key), value));
+          _attendanceData =
+              (apiResponse[year][monthKey] as Map<String, dynamic>)
+                  .map<int, String>(
+                      (key, value) => MapEntry(int.parse(key), value));
         });
         _updateSummary(); // Update summary after fetching data
       } else {
-        print('No data available for month: $month, year: $year');
+        // No data for the specific month
+        _showNoDataMessage();
       }
     }).catchError((error) {
       print("Error fetching attendance data: $error");
+      _showNoDataMessage(); // Display an error message for unexpected issues
     });
   }
 
-  Future<Map<String, dynamic>> fetchAttendanceData(int month, int year) async {
-    final url = Uri.parse(
-        'https://trusirapi.onrender.com/attendance?year=$year&month=$month');
-
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load attendance data');
-    }
+  void _showNoDataMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('No attendance data available.'),
+        duration: Duration(seconds: 3),
+      ),
+    );
   }
 
   Future<void> _submitAttendance(
@@ -191,7 +320,7 @@ class _AttendancePageState extends State<AttendancePage> {
       setState(() {
         _selectedDate =
             DateTime(result['year'], result['month'], _selectedDate.day);
-        _fetchAttendanceData();
+        _fetchAttendanceData(selectedslotID);
         _updateSummary();
       });
     }
@@ -207,7 +336,7 @@ class _AttendancePageState extends State<AttendancePage> {
       }
       print(_selectedDate.year);
       print(_selectedDate.month);
-      _fetchAttendanceData();
+      _fetchAttendanceData(selectedslotID);
     });
   }
 
@@ -219,7 +348,7 @@ class _AttendancePageState extends State<AttendancePage> {
       } else {
         _selectedDate = DateTime(_selectedDate.year, _selectedDate.month + 1);
       }
-      _fetchAttendanceData();
+      _fetchAttendanceData(selectedslotID);
     });
   }
 
@@ -235,7 +364,7 @@ class _AttendancePageState extends State<AttendancePage> {
         presentCount++;
       } else if (status == 'absent') {
         absentCount++;
-      } else if (status == 'class_not_taken') {
+      } else if (status == 'No class') {
         classNotTakenCount++;
       }
     });
@@ -245,7 +374,7 @@ class _AttendancePageState extends State<AttendancePage> {
         'total_classes_taken': totalClassesTaken,
         'present': presentCount,
         'absent': absentCount,
-        'class_not_taken': classNotTakenCount,
+        'No class': classNotTakenCount,
       };
     });
   }
@@ -340,11 +469,6 @@ class _AttendancePageState extends State<AttendancePage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.grey[50],
@@ -381,6 +505,10 @@ class _AttendancePageState extends State<AttendancePage> {
           Padding(
             padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
             child: _buildCourseList(),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
+            child: _buildSlotList(),
           ),
           // Calendar Section
           Padding(
@@ -436,7 +564,7 @@ class _AttendancePageState extends State<AttendancePage> {
                             onPressed: () {
                               setState(() {
                                 _selectedDate = DateTime.now();
-                                _fetchAttendanceData();
+                                _fetchAttendanceData(selectedslotID);
                               });
                             },
                             child: const Text(
@@ -543,8 +671,8 @@ class _AttendancePageState extends State<AttendancePage> {
                 _buildSummaryCard(
                     'Present', _summaryData['present'], Colors.green),
                 _buildSummaryCard('Absent', _summaryData['absent'], Colors.red),
-                _buildSummaryCard('Holiday', _summaryData['class_not_taken'],
-                    Colors.grey.shade400),
+                _buildSummaryCard(
+                    'Holiday', _summaryData['No class'], Colors.grey.shade400),
               ],
             ),
           ),
@@ -559,13 +687,13 @@ class _AttendancePageState extends State<AttendancePage> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: List.generate(categories.length, (index) {
-          bool isSelected = selectedIndex == index;
+          bool isSelected = selectedCourseIndex == index;
 
           return GestureDetector(
             onTap: () {
               setState(() {
-                selectedIndex = index;
-                _fetchAttendanceData();
+                selectedCourseIndex = index;
+                _fetchAttendanceData(selectedslotID);
                 _updateSummary();
               });
             },
@@ -586,6 +714,53 @@ class _AttendancePageState extends State<AttendancePage> {
               ),
               child: Text(
                 categories[index],
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildSlotList() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(slots.length, (index) {
+          bool isSelected = selectedSlotIndex == index;
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedSlotIndex = index;
+                selectedslotID = slots[index]['slotID']!; // Get slotID
+                _fetchAttendanceData(selectedslotID); // Pass slotID
+                _updateSummary();
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.black : Colors.grey[200],
+                gradient: LinearGradient(
+                  colors: isSelected
+                      ? [
+                          const Color(0xFFC22054),
+                          const Color(0xFF48116A),
+                        ]
+                      : [Colors.grey[200]!, Colors.grey[200]!],
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                slots[index]['slotName']!, // Display slot name
                 style: TextStyle(
                   color: isSelected ? Colors.white : Colors.black,
                   fontSize: 16,

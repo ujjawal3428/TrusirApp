@@ -43,50 +43,60 @@ class LoginSplashScreenState extends State<LoginSplashScreen> {
         // Store each entry in SharedPreferences
         if (responseData['role'] == 'student') {
           await prefs.setString('id', responseData['id'].toString());
-          await prefs.setString('name', responseData['name']);
-          await prefs.setString('father_name', responseData['father_name']);
-          await prefs.setString('mother_name', responseData['mother_name']);
-          await prefs.setString('gender', responseData['gender']);
-          await prefs.setString('class', responseData['class']);
-          await prefs.setString('subject', responseData['subject']);
-          await prefs.setString('DOB', responseData['DOB']);
-          await prefs.setString('role', responseData['role']);
-          await prefs.setString('school', responseData['school']);
-          await prefs.setString('medium', responseData['medium']);
-          await prefs.setString('state', responseData['state']);
-          await prefs.setString('city', responseData['city']);
-          await prefs.setString('address', responseData['address']);
-          await prefs.setString('area', responseData['area']);
-          await prefs.setString('pincode', responseData['pincode']);
-          await prefs.setString('adhaar_front', responseData['adhaar_front']);
-          await prefs.setString('adhaar_back', responseData['adhaar_back']);
-          await prefs.setString('profile', responseData['profile']);
-          await prefs.setString('time_slot', responseData['time_slot']);
+          await prefs.setString('name', responseData['name'] ?? 'N/A');
+          await prefs.setString(
+              'father_name', responseData['father_name'] ?? 'N/A');
+          await prefs.setString(
+              'mother_name', responseData['mother_name'] ?? 'N/A');
+          await prefs.setString('gender', responseData['gender'] ?? 'N/A');
+          await prefs.setString('class', responseData['class'] ?? 'N/A');
+          await prefs.setString('subject', responseData['subject'] ?? 'N/A');
+          await prefs.setString('DOB', responseData['DOB'] ?? 'N/A');
+          await prefs.setString('role', responseData['role'] ?? 'N/A');
+          await prefs.setString('school', responseData['school'] ?? 'N/A');
+          await prefs.setString('medium', responseData['medium'] ?? 'N/A');
+          await prefs.setString('state', responseData['state'] ?? 'N/A');
+          await prefs.setString('city', responseData['city'] ?? 'N/A');
+          await prefs.setString('address', responseData['address'] ?? 'N/A');
+          await prefs.setString('area', responseData['area'] ?? 'N/A');
+          await prefs.setString('pincode', responseData['pincode'] ?? 'N/A');
+          await prefs.setString(
+              'adhaar_front', responseData['adhaar_front'] ?? 'N/A');
+          await prefs.setString(
+              'adhaar_back', responseData['adhaar_back'] ?? 'N/A');
+          await prefs.setString('profile', responseData['profile'] ?? 'N/A');
+          await prefs.setString(
+              'time_slot', responseData['time_slot'] ?? 'N/A');
         } else if (responseData['role'] == 'teacher') {
           await prefs.setString('id', responseData['id'].toString());
-          await prefs.setString('name', responseData['name']);
-          await prefs.setString('father_name', responseData['father_name']);
-          await prefs.setString('mother_name', responseData['mother_name']);
-          await prefs.setString('gender', responseData['gender']);
-          await prefs.setString('class', responseData['class']);
-          await prefs.setString('subject', responseData['subject']);
-          await prefs.setString('DOB', responseData['DOB']);
-          await prefs.setString('role', responseData['role']);
-          await prefs.setString('school', responseData['school']);
-          await prefs.setString('medium', responseData['medium']);
-          await prefs.setString('state', responseData['state']);
-          await prefs.setString('city', responseData['city']);
+          await prefs.setString('name', responseData['name'] ?? 'N/A');
+          await prefs.setString(
+              'father_name', responseData['father_name'] ?? 'N/A');
+          await prefs.setString(
+              'mother_name', responseData['mother_name'] ?? 'N/A');
+          await prefs.setString('gender', responseData['gender'] ?? 'N/A');
+          await prefs.setString('class', responseData['class'] ?? 'N/A');
+          await prefs.setString('subject', responseData['subject'] ?? 'N/A');
+          await prefs.setString('DOB', responseData['DOB'] ?? 'N/A');
+          await prefs.setString('role', responseData['role'] ?? 'N/A');
+          await prefs.setString('school', responseData['school'] ?? 'N/A');
+          await prefs.setString('medium', responseData['medium'] ?? 'N/A');
+          await prefs.setString('state', responseData['state'] ?? 'N/A');
+          await prefs.setString('city', responseData['city'] ?? 'N/A');
           await prefs.setString(
               'qualification', responseData['qualification'] ?? 'N/A');
           await prefs.setString(
               'experience', responseData['experience'] ?? 'N/A');
-          await prefs.setString('address', responseData['address']);
-          await prefs.setString('area', responseData['area']);
-          await prefs.setString('pincode', responseData['pincode']);
-          await prefs.setString('adhaar_front', responseData['adhaar_front']);
-          await prefs.setString('adhaar_back', responseData['adhaar_back']);
-          await prefs.setString('profile', responseData['profile']);
-          await prefs.setString('time_slot', responseData['time_slot']);
+          await prefs.setString('address', responseData['address'] ?? 'N/A');
+          await prefs.setString('area', responseData['area'] ?? 'N/A');
+          await prefs.setString('pincode', responseData['pincode'] ?? 'N/A');
+          await prefs.setString(
+              'adhaar_front', responseData['adhaar_front'] ?? 'N/A');
+          await prefs.setString(
+              'adhaar_back', responseData['adhaar_back'] ?? 'N/A');
+          await prefs.setString('profile', responseData['profile'] ?? 'N/A');
+          await prefs.setString(
+              'time_slot', responseData['time_slot'] ?? 'N/A');
         }
 
         // Navigate to the next screen
