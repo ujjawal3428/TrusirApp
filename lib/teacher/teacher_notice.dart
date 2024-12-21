@@ -8,18 +8,21 @@ class Notice {
   final String noticetitle;
   final String date;
   final String notice;
+  final String time;
 
   Notice({
     required this.noticetitle,
     required this.notice,
     required this.date,
+    required this.time,
   });
 
   factory Notice.fromJson(Map<String, dynamic> json) {
     return Notice(
-      noticetitle: json['notice_title'],
-      notice: json['notice'],
-      date: json['posted_on'],
+      noticetitle: json['notice'],
+      notice: json['description'],
+      date: json['date'],
+      time: json['time'],
     );
   }
 }
@@ -42,7 +45,7 @@ class _TeacherNoticeScreenState extends State<TeacherNoticeScreen> {
   Future<void> fetchNotices({int page = 1}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userID = prefs.getString('userID');
-    final url = '$apiBase/$userID?page=$page&data_per_page=10';
+    final url = '$baseUrl/notices-admin-to-teacher/$userID';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -188,7 +191,7 @@ class _TeacherNoticeScreenState extends State<TeacherNoticeScreen> {
                                             ),
                                             const SizedBox(height: 5),
                                             Text(
-                                              'Posted on : ${notice.date}',
+                                              'Posted on : ${notice.date},${notice.time}',
                                               style: const TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w400,

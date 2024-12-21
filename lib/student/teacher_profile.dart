@@ -33,7 +33,7 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
   Future<void> fetchTeachers() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userID = prefs.getString('userID');
-    final response = await http.get(Uri.parse('$baseUrl/my-teacher/$userID'));
+    final response = await http.get(Uri.parse('$baseUrl/teacher/$userID'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
@@ -207,9 +207,9 @@ class Teacher {
   factory Teacher.fromJson(Map<String, dynamic> json) {
     return Teacher(
       name: json['name'],
-      subject: json['subject'],
-      mobile: json['mobile'],
-      image: json['image'],
+      subject: json['subject'] ?? 'N/A',
+      mobile: json['phone'],
+      image: json['profile'],
     );
   }
 }

@@ -1,8 +1,61 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:trusir/common/api.dart';
 import 'package:trusir/student/main_screen.dart';
 
-class NewCoursePage extends StatelessWidget {
-  const NewCoursePage({super.key});
+class Course {
+  final int id;
+  final String amount;
+  final String name;
+  final String subject;
+  final String image;
+
+  Course({
+    required this.id,
+    required this.amount,
+    required this.name,
+    required this.subject,
+    required this.image,
+  });
+
+  factory Course.fromJson(Map<String, dynamic> json) {
+    return Course(
+      id: json['id'],
+      amount: json['amount'],
+      name: json['name'],
+      subject: json['class'],
+      image: json['image'],
+    );
+  }
+}
+
+class CoursePage extends StatefulWidget {
+  const CoursePage({super.key});
+
+  @override
+  State<CoursePage> createState() => _CoursePageState();
+}
+
+class _CoursePageState extends State<CoursePage> {
+  Future<List<Course>> fetchCourses() async {
+    final url = Uri.parse('$baseUrl/all-course'); // Replace with your API URL
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      print(data);
+      return data.map((json) => Course.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch courses');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCourses();
+  }
 
   @override
   Widget build(BuildContext context) {
