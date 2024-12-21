@@ -14,7 +14,7 @@ class StudentEnquiry {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'studentclass': studentclass,
+      'class': studentclass,
       'city': city,
       'pincode': pincode,
       'gender': gender
@@ -49,7 +49,7 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
   }
 
   Future<void> submitForm(BuildContext context) async {
-    final url = Uri.parse('$baseUrl/api/submit/enqiry/student');
+    final url = Uri.parse('$baseUrl/api/enquiry-student');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
 
