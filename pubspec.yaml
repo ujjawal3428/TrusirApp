@@ -33,6 +33,7 @@ dependencies:
   video_player: 
   chewie: 
   google_fonts: 
+  youtube_player_flutter: 
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:video_player/video_player.dart';
-
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:chewie/chewie.dart';
 
 class VideoKnowledge extends StatefulWidget {
@@ -16,8 +17,7 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
   final List<Map<String, String>> _videos = [
     {
       'title': 'Learn Flutter Basics',
-      'url':
-          'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
+      'url': 'https://www.youtube.com/watch?v=ckecJeGlDbE',
       'thumbnail':
           'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg',
       'time': '9:45 AM',
@@ -144,6 +144,23 @@ class MobileLayout extends StatelessWidget {
 
   const MobileLayout({super.key, required this.videos});
 
+  String getYouTubeThumbnail(String url) {
+    final uri = Uri.parse(url);
+    if (uri.host.contains('youtube.com')) {
+      final videoId = uri.queryParameters['v'];
+      if (videoId != null) {
+        return 'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
+      }
+    } else if (uri.host.contains('youtu.be')) {
+      final videoId =
+          uri.pathSegments.isNotEmpty ? uri.pathSegments.first : null;
+      if (videoId != null) {
+        return 'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
+      }
+    }
+    return ''; // Return an empty string or a default thumbnail if URL is invalid.
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -154,7 +171,7 @@ class MobileLayout extends StatelessWidget {
         return VideoCard(
           videoUrl: Uri.parse(videos[index]['url']!),
           title: videos[index]['title']!,
-          thumbnailUrl: videos[index]['thumbnail']!,
+          thumbnailUrl: getYouTubeThumbnail(videos[index]['url']!),
           description: videos[index]['description']!,
           channelPicUrl: videos[index]['profile']!,
           uploadTime: videos[index]['time']!,
@@ -168,6 +185,23 @@ class WideScreenLayout extends StatelessWidget {
   final List<Map<String, String>> videos;
 
   const WideScreenLayout({super.key, required this.videos});
+
+  String getYouTubeThumbnail(String url) {
+    final uri = Uri.parse(url);
+    if (uri.host.contains('youtube.com')) {
+      final videoId = uri.queryParameters['v'];
+      if (videoId != null) {
+        return 'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
+      }
+    } else if (uri.host.contains('youtu.be')) {
+      final videoId =
+          uri.pathSegments.isNotEmpty ? uri.pathSegments.first : null;
+      if (videoId != null) {
+        return 'https://img.youtube.com/vi/$videoId/hqdefault.jpg';
+      }
+    }
+    return ''; // Return an empty string or a default thumbnail if URL is invalid.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +217,7 @@ class WideScreenLayout extends StatelessWidget {
         return VideoCard(
           videoUrl: Uri.parse(videos[index]['url']!),
           title: videos[index]['title']!,
-          thumbnailUrl: videos[index]['thumbnail']!,
+          thumbnailUrl: getYouTubeThumbnail(videos[index]['url']!),
           description: videos[index]['description']!,
           channelPicUrl: videos[index]['profile']!,
           uploadTime: videos[index]['time']!,
@@ -287,8 +321,6 @@ class VideoCard extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) => VideoPlayerScreen(
                 videoUrl: videoUrl,
-                title: title,
-                description: description,
               ),
             ),
           );
@@ -387,61 +419,86 @@ class VideoCard extends StatelessWidget {
 
 class VideoPlayerScreen extends StatefulWidget {
   final Uri videoUrl;
-  final String title;
-  final String description;
 
-  const VideoPlayerScreen(
-      {super.key,
-      required this.videoUrl,
-      required this.title,
-      required this.description});
+  const VideoPlayerScreen({
+    super.key,
+    required this.videoUrl,
+  });
 
   @override
   State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
 }
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
-  late VideoPlayerController _videoPlayerController;
-  ChewieController? _chewieController;
+  late YoutubePlayerController _youtubeController;
+  bool _controlsVisible = true;
+  late Timer _hideControlsTimer;
 
   @override
   void initState() {
     super.initState();
     _initializePlayer();
+    _startHideControlsTimer();
   }
 
   void _initializePlayer() {
-    _videoPlayerController = VideoPlayerController.networkUrl(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {
-          _chewieController = ChewieController(
-            videoPlayerController: _videoPlayerController,
-            autoPlay: true,
-            allowPlaybackSpeedChanging: true,
-            looping: false,
-            aspectRatio: _videoPlayerController.value.aspectRatio,
-            allowedScreenSleep: false,
-            showControlsOnInitialize: true,
-            materialSeekButtonFadeDuration: const Duration(milliseconds: 100),
-            materialSeekButtonSize: 30,
-            hideControlsTimer: const Duration(seconds: 2),
-            autoInitialize: true,
-            draggableProgressBar: true,
-            materialProgressColors: ChewieProgressColors(
-              playedColor: Colors.red,
-              handleColor: Colors.white,
-              bufferedColor: Colors.grey,
-              backgroundColor: Colors.black,
-            ),
-          );
-        });
-      });
+    final videoId = YoutubePlayer.convertUrlToId(widget.videoUrl.toString());
+    if (videoId != null) {
+      _youtubeController = YoutubePlayerController(
+        initialVideoId: videoId,
+        flags: const YoutubePlayerFlags(
+          autoPlay: true,
+          mute: false,
+          loop: false, // Set to true for looping
+          forceHD: true, // Force HD quality if available
+        ),
+      );
+    } else {
+      throw Exception("Invalid YouTube URL");
+    }
+  }
+
+  void _startHideControlsTimer() {
+    _hideControlsTimer = Timer.periodic(
+      const Duration(seconds: 3),
+      (timer) {
+        if (_controlsVisible) {
+          setState(() {
+            _controlsVisible = false;
+          });
+        }
+      },
+    );
+  }
+
+  void _seekForward() {
+    final currentPosition = _youtubeController.value.position;
+    final newPosition = currentPosition + const Duration(seconds: 10);
+    _youtubeController.seekTo(newPosition);
+    _resetHideControlsTimer();
+  }
+
+  void _seekBackward() {
+    final currentPosition = _youtubeController.value.position;
+    final newPosition = currentPosition - const Duration(seconds: 10);
+    _youtubeController.seekTo(newPosition);
+    _resetHideControlsTimer();
+  }
+
+  void _resetHideControlsTimer() {
+    if (_hideControlsTimer.isActive) {
+      _hideControlsTimer.cancel();
+    }
+    setState(() {
+      _controlsVisible = true;
+    });
+    _startHideControlsTimer();
   }
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController?.dispose();
+    _youtubeController.dispose();
+    _hideControlsTimer.cancel();
     super.dispose();
   }
 
@@ -449,20 +506,64 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-        title: Text(
-          widget.title,
-          style: const TextStyle(color: Colors.white),
+      body: GestureDetector(
+        onTap: () {
+          _resetHideControlsTimer(); // Show controls when screen is tapped
+        },
+        child: OrientationBuilder(
+          builder: (context, orientation) {
+            return Column(
+              children: [
+                Expanded(
+                  child: Stack(
+                    children: [
+                      YoutubePlayer(
+                        controller: _youtubeController,
+                        showVideoProgressIndicator: true,
+                        progressIndicatorColor: Colors.red,
+                        onReady: () {
+                          print("Video is ready to play");
+                        },
+                        onEnded: (data) {
+                          print("Video has ended");
+                        },
+                      ),
+                      Center(
+                        child: AnimatedOpacity(
+                          opacity: _controlsVisible ? 1.0 : 0.0,
+                          duration: const Duration(milliseconds: 300),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Backward button
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.replay_10,
+                                  color: Colors.white,
+                                  size: 40,
+                                ),
+                                onPressed: _seekBackward,
+                              ),
+                              const SizedBox(width: 40),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.forward_10,
+                                  color: Colors.white,
+                                  size: 40,
+                                ),
+                                onPressed: _seekForward,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
         ),
-        elevation: 0,
-      ),
-      body: Center(
-        child: _chewieController != null &&
-                _chewieController!.videoPlayerController.value.isInitialized
-            ? Chewie(controller: _chewieController!)
-            : const CircularProgressIndicator(),
       ),
     );
   }
