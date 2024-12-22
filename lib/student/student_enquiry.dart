@@ -9,13 +9,15 @@ class StudentEnquiry {
   String? studentclass;
   String? city;
   String? pincode;
+  String? gender;
 
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'studentclass': studentclass,
+      'class': studentclass,
       'city': city,
       'pincode': pincode,
+      'gender': gender
     };
   }
 }
@@ -33,6 +35,8 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
   final TextEditingController _citycontroller = TextEditingController();
   final TextEditingController _pincodecontroller = TextEditingController();
   final StudentEnquiry formData = StudentEnquiry();
+  bool isMaleSelected = false;
+  bool isFemaleSelected = false;
 
   void _onEnquire(BuildContext context) {
     setState(() {
@@ -45,7 +49,7 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
   }
 
   Future<void> submitForm(BuildContext context) async {
-    final url = Uri.parse('$baseUrl/api/submit/enqiry/student');
+    final url = Uri.parse('$baseUrl/api/enquiry-student');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
 
@@ -128,6 +132,41 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
                   controllers: _classcontroller,
                   isClass: true),
               const SizedBox(height: 10),
+
+              // Gender Selection
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _buildGenderCheckbox(
+                    label: "Male",
+                    value: isMaleSelected,
+                    onChanged: (value) {
+                      setState(() {
+                        isMaleSelected = value!;
+                        if (value) {
+                          isFemaleSelected = false;
+                          formData.gender = 'Male';
+                        }
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 20),
+                  _buildGenderCheckbox(
+                    label: "Female",
+                    value: isFemaleSelected,
+                    onChanged: (value) {
+                      setState(() {
+                        isFemaleSelected = value!;
+                        if (value) {
+                          isMaleSelected = false;
+                          formData.gender = 'Female';
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 15),
               _buildTextFieldWithBackground(
                   hintText: 'City / Town', controllers: _citycontroller),
               const SizedBox(height: 10),
@@ -151,6 +190,33 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildGenderCheckbox({
+    required String label,
+    required bool value,
+    required ValueChanged<bool?> onChanged,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Transform.scale(
+          scale: 1.3,
+          child: Checkbox(
+            value: value,
+            onChanged: onChanged,
+          ),
+        ),
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'Poppins-SemiBold',
+            fontSize: 16,
+            color: Color(0xFF7E7E7E),
+          ),
+        ),
+      ],
     );
   }
 

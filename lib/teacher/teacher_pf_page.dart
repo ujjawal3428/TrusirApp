@@ -64,7 +64,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
           age = calculateAge(dob).toString();
           gender = data['gender'] ?? 'N/A';
           address = data['address'] ?? 'N/A';
-          graduation = data['graduation'] ?? 'N/A';
+          graduation = data['qualification'] ?? 'N/A';
           experience = data['experience'] ?? 'N/A';
           subjects = data['subject'] ?? 'N/A';
           language = data['medium'] ?? 'N/A';

@@ -143,8 +143,10 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   }
 
   Future<List<dynamic>> fetchProgressReports() async {
-    final response =
-        await http.get(Uri.parse('$baseUrl/progress-report/testID'));
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getString('userID');
+    final response = await http.get(
+        Uri.parse('$baseUrl/progress-report/$userID?page=1&data_per_page=10'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -286,27 +288,32 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                   final reports = snapshot.data!;
                   // Store the fetched data in _loadedReports
                   _loadedReports = reports;
-
-                  return Column(
-                      children: List.generate(_loadedReports.length, (index) {
-                    final report = _loadedReports[index];
-                    return _buildPreviousMonthCard(
-                      subject: report['subject'],
-                      date: report['date'],
-                      time: report['time'],
-                      marks: report['marks'],
-                      reportUrl: report['report'],
-                      cardColors: 'color',
-                      index: index,
-                    );
-                  }));
+                  print(_loadedReports);
+                  return _loadedReports.isEmpty
+                      ? const Center(child: Text('No Reports Available'))
+                      : Column(
+                          children:
+                              List.generate(_loadedReports.length, (index) {
+                          final report = _loadedReports[index];
+                          return _buildPreviousMonthCard(
+                            subject: report['subject'],
+                            date: report['date'],
+                            time: report['time'],
+                            marks: report['marks'],
+                            reportUrl: report['report'],
+                            cardColors: 'color',
+                            index: index,
+                          );
+                        }));
                 }
               },
             ),
-            TextButton(
-              onPressed: _loadMoreReports,
-              child: const Text('Load More...'),
-            ),
+            _loadedReports.isEmpty
+                ? const SizedBox()
+                : TextButton(
+                    onPressed: _loadMoreReports,
+                    child: const Text('Load More...'),
+                  ),
           ],
         ),
       ),

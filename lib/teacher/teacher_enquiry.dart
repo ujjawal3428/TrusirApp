@@ -52,7 +52,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
   }
 
   Future<void> submitForm(BuildContext context) async {
-    final url = Uri.parse('$baseUrl/api/submit/enqiry/teacher');
+    final url = Uri.parse('$baseUrl/api/enquiry-teacher');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(widget.formData.toJson());
 
