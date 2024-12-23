@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:trusir/common/api.dart';
 import 'package:trusir/student/main_screen.dart';
 
@@ -38,34 +38,39 @@ class CourseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Colors.grey,
-            blurRadius: 5,
-            offset: Offset(0, 2),
+            color: Colors.grey.shade300,
+            blurRadius: 6,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(12),
                   child: Image.network(
                     course.image,
                     width: double.infinity,
-                    height: 200,
+                    height: 180,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return const Icon(
-                        Icons.error,
-                        size: 30,
+                      return const Center(
+                        child: Icon(
+                          Icons.error,
+                          size: 40,
+                          color: Colors.red,
+                        ),
                       );
                     },
                   ),
@@ -74,36 +79,38 @@ class CourseCard extends StatelessWidget {
                   top: 10,
                   left: 10,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.pink,
-                      borderRadius: BorderRadius.circular(7),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Text(
                       'Best Seller',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                        fontSize: 14,
                       ),
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
             Text(
               course.name,
               style: const TextStyle(
                 fontSize: 18,
+                fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 2),
             Text(
               course.subject,
               style: const TextStyle(
                 fontSize: 14,
+                 fontFamily: 'Poppins',
                 color: Colors.black54,
               ),
             ),
@@ -114,14 +121,17 @@ class CourseCard extends StatelessWidget {
                   '₹${course.amount}',
                   style: const TextStyle(
                     fontSize: 16,
+                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.bold,
+                    color: Colors.deepPurple,
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 10,),
                 const Text(
                   '₹5000', // Placeholder for original price
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 14,
+                     fontFamily: 'Poppins',
                     decoration: TextDecoration.lineThrough,
                     color: Colors.grey,
                   ),
@@ -129,16 +139,23 @@ class CourseCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                // Handle Buy Now action
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4A148C),
-              ),
-              child: const Text(
-                'Buy Now',
-                style: TextStyle(color: Colors.white),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  // Handle Buy Now action
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text(
+                  'Buy Now',
+                  style: TextStyle(color: Colors.white,
+                   fontFamily: 'Poppins',),
+                ),
               ),
             ),
           ],
@@ -157,12 +174,11 @@ class CoursePage extends StatefulWidget {
 
 class _CoursePageState extends State<CoursePage> {
   Future<List<Course>> fetchCourses() async {
-    final url = Uri.parse('$baseUrl/all-course'); // Replace with your API URL
+    final url = Uri.parse('$baseUrl/all-course');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
-      print(data);
       return data.map((json) => Course.fromJson(json)).toList();
     } else {
       throw Exception('Failed to fetch courses');
@@ -181,8 +197,8 @@ class _CoursePageState extends State<CoursePage> {
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.grey[50],
-        elevation: 2,
+        backgroundColor: Colors.white,
+        elevation: 1,
         title: Row(
           children: [
             GestureDetector(
@@ -194,19 +210,16 @@ class _CoursePageState extends State<CoursePage> {
                   ),
                 );
               },
-              child: Image.asset('assets/back_button.png', height: 50),
+              child: Image.asset('assets/back_button.png', height: 30),
             ),
             const SizedBox(width: 20),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              child: Text(
-                'Courses',
-                style: TextStyle(
-                  color: Color(0xFF4A148C),
-                  fontSize: 22,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w600,
-                ),
+            const Text(
+              'Courses',
+              style: TextStyle(
+                color: Colors.black87,
+                fontSize: 22,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -231,14 +244,11 @@ class _CoursePageState extends State<CoursePage> {
           } else {
             final courses = snapshot.data!;
             return ListView.builder(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
               itemCount: courses.length,
               itemBuilder: (context, index) {
                 final course = courses[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: CourseCard(course: course),
-                );
+                return CourseCard(course: course);
               },
             );
           }
