@@ -243,7 +243,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
         children: [
           SingleChildScrollView(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.78,
+              height: MediaQuery.of(context).size.height * 0.75,
               child: FutureBuilder<List<Doubt>>(
                 future: doubts,
                 builder: (context, snapshot) {
@@ -350,7 +350,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
             child: Image.asset(
               'assets/create_doubt.png',
               width: double.infinity,
-              height: 90,
+              height: 80,
               fit: BoxFit.contain,
             ),
           ),

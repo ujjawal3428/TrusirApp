@@ -207,7 +207,7 @@ class Teacher {
   factory Teacher.fromJson(Map<String, dynamic> json) {
     return Teacher(
       name: json['name'],
-      subject: json['subject'] ?? 'N/A',
+      subject: json['class'] ?? 'N/A',
       mobile: json['phone'],
       image: json['profile'],
     );

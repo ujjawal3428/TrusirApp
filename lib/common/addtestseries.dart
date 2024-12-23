@@ -180,7 +180,7 @@ class _AddtestseriesState extends State<Addtestseries> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.42,
+      height: MediaQuery.of(context).size.height * 0.38,
       width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5),
@@ -327,6 +327,17 @@ class _AddtestseriesState extends State<Addtestseries> {
       child: GestureDetector(
         onTap: () {
           if (_formKey.currentState!.validate()) {
+            if (question == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Upload Question')),
+              );
+              return;
+            } else if (answer == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Upload Answer')),
+              );
+              return;
+            }
             _sendTestData(
               _testNameController.text,
               selectedSubject!,
@@ -336,7 +347,7 @@ class _AddtestseriesState extends State<Addtestseries> {
         child: Image.asset(
           'assets/create_test.png',
           width: double.infinity,
-          height: 100,
+          height: 80,
           fit: BoxFit.contain,
         ),
       ),

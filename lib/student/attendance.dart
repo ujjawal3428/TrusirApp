@@ -98,9 +98,7 @@ class _AttendancePageState extends State<AttendancePage> {
   Map<String, int> _summaryData = {}; // Summary details
   List<String> weekdays = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
   List<Map<String, String>> slots = [];
-  String selectedslotID = '';
-
-  List<String> categories = [];
+  String? selectedslotID = '';
 
   Future<List<Course>> fetchCourses() async {
     final url = Uri.parse(
@@ -112,18 +110,18 @@ class _AttendancePageState extends State<AttendancePage> {
       print(data);
       if (mounted) {
         setState(() {
-          categories =
-              data.map((course) => course['courseName'] as String).toList();
           slots = data.map((course) {
             return {
-              'slotName': course['timeSlot'] as String,
-              'slotID': course['id'].toString(), // Assuming 'id' is the slotID
+              'courseName': course['courseName'] as String,
+              'timeSlot': course['timeSlot'] as String,
+              'slotID': course['id']
+                  .toString(), // Converting 'id' to String for uniformity
             };
           }).toList();
         });
       }
       setState(() {
-        selectedslotID = slots[0]['slotID']!;
+        selectedslotID = slots[0]['slotID'];
       });
       print(selectedslotID);
       return data.map((json) => Course.fromJson(json)).toList();
@@ -162,7 +160,7 @@ class _AttendancePageState extends State<AttendancePage> {
     try {
       await fetchCourses(); // Wait for fetchCourses to complete
       _fetchAttendanceData(
-          selectedslotID); // Call _fetchAttendanceData after fetchCourses
+          selectedslotID!); // Call _fetchAttendanceData after fetchCourses
     } catch (error) {
       print('Error during initialization: $error');
     }
@@ -299,7 +297,7 @@ class _AttendancePageState extends State<AttendancePage> {
       if (response.statusCode == 200) {
         setState(() {
           // Update the status locally
-          _fetchAttendanceData(selectedslotID);
+          _fetchAttendanceData(selectedslotID!);
           _updateSummary(); // Update the summary
         });
         ScaffoldMessenger.of(context).showSnackBar(
@@ -330,7 +328,7 @@ class _AttendancePageState extends State<AttendancePage> {
       setState(() {
         _selectedDate =
             DateTime(result['year'], result['month'], _selectedDate.day);
-        _fetchAttendanceData(selectedslotID);
+        _fetchAttendanceData(selectedslotID!);
         _updateSummary();
       });
     }
@@ -346,7 +344,7 @@ class _AttendancePageState extends State<AttendancePage> {
       }
       print(_selectedDate.year);
       print(_selectedDate.month);
-      _fetchAttendanceData(selectedslotID);
+      _fetchAttendanceData(selectedslotID!);
     });
   }
 
@@ -358,7 +356,7 @@ class _AttendancePageState extends State<AttendancePage> {
       } else {
         _selectedDate = DateTime(_selectedDate.year, _selectedDate.month + 1);
       }
-      _fetchAttendanceData(selectedslotID);
+      _fetchAttendanceData(selectedslotID!);
     });
   }
 
@@ -448,10 +446,6 @@ class _AttendancePageState extends State<AttendancePage> {
             child: Column(children: [
           Padding(
             padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
-            child: _buildCourseList(),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
             child: _buildSlotList(),
           ),
           // Calendar Section
@@ -508,7 +502,7 @@ class _AttendancePageState extends State<AttendancePage> {
                             onPressed: () {
                               setState(() {
                                 _selectedDate = DateTime.now();
-                                _fetchAttendanceData(selectedslotID);
+                                _fetchAttendanceData(selectedslotID!);
                               });
                             },
                             child: const Text(
@@ -675,52 +669,6 @@ class _AttendancePageState extends State<AttendancePage> {
         ])));
   }
 
-  Widget _buildCourseList() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(categories.length, (index) {
-          bool isSelected = selectedCourseIndex == index;
-
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedCourseIndex = index;
-                _fetchAttendanceData(selectedslotID);
-                _updateSummary();
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8.0),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.black : Colors.grey[200],
-                gradient: LinearGradient(
-                  colors: isSelected
-                      ? [
-                          const Color(0xFFC22054),
-                          const Color(0xFF48116A),
-                        ]
-                      : [Colors.grey[200]!, Colors.grey[200]!],
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                categories[index],
-                style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
   Widget _buildSlotList() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -733,7 +681,7 @@ class _AttendancePageState extends State<AttendancePage> {
               setState(() {
                 selectedSlotIndex = index;
                 selectedslotID = slots[index]['slotID']!; // Get slotID
-                _fetchAttendanceData(selectedslotID); // Pass slotID
+                _fetchAttendanceData(selectedslotID!); // Pass slotID
                 _updateSummary();
               });
             },
@@ -752,14 +700,27 @@ class _AttendancePageState extends State<AttendancePage> {
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Text(
-                slots[index]['slotName']!, // Display slot name
-                style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-                overflow: TextOverflow.ellipsis,
+              child: Row(
+                children: [
+                  Text(
+                    '${slots[index]['courseName']!}, ', // Display slot name
+                    style: TextStyle(
+                      color: isSelected ? Colors.white : Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    slots[index]['timeSlot']!, // Display slot name
+                    style: TextStyle(
+                      color: isSelected ? Colors.white : Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ),
           );

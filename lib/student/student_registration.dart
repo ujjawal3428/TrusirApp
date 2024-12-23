@@ -102,6 +102,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 
   // Filtered lists
   List<String> states = [];
+  List<String> _courses = [];
 
   bool isLoading = true;
 
@@ -110,6 +111,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     super.initState();
     _loadPhoneNumber();
     updateStudentForms(1);
+    fetchAllCourses();
     numberOfStudents = '1';
     fetchLocations();
   }
@@ -183,6 +185,24 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       studentForms[index].timeslot =
           selectedSlotsString[index]; // Assuming this field exists
     });
+  }
+
+  Future<void> fetchAllCourses() async {
+    final url = Uri.parse('$baseUrl/all-course');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      if (mounted) {
+        setState(() {
+          _courses = data.map<String>((course) {
+            return course['class'] as String;
+          }).toList();
+        });
+      }
+    } else {
+      throw Exception('Failed to fetch courses');
+    }
   }
 
   Future<void> postStudentData({
@@ -699,7 +719,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               studentForms[index].medium = value;
             });
           },
-          items: ['English', 'Hindi'],
+          items: _courses,
         ),
         const SizedBox(height: 10),
         _buildDropdownField(

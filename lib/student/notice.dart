@@ -221,23 +221,27 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                 ),
                               );
                             }),
-                            if (hasMore)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20),
-                                child: isLoadingMore
-                                    ? const CircularProgressIndicator()
-                                    : TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            isLoadingMore = true;
-                                            currentPage++;
-                                          });
-                                          fetchNotices(page: currentPage);
-                                        },
-                                        child: const Text('Load More...'),
-                                      ),
-                              ),
+                            hasMore
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: isLoadingMore
+                                        ? const CircularProgressIndicator()
+                                        : TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                isLoadingMore = true;
+                                                currentPage++;
+                                              });
+                                              fetchNotices(page: currentPage);
+                                            },
+                                            child: const Text('Load More...'),
+                                          ),
+                                  )
+                                : const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 20),
+                                    child: Text('No more Notices'),
+                                  ),
                           ],
                         ),
                       ),

@@ -47,25 +47,27 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   @override
   void initState() {
     super.initState();
-    fetchCourses();
+    fetchAllCourses();
     if (widget.drawing != null) {
       formData.photo = widget.drawing;
     }
   }
 
-  Future<void> fetchCourses() async {
-    try {
-      final response = await http.get(Uri.parse('$baseUrl/my-course/testID'));
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
+  Future<void> fetchAllCourses() async {
+    final url = Uri.parse('$baseUrl/all-course');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      if (mounted) {
         setState(() {
-          _courses = List<String>.from(data);
+          _courses = data.map<String>((course) {
+            return course['name'] as String;
+          }).toList();
         });
-      } else {
-        throw Exception('Failed to load courses');
       }
-    } catch (e) {
-      print('Error fetching courses: $e');
+    } else {
+      throw Exception('Failed to fetch courses');
     }
   }
 
@@ -89,6 +91,16 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Description cannot be empty!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    if (formData.photo == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Upload the image'),
           duration: Duration(seconds: 2),
         ),
       );

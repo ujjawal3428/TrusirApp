@@ -84,6 +84,16 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
       return;
     }
 
+    if (formData.photo == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Upload the image'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userID');
     final url = Uri.parse('$baseUrl/api/add-parents-doubts/$userId');

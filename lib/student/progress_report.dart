@@ -31,11 +31,12 @@ class ProgressReportPage extends StatefulWidget {
 }
 
 class _ProgressReportPageState extends State<ProgressReportPage> {
-  late Future<List<dynamic>> _reports;
   List<dynamic> _loadedReports = [];
+  bool reportempty = true;
   bool _isDownloading = false;
   String _downloadProgress = '';
   Map<String, String> downloadedFiles = {};
+  int page = 1;
 
   final List<Color> containerColors = [
     Colors.lightBlue.shade50,
@@ -90,8 +91,10 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   @override
   void initState() {
     super.initState();
-    _reports = fetchProgressReports();
     _loadDownloadedFiles();
+    _loadedReports = [];
+    reportempty = false;
+    _loadInitialReports();
   }
 
   Future<void> _loadDownloadedFiles() async {
@@ -142,29 +145,47 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     }
   }
 
-  Future<List<dynamic>> fetchProgressReports() async {
+  Future<List<dynamic>> fetchProgressReports({int page = 1}) async {
     final prefs = await SharedPreferences.getInstance();
     final userID = prefs.getString('userID');
-    final response = await http.get(
-        Uri.parse('$baseUrl/progress-report/$userID?page=1&data_per_page=10'));
+    final response = await http.get(Uri.parse(
+        '$baseUrl/progress-report/$userID?page=$page&data_per_page=10'));
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final data = jsonDecode(response.body);
+      return data;
     } else {
       throw Exception('Failed to load progress reports');
     }
   }
 
   void _loadMoreReports() async {
+    page++;
     try {
-      // Fetch the same data again
-      List<dynamic> newReports = await fetchProgressReports();
-      setState(() {
-        // Append the new reports to the existing list
-        _loadedReports.addAll(newReports);
-      });
+      List<dynamic> newReports = await fetchProgressReports(page: page);
+      if (newReports.isEmpty) {
+        setState(() {
+          reportempty = true; // No more data available
+        });
+      } else {
+        setState(() {
+          _loadedReports.addAll(newReports);
+        });
+      }
     } catch (e) {
       print('Error loading more reports: $e');
+    }
+  }
+
+  void _loadInitialReports() async {
+    try {
+      List<dynamic> initialReports = await fetchProgressReports();
+      setState(() {
+        _loadedReports = initialReports;
+        reportempty = initialReports.isEmpty;
+      });
+    } catch (e) {
+      print('Error loading initial reports: $e');
     }
   }
 
@@ -277,43 +298,37 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
             const SizedBox(height: 20),
             _buildPreviousMonthsReports(),
             const SizedBox(height: 20),
-            FutureBuilder<List<dynamic>>(
-              future: _reports,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  final reports = snapshot.data!;
-                  // Store the fetched data in _loadedReports
-                  _loadedReports = reports;
-                  print(_loadedReports);
-                  return _loadedReports.isEmpty
-                      ? const Center(child: Text('No Reports Available'))
-                      : Column(
-                          children:
-                              List.generate(_loadedReports.length, (index) {
-                          final report = _loadedReports[index];
-                          return _buildPreviousMonthCard(
-                            subject: report['subject'],
-                            date: report['date'],
-                            time: report['time'],
-                            marks: report['marks'],
-                            reportUrl: report['report'],
-                            cardColors: 'color',
-                            index: index,
-                          );
-                        }));
-                }
-              },
+            Column(
+              children: _loadedReports.isEmpty
+                  ? [
+                      const Center(child: Text('No Reports Available')),
+                    ]
+                  : _loadedReports.map((report) {
+                      return _buildPreviousMonthCard(
+                        subject: report['subject'],
+                        date: report['date'],
+                        time: report['time'],
+                        marks: report['marks'],
+                        reportUrl: report['report'],
+                        cardColors: 'color',
+                        index: _loadedReports.indexOf(report),
+                      );
+                    }).toList(),
             ),
-            _loadedReports.isEmpty
-                ? const SizedBox()
-                : TextButton(
-                    onPressed: _loadMoreReports,
-                    child: const Text('Load More...'),
-                  ),
+            const SizedBox(height: 20),
+            if (_loadedReports.isNotEmpty)
+              reportempty
+                  ? const Center(
+                      child: Text(
+                        'No more reports',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    )
+                  : TextButton(
+                      onPressed: _loadMoreReports,
+                      child: const Text('Load More...'),
+                    ),
           ],
         ),
       ),

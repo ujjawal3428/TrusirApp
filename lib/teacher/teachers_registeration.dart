@@ -121,6 +121,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   List<String> states = [];
   List<String> cities = [];
   List<String> pincodes = [];
+  List<String> _courses = [];
 
   bool isLoading = true;
 
@@ -151,6 +152,24 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     } else {
       print('Failed to upload file: ${response.statusCode}');
       return 'null';
+    }
+  }
+
+  Future<void> fetchAllCourses() async {
+    final url = Uri.parse('$baseUrl/all-course');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      if (mounted) {
+        setState(() {
+          _courses = data.map<String>((course) {
+            return course['class'] as String;
+          }).toList();
+        });
+      }
+    } else {
+      throw Exception('Failed to fetch courses');
     }
   }
 
@@ -315,11 +334,12 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   void initState() {
     super.initState();
     _loadPhoneNumber();
+    fetchAllCourses();
     fetchLocations();
   }
 
   Future<void> fetchLocations() async {
-    const String apiUrl = "https://admin.trusir.com/api/city";
+    const String apiUrl = "$baseUrl/api/city";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -673,7 +693,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                     formData.subject = subject;
                   });
                 },
-                items: ['Science', 'Arts'],
+                items: _courses,
               ),
               const SizedBox(height: 10),
               _buildDropdownField(

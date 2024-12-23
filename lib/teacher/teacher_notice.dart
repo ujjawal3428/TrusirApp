@@ -8,21 +8,18 @@ class Notice {
   final String noticetitle;
   final String date;
   final String notice;
-  final String time;
 
   Notice({
     required this.noticetitle,
     required this.notice,
     required this.date,
-    required this.time,
   });
 
   factory Notice.fromJson(Map<String, dynamic> json) {
     return Notice(
-      noticetitle: json['notice'],
+      noticetitle: json['title'],
       notice: json['description'],
-      date: json['date'],
-      time: json['time'],
+      date: json['posted_on'],
     );
   }
 }
@@ -40,12 +37,12 @@ class _TeacherNoticeScreenState extends State<TeacherNoticeScreen> {
   bool isLoadingMore = false;
   int currentPage = 1;
   bool hasMore = true;
-  final apiBase = '$baseUrl/my-notice';
 
   Future<void> fetchNotices({int page = 1}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userID = prefs.getString('userID');
-    final url = '$baseUrl/notices-admin-to-teacher/$userID';
+    final url =
+        '$baseUrl/notices-admin-to-teacher/$userID?page=$page&data_per_page=10';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -191,7 +188,7 @@ class _TeacherNoticeScreenState extends State<TeacherNoticeScreen> {
                                             ),
                                             const SizedBox(height: 5),
                                             Text(
-                                              'Posted on : ${notice.date},${notice.time}',
+                                              'Posted on : ${notice.date}',
                                               style: const TextStyle(
                                                 fontSize: 13,
                                                 fontWeight: FontWeight.w400,
@@ -224,23 +221,28 @@ class _TeacherNoticeScreenState extends State<TeacherNoticeScreen> {
                                 ),
                               );
                             }),
-                            if (hasMore)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20),
-                                child: isLoadingMore
-                                    ? const CircularProgressIndicator()
-                                    : TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            isLoadingMore = true;
-                                            currentPage++;
-                                          });
-                                          fetchNotices(page: currentPage);
-                                        },
-                                        child: const Text('Load More...'),
-                                      ),
-                              ),
+                            hasMore
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: isLoadingMore
+                                        ? const CircularProgressIndicator()
+                                        : TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                isLoadingMore = true;
+                                                currentPage++;
+                                              });
+                                              fetchNotices(page: currentPage);
+                                            },
+                                            child: const Text('Load More...'),
+                                          ),
+                                  )
+                                : const Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.0),
+                                    child: Text('No More Notices'),
+                                  ),
                           ],
                         ),
                       ),
