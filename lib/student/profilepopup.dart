@@ -257,14 +257,14 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                               horizontal: 8.0, vertical: 4),
                                           child: Container(
                                             decoration: BoxDecoration(
-                                              color:
-                                                  Colors.white.withOpacity(0.8),
+                                              color: Colors.white
+                                                  .withValues(alpha: 0.8),
                                               borderRadius:
                                                   BorderRadius.circular(20),
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.black
-                                                      .withOpacity(0.1),
+                                                      .withValues(alpha: 0.1),
                                                   blurRadius: 15,
                                                   spreadRadius: 5,
                                                 ),
