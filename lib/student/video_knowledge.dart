@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:video_player/video_player.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:chewie/chewie.dart';
 
 class VideoKnowledge extends StatefulWidget {
   const VideoKnowledge({super.key});
