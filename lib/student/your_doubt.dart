@@ -337,25 +337,27 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
     );
   }
 
- Widget _buildCreateButton() {
-  return Center(
-    child: GestureDetector(
-      onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => StudentDoubtScreen()));
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
-        child: Image.asset(
-          'assets/create_doubt.png',
-          width: double.infinity,
-          height: 90,
-          fit: BoxFit.contain,
+  Widget _buildCreateButton() {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => StudentDoubtScreen()));
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 40),
+          child: Expanded(
+            child: Image.asset(
+              'assets/create_doubt.png',
+              width: double.infinity,
+              height: 90,
+              fit: BoxFit.contain,
+            ),
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
 
 class Doubt {

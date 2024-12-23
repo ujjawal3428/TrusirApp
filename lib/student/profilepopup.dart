@@ -225,16 +225,13 @@ class _ProfilePopupState extends State<ProfilePopup> {
                           child: _buildProfileHeader(),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Container(
-                            height: 300,
                             decoration: BoxDecoration(
                               color: Colors.grey[100],
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: FutureBuilder(
+                            child: FutureBuilder<List<Map<String, dynamic>>>(
                               future: getProfiles(),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
@@ -245,96 +242,98 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                   return Center(
                                       child: Text("Error: ${snapshot.error}"));
                                 } else {
-                                  List<Map<String, dynamic>> data = snapshot
-                                      .data as List<Map<String, dynamic>>;
+                                  List<Map<String, dynamic>> data =
+                                      snapshot.data ?? [];
+                                  double containerHeight =
+                                      (data.length * 70.0).clamp(0, 300);
 
-                                  return ListView.builder(
-                                    itemCount: data.length,
-                                    itemBuilder: (context, index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0, vertical: 4),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white
-                                                .withValues(alpha: 0.8),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black
-                                                    .withValues(alpha: 0.1),
-                                                blurRadius: 15,
-                                                spreadRadius: 5,
-                                              ),
-                                            ],
-                                          ),
-                                          child: ListTile(
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                            ),
-                                            leading: CircleAvatar(
-                                              radius: 25,
-                                              backgroundImage: data[index]
-                                                          ['profile'] !=
-                                                      null
-                                                  ? NetworkImage(
-                                                      data[index]['profile'])
-                                                  : const NetworkImage(
-                                                      'https://via.placeholder.com/150'),
-                                            ),
-                                            title: Text(
-                                              data[index]['name'],
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                            subtitle: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Class: ${data[index]['class']}',
-                                                  style: TextStyle(
-                                                    color: Colors.grey[700],
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'Subject: ${data[index]['subject']}',
-                                                  style: TextStyle(
-                                                    color: Colors.grey[700],
-                                                  ),
+                                  return SizedBox(
+                                    height: containerHeight,
+                                    child: ListView.builder(
+                                      itemCount: data.length,
+                                      itemBuilder: (context, index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0, vertical: 4),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.white.withOpacity(0.8),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.1),
+                                                  blurRadius: 15,
+                                                  spreadRadius: 5,
                                                 ),
                                               ],
                                             ),
-                                            onTap: () async {
-                                              setState(() {
-                                                final selected =
-                                                    data.removeAt(index);
-                                                data.insert(0, selected);
-                                                selectedProfile = selected;
-                                              });
+                                            child: ListTile(
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16),
+                                              leading: CircleAvatar(
+                                                radius: 25,
+                                                backgroundImage: data[index]
+                                                            ['profile'] !=
+                                                        null
+                                                    ? NetworkImage(
+                                                        data[index]['profile'])
+                                                    : const NetworkImage(
+                                                        'https://via.placeholder.com/150'),
+                                              ),
+                                              title: Text(
+                                                data[index]['name'],
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              subtitle: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    'Class: ${data[index]['class']}',
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.grey[700]),
+                                                  ),
+                                                  Text(
+                                                    'Subject: ${data[index]['subject']}',
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.grey[700]),
+                                                  ),
+                                                ],
+                                              ),
+                                              onTap: () async {
+                                                setState(() {
+                                                  final selected =
+                                                      data.removeAt(index);
+                                                  data.insert(0, selected);
+                                                  selectedProfile = selected;
+                                                });
 
-                                              final SharedPreferences prefs =
-                                                  await SharedPreferences
-                                                      .getInstance();
-                                              prefs.setString('profiles',
-                                                  json.encode(data));
-                                              prefs.setString(
-                                                  'selectedProfile',
-                                                  json.encode(
-                                                      selectedProfile!));
+                                                final SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                prefs.setString('profiles',
+                                                    json.encode(data));
+                                                prefs.setString(
+                                                    'selectedProfile',
+                                                    json.encode(
+                                                        selectedProfile!));
 
-                                              await saveSelectedProfile(
-                                                  selectedProfile!);
-                                            },
+                                                await saveSelectedProfile(
+                                                    selectedProfile!);
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                    },
+                                        );
+                                      },
+                                    ),
                                   );
                                 }
                               },
