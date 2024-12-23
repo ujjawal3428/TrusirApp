@@ -245,7 +245,7 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                   List<Map<String, dynamic>> data =
                                       snapshot.data ?? [];
                                   double containerHeight =
-                                      (data.length * 70.0).clamp(0, 300);
+                                      (data.length * 110.0).clamp(0, 300);
 
                                   return SizedBox(
                                     height: containerHeight,

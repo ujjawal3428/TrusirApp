@@ -19,7 +19,7 @@ class TeacherBottomNavigationBar extends StatelessWidget {
           image: const AssetImage('assets/bnbbg@4x.png'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
-            Colors.black.withValues(alpha: 0.1),
+            Colors.black.withOpacity(0.1),
             BlendMode.darken,
           ),
         ),
@@ -37,7 +37,8 @@ class TeacherBottomNavigationBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             buildIconWithLabel(0, 'assets/home@3x.png', 'Home'),
-            buildIconWithLabel(1, 'assets/menu@3x.png', 'Menu'),
+            buildIconWithLabel(1, 'assets/course@3x.png', 'Courses'),
+            buildIconWithLabel(2, 'assets/menu@3x.png', 'Menu'),
           ],
         ),
       ),
