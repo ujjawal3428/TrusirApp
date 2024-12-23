@@ -63,7 +63,7 @@ class TeacherCourseCard extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  bottom : 10,
+                  bottom: 10,
                   left: 10,
                   child: Container(
                     padding:
@@ -73,7 +73,7 @@ class TeacherCourseCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Text(
-                      'Best Seller',
+                      'Science',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -85,18 +85,17 @@ class TeacherCourseCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            Text(
-              course.name,
-              style: const TextStyle(
-                fontSize: 18,
+            const Text(
+              'Start from - 01/10/2024',
+              style: TextStyle(
+                fontSize: 15,
                 fontFamily: 'Poppins',
-                fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 2),
-            Text(
-              course.subject,
-              style: const TextStyle(
+            const Text(
+              'End to - 20/10/2024',
+              style: TextStyle(
                 fontSize: 14,
                 fontFamily: 'Poppins',
                 color: Colors.black54,
@@ -108,41 +107,26 @@ class TeacherCourseCard extends StatelessWidget {
                 Text(
                   '₹${course.amount}',
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 22,
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.bold,
                     color: Colors.deepPurple,
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                const Text(
-                  '₹5000', // Placeholder for original price
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontFamily: 'Poppins',
-                    decoration: TextDecoration.lineThrough,
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
+                const SizedBox(width: 20,),
+                 SizedBox(
+              width: 120,
               child: ElevatedButton(
-                onPressed: () {
-                  // Handle Buy Now action
-                },
+                onPressed: () {  },
                 style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(0),
                   backgroundColor: Colors.deepPurple,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: const Text(
-                  'Buy Now',
+                  'Demo',
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Poppins',
@@ -150,6 +134,9 @@ class TeacherCourseCard extends StatelessWidget {
                 ),
               ),
             ),
+              ],
+            ),
+           
           ],
         ),
       ),
@@ -218,6 +205,45 @@ class TeacherCoursePage extends StatelessWidget {
           ],
         ),
         toolbarHeight: 70,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: Container(
+            color: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: List.generate(
+                  5,
+                  (index) => Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.deepPurple[50],
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
+                        // Handle student button click
+                      },
+                      child: Text(
+                        'Student ${index + 1}',
+                        style: const TextStyle(
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(vertical: 8.0),

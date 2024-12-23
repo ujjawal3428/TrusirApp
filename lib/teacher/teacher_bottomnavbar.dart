@@ -19,7 +19,7 @@ class TeacherBottomNavigationBar extends StatelessWidget {
           image: const AssetImage('assets/bnbbg@4x.png'),
           fit: BoxFit.cover,
           colorFilter: ColorFilter.mode(
-            Colors.black.withValues(alpha: 0.1),
+            Colors.grey[200]!,
             BlendMode.darken,
           ),
         ),
