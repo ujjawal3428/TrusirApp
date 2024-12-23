@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/teacher/teacher_bottomnavbar.dart';
-import 'package:trusir/teacher/teacher_course.dart';
 import 'package:trusir/teacher/teacher_facilities.dart';
 import 'package:trusir/teacher/teacherssettings.dart';
 
@@ -16,8 +15,7 @@ class TeacherMainScreenState extends State<TeacherMainScreen> {
 
   // List of pages for each bottom navigation item
   final List<Widget> pages = [
-    const TeacherFacilities(),
-    const TeacherCoursePage(), // Home page (Student Facilities) // Placeholder for Courses
+    const TeacherFacilities(), // Home page (Student Facilities) // Placeholder for Courses
     const Teacherssettings(), // Placeholder for Menu
   ];
 
@@ -38,7 +36,7 @@ class TeacherMainScreenState extends State<TeacherMainScreen> {
             padding: EdgeInsets.only(
                 bottom: currentIndex == 2
                     ? 0
-                    : 80), // Adjust for bottom nav bar height
+                    : 80), 
             child: pages[currentIndex],
           ),
           Positioned(

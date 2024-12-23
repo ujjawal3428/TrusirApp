@@ -16,8 +16,8 @@ class MainScreenState extends State<MainScreen> {
 
   // List of pages for each bottom navigation item
   final List<Widget> pages = [
-    const Studentfacilities(), // Home page (Student Facilities)
-    const CoursePage(), // Placeholder for Courses
+    const Studentfacilities(), 
+    const CoursePage(), 
 
     SettingsScreen(),
   ];
@@ -39,7 +39,7 @@ class MainScreenState extends State<MainScreen> {
             padding: EdgeInsets.only(
                 bottom: currentIndex == 2
                     ? 0
-                    : 80), // Adjust for bottom nav bar height
+                    : 80), 
             child: pages[currentIndex],
           ),
           Positioned(

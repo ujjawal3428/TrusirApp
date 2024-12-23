@@ -1,7 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:trusir/common/api.dart';
 import 'package:trusir/student/main_screen.dart';
 
 class TeacherCourse {
@@ -18,16 +15,6 @@ class TeacherCourse {
     required this.subject,
     required this.image,
   });
-
-  factory TeacherCourse.fromJson(Map<String, dynamic> json) {
-    return TeacherCourse(
-      id: json['id'],
-      amount: json['amount'],
-      name: json['name'],
-      subject: json['class'],
-      image: json['image'],
-    );
-  }
 }
 
 class TeacherCourseCard extends StatelessWidget {
@@ -76,7 +63,7 @@ class TeacherCourseCard extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  top: 10,
+                  bottom : 10,
                   left: 10,
                   child: Container(
                     padding:
@@ -170,34 +157,35 @@ class TeacherCourseCard extends StatelessWidget {
   }
 }
 
-class TeacherCoursePage extends StatefulWidget {
+class TeacherCoursePage extends StatelessWidget {
   const TeacherCoursePage({super.key});
 
   @override
-  State<TeacherCoursePage> createState() => _TeacherCoursePageState();
-}
-
-class _TeacherCoursePageState extends State<TeacherCoursePage> {
-  Future<List<TeacherCourse>> fetchCourses() async {
-    final url = Uri.parse('$baseUrl/all-course');
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      return data.map((json) => TeacherCourse.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to fetch courses');
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchCourses();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final List<TeacherCourse> courses = [
+      TeacherCourse(
+        id: 1,
+        amount: '1500',
+        name: 'Mathematics Basics',
+        subject: 'Mathematics',
+        image: 'https://via.placeholder.com/150',
+      ),
+      TeacherCourse(
+        id: 2,
+        amount: '2000',
+        name: 'Science Experiments',
+        subject: 'Science',
+        image: 'https://via.placeholder.com/150',
+      ),
+      TeacherCourse(
+        id: 3,
+        amount: '1800',
+        name: 'English Grammar',
+        subject: 'English',
+        image: 'https://via.placeholder.com/150',
+      ),
+    ];
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -231,32 +219,12 @@ class _TeacherCoursePageState extends State<TeacherCoursePage> {
         ),
         toolbarHeight: 70,
       ),
-      body: FutureBuilder<List<TeacherCourse>>(
-        future: fetchCourses(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Failed to load courses: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text('No courses available'),
-            );
-          } else {
-            final courses = snapshot.data!;
-            return ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              itemCount: courses.length,
-              itemBuilder: (context, index) {
-                final course = courses[index];
-                return TeacherCourseCard(course: course);
-              },
-            );
-          }
+      body: ListView.builder(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        itemCount: courses.length,
+        itemBuilder: (context, index) {
+          final course = courses[index];
+          return TeacherCourseCard(course: course);
         },
       ),
     );
