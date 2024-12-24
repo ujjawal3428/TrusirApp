@@ -16,46 +16,21 @@ class VideoKnowledge extends StatefulWidget {
 class _VideoKnowledgeState extends State<VideoKnowledge> {
   final TextEditingController _searchController = TextEditingController();
 
-  Future<List<Map<String, dynamic>>> fetchData() async {
-    const String apiUrl =
-        "$baseUrl/video/all?page=1&data_per_page=10"; // Replace with your API endpoint
-
-    try {
-      final response = await http.get(Uri.parse(apiUrl));
-
-      if (response.statusCode == 200) {
-        final List<dynamic> jsonData = json.decode(response.body);
-
-        // Transform the response into a List<Map<String, String>>
-        List<Map<String, dynamic>> formattedData = jsonData.map((item) {
-          return {
-            "title": item["title"],
-            "url": item["url"],
-            "time": item["time"],
-            "description": item["description"],
-            "profile": item["profile"] == ""
-                ? "https://admin.trusir.com/uploads/profile/profile_1735053128.png"
-                : item["profile"],
-            "category": item["category"],
-          };
-        }).toList();
-        setState(() {
-          _videos = formattedData;
-          _filteredVideos = formattedData;
-        });
-        return formattedData;
-      } else {
-        throw Exception(
-            "Failed to fetch data. Status code: ${response.statusCode}");
-      }
-    } catch (e) {
-      throw Exception("Error fetching data: $e");
-    }
-  }
-
   List<Map<String, dynamic>> _videos = [];
-
   List<Map<String, dynamic>> _filteredVideos = [];
+  List<String> categories = [];
+  int selectedIndex = 0;
+  int currentPage = 1;
+  bool isFetching = false;
+  bool hasMoreVideos = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_filterVideos);
+    fetchVideoCategory();
+    fetchData(category: 'All');
+  }
 
   Future<void> fetchVideoCategory() async {
     final url = Uri.parse('$baseUrl/video-category');
@@ -78,18 +53,63 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
     }
   }
 
-  List<String> categories = [];
+  Future<void> fetchData(
+      {required String category, bool isLoadMore = false}) async {
+    if (isFetching) return;
 
-  // Currently selected category
-  int selectedIndex = 0;
+    setState(() {
+      isFetching = true;
+    });
 
-  @override
-  void initState() {
-    super.initState();
-    _filteredVideos = _videos;
-    _searchController.addListener(_filterVideos);
-    fetchVideoCategory();
-    fetchData();
+    try {
+      final apiCategory = category == "All" ? "all" : category;
+      final apiUrl =
+          "$baseUrl/video/$apiCategory?page=$currentPage&data_per_page=10";
+
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = json.decode(response.body);
+
+        if (jsonData.isEmpty) {
+          setState(() {
+            hasMoreVideos = false;
+          });
+        } else {
+          final newVideos = jsonData.map((item) {
+            return {
+              "title": item["title"],
+              "url": item["url"],
+              "time": item["time"],
+              "description": item["description"],
+              "profile": item["profile"] == ""
+                  ? "https://admin.trusir.com/uploads/profile/profile_1735053128.png"
+                  : item["profile"],
+              "category": item["category"],
+            };
+          }).toList();
+
+          setState(() {
+            if (isLoadMore) {
+              _videos.addAll(newVideos);
+            } else {
+              _videos = newVideos;
+            }
+            _filteredVideos = _videos;
+            currentPage++;
+          });
+        }
+      } else {
+        throw Exception(
+            "Failed to fetch data. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
+    } finally {
+      setState(() {
+        isFetching = false;
+      });
+    }
   }
 
   void _filterVideos() {
@@ -107,48 +127,13 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
     super.dispose();
   }
 
-  Widget _buildCategories(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(categories.length, (index) {
-          bool isSelected = selectedIndex == index;
-
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8.0),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.black : Colors.grey[200],
-                gradient: LinearGradient(
-                  colors: isSelected
-                      ? [
-                          const Color(0xFFC22054),
-                          const Color(0xFF48116A),
-                        ]
-                      : [Colors.grey[200]!, Colors.grey[200]!],
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                categories[index],
-                style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          );
-        }),
-      ),
-    );
+  void _onCategorySelected(int index) {
+    setState(() {
+      selectedIndex = index;
+      currentPage = 1;
+      hasMoreVideos = true;
+    });
+    fetchData(category: categories[index]);
   }
 
   @override
@@ -201,17 +186,74 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
           _buildCategories(context),
           const SizedBox(height: 10),
           Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                if (constraints.maxWidth > 800) {
-                  return WideScreenLayout(videos: _filteredVideos);
-                } else {
-                  return MobileLayout(videos: _filteredVideos);
-                }
-              },
-            ),
+            child: _filteredVideos.isEmpty
+                ? const Center(child: Text("No videos available"))
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      if (constraints.maxWidth > 800) {
+                        return WideScreenLayout(videos: _filteredVideos);
+                      } else {
+                        return MobileLayout(videos: _filteredVideos);
+                      }
+                    },
+                  ),
           ),
+          _filteredVideos.isEmpty
+              ? const SizedBox()
+              : hasMoreVideos
+                  ? TextButton(
+                      onPressed: () {
+                        fetchData(
+                            category: categories[selectedIndex],
+                            isLoadMore: true);
+                      },
+                      child: const Text('Load More..'),
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      child: Text("No more videos"),
+                    ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCategories(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(categories.length, (index) {
+          bool isSelected = selectedIndex == index;
+
+          return GestureDetector(
+            onTap: () => _onCategorySelected(index),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.black : Colors.grey[200],
+                gradient: LinearGradient(
+                  colors: isSelected
+                      ? [
+                          const Color(0xFFC22054),
+                          const Color(0xFF48116A),
+                        ]
+                      : [Colors.grey[200]!, Colors.grey[200]!],
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                categories[index],
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -525,6 +567,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         },
         child: OrientationBuilder(
           builder: (context, orientation) {
+            // orientation == landscape;
             return Column(
               children: [
                 Expanded(

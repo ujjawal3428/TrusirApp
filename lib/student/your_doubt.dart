@@ -21,16 +21,20 @@ class YourDoubtPage extends StatefulWidget {
 }
 
 class _YourDoubtPageState extends State<YourDoubtPage> {
-  late Future<List<Doubt>> doubts;
   bool isDownloading = false;
   String downloadProgress = '';
   Map<String, String> downloadedFiles = {};
+  List<Doubt> doubtsList = [];
   String extension = '';
+  int page = 1;
+  bool isLoading = false;
+  bool hasMoreData = true;
+  bool initialLoadComplete = false;
 
   @override
   void initState() {
     super.initState();
-    doubts = fetchDoubts();
+    fetchDoubts();
     _loadDownloadedFiles();
   }
 
@@ -214,20 +218,43 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
     OpenFile.open(filePath);
   }
 
-  Future<List<Doubt>> fetchDoubts() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userID = prefs.getString('userID');
+  Future<void> fetchDoubts() async {
+    if (!hasMoreData || isLoading) return; // Prevent unnecessary calls
 
-    final response = await http.get(
-      Uri.parse(
-          '$baseUrl/api/view-doubts/$userID/student'), // Replace with your API endpoint
-    );
+    setState(() {
+      isLoading = true; // Show loading indicator while fetching data
+    });
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body)['data'] as List;
-      return data.map((json) => Doubt.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load doubts');
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final userID = prefs.getString('userID');
+
+      final response = await http
+          .get(Uri.parse(
+              '$baseUrl/api/view-doubts/$userID/student?page=$page&data_per_page=10'))
+          .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body)['data'] as List;
+        setState(() {
+          if (data.isEmpty) {
+            hasMoreData = false; // No more data available
+          } else {
+            doubtsList
+                .addAll(data.map((json) => Doubt.fromJson(json)).toList());
+            page++; // Increment page for next fetch
+          }
+        });
+      } else {
+        throw Exception('Failed to load doubts');
+      }
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      setState(() {
+        isLoading = false; // Stop loading indicator
+        initialLoadComplete = true; // Mark the initial load as complete
+      });
     }
   }
 
@@ -263,27 +290,28 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
         toolbarHeight: 70,
       ),
       backgroundColor: Colors.grey[50],
-      body: Column(
-        children: [
-          SingleChildScrollView(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.75,
-              child: FutureBuilder<List<Doubt>>(
-                future: doubts,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('No doubts available.'));
-                  } else {
-                    final doubts = snapshot.data!;
-                    return ListView.builder(
+      body: doubtsList.isEmpty && !isLoading && initialLoadComplete
+          ? const Center(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'No doubts available',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SingleChildScrollView(
+                  child: SizedBox(
+                    height: (doubtsList.length * 130.0)
+                        .clamp(0, MediaQuery.of(context).size.height * 0.65),
+                    child: ListView.builder(
                       padding: const EdgeInsets.all(10.0),
-                      itemCount: doubts.length,
+                      itemCount: doubtsList.length,
                       itemBuilder: (context, index) {
-                        final doubt = doubts[index];
+                        final doubt = doubtsList[index];
                         final filename =
                             '${doubt.course}_your_doubt_${doubt.createdAt}';
                         final isDownloaded =
@@ -346,15 +374,28 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                           ),
                         );
                       },
-                    );
-                  }
-                },
-              ),
+                    ),
+                  ),
+                ),
+                if (isLoading)
+                  const CircularProgressIndicator()
+                else if (!hasMoreData && doubtsList.isNotEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text(
+                      'No more Doubts',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  )
+                else if (doubtsList.isNotEmpty)
+                  TextButton(
+                    onPressed: fetchDoubts,
+                    child: const Text('Load More'),
+                  ),
+                _buildCreateButton(),
+              ],
             ),
-          ),
-          _buildCreateButton(),
-        ],
-      ),
     );
   }
 
