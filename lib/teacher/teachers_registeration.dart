@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/login_page.dart';
+import 'package:trusir/common/otp_screen.dart';
 import 'package:trusir/common/registration_splash_screen.dart';
 import 'package:trusir/common/terms_and_conditions.dart';
 
@@ -108,7 +109,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   final TeacherRegistrationData formData = TeacherRegistrationData();
 
   final TextEditingController _phoneController = TextEditingController();
-  String? phoneNum;
 
   List<Location> locations = [];
 
@@ -122,7 +122,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   List<String> cities = [];
   List<String> pincodes = [];
   List<String> _courses = [];
-
+  bool userSkipped = false;
   bool isLoading = true;
 
   Set<String> selectedSlots = {}; // Store selected time slots
@@ -325,8 +325,15 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     String? savedPhoneNumber =
         prefs.getString('phone_number'); // Replace with your key
     if (savedPhoneNumber != null) {
-      _phoneController.text = savedPhoneNumber;
-      phoneNum = savedPhoneNumber; // Set the text field value
+      setState(() {
+        _phoneController.text = savedPhoneNumber;
+        userSkipped = false;
+      });
+      // Set the text field value
+    } else {
+      setState(() {
+        userSkipped = true;
+      });
     }
   }
 
@@ -437,7 +444,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     }
 
     final Map<String, dynamic> payload = {
-      "phone": phoneNum ?? _phoneController.text,
+      "phone": _phoneController.text,
       "role": "teacher",
       "data": teacherFormsData.map((teacher) {
         return {
@@ -482,19 +489,22 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
       if (response.statusCode == 201) {
         print('Data posted successfully: ${response.body}');
         print(payload);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                SplashScreen(phone: phoneNum ?? _phoneController.text),
-          ),
-        );
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Registration Successful'),
             duration: Duration(seconds: 1),
           ),
         );
+        userSkipped
+            ? sendOTP(_phoneController.text)
+            : Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      SplashScreen(phone: _phoneController.text),
+                ),
+              );
       } else if (response.statusCode == 409) {
         Navigator.push(
           context,
@@ -520,6 +530,36 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     } catch (e) {
       print('Error occurred while posting data: $e');
       print(payload);
+    }
+  }
+
+  Future<void> sendOTP(String phoneNumber) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('phone_number', phoneNumber);
+    final url = Uri.parse(
+      '$otpapi/SMS/+91$phoneNumber/AUTOGEN3/TRUSIR_OTP',
+    );
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        print('OTP sent successfully: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('OTP Sent Successfully'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OTPScreen(
+                      phonenum: phoneNumber,
+                    )));
+      } else {
+        print('Failed to send OTP: ${response.body}');
+      }
+    } catch (e) {
+      print('Error sending OTP: $e');
     }
   }
 
@@ -1076,6 +1116,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         ],
       ),
       child: TextField(
+        enabled: userSkipped,
         controller: _phoneController,
         keyboardType: TextInputType.phone,
         maxLength: 10,

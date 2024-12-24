@@ -48,6 +48,16 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
       widget.formData.city = widget._citycontroller.text;
       widget.formData.pincode = widget._pincodecontroller.text;
     });
+
+    if (widget.formData.gender == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Select a Gender'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
     submitForm(context);
   }
 
@@ -212,7 +222,13 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
           ),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Required Field';
+          }
+          return null;
+        },
         controller: controllers,
         decoration: InputDecoration(
           labelText: hintText,
@@ -255,7 +271,13 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
           ),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Required Field';
+          }
+          return null;
+        },
         textCapitalization: TextCapitalization.words,
         controller: controllers,
         keyboardType: TextInputType.number,

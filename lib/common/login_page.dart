@@ -98,7 +98,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
               ),
             );
           } else {
-            // sendOTP(phonenum);
+            sendOTP(phonenum);
             storePhoneNo();
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -106,12 +106,6 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                 duration: Duration(seconds: 1),
               ),
             );
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OTPScreen(
-                          phonenum: phonenum,
-                        )));
           }
         },
         child: Image.asset(
@@ -140,9 +134,8 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
 
   Future<void> sendOTP(String phoneNumber) async {
     final url = Uri.parse(
-      '$otpapi/SMS/+91$phoneNumber/AUTOGEN3/Test',
+      '$otpapi/SMS/+91$phoneNumber/AUTOGEN3/TRUSIR_OTP',
     );
-
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -351,7 +344,13 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                 SizedBox(width: responsive.screenWidth * 0.02),
                 // Mobile number input field
                 Expanded(
-                  child: TextField(
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Required';
+                      }
+                      return null;
+                    },
                     keyboardType: TextInputType.phone,
                     maxLength: 10,
                     buildCounter: (_,

@@ -7,6 +7,7 @@ import 'package:trusir/common/login_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:trusir/common/otp_screen.dart';
 import 'package:trusir/common/registration_splash_screen.dart';
 import 'package:trusir/common/terms_and_conditions.dart';
 
@@ -79,8 +80,7 @@ class Location {
 }
 
 class StudentRegistrationPage extends StatefulWidget {
-  final bool enablephonefield;
-  const StudentRegistrationPage({super.key, required this.enablephonefield});
+  const StudentRegistrationPage({super.key});
 
   @override
   StudentRegistrationPageState createState() => StudentRegistrationPageState();
@@ -92,12 +92,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   String? city;
   String? medium;
   String? studentClass;
-  String? phoneNum;
   String? subject;
   DateTime? selectedDOB;
   bool agreeToTerms = false;
   final TextEditingController _phoneController = TextEditingController();
-
+  bool userSkipped = false;
   List<Location> locations = [];
 
   // Filtered lists
@@ -122,8 +121,15 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     String? savedPhoneNumber =
         prefs.getString('phone_number'); // Replace with your key
     if (savedPhoneNumber != null) {
-      _phoneController.text = savedPhoneNumber;
-      phoneNum = savedPhoneNumber; // Set the text field value
+      setState(() {
+        _phoneController.text = savedPhoneNumber;
+        userSkipped = false;
+      });
+      // Set the text field value
+    } else {
+      setState(() {
+        userSkipped = true;
+      });
     }
   }
 
@@ -154,23 +160,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       print("Error: $e");
     }
   }
-
-  final List<String> timeSlots = [
-    "06:00 AM - 07:00 AM",
-    "07:00 AM - 08:00 AM",
-    "08:00 AM - 09:00 AM",
-    "09:00 AM - 10:00 AM",
-    "10:00 AM - 11:00 AM",
-    "11:00 AM - 12:00 PM",
-    "12:00 PM - 01:00 PM",
-    "02:00 PM - 03:00 PM",
-    "03:00 PM - 04:00 PM",
-    "04:00 PM - 05:00 PM",
-    "05:00 PM - 06:00 PM",
-    "06:00 PM - 07:00 PM",
-    "08:00 PM - 09:00 PM",
-    "09:00 PM - 10:00 PM",
-  ];
 
   // List to store selected slots for each student form
   final List<Set<String>> selectedSlots = [];
@@ -243,7 +232,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     }
 
     final Map<String, dynamic> payload = {
-      "phone": phoneNum ?? _phoneController.text,
+      "phone": _phoneController.text,
       "number_of_students": numberOfStudents,
       "role": "student",
       "data": studentFormsData.map((student) {
@@ -281,19 +270,23 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 
       if (response.statusCode == 201) {
         print('Data posted successfully: ${response.body}');
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                SplashScreen(phone: phoneNum ?? _phoneController.text),
-          ),
-        );
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Registration Successful'),
             duration: Duration(seconds: 1),
           ),
         );
+
+        userSkipped
+            ? sendOTP(_phoneController.text)
+            : Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      SplashScreen(phone: _phoneController.text),
+                ),
+              );
       } else if (response.statusCode == 409) {
         Navigator.push(
           context,
@@ -301,7 +294,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('User Already Exists!'),
+            content: Text('User Already Exists! Proceed to Login'),
             duration: Duration(seconds: 1),
           ),
         );
@@ -316,6 +309,36 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       }
     } catch (e) {
       print('Error occurred while posting data: $e');
+    }
+  }
+
+  Future<void> sendOTP(String phoneNumber) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('phone_number', phoneNumber);
+    final url = Uri.parse(
+      '$otpapi/SMS/+91$phoneNumber/AUTOGEN3/TRUSIR_OTP',
+    );
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        print('OTP sent successfully: ${response.body}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('OTP Sent Successfully'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => OTPScreen(
+                      phonenum: phoneNumber,
+                    )));
+      } else {
+        print('Failed to send OTP: ${response.body}');
+      }
+    } catch (e) {
+      print('Error sending OTP: $e');
     }
   }
 
@@ -563,7 +586,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     updateStudentForms(int.parse(value!));
                   });
                 },
-                items: List.generate(3, (index) => (index + 1).toString()),
+                items: List.generate(7, (index) => (index + 1).toString()),
               ),
 
               // Dynamically Generated Forms
@@ -930,7 +953,13 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           ),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Required';
+          }
+          return null;
+        },
         textCapitalization: TextCapitalization.words,
         onChanged: onChanged,
         decoration: InputDecoration(
@@ -973,7 +1002,13 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           ),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Required';
+          }
+          return null;
+        },
         textCapitalization: TextCapitalization.words,
         onChanged: onChanged,
         maxLines: null, // Allows the text to wrap and grow vertically
@@ -1018,8 +1053,15 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Required';
+          }
+          return null;
+        },
         controller: _phoneController,
+        enabled: userSkipped,
         textAlignVertical: TextAlignVertical.top,
         keyboardType: TextInputType.phone,
         maxLength: 10,
@@ -1072,6 +1114,12 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         ],
       ),
       child: DropdownButtonFormField<String>(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Required';
+          }
+          return null;
+        },
         value: selectedValue,
         onChanged: onChanged,
         decoration: InputDecoration(

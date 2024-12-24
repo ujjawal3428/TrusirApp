@@ -86,9 +86,9 @@ class _OTPScreenState extends State<OTPScreen> {
       return;
     }
 
-    await fetchUserData(phone);
-    showVerificationDialog(context);
-    // verifyOTP(phone, otp);
+    // showVerificationDialog(context);
+    verifyOTP(phone, otp);
+
     // Handle OTP verification logic
   }
 
@@ -103,6 +103,7 @@ class _OTPScreenState extends State<OTPScreen> {
         final responseBody = json.decode(response.body);
         if (responseBody['Status'] == 'Success') {
           print('OTP verified successfully: ${response.body}');
+          await fetchUserData(phone);
           showVerificationDialog(context);
         } else if (responseBody['Status'] == 'Error') {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -212,7 +213,7 @@ class _OTPScreenState extends State<OTPScreen> {
               ),
               const SizedBox(height: 8),
               const Text(
-                'Enter the verification code we \njust sent on your phone number.',
+                'Enter the verification code \nwe just sent on your phone number.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Poppins',

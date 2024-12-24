@@ -45,6 +45,15 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
       formData.city = _citycontroller.text;
       formData.pincode = _pincodecontroller.text;
     });
+    if (formData.gender == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Select a Gender'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
     submitForm(context);
   }
 
@@ -238,7 +247,13 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
           ),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Required Field';
+          }
+          return null;
+        },
         textCapitalization: TextCapitalization.words,
         controller: controllers,
         keyboardType: TextInputType.number,
@@ -292,7 +307,13 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
           ),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Required Field';
+          }
+          return null;
+        },
         textCapitalization: TextCapitalization.words,
         keyboardType: isClass ? TextInputType.number : TextInputType.text,
         controller: controllers,
