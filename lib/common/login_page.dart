@@ -100,12 +100,6 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
           } else {
             sendOTP(phonenum);
             storePhoneNo();
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('OTP Sent Successfully'),
-                duration: Duration(seconds: 1),
-              ),
-            );
           }
         },
         child: Image.asset(

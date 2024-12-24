@@ -4,6 +4,8 @@ import 'package:trusir/common/api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:trusir/student/student_payment_page.dart';
+
 class Fees {
   final String paymenttype;
   final String date;
@@ -381,7 +383,14 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
   Widget _buildPayButton(BuildContext context) {
     return Center(
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const StudentPaymentPage(),
+            ),
+          );
+        },
         child: Image.asset(
           'assets/pay_fee.png',
           width: double.infinity,
@@ -392,5 +401,3 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
     );
   }
 }
-
-

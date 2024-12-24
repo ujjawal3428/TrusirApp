@@ -15,7 +15,7 @@ class StudentPaymentPage extends StatelessWidget {
             left: 0,
             right: 0,
             child: Image.asset(
-              'studenttopimage.png', // Ensure this path is correct
+              'assets/studenttopimage.png', // Ensure this path is correct
               fit: BoxFit.cover,
             ),
           ),
@@ -34,7 +34,7 @@ class StudentPaymentPage extends StatelessWidget {
                 GestureDetector(
                   onTap: () => _goBack(context),
                   child: Image.asset(
-                    "back_button.png", // Ensure this path is correct
+                    "assets/back_button.png", // Ensure this path is correct
                     width: 58, // Adjust based on your image dimensions
                     height: 58,
                   ),
@@ -46,7 +46,7 @@ class StudentPaymentPage extends StatelessWidget {
                   child: GestureDetector(
                     onTap: _ononlinepayment,
                     child: Image.asset(
-                      'onlinepayment.png', // Ensure this path is correct
+                      'assets/onlinepayment.png', // Ensure this path is correct
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -59,7 +59,7 @@ class StudentPaymentPage extends StatelessWidget {
                   child: GestureDetector(
                     onTap: _onofflinepayment,
                     child: Image.asset(
-                      'offlinepayment.png', // Ensure this path is correct
+                      'assets/offlinepayment.png', // Ensure this path is correct
                       fit: BoxFit.cover,
                     ),
                   ),
