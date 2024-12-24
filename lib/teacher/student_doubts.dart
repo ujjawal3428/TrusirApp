@@ -155,6 +155,30 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
     return ''; // Default, in case we can't determine the extension
   }
 
+  Widget _buildFilePreview(String fileUrl) {
+    final extension = fileUrl.split('.').last.toLowerCase();
+
+    if (['jpg', 'jpeg', 'png'].contains(extension)) {
+      // Display the image preview
+      return Image.network(
+        fileUrl,
+        width: 50,
+        height: 50,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.broken_image, color: Colors.grey, size: 50);
+        },
+      );
+    } else {
+      // Display an icon for non-image file types
+      return Icon(
+        _getIconForFile(fileUrl),
+        size: 50,
+        color: _getIconColorForFile(fileUrl),
+      );
+    }
+  }
+
   IconData _getIconForFile(String url) {
     extension = url.split('.').last;
     if (extension == 'pdf') {
@@ -264,10 +288,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: ListTile(
-                      leading: Icon(
-                        _getIconForFile(doubt.image),
-                        color: _getIconColorForFile(doubt.image),
-                      ),
+                      leading: _buildFilePreview(doubt.image),
                       title: Text(
                         doubt.title,
                         style: const TextStyle(

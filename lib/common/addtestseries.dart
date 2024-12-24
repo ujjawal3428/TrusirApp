@@ -1,12 +1,12 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:trusir/common/api.dart';
 
 class Addtestseries extends StatefulWidget {
-  const Addtestseries({super.key});
+  final String userID;
+  const Addtestseries({super.key, required this.userID});
 
   @override
   State<Addtestseries> createState() => _AddtestseriesState();
@@ -19,10 +19,31 @@ class _AddtestseriesState extends State<Addtestseries> {
   String? photo;
   String? answer;
   String? question;
+  List<String> _courses = [];
+  String extension = '';
 
-  Future<String?> _getUserID() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('userID'); // Retrieve 'userID' from storage
+  Future<void> fetchAllCourses() async {
+    final url = Uri.parse('$baseUrl/all-course');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      if (mounted) {
+        setState(() {
+          _courses = data.map<String>((course) {
+            return course['name'] as String;
+          }).toList();
+        });
+      }
+    } else {
+      throw Exception('Failed to fetch courses');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAllCourses();
   }
 
   Future<String> uploadFile(String filePath, String fileType) async {
@@ -115,12 +136,59 @@ class _AddtestseriesState extends State<Addtestseries> {
     }
   }
 
-  final List<String> subjects = [
-    'Mathematics',
-    'Science',
-    'English',
-    'History'
-  ];
+  Widget _buildFilePreview(String fileUrl) {
+    final extension = fileUrl.split('.').last.toLowerCase();
+
+    if (['jpg', 'jpeg', 'png'].contains(extension)) {
+      // Display the image preview
+      return Image.network(
+        fileUrl,
+        width: 50,
+        height: 50,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.broken_image, color: Colors.grey, size: 50);
+        },
+      );
+    } else {
+      // Display an icon for non-image file types
+      return Icon(
+        _getIconForFile(fileUrl),
+        size: 50,
+        color: _getIconColorForFile(fileUrl),
+      );
+    }
+  }
+
+  IconData _getIconForFile(String url) {
+    extension = url.split('.').last;
+    if (extension == 'pdf') {
+      return Icons.picture_as_pdf;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Icons.description;
+    } else if (extension == 'jpeg' ||
+        extension == 'jpg' ||
+        extension == 'png') {
+      return Icons.image;
+    } else {
+      return Icons.insert_drive_file; // Default icon for unknown file types
+    }
+  }
+
+  Color _getIconColorForFile(String url) {
+    extension = url.split('.').last;
+    if (extension == 'pdf') {
+      return Colors.red;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Colors.blue;
+    } else if (extension == 'png' ||
+        extension == 'jpg' ||
+        extension == 'jpeg') {
+      return Colors.green;
+    } else {
+      return Colors.grey; // Default color for unknown file types
+    }
+  }
 
   // Function to send data to the API
   Future<void> _sendTestData(String testName, String subject) async {
@@ -129,14 +197,7 @@ class _AddtestseriesState extends State<Addtestseries> {
     final currentDate = "${now.year}-${now.month}-${now.day}";
     final currentTime = "${now.hour}:${now.minute}";
 
-    final userID = await _getUserID();
-    if (userID == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('User ID not found. Please log in again.')),
-      );
-      return;
-    }
+    final userID = widget.userID;
 
     // Construct the API payload
     final postData = {
@@ -221,7 +282,7 @@ class _AddtestseriesState extends State<Addtestseries> {
               // Subject Dropdown
               DropdownButtonFormField<String>(
                 value: selectedSubject,
-                items: subjects.map((String subject) {
+                items: _courses.map((String subject) {
                   return DropdownMenuItem<String>(
                     value: subject,
                     child: Text(subject),
@@ -264,7 +325,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   question != null
-                      ? Image.network(width: 50, height: 50, question!)
+                      ? _buildFilePreview(question!)
                       : SizedBox(
                           height: 40,
                           width: 150,
@@ -273,10 +334,14 @@ class _AddtestseriesState extends State<Addtestseries> {
                               elevation: 4,
                               backgroundColor: Colors.white,
                             ),
-                            onPressed: () {
-                              setState(() async {
-                                question = await handleFileSelection(context);
-                              }); // Here, implement the file picker logic for questions
+                            onPressed: () async {
+                              final selectedFile =
+                                  await handleFileSelection(context);
+                              if (selectedFile != null) {
+                                setState(() {
+                                  question = selectedFile;
+                                });
+                              }
                             },
                             icon: const Icon(Icons.upload_file),
                             label: const Text(
@@ -286,7 +351,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                           ),
                         ),
                   answer != null
-                      ? Image.network(width: 50, height: 50, answer!)
+                      ? _buildFilePreview(answer!)
                       : SizedBox(
                           height: 40,
                           width: 150,
@@ -295,10 +360,14 @@ class _AddtestseriesState extends State<Addtestseries> {
                               elevation: 4,
                               backgroundColor: Colors.white,
                             ),
-                            onPressed: () {
-                              setState(() async {
-                                answer = await handleFileSelection(context);
-                              });
+                            onPressed: () async {
+                              final selectedFile =
+                                  await handleFileSelection(context);
+                              if (selectedFile != null) {
+                                setState(() {
+                                  answer = selectedFile;
+                                });
+                              }
                             },
                             icon: const Icon(Icons.upload_file),
                             label: const Text(
@@ -309,6 +378,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                         ),
                 ],
               ),
+
               const SizedBox(height: 20),
               // Submit Button
               Padding(

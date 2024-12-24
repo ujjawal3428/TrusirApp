@@ -17,8 +17,8 @@ class Notice {
 
   factory Notice.fromJson(Map<String, dynamic> json) {
     return Notice(
-      noticetitle: json['notice_title'],
-      notice: json['notice'],
+      noticetitle: json['title'],
+      notice: json['description'],
       date: json['posted_on'],
     );
   }
@@ -37,7 +37,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
   bool isLoadingMore = false;
   int currentPage = 1;
   bool hasMore = true;
-  final apiBase = '$baseUrl/my-notice';
+  final apiBase = '$baseUrl/api/my-notice';
 
   Future<void> fetchNotices({int page = 1}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

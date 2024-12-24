@@ -27,8 +27,8 @@ class StudentProfile {
   factory StudentProfile.fromJson(Map<String, dynamic> json) {
     return StudentProfile(
       name: json['name'],
-      image: json['image'],
-      phone: json['mobile'],
+      image: json['profile'],
+      phone: json['phone'],
       subject: json['subject'],
       userID: json['userID'],
     );

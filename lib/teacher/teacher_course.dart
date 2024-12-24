@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/student/main_screen.dart';
+import 'package:trusir/teacher/teacher_main_screen.dart';
 
 class TeacherCourse {
   final int id;
@@ -113,30 +113,31 @@ class TeacherCourseCard extends StatelessWidget {
                     color: Colors.deepPurple,
                   ),
                 ),
-                const SizedBox(width: 20,),
-                 SizedBox(
-              width: 120,
-              child: ElevatedButton(
-                onPressed: () {  },
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(0),
-                  backgroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                const SizedBox(
+                  width: 20,
+                ),
+                SizedBox(
+                  width: 120,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(0),
+                      backgroundColor: Colors.deepPurple,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Demo',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
                   ),
                 ),
-                child: const Text(
-                  'Demo',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-            ),
               ],
             ),
-           
           ],
         ),
       ),
@@ -186,11 +187,11 @@ class TeacherCoursePage extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MainScreen(),
+                    builder: (context) => const TeacherMainScreen(),
                   ),
                 );
               },
-              child: Image.asset('assets/back_button.png', height: 30),
+              child: Image.asset('assets/back_button.png', height: 50),
             ),
             const SizedBox(width: 20),
             const Text(

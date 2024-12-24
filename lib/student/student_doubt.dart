@@ -35,6 +35,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _courseController = TextEditingController();
   final StudentDoubts formData = StudentDoubts();
+  String extension = '';
 
   Future<void> openDialer(String phoneNumber) async {
     final Uri launchUri = Uri(
@@ -136,6 +137,60 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
     }
   }
 
+  Widget _buildFilePreview(String fileUrl) {
+    final extension = fileUrl.split('.').last.toLowerCase();
+
+    if (['jpg', 'jpeg', 'png'].contains(extension)) {
+      // Display the image preview
+      return Image.network(
+        fileUrl,
+        width: 50,
+        height: 50,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.broken_image, color: Colors.grey, size: 50);
+        },
+      );
+    } else {
+      // Display an icon for non-image file types
+      return Icon(
+        _getIconForFile(fileUrl),
+        size: 50,
+        color: _getIconColorForFile(fileUrl),
+      );
+    }
+  }
+
+  IconData _getIconForFile(String url) {
+    extension = url.split('.').last;
+    if (extension == 'pdf') {
+      return Icons.picture_as_pdf;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Icons.description;
+    } else if (extension == 'jpeg' ||
+        extension == 'jpg' ||
+        extension == 'png') {
+      return Icons.image;
+    } else {
+      return Icons.insert_drive_file; // Default icon for unknown file types
+    }
+  }
+
+  Color _getIconColorForFile(String url) {
+    extension = url.split('.').last;
+    if (extension == 'pdf') {
+      return Colors.red;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Colors.blue;
+    } else if (extension == 'png' ||
+        extension == 'jpg' ||
+        extension == 'jpeg') {
+      return Colors.green;
+    } else {
+      return Colors.grey; // Default color for unknown file types
+    }
+  }
+
   Future<String> uploadFile(String filePath, String fileType) async {
     final uri = Uri.parse('$baseUrl/api/upload-profile');
     final request = http.MultipartRequest('POST', uri); // Correct HTTP method
@@ -191,7 +246,9 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
             ),
           );
           print('File uploaded successfully: $uploadedPath');
-          formData.photo = uploadedPath;
+          setState(() {
+            formData.photo = uploadedPath;
+          });
         } else {
           print('Failed to upload the file.');
           ScaffoldMessenger.of(context).showSnackBar(
@@ -425,36 +482,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                         ],
                                       ),
                                       child: formData.photo != null
-                                          ? Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Center(
-                                                  child: Image.network(
-                                                    width: 100,
-                                                    height: 100,
-                                                    formData.photo!,
-                                                    errorBuilder: (context,
-                                                            error,
-                                                            stackTrace) =>
-                                                        const Icon(
-                                                      Icons
-                                                          .picture_as_pdf_rounded,
-                                                      size: 50,
-                                                    ),
-                                                  ),
-                                                ),
-                                                const Center(
-                                                  child: Text(
-                                                    'File Uploaded',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 7,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            )
+                                          ? _buildFilePreview(formData.photo!)
                                           : GestureDetector(
                                               onTap: () {
                                                 handleFileSelection(context);

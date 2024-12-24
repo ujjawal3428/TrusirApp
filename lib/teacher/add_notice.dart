@@ -26,7 +26,7 @@ class _AddNoticePageState extends State<AddNoticePage> {
       'title': _titleController.text,
       'description': _descriptionController.text,
       'posted_on': currentDate,
-      'to': '2ca5fb8b-a252-41d5-b6e4-2bbe039594bb',
+      'to': widget.userID,
       'from': teacherUserID,
     };
 
@@ -104,30 +104,129 @@ class _AddNoticePageState extends State<AddNoticePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 50),
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Title',
-                border: OutlineInputBorder(),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.5),
+                    offset: const Offset(2, 2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Required';
+                  }
+                  return null;
+                },
+                controller: _titleController,
+                textAlignVertical: TextAlignVertical.top,
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  floatingLabelStyle: const TextStyle(color: Colors.blue),
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 20),
-            TextField(
-              controller: _descriptionController,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                border: OutlineInputBorder(),
+            Container(
+              height: 168,
+              width: double.infinity, // Responsive width
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    offset: const Offset(2, 2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: TextFormField(
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Required';
+                  }
+                  return null;
+                },
+                controller: _descriptionController,
+                textAlignVertical: TextAlignVertical.top,
+                decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 120, horizontal: 20),
+                  labelText: 'Description',
+                  floatingLabelStyle: const TextStyle(color: Colors.blue),
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
               ),
             ),
             const SizedBox(height: 20),
-            Center(
-              child: ElevatedButton(
-                onPressed: _onPost,
-                child: const Text('Post Notice'),
-              ),
-            ),
+            _buildPostButton(context)
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPostButton(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          _onPost();
+        },
+        child: Image.asset(
+          'assets/postbutton.png',
+          width: double.infinity,
+          height: 100,
+          fit: BoxFit.contain,
         ),
       ),
     );

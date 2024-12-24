@@ -26,6 +26,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   final url = "$baseUrl/api/test-series";
   bool hasMoreData = true;
   bool isLoading = false;
+  bool initialLoadComplete = false;
   int page = 1;
 
   // Map to store downloaded file paths for questions and answers
@@ -113,6 +114,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     } finally {
       setState(() {
         isLoading = false; // Stop loading indicator
+        initialLoadComplete = true; // Mark the initial load as complete
       });
     }
   }
@@ -218,8 +220,8 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            const Addtestseries(),
-            if (testSeriesList.isEmpty && !isLoading)
+            Addtestseries(userID: widget.userID!),
+            if (testSeriesList.isEmpty && !isLoading && initialLoadComplete)
               const Center(
                 child: Padding(
                   padding: EdgeInsets.all(20.0),
@@ -251,7 +253,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
             const SizedBox(height: 20),
             if (isLoading)
               const CircularProgressIndicator()
-            else if (!hasMoreData)
+            else if (!hasMoreData && testSeriesList.isNotEmpty)
               const Padding(
                 padding: EdgeInsets.all(20.0),
                 child: Text(
@@ -259,7 +261,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               )
-            else
+            else if (testSeriesList.isNotEmpty)
               TextButton(
                 onPressed: fetchTestSeries,
                 child: const Text('Load More'),

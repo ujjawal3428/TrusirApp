@@ -1,6 +1,9 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trusir/common/api.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class VideoKnowledge extends StatefulWidget {
@@ -12,48 +15,81 @@ class VideoKnowledge extends StatefulWidget {
 
 class _VideoKnowledgeState extends State<VideoKnowledge> {
   final TextEditingController _searchController = TextEditingController();
-  final List<Map<String, String>> _videos = [
-    {
-      'title': 'Learn Flutter Basics',
-      'url': 'https://www.youtube.com/watch?v=ckecJeGlDbE',
-      'thumbnail':
-          'https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg',
-      'time': '9:45 AM',
-      'description': 'description',
-      'profile':
-          'https://th.bing.com/th/id/OIP.XSZAFm-5JI7nriDLwZqRQQHaE7?rs=1&pid=ImgDetMain.jpg'
-    },
-    {
-      'title': 'Advanced Dart Techniques',
-      'url':
-          'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
-      'thumbnail':
-          'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
-      'time': '10:45 AM',
-      'description': 'description',
-      'profile':
-          'https://th.bing.com/th/id/OIP.XSZAFm-5JI7nriDLwZqRQQHaE7?rs=1&pid=ImgDetMain.jpg'
-    },
-    {
-      'title': 'Understanding State Management',
-      'url':
-          'https://jsoncompare.org/LearningContainer/SampleFiles/Video/MP4/sample-mp4-file.mp4',
-      'thumbnail':
-          'https://th.bing.com/th/id/OIP.XSZAFm-5JI7nriDLwZqRQQHaE7?rs=1&pid=ImgDetMain.jpg',
-      'time': '9:45 PM',
-      'description': 'description',
-      'profile':
-          'https://th.bing.com/th/id/OIP.XSZAFm-5JI7nriDLwZqRQQHaE7?rs=1&pid=ImgDetMain.jpg'
-    },
-  ];
 
-  List<Map<String, String>> _filteredVideos = [];
+  Future<List<Map<String, dynamic>>> fetchData() async {
+    const String apiUrl =
+        "$baseUrl/video/all?page=1&data_per_page=10"; // Replace with your API endpoint
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonData = json.decode(response.body);
+
+        // Transform the response into a List<Map<String, String>>
+        List<Map<String, dynamic>> formattedData = jsonData.map((item) {
+          return {
+            "title": item["title"],
+            "url": item["url"],
+            "time": item["time"],
+            "description": item["description"],
+            "profile": item["profile"] == ""
+                ? "https://admin.trusir.com/uploads/profile/profile_1735053128.png"
+                : item["profile"],
+            "category": item["category"],
+          };
+        }).toList();
+        setState(() {
+          _videos = formattedData;
+          _filteredVideos = formattedData;
+        });
+        return formattedData;
+      } else {
+        throw Exception(
+            "Failed to fetch data. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Error fetching data: $e");
+    }
+  }
+
+  List<Map<String, dynamic>> _videos = [];
+
+  List<Map<String, dynamic>> _filteredVideos = [];
+
+  Future<void> fetchVideoCategory() async {
+    final url = Uri.parse('$baseUrl/video-category');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      if (mounted) {
+        setState(() {
+          categories = [
+            "All",
+            ...data.map<String>((course) {
+              return course['name'] as String;
+            })
+          ];
+        });
+      }
+    } else {
+      throw Exception('Failed to fetch categories');
+    }
+  }
+
+  List<String> categories = [];
+
+  // Currently selected category
+  int selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _filteredVideos = _videos;
     _searchController.addListener(_filterVideos);
+    fetchVideoCategory();
+    fetchData();
   }
 
   void _filterVideos() {
@@ -69,6 +105,50 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Widget _buildCategories(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(categories.length, (index) {
+          bool isSelected = selectedIndex == index;
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.black : Colors.grey[200],
+                gradient: LinearGradient(
+                  colors: isSelected
+                      ? [
+                          const Color(0xFFC22054),
+                          const Color(0xFF48116A),
+                        ]
+                      : [Colors.grey[200]!, Colors.grey[200]!],
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                categories[index],
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          );
+        }),
+      ),
+    );
   }
 
   @override
@@ -118,7 +198,7 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
       ),
       body: Column(
         children: [
-          const CategoriesList(),
+          _buildCategories(context),
           const SizedBox(height: 10),
           Expanded(
             child: LayoutBuilder(
@@ -138,7 +218,7 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
 }
 
 class MobileLayout extends StatelessWidget {
-  final List<Map<String, String>> videos;
+  final List<Map<String, dynamic>> videos;
 
   const MobileLayout({super.key, required this.videos});
 
@@ -171,7 +251,8 @@ class MobileLayout extends StatelessWidget {
           title: videos[index]['title']!,
           thumbnailUrl: getYouTubeThumbnail(videos[index]['url']!),
           description: videos[index]['description']!,
-          channelPicUrl: videos[index]['profile']!,
+          channelPicUrl: videos[index]['profile'] ??
+              'https://admin.trusir.com/uploads/profile/profile_1735053128.png',
           uploadTime: videos[index]['time']!,
         );
       },
@@ -180,7 +261,7 @@ class MobileLayout extends StatelessWidget {
 }
 
 class WideScreenLayout extends StatelessWidget {
-  final List<Map<String, String>> videos;
+  final List<Map<String, dynamic>> videos;
 
   const WideScreenLayout({super.key, required this.videos});
 
@@ -217,77 +298,11 @@ class WideScreenLayout extends StatelessWidget {
           title: videos[index]['title']!,
           thumbnailUrl: getYouTubeThumbnail(videos[index]['url']!),
           description: videos[index]['description']!,
-          channelPicUrl: videos[index]['profile']!,
+          channelPicUrl: videos[index]['profile'] ??
+              'https://admin.trusir.com/uploads/profile/profile_1735053128.png',
           uploadTime: videos[index]['time']!,
         );
       },
-    );
-  }
-}
-
-class CategoriesList extends StatefulWidget {
-  const CategoriesList({super.key});
-
-  @override
-  CategoriesListState createState() => CategoriesListState();
-}
-
-class CategoriesListState extends State<CategoriesList> {
-  // List of categories
-  final List<String> categories = [
-    'English',
-    'Hindi',
-    'Maths',
-    'Science',
-    'History',
-    'GK'
-  ];
-
-  // Currently selected category
-  int selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(categories.length, (index) {
-          bool isSelected = selectedIndex == index;
-
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedIndex = index;
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8.0),
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.black : Colors.grey[200],
-                gradient: LinearGradient(
-                  colors: isSelected
-                      ? [
-                          const Color(0xFFC22054),
-                          const Color(0xFF48116A),
-                        ]
-                      : [Colors.grey[200]!, Colors.grey[200]!],
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                categories[index],
-                style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          );
-        }),
-      ),
     );
   }
 }

@@ -103,41 +103,48 @@ class AddGK extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 1.0),
+          child: Row(
+            children: [
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset('assets/back_button.png', height: 50)),
+              const SizedBox(width: 20),
+              const Text(
+                'Add GK',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 25,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+        toolbarHeight: 70,
+      ),
       backgroundColor: Colors.grey[50],
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Image.asset('assets/back_button.png', height: 50)),
-                const SizedBox(width: 20),
-                const Text(
-                  'Add GK',
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF4A148C),
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ],
-            ),
             const SizedBox(height: 30),
-
-            // Title TextField
             Container(
+              width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.circular(22),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.1),
+                    color: Colors.black.withValues(alpha: 0.5),
                     offset: const Offset(2, 2),
                     blurRadius: 4,
                   ),
@@ -145,88 +152,148 @@ class AddGK extends StatelessWidget {
               ),
               child: TextField(
                 controller: titleController,
-                decoration: const InputDecoration(
+                textAlignVertical: TextAlignVertical.top,
+                decoration: InputDecoration(
                   hintText: 'Title',
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 20,
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.blue,
+                    ),
                   ),
                 ),
               ),
             ),
             const SizedBox(height: 25),
-
-            // Description TextField
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          offset: const Offset(2, 2),
-                          blurRadius: 4,
+                Container(
+                  height: 168,
+                  width: 260, // Responsive width
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(22),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        offset: const Offset(2, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    controller: descriptionController,
+                    textAlignVertical: TextAlignVertical.top,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 120, horizontal: 20),
+                      hintText: 'Description',
+                      fillColor: Colors.white,
+                      filled: true,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(22),
+                        borderSide: const BorderSide(
+                          width: 1,
+                          color: Colors.grey,
                         ),
-                      ],
-                    ),
-                    child: TextField(
-                      controller: descriptionController,
-                      maxLines: 6,
-                      decoration: const InputDecoration(
-                        hintText: 'Description',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 20,
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(22),
+                        borderSide: const BorderSide(
+                          width: 1,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(22),
+                        borderSide: const BorderSide(
+                          width: 1,
+                          color: Colors.blue,
                         ),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 10),
-
-                // Image Upload Placeholder
+                const SizedBox(width: 20),
                 GestureDetector(
                   onTap: () {
                     handleFileSelection(context);
                   },
-                  child: Container(
-                    width: 80,
-                    height: 160,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.2),
-                          offset: const Offset(2, 2),
-                          blurRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/camera@3x.png',
-                            height: 50,
-                            width: 50,
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Upload File',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black,
-                            ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Container(
+                      width: 100, // Responsive width
+                      height: 168,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(14.40),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.5),
+                            offset: const Offset(2, 2),
+                            blurRadius: 4,
                           ),
                         ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: Image.asset(
+                                  'assets/camera@3x.png',
+                                  width: 46,
+                                  height: 37,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              const Center(
+                                child: Text(
+                                  'Upload Image',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              const Center(
+                                child: Text(
+                                  'Click Here',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -234,7 +301,6 @@ class AddGK extends StatelessWidget {
               ],
             ),
             const Spacer(),
-
             const Center(
               child: Text(
                 'This post will only be visible to the\nstudents you teach',
@@ -247,19 +313,24 @@ class AddGK extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-
-            Center(
-              child: GestureDetector(
-                onTap: _onPost,
-                child: Image.asset(
-                  'assets/postbutton.png',
-                  fit: BoxFit.contain,
-                  width: 300,
-                  height: 70,
-                ),
-              ),
-            ),
+            _buildPostButton(context)
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPostButton(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          _onPost();
+        },
+        child: Image.asset(
+          'assets/postbutton.png',
+          width: double.infinity,
+          height: 80,
+          fit: BoxFit.contain,
         ),
       ),
     );

@@ -3,10 +3,10 @@ import 'package:trusir/common/parents_doubts.dart';
 import 'package:trusir/teacher/add_gk.dart';
 import 'package:trusir/student/attendance.dart';
 import 'package:trusir/teacher/student_doubts.dart';
-import 'package:trusir/student/progress_report.dart';
 import 'package:trusir/teacher/student_notice.dart';
 import 'package:trusir/common/test_series.dart';
 import 'package:trusir/teacher/student_profile_page.dart';
+import 'package:trusir/teacher/students_progress.dart';
 
 class StudentProfileScreen extends StatelessWidget {
   final String name;
@@ -403,7 +403,7 @@ class StudentProfileScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      const ProgressReportPage(),
+                                      StudentProgressPage(userID: userID),
                                 ),
                               );
                             },
@@ -732,7 +732,7 @@ class StudentProfileScreen extends StatelessWidget {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => StudentNoticeScreen(
-                                          studentuserID: userID,
+                                          userID: userID,
                                         )),
                               );
                             },

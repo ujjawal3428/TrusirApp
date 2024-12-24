@@ -31,6 +31,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   final ParentsDoubt formData = ParentsDoubt();
+  String extension = '';
 
   Future<void> openDialer(String phoneNumber) async {
     final Uri launchUri = Uri(
@@ -123,6 +124,60 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
     }
   }
 
+  Widget _buildFilePreview(String fileUrl) {
+    final extension = fileUrl.split('.').last.toLowerCase();
+
+    if (['jpg', 'jpeg', 'png'].contains(extension)) {
+      // Display the image preview
+      return Image.network(
+        fileUrl,
+        width: 50,
+        height: 50,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.broken_image, color: Colors.grey, size: 50);
+        },
+      );
+    } else {
+      // Display an icon for non-image file types
+      return Icon(
+        _getIconForFile(fileUrl),
+        size: 50,
+        color: _getIconColorForFile(fileUrl),
+      );
+    }
+  }
+
+  IconData _getIconForFile(String url) {
+    extension = url.split('.').last;
+    if (extension == 'pdf') {
+      return Icons.picture_as_pdf;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Icons.description;
+    } else if (extension == 'jpeg' ||
+        extension == 'jpg' ||
+        extension == 'png') {
+      return Icons.image;
+    } else {
+      return Icons.insert_drive_file; // Default icon for unknown file types
+    }
+  }
+
+  Color _getIconColorForFile(String url) {
+    extension = url.split('.').last;
+    if (extension == 'pdf') {
+      return Colors.red;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Colors.blue;
+    } else if (extension == 'png' ||
+        extension == 'jpg' ||
+        extension == 'jpeg') {
+      return Colors.green;
+    } else {
+      return Colors.grey; // Default color for unknown file types
+    }
+  }
+
   Future<String> uploadFile(String filePath, String fileType) async {
     final uri = Uri.parse('$baseUrl/api/upload-profile');
     final request = http.MultipartRequest('POST', uri); // Correct HTTP method
@@ -178,7 +233,9 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
             ),
           );
           print('File uploaded successfully: $uploadedPath');
-          formData.photo = uploadedPath;
+          setState(() {
+            formData.photo = uploadedPath;
+          });
         } else {
           print('Failed to upload the file.');
           ScaffoldMessenger.of(context).showSnackBar(
@@ -348,89 +405,77 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                 ),
                               ),
                             ),
-                            GestureDetector(
-                              onTap: () {
-                                handleFileSelection(context);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Container(
-                                  width: constraints.maxWidth *
-                                      0.2, // Responsive width
-                                  height: 168,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(14.40),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color:
-                                            Colors.black.withValues(alpha: 0.5),
-                                        offset: const Offset(2, 2),
-                                        blurRadius: 4,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(1.0),
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 30),
-                                            child: formData.photo != null
-                                                ? Image.network(
-                                                    width: 50,
-                                                    height: 50,
-                                                    formData.photo!,
-                                                    errorBuilder: (context,
-                                                            error,
-                                                            stackTrace) =>
-                                                        const Icon(Icons
-                                                            .picture_as_pdf_rounded),
-                                                  )
-                                                : Image.asset(
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Container(
+                                width: constraints.maxWidth *
+                                    0.2, // Responsive width
+                                height: 168,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(14.40),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color:
+                                          Colors.black.withValues(alpha: 0.5),
+                                      offset: const Offset(2, 2),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
+                                ),
+                                child: formData.photo != null
+                                    ? _buildFilePreview(formData.photo!)
+                                    : GestureDetector(
+                                        onTap: () {
+                                          handleFileSelection(context);
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(1.0),
+                                          child: Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 30),
+                                                  child: Image.asset(
                                                     'assets/camera@3x.png',
                                                     width: 46,
                                                     height: 37,
                                                   ),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Center(
-                                            child: Text(
-                                              formData.photo != null
-                                                  ? 'Image Uploaded'
-                                                  : 'Upload Image',
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 14,
-                                              ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                const Center(
+                                                  child: Text(
+                                                    'Upload Image',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                const Center(
+                                                  child: Text(
+                                                    'Click Here',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 10,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
                                             ),
                                           ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Center(
-                                            child: Text(
-                                              formData.photo != null
-                                                  ? ''
-                                                  : 'Click Here',
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                          )
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
                               ),
                             ),
                           ],

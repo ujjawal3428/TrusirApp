@@ -102,6 +102,7 @@ flutter:
     - assets/logoutbutton.png
     - assets/cancelbutton.png
     - assets/postbutton.png
+    - assets/add_notice.png
     - assets/titlebox.png
     - assets/attachfilebox.png
     - assets/skipbutton.png

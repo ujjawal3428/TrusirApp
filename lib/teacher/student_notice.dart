@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trusir/teacher/add_Notice.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/teacher/add_notice.dart';
 
 class Notice {
   final String noticetitle;
@@ -18,16 +17,16 @@ class Notice {
 
   factory Notice.fromJson(Map<String, dynamic> json) {
     return Notice(
-      noticetitle: json['notice_title'],
-      notice: json['notice'],
+      noticetitle: json['title'],
+      notice: json['description'],
       date: json['posted_on'],
     );
   }
 }
 
 class StudentNoticeScreen extends StatefulWidget {
-  final String? studentuserID;
-  const StudentNoticeScreen({super.key, required this.studentuserID});
+  final String userID;
+  const StudentNoticeScreen({super.key, required this.userID});
 
   @override
   State<StudentNoticeScreen> createState() => _StudentNoticeScreenState();
@@ -39,12 +38,10 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
   bool isLoadingMore = false;
   int currentPage = 1;
   bool hasMore = true;
-  final apiBase = '$baseUrl/my-notice';
+  final apiBase = '$baseUrl/api/my-notice';
 
   Future<void> fetchNotices({int page = 1}) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userID = prefs.getString('userID');
-    final url = '$apiBase/$userID?page=$page&data_per_page=10';
+    final url = '$apiBase/${widget.userID}?page=$page&data_per_page=10';
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
@@ -122,39 +119,6 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
         ),
         toolbarHeight: 70,
       ),
-      floatingActionButton: Container(
-        margin: const EdgeInsets.only(bottom: 16.0, right: 16.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            colors: [Colors.grey[300]!, Colors.white],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddNoticePage(
-                  userID: widget.studentuserID,
-                ),
-              ),
-            );
-          },
-          elevation: 0, // To match the gradient
-          backgroundColor:
-              const Color(0xFF48116A), // Transparent for gradient to show
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 50,
-          ), // Plus icon
-          // Icon size
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(),
@@ -175,7 +139,11 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                     SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.only(
-                            left: 15, right: 15, bottom: 15, top: 0),
+                          left: 15,
+                          right: 15,
+                          bottom: 15,
+                          top: 0,
+                        ),
                         child: Column(
                           children: [
                             ...notices.asMap().entries.map((entry) {
@@ -188,7 +156,10 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
 
                               return Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 10, top: 20, right: 10),
+                                  left: 10,
+                                  top: 20,
+                                  right: 10,
+                                ),
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
@@ -249,29 +220,62 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                 ),
                               );
                             }),
-                            if (hasMore)
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20),
-                                child: isLoadingMore
-                                    ? const CircularProgressIndicator()
-                                    : TextButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            isLoadingMore = true;
-                                            currentPage++;
-                                          });
-                                          fetchNotices(page: currentPage);
-                                        },
-                                        child: const Text('Load More...'),
-                                      ),
-                              ),
+                            hasMore
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: isLoadingMore
+                                        ? const CircularProgressIndicator()
+                                        : TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                isLoadingMore = true;
+                                                currentPage++;
+                                              });
+                                              fetchNotices(page: currentPage);
+                                            },
+                                            child: const Text('Load More...'),
+                                          ),
+                                  )
+                                : const Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 20),
+                                    child: Text('No more Notices'),
+                                  ),
+                            const SizedBox(height: 50),
                           ],
                         ),
                       ),
                     ),
+                    Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: _buildAddNoticeButton(context))
                   ],
                 ),
+    );
+  }
+
+  Widget _buildAddNoticeButton(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddNoticePage(
+                userID: widget.userID,
+              ),
+            ),
+          );
+        },
+        child: Image.asset(
+          'assets/add_notice.png',
+          width: double.infinity,
+          height: 80,
+          fit: BoxFit.contain,
+        ),
+      ),
     );
   }
 }
