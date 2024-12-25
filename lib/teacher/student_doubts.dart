@@ -20,16 +20,20 @@ class StudentDoubtsPage extends StatefulWidget {
 }
 
 class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
-  late Future<List<Doubt>> doubts;
+  List<Doubt> doubtsList = [];
   bool isDownloading = false;
   String downloadProgress = '';
   Map<String, String> downloadedFiles = {};
   String extension = '';
+  int page = 1;
+  bool isLoading = false;
+  bool hasMoreData = true;
+  bool initialLoadComplete = false;
 
   @override
   void initState() {
     super.initState();
-    doubts = fetchDoubts();
+    fetchDoubts();
 
     _loadDownloadedFiles();
   }
@@ -214,17 +218,40 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
     OpenFile.open(filePath);
   }
 
-  Future<List<Doubt>> fetchDoubts() async {
-    final response = await http.get(
-      Uri.parse(
-          '$baseUrl/api/view-doubts/${widget.userID}/student'), // Replace with your API endpoint
-    );
+  Future<void> fetchDoubts() async {
+    if (!hasMoreData || isLoading) return; // Prevent unnecessary calls
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body)['data'] as List;
-      return data.map((json) => Doubt.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load doubts');
+    setState(() {
+      isLoading = true; // Show loading indicator while fetching data
+    });
+
+    try {
+      final response = await http
+          .get(Uri.parse(
+              '$baseUrl/api/view-doubts/${widget.userID}/student?page=$page&data_per_page=10'))
+          .timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body)['data'] as List;
+        setState(() {
+          if (data.isEmpty) {
+            hasMoreData = false; // No more data available
+          } else {
+            doubtsList
+                .addAll(data.map((json) => Doubt.fromJson(json)).toList());
+            page++; // Increment page for next fetch
+          }
+        });
+      } else {
+        throw Exception('Failed to load doubts');
+      }
+    } catch (e) {
+      print('Error: $e');
+    } finally {
+      setState(() {
+        isLoading = false; // Stop loading indicator
+        initialLoadComplete = true; // Mark the initial load as complete
+      });
     }
   }
 
@@ -260,108 +287,132 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
         ),
         toolbarHeight: 70,
       ),
-      body: FutureBuilder<List<Doubt>>(
-        future: doubts, // Your future for fetching doubts
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No doubts available.'));
-          } else {
-            final doubts = snapshot.data!;
-            return ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
-              itemCount: doubts.length,
-              itemBuilder: (context, index) {
-                final doubt = doubts[index];
-                final filename =
-                    '${doubt.course}_student_doubt_${doubt.createdAt}';
-                final isDownloaded = downloadedFiles.containsKey(filename);
+      body: doubtsList.isEmpty && !isLoading && initialLoadComplete
+          ? const Center(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'No doubts available',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SingleChildScrollView(
+                  child: SizedBox(
+                    height: (doubtsList.length * 130.0)
+                        .clamp(0, MediaQuery.of(context).size.height * 0.65),
+                    child: ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      itemCount: doubtsList.length,
+                      itemBuilder: (context, index) {
+                        final doubt = doubtsList[index];
+                        final filename =
+                            '${doubt.course}_student_doubt_${doubt.createdAt}';
+                        final isDownloaded =
+                            downloadedFiles.containsKey(filename);
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: ListTile(
-                      leading: _buildFilePreview(doubt.image),
-                      title: Text(
-                        doubt.title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Course: ${doubt.course}'),
-                          const SizedBox(height: 2),
-                          Text(
-                            'Status: ${doubt.status}',
-                          ),
-                          Text('Posted on: ${doubt.createdAt}'),
-                        ],
-                      ),
-                      trailing: Column(
-                        children: [
-                          SizedBox(
-                            height: 20,
-                            width: 80,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                if (isDownloaded) {
-                                  _openFile(filename);
-                                } else {
-                                  _downloadFile(doubt.image, filename);
-                                }
-                              },
-                              icon: Icon(
-                                isDownloaded
-                                    ? Icons.open_in_new
-                                    : Icons.download,
-                                size: 17,
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: ListTile(
+                              leading: _buildFilePreview(doubt.image),
+                              title: Text(
+                                doubt.title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                              label: Text(
-                                isDownloaded ? "Open" : "Download",
-                                style: const TextStyle(fontSize: 10),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Course: ${doubt.course}'),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'Status: ${doubt.status}',
+                                  ),
+                                  Text('Posted on: ${doubt.createdAt}'),
+                                ],
                               ),
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.all(0),
-                                foregroundColor: Colors.blue,
+                              trailing: Column(
+                                children: [
+                                  SizedBox(
+                                    height: 20,
+                                    width: 80,
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {
+                                        if (isDownloaded) {
+                                          _openFile(filename);
+                                        } else {
+                                          _downloadFile(doubt.image, filename);
+                                        }
+                                      },
+                                      icon: Icon(
+                                        isDownloaded
+                                            ? Icons.open_in_new
+                                            : Icons.download,
+                                        size: 17,
+                                      ),
+                                      label: Text(
+                                        isDownloaded ? "Open" : "Download",
+                                        style: const TextStyle(fontSize: 10),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.all(0),
+                                        foregroundColor: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  SizedBox(
+                                    height: 20,
+                                    width: 80,
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {
+                                        // Handle upload action
+                                      },
+                                      icon: const Icon(Icons.upload, size: 17),
+                                      label: const Text("Upload",
+                                          style: TextStyle(fontSize: 10)),
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.all(0),
+                                        foregroundColor: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          SizedBox(
-                            height: 20,
-                            width: 80,
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                // Handle upload action
-                              },
-                              icon: const Icon(Icons.upload, size: 17),
-                              label: const Text("Upload",
-                                  style: TextStyle(fontSize: 10)),
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.all(0),
-                                foregroundColor: Colors.blue,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                   ),
-                );
-              },
-            );
-          }
-        },
-      ),
+                ),
+                if (isLoading)
+                  const CircularProgressIndicator()
+                else if (!hasMoreData && doubtsList.isNotEmpty)
+                  const Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text(
+                      'No more Doubts',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  )
+                else if (doubtsList.isNotEmpty)
+                  TextButton(
+                    onPressed: fetchDoubts,
+                    child: const Text('Load More'),
+                  ),
+              ],
+            ),
     );
   }
 }
