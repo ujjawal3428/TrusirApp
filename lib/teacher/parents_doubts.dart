@@ -12,7 +12,8 @@ import 'package:trusir/common/api.dart';
 import 'package:trusir/common/notificationhelper.dart';
 
 class ParentsDoubtsPage extends StatefulWidget {
-  const ParentsDoubtsPage({super.key});
+  final String userID;
+  const ParentsDoubtsPage({super.key, required this.userID});
 
   @override
   State<ParentsDoubtsPage> createState() => _ParentsDoubtsPageState();
@@ -218,8 +219,6 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
   }
 
   Future<void> fetchDoubts() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userID');
     if (!hasMoreData || isLoading) return; // Prevent unnecessary calls
 
     setState(() {
@@ -229,7 +228,7 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
     try {
       final response = await http
           .get(Uri.parse(
-              '$baseUrl/api/view-doubts/$userId/parent?page=$page&data_per_page=10'))
+              '$baseUrl/api/view-doubts/${widget.userID}/parent?page=$page&data_per_page=10'))
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {

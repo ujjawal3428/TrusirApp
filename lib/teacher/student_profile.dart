@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trusir/common/parents_doubts.dart';
+import 'package:trusir/teacher/parents_doubts.dart';
 import 'package:trusir/teacher/add_gk.dart';
 import 'package:trusir/student/attendance.dart';
 import 'package:trusir/teacher/student_doubts.dart';

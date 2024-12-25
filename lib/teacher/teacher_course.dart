@@ -73,7 +73,7 @@ class TeacherCourseCard extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [Colors.deepPurple, Colors.pinkAccent],
                       ),
                       borderRadius: BorderRadius.circular(8),

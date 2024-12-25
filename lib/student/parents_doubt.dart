@@ -97,6 +97,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userID');
+    print(userId);
     final url = Uri.parse('$baseUrl/api/add-parents-doubts/$userId');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
@@ -105,6 +106,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
       final response = await http.post(url, headers: headers, body: body);
 
       if (response.statusCode == 200) {
+        print(response.body);
         // Successfully submitted
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
