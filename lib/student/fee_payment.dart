@@ -114,17 +114,17 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                 Navigator.pop(context);
               },
               child: Image.asset('assets/back_button.png', height: 50)),
-          const SizedBox(width: 20),
+          const SizedBox(width: 10),
           const Text(
             'Fee Payment',
             style: TextStyle(
               color: Color(0xFF48116A),
-              fontSize: 25,
+              fontSize: 20,
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w700,
             ),
           ),
-          const Spacer(),
+           SizedBox(width: MediaQuery.of(context).size.width * 0.08,),
           const Row(
             mainAxisSize: MainAxisSize.min,
             children: [

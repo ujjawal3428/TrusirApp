@@ -27,13 +27,17 @@ class TeacherCourseCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          colors: [Colors.white, Colors.grey.shade50],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.shade300,
-            blurRadius: 6,
-            offset: const Offset(0, 4),
+            blurRadius: 10,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -69,12 +73,14 @@ class TeacherCourseCard extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.pink,
+                      gradient: LinearGradient(
+                        colors: [Colors.deepPurple, Colors.pinkAccent],
+                      ),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Text(
-                      'Science',
-                      style: TextStyle(
+                    child: Text(
+                      course.subject,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -85,23 +91,24 @@ class TeacherCourseCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Start from - 01/10/2024',
               style: TextStyle(
                 fontSize: 15,
                 fontFamily: 'Poppins',
+                color: Colors.grey.shade700,
               ),
             ),
             const SizedBox(height: 2),
-            const Text(
+            Text(
               'End to - 20/10/2024',
               style: TextStyle(
                 fontSize: 14,
                 fontFamily: 'Poppins',
-                color: Colors.black54,
+                color: Colors.grey.shade500,
               ),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Text(
@@ -113,26 +120,21 @@ class TeacherCourseCard extends StatelessWidget {
                     color: Colors.deepPurple,
                   ),
                 ),
-                const SizedBox(
-                  width: 20,
-                ),
-                SizedBox(
-                  width: 120,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(0),
-                      backgroundColor: Colors.deepPurple,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                const Spacer(),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
-                      'Demo',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
-                      ),
+                    backgroundColor: Colors.deepPurpleAccent,
+                  ),
+                  child: const Text(
+                    'Demo',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Poppins',
                     ),
                   ),
                 ),
@@ -179,7 +181,7 @@ class TeacherCoursePage extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
-        elevation: 1,
+        elevation: 2,
         title: Row(
           children: [
             GestureDetector(
@@ -191,9 +193,9 @@ class TeacherCoursePage extends StatelessWidget {
                   ),
                 );
               },
-              child: Image.asset('assets/back_button.png', height: 50),
+              child: const Icon(Icons.arrow_back, color: Colors.deepPurple),
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 16),
             const Text(
               'Courses',
               style: TextStyle(

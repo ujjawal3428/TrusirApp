@@ -97,7 +97,7 @@ class EnquiryPage extends StatelessWidget {
                 );
               },
               child: Image.asset(
-                "assets/teacherenquiry.png", // Ensure asset path is correct
+                "assets/teacherenquiry.png",
                 width: 340,
                 height: 225,
               ),
@@ -106,7 +106,7 @@ class EnquiryPage extends StatelessWidget {
               height: 10,
             ),
 
-            // "Or Enquire On" Text
+          
             const Text(
               'Or Enquire On',
               style: TextStyle(
@@ -115,7 +115,7 @@ class EnquiryPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF8C4C92),
                 fontFamily:
-                    'Poppins', // Ensure Poppins font is added in pubspec.yaml
+                    'Poppins', 
               ),
             ),
             const SizedBox(height: 25),
