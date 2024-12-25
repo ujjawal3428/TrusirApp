@@ -130,6 +130,18 @@ class DrawPadState extends State<DrawPad> {
 
   Future<String> _uploadImage(File imageFile) async {
     try {
+      final fileSize = await imageFile.length(); // File size in bytes
+      if (fileSize > 2 * 1024 * 1024) {
+        // 2 MB limit
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text('File size exceeds 2MB. Please select a smaller image.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return 'null'; // Return early
+      }
       final uri = Uri.parse('$baseUrl/api/upload-profile');
       final request = http.MultipartRequest('POST', uri);
 
@@ -179,6 +191,17 @@ class DrawPadState extends State<DrawPad> {
       final tempDir = await getTemporaryDirectory();
       final filePath = path.join(tempDir.path, 'drawing.png');
       final file = File(filePath)..writeAsBytesSync(imageBytes);
+      final fileSize = imageBytes.length; // Byte size of the image
+      if (fileSize > 2 * 1024 * 1024) {
+        // 2 MB limit
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('File size exceeds 2MB'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        return; // Exit if file is too large
+      }
 
       final downloadUrl = await _uploadImage(file);
 

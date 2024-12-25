@@ -113,6 +113,23 @@ class EditProfileScreenState extends State<EditProfileScreen> {
           await picker.pickImage(source: ImageSource.gallery);
 
       if (pickedFile != null) {
+        final fileSize =
+            await pickedFile.length(); // Get the file size in bytes
+
+        // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
+        if (fileSize > 2 * 1024 * 1024) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('File size exceeds 2MB. Please select a smaller image.'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return;
+        }
+      }
+
+      if (pickedFile != null) {
         // Upload the image and get the path
         final uploadedPath = await uploadImage(pickedFile);
         if (uploadedPath != 'null') {

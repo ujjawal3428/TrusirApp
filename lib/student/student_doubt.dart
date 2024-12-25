@@ -227,6 +227,19 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
       if (result != null && result.files.single.path != null) {
         final filePath = result.files.single.path!;
         final fileName = result.files.single.name;
+        final fileSize = result.files.single.size; // File size in bytes
+
+        // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
+        if (fileSize > 2 * 1024 * 1024) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content:
+                  Text('File size exceeds 2MB. Please select a smaller file.'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return; // Exit the method
+        }
 
         // Determine file type (use "document" for docx/pdf, "photo" for images)
         final fileType = fileName.endsWith('.jpg') ||
