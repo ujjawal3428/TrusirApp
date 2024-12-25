@@ -44,168 +44,169 @@ flutter:
   uses-material-design: true
   
   assets:
-    - assets/girlimage@4x.png
-    - assets/verify.png
-    - assets/poster1.png
-    - assets/sad_girl.png
-    - assets/whatsapp@3x.png
-    - assets/teacherenquiry.png
-    - assets/studentenquiry.png
-    - assets/studentregisteration@4x.png
-    - assets/call.png
-    - assets/registration.png
-    - assets/create_test.png
-    - assets/cancelbutton.png
-    - assets/create_doubt.png
-    - assets/logoutbutton.png
-    - assets/submit.png
-    - assets/pay_fee.png
-    - assets/pamplate.png
-    - assets/register.png
-    - assets/enquire.png
-    - assets/studentenquiry2.png
-    - assets/wanna_logout.png
-    - assets/back_button.png
-    - assets/textfield.png
-    - assets/Teacher_Enquiry2.png
-    - assets/checkbox.png
-    - assets/thanks_for_registration.png
-    - assets/student_registration.png
-    - assets/textbox.png
-    - assets/check.png
-    - assets/onlinepayment.png
-    - assets/offlinepayment.png
-    - assets/topimage.png
-    - assets/studenttopimage.png
-    - assets/g1@4x.png
-    - assets/g2@4x.png
-    - assets/t1@3x.png
-    - assets/t2.jpg
-    - assets/get_in_touch.png
-    - assets/callimage@3x.png
-    - assets/mailimage@3x.png
-    - assets/locationimage@3x.png
-    - assets/whatsappimage@3x.png
-    - assets/footer@4x.png
-    - assets/11.png
-    - assets/fb@3x.png
-    - assets/insta@3x.png
-    - assets/yt@3x.png
-    - assets/napbarbg.png
-    - assets/homeicon.png
-    - assets/upload_from_camera.png
-    - assets/call_teacher.png
-    # - assets/StudentDoubtstext.png  # Removed space in filename
-    - assets/book.png
-    - assets/menu.png
-    - assets/logout.png
-    - assets/logoutbutton.png
-    - assets/cancelbutton.png
-    - assets/postbutton.png
-    - assets/add_notice.png
-    - assets/titlebox.png
-    - assets/attachfilebox.png
-    - assets/skipbutton.png
-    - assets/send_otp.png
-    - assets/pamplate.png
-    - assets/indianflag.png
-    - assets/otpbg.png
-    - assets/checkmark.png
-    - assets/profilebg@4x.png
-    - assets/diksha@4x.png
-    - assets/imagebg@4x.png
-    - assets/myprofile@4x.png
-    - assets/teacherprofile@4x.png
-    - assets/attendance@3x.png
-    - assets/fee@3x.png 
-    - assets/testseries@3x.png 
-    - assets/progress@3x.png  
-    - assets/stuudentdoubt@3x.png   
-    - assets/parentsdoubt@3x.png  
-    - assets/gk@3x.png  
-    - assets/notice@3x.png  
-    - assets/settings@3x.png  
-    - assets/logout@3x.png
-    - assets/dikshaback@2x.png  
-    - assets/dikshabg@4x.png
-    - assets/pastry@3x.png  
-    - assets/graduation@3x.png
-    - assets/house@3x.png
-    - assets/pen@3x.png
-    - assets/bg@4x.png
-    - assets/man@3x.png
-    - assets/woman@3x.png
-    - assets/money@3x.png
-    - assets/whitebg@4x.png
-    - assets/list@3x.png
-    - assets/upload@3x.png
-    - assets/listaim@3x.png
-    - assets/camera@3x.png
-    - assets/textfield@4x.png
-    - assets/descriptionbox.png
-    - assets/whatsapp@3x.png
-    - assets/phone@3x.png
-    - assets/anup@4x.png
-    - assets/penpaper@3x.png
-    - assets/degree@3x.png
-    - assets/medal@3x.png
-    - assets/location@3x.png
-    - assets/contact@3x.png
-    - assets/AB@3x.png
-    - assets/pin@2x.png
-    - assets/editprofile.png
-    - assets/changenumber@2x.png
-    - assets/qna@2x.png
-    - assets/parentsdoubt@2x.png
-    - assets/aboutus@2x.png
-    - assets/contactus@2x.png
-    - assets/tnc@2x.png
-    - assets/greybox.png
-    - assets/gksp@3x.png
-    - assets/noticesp@3x.png
-    - assets/medalsp@3x.png
-    - assets/pensp@3x.png
-    - assets/calendarsp@3x.png
-    - assets/qnasp@3x.png
-    - assets/rakesh@3x.png
-    - assets/jpg@3x.png
-    - assets/bnbbg@4x.png
-    - assets/home@3x.png
-    - assets/menu@3x.png
-    - assets/course@3x.png
-    - assets/myprofile.png
-    - assets/teacherprofile.png
-    - assets/attendance.png
-    - assets/money.png
-    - assets/pencil and ruller.png
-    - assets/medal.png
-    - assets/qna.png
-    - assets/sir.png
-    - assets/knowledge.png
-    - assets/notice.png
-    - assets/setting.png
-    - assets/video knowledge.png
-    - assets/logout.png
-    - assets/asmitcircle.png
-    - assets/asmitsquare.png
-    - assets/teacherenglish@3x.png
-    - assets/circleleft.png
-    - assets/circleright.png
-    - assets/bell.png
-    - assets/pin.png
-    - assets/changenumber.png
-    - assets/qna.png
-    - assets/men.png
-    - assets/aboutus.png
-    - assets/contactus.png
-    - assets/tnc.png   
-    - assets/male@2x.png 
-    - assets/location@2x.png 
-    - assets/degree@2x.png 
-    - assets/medal@2x.png 
-    - assets/ab@2x.png 
-    - assets/phone@2x.png 
-    - assets/groupregister.png
+    - assets/
+    # - assets/girlimage@4x.png
+    # - assets/verify.png
+    # - assets/poster1.png
+    # - assets/sad_girl.png
+    # - assets/whatsapp@3x.png
+    # - assets/teacherenquiry.png
+    # - assets/studentenquiry.png
+    # - assets/studentregisteration@4x.png
+    # - assets/call.png
+    # - assets/registration.png
+    # - assets/create_test.png
+    # - assets/cancelbutton.png
+    # - assets/create_doubt.png
+    # - assets/logoutbutton.png
+    # - assets/submit.png
+    # - assets/pay_fee.png
+    # - assets/pamplate.png
+    # - assets/register.png
+    # - assets/enquire.png
+    # - assets/studentenquiry2.png
+    # - assets/wanna_logout.png
+    # - assets/back_button.png
+    # - assets/textfield.png
+    # - assets/Teacher_Enquiry2.png
+    # - assets/checkbox.png
+    # - assets/thanks_for_registration.png
+    # - assets/student_registration.png
+    # - assets/textbox.png
+    # - assets/check.png
+    # - assets/onlinepayment.png
+    # - assets/offlinepayment.png
+    # - assets/topimage.png
+    # - assets/studenttopimage.png
+    # - assets/g1@4x.png
+    # - assets/g2@4x.png
+    # - assets/t1@3x.png
+    # - assets/t2.jpg
+    # - assets/get_in_touch.png
+    # - assets/callimage@3x.png
+    # - assets/mailimage@3x.png
+    # - assets/locationimage@3x.png
+    # - assets/whatsappimage@3x.png
+    # - assets/footer@4x.png
+    # - assets/11.png
+    # - assets/fb@3x.png
+    # - assets/insta@3x.png
+    # - assets/yt@3x.png
+    # - assets/napbarbg.png
+    # - assets/homeicon.png
+    # - assets/upload_from_camera.png
+    # - assets/call_teacher.png
+    # - assets/StudentDoubtstext.png
+    # - assets/book.png
+    # - assets/menu.png
+    # - assets/logout.png
+    # - assets/logoutbutton.png
+    # - assets/cancelbutton.png
+    # - assets/postbutton.png
+    # - assets/add_notice.png
+    # - assets/titlebox.png
+    # - assets/attachfilebox.png
+    # - assets/skipbutton.png
+    # - assets/send_otp.png
+    # - assets/pamplate.png
+    # - assets/indianflag.png
+    # - assets/otpbg.png
+    # - assets/checkmark.png
+    # - assets/profilebg@4x.png
+    # - assets/diksha@4x.png
+    # - assets/imagebg@4x.png
+    # - assets/myprofile@4x.png
+    # - assets/teacherprofile@4x.png
+    # - assets/attendance@3x.png
+    # - assets/fee@3x.png 
+    # - assets/testseries@3x.png 
+    # - assets/progress@3x.png  
+    # - assets/stuudentdoubt@3x.png   
+    # - assets/parentsdoubt@3x.png  
+    # - assets/gk@3x.png  
+    # - assets/notice@3x.png  
+    # - assets/settings@3x.png  
+    # - assets/logout@3x.png
+    # - assets/dikshaback@2x.png  
+    # - assets/dikshabg@4x.png
+    # - assets/pastry@3x.png  
+    # - assets/graduation@3x.png
+    # - assets/house@3x.png
+    # - assets/pen@3x.png
+    # - assets/bg@4x.png
+    # - assets/man@3x.png
+    # - assets/woman@3x.png
+    # - assets/money@3x.png
+    # - assets/whitebg@4x.png
+    # - assets/list@3x.png
+    # - assets/upload@3x.png
+    # - assets/listaim@3x.png
+    # - assets/camera@3x.png
+    # - assets/textfield@4x.png
+    # - assets/descriptionbox.png
+    # - assets/whatsapp@3x.png
+    # - assets/phone@3x.png
+    # - assets/anup@4x.png
+    # - assets/penpaper@3x.png
+    # - assets/degree@3x.png
+    # - assets/medal@3x.png
+    # - assets/location@3x.png
+    # - assets/contact@3x.png
+    # - assets/AB@3x.png
+    # - assets/pin@2x.png
+    # - assets/editprofile.png
+    # - assets/changenumber@2x.png
+    # - assets/qna@2x.png
+    # - assets/parentsdoubt@2x.png
+    # - assets/aboutus@2x.png
+    # - assets/contactus@2x.png
+    # - assets/tnc@2x.png
+    # - assets/greybox.png
+    # - assets/gksp@3x.png
+    # - assets/noticesp@3x.png
+    # - assets/medalsp@3x.png
+    # - assets/pensp@3x.png
+    # - assets/calendarsp@3x.png
+    # - assets/qnasp@3x.png
+    # - assets/rakesh@3x.png
+    # - assets/jpg@3x.png
+    # - assets/bnbbg@4x.png
+    # - assets/home@3x.png
+    # - assets/menu@3x.png
+    # - assets/course@3x.png
+    # - assets/myprofile.png
+    # - assets/teacherprofile.png
+    # - assets/attendance.png
+    # - assets/money.png
+    # - assets/pencil and ruller.png
+    # - assets/medal.png
+    # - assets/qna.png
+    # - assets/sir.png
+    # - assets/knowledge.png
+    # - assets/notice.png
+    # - assets/setting.png
+    # - assets/video knowledge.png
+    # - assets/logout.png
+    # - assets/asmitcircle.png
+    # - assets/asmitsquare.png
+    # - assets/teacherenglish@3x.png
+    # - assets/circleleft.png
+    # - assets/circleright.png
+    # - assets/bell.png
+    # - assets/pin.png
+    # - assets/changenumber.png
+    # - assets/qna.png
+    # - assets/men.png
+    # - assets/aboutus.png
+    # - assets/contactus.png
+    # - assets/tnc.png   
+    # - assets/male@2x.png 
+    # - assets/location@2x.png 
+    # - assets/degree@2x.png 
+    # - assets/medal@2x.png 
+    # - assets/ab@2x.png 
+    # - assets/phone@2x.png 
+    # - assets/groupregister.png
 
   fonts:
     - family: Poppins
