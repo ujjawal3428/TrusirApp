@@ -239,7 +239,9 @@ class StudentProfileScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const AttendancePage(),
+                                  builder: (context) => AttendancePage(
+                                    userID: userID,
+                                  ),
                                 ),
                               );
                             },
