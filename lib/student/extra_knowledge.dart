@@ -73,7 +73,7 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
           children: [
             Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                 child: FilterSwitch(
                   option1: 'Admin',
                   option2: 'Teacher',
