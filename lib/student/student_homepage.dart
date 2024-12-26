@@ -417,7 +417,7 @@ class StudentHomepage extends StatelessWidget {
           );
         },
         child: Image.asset(
-          'assets/registration.png',
+          'assets/registeration.png',
           width: double.infinity,
           height: 100,
           fit: BoxFit.contain,
