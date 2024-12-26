@@ -83,7 +83,8 @@ class Course {
 }
 
 class AttendancePage extends StatefulWidget {
-  const AttendancePage({super.key});
+  final String userID;
+  const AttendancePage({super.key, required this.userID});
 
   @override
   State<AttendancePage> createState() => _AttendancePageState();
@@ -102,7 +103,7 @@ class _AttendancePageState extends State<AttendancePage> {
 
   Future<List<Course>> fetchCourses() async {
     final url = Uri.parse(
-        '$baseUrl/view-slots/bbf8bc48-19f2-4d73-9925-63a140e238ec'); // Replace with your API URL
+        '$baseUrl/view-slots/${widget.userID}'); // Replace with your API URL
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -172,7 +173,7 @@ class _AttendancePageState extends State<AttendancePage> {
     required String slotID,
   }) async {
     final url = Uri.parse(
-        'https://admin.trusir.com/view-attendance/bbf8bc48-19f2-4d73-9925-63a140e238ec/$year/$month/$slotID');
+        'https://admin.trusir.com/view-attendance/${widget.userID}/$year/$month/$slotID');
 
     try {
       final response = await http.get(url);
