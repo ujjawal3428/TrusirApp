@@ -896,7 +896,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             ),
             _buildFileUploadField('Upload Image', isFile: false, onTap: () {
               handleImageSelection('profilephoto', index);
-            }, width: 200, displayPath: studentForms[index].photoPath),
+            }, width: 170, displayPath: studentForms[index].photoPath),
           ],
         ),
         const SizedBox(height: 10),
@@ -912,7 +912,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             ),
             _buildFileUploadField('Upload File', isFile: true, onTap: () {
               handleFileSelection(context, index, 'aadharFrontPath');
-            }, width: 200, displayPath: studentForms[index].aadharFrontPath),
+            }, width: 170, displayPath: studentForms[index].aadharFrontPath),
           ],
         ),
         const SizedBox(height: 10),
@@ -928,7 +928,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             ),
             _buildFileUploadField('Upload File', isFile: true, onTap: () {
               handleFileSelection(context, index, 'aadharBackPath');
-            }, width: 200, displayPath: studentForms[index].aadharBackPath),
+            }, width: 170, displayPath: studentForms[index].aadharBackPath),
           ],
         ),
         const SizedBox(height: 30),

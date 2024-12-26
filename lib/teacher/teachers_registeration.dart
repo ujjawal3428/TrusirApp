@@ -855,7 +855,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       formData.photoPath == null
                           ? 'Upload Image'
                           : 'Update Image',
-                      width: 200, onTap: () {
+                      width: 170, onTap: () {
                     handleImageSelection('profilephoto');
                   }, displayPath: formData.photoPath),
                 ],
@@ -877,7 +877,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       formData.aadharFrontPath == null
                           ? 'Upload File'
                           : 'Update File',
-                      width: 200, onTap: () {
+                      width: 170, onTap: () {
                     handleFileSelection(context, 'aadharFrontPath');
                   }, displayPath: formData.aadharFrontPath),
                 ],
@@ -898,7 +898,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       formData.aadharBackPath == null
                           ? 'Upload File'
                           : 'Update File',
-                      width: 200, onTap: () {
+                      width: 170, onTap: () {
                     handleFileSelection(context, 'aadharBackPath');
                   }, displayPath: formData.aadharBackPath),
                 ],
@@ -921,7 +921,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           ? 'Upload Image'
                           : 'Update Image', onTap: () {
                     handleImageSelection('signature');
-                  }, width: 200, displayPath: formData.signaturePath),
+                  }, width: 166, displayPath: formData.signaturePath),
                 ],
               ),
               const SizedBox(height: 10),

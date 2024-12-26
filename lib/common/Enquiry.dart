@@ -85,7 +85,7 @@ class EnquiryPage extends StatelessWidget {
                 height: 225,
               ),
             ),
-
+        
             // Teacher Enquiry Image
             GestureDetector(
               onTap: () {
@@ -102,10 +102,8 @@ class EnquiryPage extends StatelessWidget {
                 height: 225,
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-
+            const Spacer(),
+        
           
             const Text(
               'Or Enquire On',
@@ -119,39 +117,44 @@ class EnquiryPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 25),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // WhatsApp Button
-                GestureDetector(
-                  onTap: () {
-                    _launchWhatsApp('919797472922', 'Hi');
-                  },
-                  child: Image.asset(
-                    'assets/whatsapp@3x.png',
-                    width: 70,
-                    height: 70,
+        
+            SafeArea(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // WhatsApp Button
+                  GestureDetector(
+                    onTap: () {
+                      _launchWhatsApp('919797472922', 'Hi');
+                    },
+                    child: Image.asset(
+                      'assets/whatsapp@3x.png',
+                      width: 70,
+                      height: 70,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 70),
-
-                // Call Button
-                GestureDetector(
-                  onTap: () {
-                    openDialer('9797472922');
-                  },
-                  child: Image.asset(
-                    'assets/call.png',
-                    width: 80,
-                    height: 80,
+                  const SizedBox(width: 70),
+                      
+                  // Call Button
+                  GestureDetector(
+                    onTap: () {
+                      openDialer('9797472922');
+                    },
+                    child: Image.asset(
+                      'assets/call.png',
+                      width: 80,
+                      height: 80,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+           const  SizedBox(height: 20,),
           ],
         ),
       ),
     );
   }
 }
+
+
