@@ -50,10 +50,10 @@ class FilterSwitchState extends State<FilterSwitch> {
           AnimatedPositioned(
             duration: const Duration(milliseconds: 400),
             curve: Curves.easeOutCubic,
-            left: _selectedIndex == 0 ? 4 : (400 / 2) - 4,
+            left: _selectedIndex == 0 ? 4 : (350 / 2) - 4,
             top: 4,
             child: Container(
-              width: (400 / 2) - 8,
+              width: (350 / 2) - 8,
               height: 38,
               decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 119, 0, 255),
