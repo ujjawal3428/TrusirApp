@@ -79,7 +79,8 @@ class CourseCard extends StatelessWidget {
                   top: 10,
                   left: 10,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.pink,
                       borderRadius: BorderRadius.circular(8),
@@ -110,7 +111,7 @@ class CourseCard extends StatelessWidget {
               course.subject,
               style: const TextStyle(
                 fontSize: 14,
-                 fontFamily: 'Poppins',
+                fontFamily: 'Poppins',
                 color: Colors.black54,
               ),
             ),
@@ -121,17 +122,19 @@ class CourseCard extends StatelessWidget {
                   '₹${course.amount}',
                   style: const TextStyle(
                     fontSize: 16,
-                     fontFamily: 'Poppins',
+                    fontFamily: 'Poppins',
                     fontWeight: FontWeight.bold,
                     color: Colors.deepPurple,
                   ),
                 ),
-                const SizedBox(width: 10,),
+                const SizedBox(
+                  width: 10,
+                ),
                 const Text(
                   '₹5000', // Placeholder for original price
                   style: TextStyle(
                     fontSize: 14,
-                     fontFamily: 'Poppins',
+                    fontFamily: 'Poppins',
                     decoration: TextDecoration.lineThrough,
                     color: Colors.grey,
                   ),
@@ -153,8 +156,10 @@ class CourseCard extends StatelessWidget {
                 ),
                 child: const Text(
                   'Buy Now',
-                  style: TextStyle(color: Colors.white,
-                   fontFamily: 'Poppins',),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'Poppins',
+                  ),
                 ),
               ),
             ),
@@ -196,33 +201,36 @@ class _CoursePageState extends State<CoursePage> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        elevation: 1,
-        title: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainScreen(),
-                  ),
-                );
-              },
-              child: Image.asset('assets/back_button.png', height: 30),
-            ),
-            const SizedBox(width: 20),
-            const Text(
-              'Courses',
-              style: TextStyle(
-                color: Colors.black87,
-                fontSize: 22,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w600,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MainScreen(),
+                    ),
+                  );
+                },
+                child: Image.asset('assets/back_button.png', height: 50),
               ),
-            ),
-          ],
+              const SizedBox(width: 20),
+              const Text(
+                'Course',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 25,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
         toolbarHeight: 70,
       ),

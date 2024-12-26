@@ -179,33 +179,36 @@ class TeacherCoursePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        elevation: 2,
-        title: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const TeacherMainScreen(),
-                  ),
-                );
-              },
-              child: const Icon(Icons.arrow_back, color: Colors.deepPurple),
-            ),
-            const SizedBox(width: 16),
-            const Text(
-              'Courses',
-              style: TextStyle(
-                color: Colors.black87,
-                fontSize: 22,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w600,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TeacherMainScreen(),
+                    ),
+                  );
+                },
+                child: Image.asset('assets/back_button.png', height: 50),
               ),
-            ),
-          ],
+              const SizedBox(width: 20),
+              const Text(
+                'Course',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 25,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
         toolbarHeight: 70,
         bottom: PreferredSize(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trusir/student/toggle_button.dart';
 
 class ExtraKnowledge extends StatefulWidget {
   const ExtraKnowledge({super.key});
@@ -71,7 +72,25 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
+                child: FilterSwitch(
+                  option1: 'Admin',
+                  option2: 'Teacher',
+                  initialSelectedIndex: 0, // Start with Option 1 selected
+                  onChanged: (selectedIndex) {
+                    print('Selected index: $selectedIndex');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Selected index: $selectedIndex'),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                )),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
               child: Row(
                 children: [
                   Expanded(
@@ -105,7 +124,6 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
                           color: Colors.blueGrey,
                           borderRadius: BorderRadius.circular(8),
                         ),
-                       
                         child: TextButton(
                           onPressed: () {},
                           child: Center(
@@ -125,7 +143,9 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
                 ),
               ),
             ),
-           const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             SizedBox(
               height: 200,
               width: 400,
@@ -138,7 +158,8 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
                       // Handle blog navigation based on the thumbnail
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 16.0, top: 8, bottom: 8),
+                      padding:
+                          const EdgeInsets.only(left: 16.0, top: 8, bottom: 8),
                       child: Container(
                         width: 230,
                         decoration: BoxDecoration(
