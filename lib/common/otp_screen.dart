@@ -235,7 +235,7 @@ class _OTPScreenState extends State<OTPScreen> {
                           color: const Color.fromARGB(255, 177, 177, 177),
                           width: 1.5),
                     ),
-                    child: TextField(
+                    child: TextFormField(
                       controller: otpControllers[index],
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       focusNode: focusNodes[index],
