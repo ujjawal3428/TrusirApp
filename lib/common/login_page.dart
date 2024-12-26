@@ -83,29 +83,31 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
   ];
 
   Widget _buildSendOTPButton(ResponsiveDimensions responsive) {
-    return Center(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            phonenum = _phonecontroller.text;
-          });
-
-          if (phonenum.length < 10 || !RegExp(r'^[0-9]+$').hasMatch(phonenum)) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Enter a valid phone number'),
-                duration: Duration(seconds: 2),
-              ),
-            );
-          } else {
-            sendOTP(phonenum);
-            storePhoneNo();
-          }
-        },
-        child: Image.asset(
-          'assets/send_otp.png',
-          width: responsive.screenWidth,
-          fit: BoxFit.contain,
+    return SafeArea(
+      child: Center(
+        child: GestureDetector(
+          onTap: () {
+            setState(() {
+              phonenum = _phonecontroller.text;
+            });
+      
+            if (phonenum.length < 10 || !RegExp(r'^[0-9]+$').hasMatch(phonenum)) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Enter a valid phone number'),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            } else {
+              sendOTP(phonenum);
+              storePhoneNo();
+            }
+          },
+          child: Image.asset(
+            'assets/send_otp.png',
+            width: responsive.screenWidth,
+            fit: BoxFit.contain,
+          ),
         ),
       ),
     );
@@ -183,21 +185,19 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                     horizontal: responsive.horizontalPadding,
                     vertical: responsive.verticalPadding,
                   ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildHeader(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.04),
-                        _buildCarousel(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.04),
-                        _buildPageIndicators(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.04),
-                        _buildPhoneInput(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.04),
-                        _buildSendOTPButton(responsive),
-                      ],
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeader(responsive),
+                      SizedBox(height: responsive.safeHeight * 0.04),
+                      _buildCarousel(responsive),
+                      SizedBox(height: responsive.safeHeight * 0.04),
+                      _buildPageIndicators(responsive),
+                      SizedBox(height: responsive.safeHeight * 0.04),
+                      _buildPhoneInput(responsive),
+                      const Spacer(),
+                      _buildSendOTPButton(responsive),
+                    ],
                   ),
                 ),
               ),
