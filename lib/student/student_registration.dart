@@ -955,7 +955,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 );
         },
         child: Image.asset(
-          'assets/register.png',
+          'assets/registeration.png',
           width: double.infinity,
           height: 100,
           fit: BoxFit.contain,
