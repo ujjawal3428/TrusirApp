@@ -289,13 +289,14 @@ class MobileLayout extends StatelessWidget {
       itemCount: videos.length,
       itemBuilder: (context, index) {
         return VideoCard(
-          videoUrl: Uri.parse(videos[index]['url']!),
-          title: videos[index]['title']!,
-          thumbnailUrl: getYouTubeThumbnail(videos[index]['url']!),
-          description: videos[index]['description']!,
+          videoUrl: Uri.parse(videos[index]['url'] ?? ''),
+          title: videos[index]['title'] ?? 'title',
+          thumbnailUrl: getYouTubeThumbnail(videos[index]['url'] ??
+              'https://admin.trusir.com/uploads/profile/profile_1735053128.png'),
+          description: videos[index]['description'] ?? 'description',
           channelPicUrl: videos[index]['profile'] ??
               'https://admin.trusir.com/uploads/profile/profile_1735053128.png',
-          uploadTime: videos[index]['time']!,
+          uploadTime: videos[index]['time'] ?? 'time',
         );
       },
     );
@@ -336,13 +337,14 @@ class WideScreenLayout extends StatelessWidget {
       itemCount: videos.length,
       itemBuilder: (context, index) {
         return VideoCard(
-          videoUrl: Uri.parse(videos[index]['url']!),
-          title: videos[index]['title']!,
-          thumbnailUrl: getYouTubeThumbnail(videos[index]['url']!),
-          description: videos[index]['description']!,
+          videoUrl: Uri.parse(videos[index]['url'] ?? ''),
+          title: videos[index]['title'] ?? 'title',
+          thumbnailUrl: getYouTubeThumbnail(videos[index]['url'] ??
+              'https://admin.trusir.com/uploads/profile/profile_1735053128.png'),
+          description: videos[index]['description'] ?? 'description',
           channelPicUrl: videos[index]['profile'] ??
               'https://admin.trusir.com/uploads/profile/profile_1735053128.png',
-          uploadTime: videos[index]['time']!,
+          uploadTime: videos[index]['time'] ?? 'time',
         );
       },
     );
