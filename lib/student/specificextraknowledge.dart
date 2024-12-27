@@ -13,10 +13,10 @@ class SpecificExtraKnowledge extends StatefulWidget {
   });
 
   @override
-  _SpecificExtraKnowledgeState createState() => _SpecificExtraKnowledgeState();
+  SpecificExtraKnowledgeState createState() => SpecificExtraKnowledgeState();
 }
 
-class _SpecificExtraKnowledgeState extends State<SpecificExtraKnowledge> {
+class SpecificExtraKnowledgeState extends State<SpecificExtraKnowledge> {
   bool _showFullContent = false;
 
   // This function is triggered when the "Read More" button is pressed
@@ -43,7 +43,6 @@ class _SpecificExtraKnowledgeState extends State<SpecificExtraKnowledge> {
                 },
                 child: Image.asset('assets/back_button.png', height: 50),
               ),
-             
             ],
           ),
         ),
@@ -84,7 +83,8 @@ class _SpecificExtraKnowledgeState extends State<SpecificExtraKnowledge> {
                     child: SingleChildScrollView(
                       child: Text(
                         widget.content,
-                        style: const TextStyle(fontSize: 16, color: Colors.black87),
+                        style: const TextStyle(
+                            fontSize: 16, color: Colors.black87),
                       ),
                     ),
                   ),
