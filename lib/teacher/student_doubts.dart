@@ -226,6 +226,14 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
     });
 
     try {
+      // Get the stored userID from shared preferences
+      final prefs = await SharedPreferences.getInstance();
+      final storedUserID = prefs.getString('userID');
+
+      if (storedUserID == null) {
+        throw Exception('User ID not found in shared preferences');
+      }
+
       final response = await http
           .get(Uri.parse(
               '$baseUrl/api/view-doubts/${widget.userID}/student?page=$page&data_per_page=10'))
@@ -237,8 +245,12 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
           if (data.isEmpty) {
             hasMoreData = false; // No more data available
           } else {
-            doubtsList
-                .addAll(data.map((json) => Doubt.fromJson(json)).toList());
+            // Filter doubts where teacheruserID matches the stored userID
+            final filteredDoubts = data
+                .map((json) => Doubt.fromJson(json))
+                .where((doubt) => doubt.teacheruserID == storedUserID)
+                .toList();
+            doubtsList.addAll(filteredDoubts);
             page++; // Increment page for next fetch
           }
         });
@@ -424,15 +436,16 @@ class Doubt {
   final String image;
   final String createdAt;
   final String status;
+  final String teacheruserID;
 
-  Doubt({
-    required this.id,
-    required this.title,
-    required this.course,
-    required this.image,
-    required this.createdAt,
-    required this.status,
-  });
+  Doubt(
+      {required this.id,
+      required this.title,
+      required this.course,
+      required this.image,
+      required this.createdAt,
+      required this.status,
+      required this.teacheruserID});
 
   factory Doubt.fromJson(Map<String, dynamic> json) {
     return Doubt(
@@ -440,6 +453,7 @@ class Doubt {
       title: json['title'],
       course: json['course'],
       image: json['image'],
+      teacheruserID: json['teacher_userID'] ?? 'N/A',
       createdAt:
           DateTime.parse(json['created_at']).toIso8601String().split('T')[0],
       status: json['status'] ?? 'N/A',
