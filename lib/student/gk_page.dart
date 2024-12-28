@@ -274,7 +274,7 @@ class _GKPageState extends State<GKPage> {
                   child: Image.asset('assets/back_button.png', height: 50)),
               const SizedBox(width: 20),
               const Text(
-                'General Knowledge',
+                'GK',
                 style: TextStyle(
                   color: Color(0xFF48116A),
                   fontSize: 25,
