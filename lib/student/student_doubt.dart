@@ -10,13 +10,29 @@ class StudentDoubts {
   String? title;
   String? course;
   String? photo;
+  String? teacherID;
 
   Map<String, dynamic> toJson() {
     return {
       'title': title,
       'course': course,
       'image': photo,
+      'teacher_userID': teacherID,
     };
+  }
+}
+
+class Course {
+  final String courseName;
+  final String teacherID;
+
+  Course({required this.courseName, required this.teacherID});
+
+  factory Course.fromJson(Map<String, dynamic> json) {
+    return Course(
+      courseName: json['courseName'] as String,
+      teacherID: json['teacherID'] as String,
+    );
   }
 }
 
@@ -30,10 +46,11 @@ class StudentDoubtScreen extends StatefulWidget {
 
 class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   bool _isDropdownOpen = false;
-  List<String> _courses = [];
+  List<Course> _courses = [];
   String _selectedCourse = '-- Select Course --';
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _courseController = TextEditingController();
+  final TextEditingController _teacherIDController = TextEditingController();
   final StudentDoubts formData = StudentDoubts();
   String extension = '';
 
@@ -55,16 +72,20 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   }
 
   Future<void> fetchAllCourses() async {
-    final url = Uri.parse('$baseUrl/all-course');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userID');
+    final url = Uri.parse('$baseUrl/view-slots/$userId');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
+      final List<Course> courses = data.map<Course>((courseJson) {
+        return Course.fromJson(courseJson as Map<String, dynamic>);
+      }).toList();
+
       if (mounted) {
         setState(() {
-          _courses = data.map<String>((course) {
-            return course['name'] as String;
-          }).toList();
+          _courses = courses; // Update _courses with the list of Course objects
         });
       }
     } else {
@@ -74,8 +95,9 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
 
   Future<void> submitForm(BuildContext context) async {
     // Fetch the entered data
-    formData.title = _titleController.text.trim();
-    formData.course = _courseController.text.trim();
+    formData.title = _titleController.text;
+    formData.course = _courseController.text;
+    formData.teacherID = _teacherIDController.text;
 
     // Validation: Check if any field is empty
     if (formData.title == null || formData.title!.isEmpty) {
@@ -91,7 +113,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
     if (formData.course == null || formData.course!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Description cannot be empty!'),
+          content: Text('Please Select a course!'),
           duration: Duration(seconds: 2),
         ),
       );
@@ -450,21 +472,35 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                               ),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Column(
-                              children: _courses.map((course) {
-                                return ListTile(
-                                  title: Text(course),
-                                  onTap: () {
-                                    setState(() {
-                                      _selectedCourse = course;
-                                      _courseController.text = course;
-                                      _isDropdownOpen = false;
-                                      formData.course = _selectedCourse;
-                                    });
-                                  },
-                                );
-                              }).toList(),
-                            ),
+                            child: _courses.isEmpty
+                                ? const Center(
+                                    child: Text(
+                                      'No courses available',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  )
+                                : Column(
+                                    children: _courses.map((course) {
+                                      return ListTile(
+                                        title: Text(course.courseName),
+                                        onTap: () {
+                                          setState(() {
+                                            _selectedCourse = course.courseName;
+                                            _courseController.text =
+                                                course.courseName;
+                                            _teacherIDController.text =
+                                                course.teacherID;
+                                            print(course.teacherID);
+                                            _isDropdownOpen = false;
+                                            formData.course = _selectedCourse;
+                                          });
+                                        },
+                                      );
+                                    }).toList(),
+                                  ),
                           ),
                         Align(
                           alignment: Alignment.topCenter,

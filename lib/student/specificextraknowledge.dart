@@ -34,7 +34,7 @@ class SpecificExtraKnowledgeState extends State<SpecificExtraKnowledge> {
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Padding(
-          padding: const EdgeInsets.only(left: 10.0),
+          padding: const EdgeInsets.only(left: 5),
           child: Row(
             children: [
               GestureDetector(
@@ -43,6 +43,8 @@ class SpecificExtraKnowledgeState extends State<SpecificExtraKnowledge> {
                 },
                 child: Image.asset('assets/back_button.png', height: 50),
               ),
+              const SizedBox(width: 10),
+              Text(widget.title)
             ],
           ),
         ),
@@ -57,7 +59,7 @@ class SpecificExtraKnowledgeState extends State<SpecificExtraKnowledge> {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(widget.imagePath),
+                image: NetworkImage(widget.imagePath),
                 fit: BoxFit.cover,
               ),
             ),
@@ -107,6 +109,7 @@ class SpecificExtraKnowledgeState extends State<SpecificExtraKnowledge> {
                         child: const Text(
                           'Read More',
                           style: TextStyle(
+                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),

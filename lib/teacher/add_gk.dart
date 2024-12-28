@@ -2,13 +2,158 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 
-class AddGK extends StatelessWidget {
-  AddGK({super.key});
+class GK {
+  String? title;
+  String? description;
+  String? photo;
+  String? teacherID;
 
+  Map<String, dynamic> toJson() {
+    return {
+      'title': title,
+      'course': description,
+      'image': photo,
+      'teacher_userID': teacherID,
+    };
+  }
+}
+
+class AddGK extends StatefulWidget {
+  final String studentuserID;
+  const AddGK({super.key, required this.studentuserID});
+
+  @override
+  State<AddGK> createState() => _AddGKState();
+}
+
+class _AddGKState extends State<AddGK> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final GK formData = GK();
+  String extension = '';
+
+  Widget _buildFilePreview(String fileUrl) {
+    final extension = fileUrl.split('.').last.toLowerCase();
+
+    if (['jpg', 'jpeg', 'png'].contains(extension)) {
+      // Display the image preview
+      return Image.network(
+        fileUrl,
+        width: 50,
+        height: 50,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(Icons.broken_image, color: Colors.grey, size: 50);
+        },
+      );
+    } else {
+      // Display an icon for non-image file types
+      return Icon(
+        _getIconForFile(fileUrl),
+        size: 50,
+        color: _getIconColorForFile(fileUrl),
+      );
+    }
+  }
+
+  IconData _getIconForFile(String url) {
+    extension = url.split('.').last;
+    if (extension == 'pdf') {
+      return Icons.picture_as_pdf;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Icons.description;
+    } else if (extension == 'jpeg' ||
+        extension == 'jpg' ||
+        extension == 'png') {
+      return Icons.image;
+    } else {
+      return Icons.insert_drive_file; // Default icon for unknown file types
+    }
+  }
+
+  Color _getIconColorForFile(String url) {
+    extension = url.split('.').last;
+    if (extension == 'pdf') {
+      return Colors.red;
+    } else if (extension == 'docx' || extension == 'doc') {
+      return Colors.blue;
+    } else if (extension == 'png' ||
+        extension == 'jpg' ||
+        extension == 'jpeg') {
+      return Colors.green;
+    } else {
+      return Colors.grey; // Default color for unknown file types
+    }
+  }
+
+  Future<void> submitForm(BuildContext context) async {
+    // Fetch the entered data
+    formData.title = titleController.text;
+    formData.description = descriptionController.text;
+
+    // Validation: Check if any field is empty
+    if (formData.title == null || formData.title!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Title cannot be empty!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    if (formData.description == null || formData.description!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Description cannot be empty!'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    if (formData.photo == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Upload the image'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userID');
+    final url =
+        Uri.parse('$baseUrl/api/tecaher-gks/$userId/${widget.studentuserID}');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(formData.toJson());
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        // Successfully submitted
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('GK Posted Successfully!'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        Navigator.pop(context);
+
+        print(body);
+      } else {
+        // Handle error
+        print('Failed to submit form: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+    }
+  }
 
   Future<String> uploadFile(String filePath, String fileType) async {
     final uri = Uri.parse('$baseUrl/api/upload-profile');
@@ -38,7 +183,7 @@ class AddGK extends StatelessWidget {
     }
   }
 
-  Future<String?> handleFileSelection(BuildContext context) async {
+  Future<void> handleFileSelection(BuildContext context) async {
     try {
       // Use FilePicker to select a file
       final result = await FilePicker.platform.pickFiles();
@@ -57,7 +202,7 @@ class AddGK extends StatelessWidget {
               duration: Duration(seconds: 2),
             ),
           );
-          return null; // Exit the method
+          return; // Exit the method
         }
 
         // Determine file type (use "document" for docx/pdf, "photo" for images)
@@ -78,7 +223,9 @@ class AddGK extends StatelessWidget {
             ),
           );
           print('File uploaded successfully: $uploadedPath');
-          return uploadedPath;
+          setState(() {
+            formData.photo = uploadedPath;
+          });
         } else {
           print('Failed to upload the file.');
           ScaffoldMessenger.of(context).showSnackBar(
@@ -88,7 +235,6 @@ class AddGK extends StatelessWidget {
               duration: Duration(seconds: 1),
             ),
           );
-          return null;
         }
       } else {
         print('No file selected.');
@@ -98,7 +244,6 @@ class AddGK extends StatelessWidget {
             duration: Duration(seconds: 1),
           ),
         );
-        return null;
       }
     } catch (e) {
       print('Error during file selection: $e');
@@ -109,7 +254,6 @@ class AddGK extends StatelessWidget {
           duration: Duration(seconds: 1),
         ),
       );
-      return null;
     }
   }
 
@@ -268,44 +412,46 @@ class AddGK extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(1.0),
                         child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(top: 30),
-                                child: Image.asset(
-                                  'assets/camera@3x.png',
-                                  width: 46,
-                                  height: 37,
+                          child: formData.photo != null
+                              ? _buildFilePreview(formData.photo!)
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 30),
+                                      child: Image.asset(
+                                        'assets/camera@3x.png',
+                                        width: 46,
+                                        height: 37,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Center(
+                                      child: Text(
+                                        'Upload Image',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    const Center(
+                                      child: Text(
+                                        'Click Here',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              const Center(
-                                child: Text(
-                                  'Upload Image',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              const Center(
-                                child: Text(
-                                  'Click Here',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
                         ),
                       ),
                     ),
@@ -337,7 +483,7 @@ class AddGK extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () {
-          _onPost();
+          submitForm(context);
         },
         child: Image.asset(
           'assets/postbutton.png',
@@ -347,9 +493,5 @@ class AddGK extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _onPost() {
-    debugPrint("Post button pressed");
   }
 }

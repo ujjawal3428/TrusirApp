@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/student/attendance.dart';
 import 'package:trusir/student/extra_knowledge.dart';
+import 'package:trusir/student/gk_page.dart';
 import 'package:trusir/student/profilepopup.dart';
 import 'package:trusir/common/test_series.dart';
 import 'package:trusir/student/fee_payment.dart';
@@ -389,6 +390,20 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => const ExtraKnowledge(),
+                            ),
+                          );
+                        }),
+                        buildTile(
+                            context,
+                            const Color(0x80FFF59D),
+                            'assets/knowledge.png',
+                            'General Knowledge',
+                            tileWidth,
+                            tileHeight, () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const GKPage(),
                             ),
                           );
                         }),

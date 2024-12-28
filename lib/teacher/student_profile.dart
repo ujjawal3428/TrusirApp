@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trusir/teacher/gk_page.dart';
 import 'package:trusir/teacher/parents_doubts.dart';
-import 'package:trusir/teacher/add_gk.dart';
 import 'package:trusir/student/attendance.dart';
 import 'package:trusir/teacher/student_doubts.dart';
 import 'package:trusir/teacher/student_notice.dart';
@@ -652,7 +652,8 @@ class StudentProfileScreen extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => AddGK(),
+                                  builder: (context) =>
+                                      StudentGKPage(studentuserID: userID),
                                 ),
                               );
                             },

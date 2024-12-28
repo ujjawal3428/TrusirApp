@@ -1,10 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'specificextraknowledge.dart';
-import 'toggle_button.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+
+class KnowledgeItem {
+  final int id;
+  final String category;
+  final String subCategory;
+  final String image;
+  final String title;
+  final String description;
+
+  KnowledgeItem({
+    required this.id,
+    required this.category,
+    required this.subCategory,
+    required this.image,
+    required this.title,
+    required this.description,
+  });
+
+  // Factory constructor to create an instance from JSON
+  factory KnowledgeItem.fromJson(Map<String, dynamic> json) {
+    return KnowledgeItem(
+      id: json['id'] as int,
+      category: json['category'] as String,
+      subCategory: json['sub_category'] as String,
+      image: json['image'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+    );
+  }
+
+  // Method to convert the instance back to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'category': category,
+      'sub_category': subCategory,
+      'image': image,
+      'title': title,
+      'description': description,
+    };
+  }
+}
 
 class ExtraKnowledge extends StatefulWidget {
   const ExtraKnowledge({super.key});
@@ -16,16 +57,138 @@ class ExtraKnowledge extends StatefulWidget {
 class _ExtraKnowledgeState extends State<ExtraKnowledge> {
   final TextEditingController _searchController = TextEditingController();
   bool isTeacherSelected = false;
-  
-  final List<String> categories = [
-    'National', 'International', 'Politics', 'Economy', 
-    'Technology', 'Health', 'Sports', 'Education',
-  ];
+  List<KnowledgeItem> recentlyViewed = [];
+  List<String> categories = [];
+  String selectedCategory = '';
+  String selectedSubcategory = '';
+  List<String> subcategory = [];
+  List<KnowledgeItem> gks = [];
 
-  final List<String> genres = [
-    'Crime', 'Politics', 'Comedy', 'Drama', 'Fantasy',
-    'Horror', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller',
-  ];
+  Future<void> fetchSubCategories(String category) async {
+    try {
+      // Clear previous subcategories before fetching new ones
+      setState(() {
+        subcategory = [];
+        gks = [];
+      });
+
+      // Build the URL by appending the category name
+      final String url = "$baseUrl/get-gks-sub-category/$category";
+
+      // Fetch data from the API
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        // Decode JSON response
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+
+        // Update the subcategory list in the state
+        setState(() {
+          subcategory =
+              jsonResponse.map((item) => item['name'] as String).toList();
+          selectedCategory = category;
+        });
+
+        // Print the subcategory names for debugging
+      } else {
+        print(
+            "Failed to fetch subcategories for $category. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching subcategories for $category: $e");
+    }
+  }
+
+  Future<void> fetchcategories() async {
+    const String apiUrl = "$baseUrl/get-gks-category";
+
+    // Fetch data from the API
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // Decode JSON response
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+        setState(() {
+          categories =
+              jsonResponse.map((item) => item['name'] as String).toList();
+        });
+      } else {
+        print("Failed to fetch data. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
+
+  Future<void> fetchGks() async {
+    String apiUrl = "$baseUrl/get-gks/$selectedCategory/$selectedSubcategory";
+
+    // Fetch data from the API
+    try {
+      setState(() {
+        gks = [];
+      });
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        // Decode JSON response
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+        setState(() {
+          gks = jsonResponse
+              .map((item) =>
+                  KnowledgeItem.fromJson(item as Map<String, dynamic>))
+              .toList();
+        });
+      } else {
+        print("Failed to fetch data. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
+  }
+
+  Future<void> loadRecentlyViewed() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data = prefs.getString('recentlyViewed');
+    if (data != null) {
+      final List<dynamic> jsonList = jsonDecode(data);
+      setState(() {
+        recentlyViewed = jsonList
+            .map((item) => KnowledgeItem.fromJson(item as Map<String, dynamic>))
+            .toList();
+      });
+    }
+  }
+
+  Future<void> saveRecentlyViewed() async {
+    final prefs = await SharedPreferences.getInstance();
+    final data =
+        jsonEncode(recentlyViewed.map((item) => item.toJson()).toList());
+    await prefs.setString('recentlyViewed', data);
+  }
+
+  // Add a new item to recently viewed
+  void addToRecentlyViewed(KnowledgeItem item) {
+    setState(() {
+      // Remove the item if it already exists
+      recentlyViewed.removeWhere((viewedItem) => viewedItem.id == item.id);
+      // Add the new item to the beginning of the list
+      recentlyViewed.insert(0, item);
+      // Ensure the list doesn't exceed 5 items
+      if (recentlyViewed.length > 7) {
+        recentlyViewed = recentlyViewed.sublist(0, 7);
+      }
+    });
+    saveRecentlyViewed();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchcategories();
+    loadRecentlyViewed();
+  }
 
   @override
   void dispose() {
@@ -36,74 +199,105 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
-      appBar: _buildAppBar(),
+      backgroundColor: Colors.grey[50],
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Image.asset('assets/back_button.png', height: 50),
+              ),
+              const SizedBox(width: 20),
+              const Text(
+                'Extra Knowledge',
+                style: TextStyle(
+                  color: Color(0xFF48116A),
+                  fontSize: 25,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+        toolbarHeight: 70,
+      ),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildToggleSwitch(),
-            if (isTeacherSelected) 
-              const ExtraKnowledgeNotice()
-            else
-              Column(
-                children: [
-                  _buildSearchBar(),
-                  _buildCategoryList(),
-                  _buildThumbnailGallery(),
-                  _buildGenresSection(),
-                   _buildRecentlyViewed(),
-                   const SizedBox(height: 20,),
-                ],
-              ),
+            Column(
+              children: [
+                _buildSearchBar(),
+                categories.isEmpty
+                    ? const Text('No Categories available')
+                    : _buildCategoryList(),
+                subcategory.isEmpty
+                    ? selectedCategory.isNotEmpty
+                        ? const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 20.0, horizontal: 16.0),
+                                child: Text(
+                                  'Sub-Categories',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: 50,
+                                  child: Center(
+                                      child:
+                                          Text('No Sub-Categories available'))),
+                            ],
+                          )
+                        : const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 20.0, horizontal: 16.0),
+                                child: Text(
+                                  'Sub-Categories',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                  height: 50,
+                                  child: Center(
+                                      child:
+                                          Text('Select a Category to start'))),
+                            ],
+                          )
+                    : _buildSubcategoriesSection(),
+                gks.isEmpty
+                    ? subcategory.isNotEmpty
+                        ? const SizedBox(
+                            height: 50,
+                            child: Center(child: Text('Select a Sub-Category')))
+                        : const SizedBox()
+                    : _buildThumbnailGallery(),
+                _buildRecentlyViewed(),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           ],
         ),
-      ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.grey[50],
-      elevation: 0,
-      automaticallyImplyLeading: false,
-      title: Padding(
-        padding: const EdgeInsets.only(left: 10.0),
-        child: Row(
-          children: [
-            GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Image.asset('assets/back_button.png', height: 50),
-            ),
-            const SizedBox(width: 20),
-            const Text(
-              'Extra Knowledge',
-              style: TextStyle(
-                color: Color(0xFF48116A),
-                fontSize: 25,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-      ),
-      toolbarHeight: 70,
-    );
-  }
-
-  Widget _buildToggleSwitch() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-      child: FilterSwitch(
-        option1: 'Admin',
-        option2: 'Teacher',
-        initialSelectedIndex: 0,
-        onChanged: (selectedIndex) {
-          setState(() {
-            isTeacherSelected = selectedIndex == 1;
-          });
-        },
       ),
     );
   }
@@ -125,19 +319,34 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
   }
 
   Widget _buildCategoryList() {
-    return SizedBox(
-      height: 35,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: categories.length,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            child: _buildCategoryChip(categories[index]),
-          );
-        },
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+          child: Text(
+            'Categories',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 40,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: categories.length,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: _buildCategoryChip(categories[index]),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
@@ -148,7 +357,9 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          fetchSubCategories(category);
+        },
         child: Text(
           category,
           style: const TextStyle(
@@ -166,54 +377,49 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
       height: 200,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 10,
+        itemCount: gks.length,
         padding: const EdgeInsets.symmetric(vertical: 8),
         itemBuilder: (context, index) {
-          return _buildThumbnailItem(index);
+          return GestureDetector(
+            onTap: () {
+              addToRecentlyViewed(gks[index]); // Add item to recently viewed
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SpecificExtraKnowledge(
+                    title: gks[index].title,
+                    imagePath: gks[index].image,
+                    content: gks[index].description,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              width: 230,
+              margin: const EdgeInsets.only(left: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.purple[100],
+                image: DecorationImage(
+                  image: NetworkImage(gks[index].image),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          );
         },
       ),
     );
   }
 
-  Widget _buildThumbnailItem(int index) {
-    return GestureDetector(
-      onTap: () => _navigateToDetail(),
-      child: Container(
-        width: 230,
-        margin: const EdgeInsets.only(left: 16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.purple[100],
-          image: DecorationImage(
-            image: AssetImage('assets/thumbnail_$index.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _navigateToDetail() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SpecificExtraKnowledge(
-          title: 'Sample Blog Title',
-          imagePath: 'assets/sample_image.png',
-          content: 'This is a sample blog content.',
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGenresSection() {
+  Widget _buildSubcategoriesSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
           child: Text(
-            'Genres',
+            'Sub-Categories',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -224,12 +430,20 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
           height: 50,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: genres.length,
+            itemCount: subcategory.length,
             padding: const EdgeInsets.symmetric(horizontal: 8),
             itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: Chip(label: Text(genres[index])),
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selectedSubcategory = subcategory[index];
+                  });
+                  fetchGks();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Chip(label: Text(subcategory[index])),
+                ),
               );
             },
           ),
@@ -237,175 +451,8 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
       ],
     );
   }
-}
 
-class Notice {
-  final String noticetitle;
-  final String date;
-  final String notice;
-
-  const Notice({
-    required this.noticetitle,
-    required this.notice,
-    required this.date,
-  });
-
-  factory Notice.fromJson(Map<String, dynamic> json) {
-    return Notice(
-      noticetitle: json['title'] ?? '',
-      notice: json['description'] ?? '',
-      date: json['posted_on'] ?? '',
-    );
-  }
-}
-
-class ExtraKnowledgeNotice extends StatefulWidget {
-  const ExtraKnowledgeNotice({super.key});
-
-  @override
-  State<ExtraKnowledgeNotice> createState() => _ExtraKnowledgeNoticeState();
-}
-
-class _ExtraKnowledgeNoticeState extends State<ExtraKnowledgeNotice> {
-  final List<Notice> notices = [];
-  bool isLoading = true;
-  bool isLoadingMore = false;
-  int currentPage = 1;
-  bool hasMore = true;
-  final ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-    fetchNotices();
-    _setupScrollListener();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _setupScrollListener() {
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        _loadMore();
-      }
-    });
-  }
-
-  Future<void> fetchNotices({int page = 1}) async {
-    if (isLoadingMore) return;
-
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final userID = prefs.getString('userID');
-      if (userID == null) throw Exception('User ID not found');
-
-      final url = Uri.parse('$baseUrl/api/my-notice/$userID?page=$page&data_per_page=10');
-      final response = await http.get(url);
-
-      if (!mounted) return;
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        setState(() {
-          if (page == 1) {
-            notices.clear();
-          }
-          notices.addAll(data.map((json) => Notice.fromJson(json)));
-          hasMore = data.isNotEmpty;
-          isLoading = false;
-          isLoadingMore = false;
-        });
-      } else {
-        throw Exception('Failed to load notices');
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          isLoading = false;
-          isLoadingMore = false;
-        });
-        _showError('Failed to load notices: ${e.toString()}');
-      }
-    }
-  }
-
-  Future<void> _loadMore() async {
-    if (!hasMore || isLoadingMore) return;
-    setState(() {
-      isLoadingMore = true;
-      currentPage++;
-    });
-    await fetchNotices(page: currentPage);
-  }
-
-  void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (notices.isEmpty) {
-      return const Center(child: Text('No Notices Available'));
-    }
-
-    return ListView.builder(
-      controller: _scrollController,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: notices.length + (hasMore ? 1 : 0),
-      itemBuilder: (context, index) {
-        if (index == notices.length) {
-          return isLoadingMore
-              ? const Center(child: CircularProgressIndicator())
-              : const SizedBox.shrink();
-        }
-
-        final notice = notices[index];
-        final cardColor = Colors.primaries[index % Colors.primaries.length][100];
-
-        return Card(
-          margin: const EdgeInsets.all(10),
-          color: cardColor,
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  notice.noticetitle,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  notice.date,
-                 
-                ),
-                const SizedBox(height: 8),
-                Text(notice.notice),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-
-
-
-
-Widget _buildRecentlyViewed() {
+  Widget _buildRecentlyViewed() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -419,77 +466,62 @@ Widget _buildRecentlyViewed() {
             ),
           ),
         ),
-        SizedBox(
-          height: 150,
-          child: LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 5, 
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: constraints.maxWidth * 0.4,
+        if (recentlyViewed.isEmpty)
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text('No recently viewed items'),
+          )
+        else
+          SizedBox(
+            height: 150,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: recentlyViewed.length,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              itemBuilder: (context, index) {
+                final item = recentlyViewed[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SpecificExtraKnowledge(
+                          title: item.title,
+                          imagePath: item.image,
+                          content: item.description,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: 150,
                     margin: const EdgeInsets.symmetric(horizontal: 8.0),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color:  Colors.grey.withValues(alpha: 0.3),
-                          blurRadius: 4,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
+                      image: DecorationImage(
+                        image: NetworkImage(item.image),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(10),
-                              ),
-                              image: DecorationImage(
-                                image: AssetImage('assets/history_$index.png'),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        color: Colors.black54,
+                        child: Text(
+                          item.title,
+                          style: const TextStyle(color: Colors.white),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'History Item ${index + 1}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                'Viewed ${index + 1} days ago',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  );
-                },
-              );
-            },
+                  ),
+                );
+              },
+            ),
           ),
-        ),
       ],
     );
   }
+}
