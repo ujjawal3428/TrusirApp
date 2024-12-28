@@ -9,14 +9,12 @@ class GK {
   String? title;
   String? description;
   String? photo;
-  String? teacherID;
 
   Map<String, dynamic> toJson() {
     return {
       'title': title,
-      'course': description,
+      'description': description,
       'image': photo,
-      'teacher_userID': teacherID,
     };
   }
 }
@@ -42,8 +40,8 @@ class _AddGKState extends State<AddGK> {
       // Display the image preview
       return Image.network(
         fileUrl,
-        width: 50,
-        height: 50,
+        width: 100,
+        height: 100,
         fit: BoxFit.contain,
         errorBuilder: (context, error, stackTrace) {
           return const Icon(Icons.broken_image, color: Colors.grey, size: 50);
@@ -339,125 +337,122 @@ class _AddGKState extends State<AddGK> {
               ),
             ),
             const SizedBox(height: 25),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 168,
-                  width: 260, // Responsive width
-                  decoration: BoxDecoration(
+            Container(
+              height: 168,
+              width: double.infinity, // Responsive width
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.2),
+                    offset: const Offset(2, 2),
+                    blurRadius: 4,
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: descriptionController,
+                textAlignVertical: TextAlignVertical.top,
+                decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 120, horizontal: 20),
+                  hintText: 'Description',
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(22),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.2),
-                        offset: const Offset(2, 2),
-                        blurRadius: 4,
-                      ),
-                    ],
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.grey,
+                    ),
                   ),
-                  child: TextField(
-                    controller: descriptionController,
-                    textAlignVertical: TextAlignVertical.top,
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 120, horizontal: 20),
-                      hintText: 'Description',
-                      fillColor: Colors.white,
-                      filled: true,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(22),
-                        borderSide: const BorderSide(
-                          width: 1,
-                          color: Colors.grey,
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Center(
+              child: GestureDetector(
+                onTap: () {
+                  handleFileSelection(context);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Container(
+                    width: double.infinity, // Responsive width
+                    height: 168,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(14.40),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.5),
+                          offset: const Offset(2, 2),
+                          blurRadius: 4,
                         ),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(22),
-                        borderSide: const BorderSide(
-                          width: 1,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(22),
-                        borderSide: const BorderSide(
-                          width: 1,
-                          color: Colors.blue,
-                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: Center(
+                        child: formData.photo != null
+                            ? _buildFilePreview(formData.photo!)
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 30),
+                                    child: Image.asset(
+                                      'assets/camera@3x.png',
+                                      width: 46,
+                                      height: 37,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  const Center(
+                                    child: Text(
+                                      'Upload Image',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  const Center(
+                                    child: Text(
+                                      'Click Here',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 20),
-                GestureDetector(
-                  onTap: () {
-                    handleFileSelection(context);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Container(
-                      width: 100, // Responsive width
-                      height: 168,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(14.40),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.5),
-                            offset: const Offset(2, 2),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(1.0),
-                        child: Center(
-                          child: formData.photo != null
-                              ? _buildFilePreview(formData.photo!)
-                              : Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 30),
-                                      child: Image.asset(
-                                        'assets/camera@3x.png',
-                                        width: 46,
-                                        height: 37,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    const Center(
-                                      child: Text(
-                                        'Upload Image',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    const Center(
-                                      child: Text(
-                                        'Click Here',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 10,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
             const Spacer(),
             const Center(

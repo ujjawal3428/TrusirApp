@@ -290,108 +290,117 @@ class _StudentGKPageState extends State<StudentGKPage> {
         toolbarHeight: 70,
       ),
       backgroundColor: Colors.grey[50],
-      body: gkList.isEmpty && !isLoading && initialLoadComplete
-          ? const Center(
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Text(
-                  "No GK's available",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-            )
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SingleChildScrollView(
-                  child: SizedBox(
-                    height: (gkList.length * 130.0)
-                        .clamp(0, MediaQuery.of(context).size.height * 0.65),
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(10.0),
-                      itemCount: gkList.length,
-                      itemBuilder: (context, index) {
-                        final gk = gkList[index];
-                        final filename = '${gk.course}_gk_${gk.createdAt}';
-                        final isDownloaded =
-                            downloadedFiles.containsKey(filename);
-
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.yellow.shade100,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: ListTile(
-                              leading: _buildFilePreview(gk.image),
-                              title: Text(
-                                gk.title,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Description: ${gk.course}'),
-                                  const SizedBox(height: 2),
-                                  Text('Posted on: ${gk.createdAt}'),
-                                ],
-                              ),
-                              trailing: SizedBox(
-                                height: 20,
-                                width: 80,
-                                child: ElevatedButton.icon(
-                                  onPressed: () {
-                                    if (isDownloaded) {
-                                      _openFile(filename);
-                                    } else {
-                                      _downloadFile(gk.image, filename);
-                                    }
-                                  },
-                                  icon: Icon(
-                                    isDownloaded
-                                        ? Icons.open_in_new
-                                        : Icons.download,
-                                    size: 17,
-                                  ),
-                                  label: Text(
-                                    isDownloaded ? "Open" : "Download",
-                                    style: const TextStyle(fontSize: 10),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.all(0),
-                                    foregroundColor: Colors.blue,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                if (isLoading)
-                  const CircularProgressIndicator()
-                else if (!hasMoreData && gkList.isNotEmpty)
-                  const Padding(
+      body: Column(
+        mainAxisAlignment:
+            gkList.isEmpty ? MainAxisAlignment.center : MainAxisAlignment.start,
+        children: [
+          gkList.isEmpty && !isLoading && initialLoadComplete
+              ? const Center(
+                  child: Padding(
                     padding: EdgeInsets.all(20.0),
                     child: Text(
-                      'No more GKs',
+                      "No GK's available",
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                  )
-                else if (gkList.isNotEmpty)
-                  TextButton(
-                    onPressed: fetchGks,
-                    child: const Text('Load More'),
                   ),
-                _buildCreateButton(),
-              ],
-            ),
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SingleChildScrollView(
+                      child: SizedBox(
+                        height: (gkList.length * 130.0).clamp(
+                            0, MediaQuery.of(context).size.height * 0.65),
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(10.0),
+                          itemCount: gkList.length,
+                          itemBuilder: (context, index) {
+                            final gk = gkList[index];
+                            final filename = '${gk.course}_gk_${gk.createdAt}';
+                            final isDownloaded =
+                                downloadedFiles.containsKey(filename);
+
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.yellow.shade100,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: ListTile(
+                                  leading: _buildFilePreview(gk.image),
+                                  title: Text(
+                                    gk.title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Description: ${gk.course}'),
+                                      const SizedBox(height: 2),
+                                      Text('Posted on: ${gk.createdAt}'),
+                                    ],
+                                  ),
+                                  trailing: SizedBox(
+                                    height: 20,
+                                    width: 80,
+                                    child: ElevatedButton.icon(
+                                      onPressed: () {
+                                        if (isDownloaded) {
+                                          _openFile(filename);
+                                        } else {
+                                          _downloadFile(gk.image, filename);
+                                        }
+                                      },
+                                      icon: Icon(
+                                        isDownloaded
+                                            ? Icons.open_in_new
+                                            : Icons.download,
+                                        size: 17,
+                                      ),
+                                      label: Text(
+                                        isDownloaded ? "Open" : "Download",
+                                        style: const TextStyle(fontSize: 10),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.all(0),
+                                        foregroundColor: Colors.blue,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    if (isLoading)
+                      const CircularProgressIndicator()
+                    else if (!hasMoreData && gkList.isNotEmpty)
+                      const Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text(
+                          'No more GKs',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    else if (gkList.isNotEmpty)
+                      TextButton(
+                        onPressed: fetchGks,
+                        child: const Text('Load More'),
+                      ),
+                  ],
+                ),
+          _buildCreateButton(),
+        ],
+      ),
     );
   }
 
