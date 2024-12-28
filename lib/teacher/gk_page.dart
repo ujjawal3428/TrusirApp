@@ -312,7 +312,7 @@ class _StudentGKPageState extends State<StudentGKPage> {
                       itemCount: gkList.length,
                       itemBuilder: (context, index) {
                         final gk = gkList[index];
-                        final filename = '${gk.description}_gk_${gk.studentID}';
+                        final filename = '${gk.course}_gk_${gk.createdAt}';
                         final isDownloaded =
                             downloadedFiles.containsKey(filename);
 
@@ -330,6 +330,14 @@ class _StudentGKPageState extends State<StudentGKPage> {
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                 ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Description: ${gk.course}'),
+                                  const SizedBox(height: 2),
+                                  Text('Posted on: ${gk.createdAt}'),
+                                ],
                               ),
                               trailing: SizedBox(
                                 height: 20,
@@ -415,28 +423,26 @@ class _StudentGKPageState extends State<StudentGKPage> {
 class GK {
   final int id;
   final String title;
-  final String description;
+  final String course;
   final String image;
-  final String teacherID;
-  final String studentID;
+  final String createdAt;
 
   GK({
     required this.id,
     required this.title,
-    required this.description,
+    required this.course,
     required this.image,
-    required this.teacherID,
-    required this.studentID,
+    required this.createdAt,
   });
 
   factory GK.fromJson(Map<String, dynamic> json) {
     return GK(
       id: json['id'],
       title: json['title'],
-      description: json['description'],
+      course: json['description'],
       image: json['image'],
-      teacherID: json['teacherID'],
-      studentID: json['studentID'],
+      createdAt:
+          DateTime.parse(json['created_at']).toIso8601String().split('T')[0],
     );
   }
 }
