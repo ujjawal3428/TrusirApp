@@ -102,13 +102,9 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
 
     // Validation: Check if any field is empty
     if (formData.title == null || formData.title!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Title cannot be empty!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
+      setState(() {
+        formData.title = "No Title";
+      });
     }
 
     if (formData.course == null || formData.course!.isEmpty) {
@@ -121,7 +117,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
       return;
     }
 
-    if (formData.photo == null) {
+    if (formData.photo == null || formData.photo!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Upload the image'),

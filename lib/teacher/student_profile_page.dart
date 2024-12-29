@@ -2,11 +2,23 @@ import 'package:flutter/material.dart';
 
 class StudentProfilePage extends StatefulWidget {
   final String? name;
+  final String? dob;
+  final String? school;
+  final String? studentClass;
   final String? subject;
   final String? profile;
+  final String? address;
   final String? phone;
   const StudentProfilePage(
-      {super.key, this.name, this.subject, this.profile, this.phone});
+      {super.key,
+      required this.name,
+      required this.dob,
+      required this.school,
+      required this.studentClass,
+      required this.subject,
+      required this.profile,
+      required this.address,
+      required this.phone});
 
   @override
   StudentProfilePageState createState() => StudentProfilePageState();
@@ -23,11 +35,12 @@ class StudentProfilePageState extends State<StudentProfilePage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isLargeScreen = screenWidth > 600;
 
-    const rowColors = [
-      Color.fromARGB(255, 255, 199, 221),
-      Color.fromARGB(255, 199, 236, 255),
-      Color.fromARGB(255, 255, 185, 185),
-      Color.fromARGB(255, 191, 184, 255),
+    final rowColors = [
+      const Color.fromARGB(255, 255, 199, 221),
+      const Color.fromARGB(255, 199, 236, 255),
+      const Color.fromARGB(255, 255, 185, 185),
+      const Color.fromARGB(255, 191, 184, 255),
+      Colors.green.shade100
     ];
 
     return Scaffold(
@@ -47,7 +60,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
                     child: Image.asset('assets/back_button.png', height: 50)),
                 const SizedBox(width: 20),
                 const Text(
-                  'Student Profile',
+                  'My Profile',
                   style: TextStyle(
                     color: Color(0xFF48116A),
                     fontSize: 25,
@@ -106,13 +119,31 @@ class StudentProfilePageState extends State<StudentProfilePage> {
             // Info rows
             const SizedBox(height: 18),
             buildInfoRow(
-              'assets/phone@2x.png',
-              'Phone',
-              widget.phone!,
+              'assets/pastry@3x.png',
+              'Date of Birth',
+              widget.dob!,
               isLargeScreen,
               rowColors[0],
             ),
-
+            const SizedBox(height: 10),
+            buildInfoRow(
+              'assets/house@3x.png',
+              'School',
+              widget.school!,
+              isLargeScreen,
+              rowColors[1],
+            ),
+            const SizedBox(height: 10),
+            buildInfoRow('assets/location@2x.png', 'Address', widget.address!,
+                isLargeScreen, rowColors[4]),
+            const SizedBox(height: 10),
+            buildInfoRow(
+              'assets/graduation@3x.png',
+              'Class',
+              widget.studentClass!,
+              isLargeScreen,
+              rowColors[2],
+            ),
             const SizedBox(height: 10),
             buildInfoRow(
               'assets/pensp@3x.png',

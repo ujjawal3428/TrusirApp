@@ -46,11 +46,12 @@ class MyProfileScreenState extends State<MyProfileScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isLargeScreen = screenWidth > 600;
 
-    const rowColors = [
-      Color.fromARGB(255, 255, 199, 221),
-      Color.fromARGB(255, 199, 236, 255),
-      Color.fromARGB(255, 255, 185, 185),
-      Color.fromARGB(255, 191, 184, 255),
+    final rowColors = [
+      const Color.fromARGB(255, 255, 199, 221),
+      const Color.fromARGB(255, 199, 236, 255),
+      const Color.fromARGB(255, 255, 185, 185),
+      const Color.fromARGB(255, 191, 184, 255),
+      Colors.green.shade100
     ];
 
     return Scaffold(
@@ -173,6 +174,9 @@ class MyProfileScreenState extends State<MyProfileScreen> {
               isLargeScreen,
               rowColors[1],
             ),
+            const SizedBox(height: 10),
+            buildInfoRow('assets/location@2x.png', 'Address', address!,
+                isLargeScreen, rowColors[4]),
             const SizedBox(height: 10),
             buildInfoRow(
               'assets/graduation@3x.png',

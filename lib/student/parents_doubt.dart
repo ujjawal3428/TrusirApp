@@ -67,26 +67,18 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
 
     // Validation: Check if any field is empty
     if (formData.title == null || formData.title!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Title cannot be empty!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
+      setState(() {
+        formData.title = "No Title";
+      });
     }
 
     if (formData.description == null || formData.description!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Description cannot be empty!'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      return;
+      setState(() {
+        formData.description = "No Description";
+      });
     }
 
-    if (formData.photo == null) {
+    if (formData.photo == null || formData.photo!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Upload the image'),
