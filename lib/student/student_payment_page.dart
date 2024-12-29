@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trusir/common/phonepe_payment.dart';
 
 class StudentPaymentPage extends StatelessWidget {
   const StudentPaymentPage({super.key});
@@ -44,7 +45,7 @@ class StudentPaymentPage extends StatelessWidget {
                 // Online Payment Button
                 Center(
                   child: GestureDetector(
-                    onTap: _ononlinepayment,
+                    onTap: () => _ononlinepayment(context),
                     child: Image.asset(
                       'assets/onlinepayment.png', // Ensure this path is correct
                       fit: BoxFit.cover,
@@ -78,8 +79,13 @@ class StudentPaymentPage extends StatelessWidget {
   }
 
   // Define the functions for online and offline payment actions
-  void _ononlinepayment() {
-    print("Online Payment selected");
+  void _ononlinepayment(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const PaymentPage(),
+      ),
+    );
     // Add your action here for online payment
   }
 

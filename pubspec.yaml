@@ -33,6 +33,8 @@ dependencies:
   chewie: 
   google_fonts: 
   youtube_player_flutter: 
+  phonepe_payment_sdk: 
+  crypto: 
 dev_dependencies:
   flutter_test:
     sdk: flutter
