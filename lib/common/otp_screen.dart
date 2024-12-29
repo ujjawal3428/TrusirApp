@@ -19,6 +19,7 @@ class OTPScreen extends StatefulWidget {
 class _OTPScreenState extends State<OTPScreen> {
   final TextEditingController otpController = TextEditingController();
   bool newuser = false;
+  bool isVerifying = false;
 
   Future<Map<String, dynamic>?> fetchUserData(String phoneNumber) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -74,8 +75,6 @@ class _OTPScreenState extends State<OTPScreen> {
 
   void onPost(String phone, BuildContext context) async {
     String otp = otpControllers.map((controller) => controller.text).join();
-    print("Entered OTP: $otp");
-
     if (otp.length != 4 || !RegExp(r'^[0-9]+$').hasMatch(otp)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -86,10 +85,19 @@ class _OTPScreenState extends State<OTPScreen> {
       return;
     }
 
-    // showVerificationDialog(context);
-    verifyOTP(phone, otp);
+    // Show progress indicator
+    setState(() {
+      isVerifying = true;
+    });
 
-    // Handle OTP verification logic
+    try {
+      await verifyOTP(phone, otp);
+    } finally {
+      // Hide progress indicator
+      setState(() {
+        isVerifying = false;
+      });
+    }
   }
 
   Future<void> verifyOTP(String phone, String otp) async {
@@ -255,13 +263,18 @@ class _OTPScreenState extends State<OTPScreen> {
                       ),
                       onChanged: (value) {
                         if (value.isNotEmpty && index < 3) {
-                          // Move to the next field
                           FocusScope.of(context)
                               .requestFocus(focusNodes[index + 1]);
                         } else if (value.isEmpty && index > 0) {
-                          // Move to the previous field if backspace is pressed
                           FocusScope.of(context)
                               .requestFocus(focusNodes[index - 1]);
+                        }
+
+                        bool allFilled = otpControllers
+                            .every((controller) => controller.text.isNotEmpty);
+                        if (allFilled) {
+                          FocusScope.of(context).unfocus();
+                          onPost(widget.phonenum, context);
                         }
                       },
                     ),
@@ -269,19 +282,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 }),
               ),
               const SizedBox(
-                height: 20,
-              ),
-              // const Text(
-              //   'Resend OTP',
-              //   style: TextStyle(
-              //     fontFamily: 'Poppins',
-              //     color: Color(0xFF48116A),
-              //     fontSize: 17,
-              //     fontWeight: FontWeight.w500,
-              //   ),
-              // ),
-              const SizedBox(
-                height: 50,
+                height: 70,
               ),
               _buildVerifyButton(),
             ],
@@ -293,16 +294,18 @@ class _OTPScreenState extends State<OTPScreen> {
 
   Widget _buildVerifyButton() {
     return Center(
-      child: GestureDetector(
-        onTap: () {
-          onPost(widget.phonenum, context);
-        },
-        child: Image.asset(
-          'assets/verify.png',
-          width: double.infinity,
-          fit: BoxFit.contain,
-        ),
-      ),
+      child: isVerifying
+          ? const CircularProgressIndicator() // Show progress indicator
+          : GestureDetector(
+              onTap: () {
+                onPost(widget.phonenum, context);
+              },
+              child: Image.asset(
+                'assets/verify.png',
+                width: double.infinity,
+                fit: BoxFit.contain,
+              ),
+            ),
     );
   }
 }
