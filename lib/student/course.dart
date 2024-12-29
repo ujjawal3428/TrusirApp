@@ -1,6 +1,11 @@
 import 'dart:convert';
+import 'dart:math';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/student/main_screen.dart';
 
@@ -30,10 +35,22 @@ class Course {
   }
 }
 
-class CourseCard extends StatelessWidget {
+class CourseCard extends StatefulWidget {
   final Course course;
 
   const CourseCard({super.key, required this.course});
+
+  @override
+  State<CourseCard> createState() => _CourseCardState();
+}
+
+class _CourseCardState extends State<CourseCard> {
+  @override
+  void initState() {
+    super.initState();
+    initPhonePeSdk();
+    fetchProfileData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +77,7 @@ class CourseCard extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    course.image,
+                    widget.course.image,
                     width: double.infinity,
                     height: 180,
                     fit: BoxFit.cover,
@@ -99,7 +116,7 @@ class CourseCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              course.name,
+              widget.course.name,
               style: const TextStyle(
                 fontSize: 18,
                 fontFamily: 'Poppins',
@@ -108,7 +125,7 @@ class CourseCard extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              course.subject,
+              widget.course.subject,
               style: const TextStyle(
                 fontSize: 14,
                 fontFamily: 'Poppins',
@@ -119,7 +136,7 @@ class CourseCard extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  '₹${course.amount}',
+                  '₹${widget.course.amount}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontFamily: 'Poppins',
@@ -142,7 +159,7 @@ class CourseCard extends StatelessWidget {
                 const SizedBox(
                   width: 7,
                 ),
-                 const Text(
+                const Text(
                   '50% OFF', // Placeholder for original price
                   style: TextStyle(
                     fontSize: 10,
@@ -159,7 +176,11 @@ class CourseCard extends StatelessWidget {
                   width: 142,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Handle Buy Now action
+                      merchantTransactionID =
+                          generateUniqueTransactionId(userID!);
+                      body = getChecksum(int.parse('${widget.course.amount}00'))
+                          .toString();
+                      startTransaction();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
@@ -176,34 +197,151 @@ class CourseCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(width: 10,),
-                 SizedBox(
-              width: 142,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle Buy Now action
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 225, 143, 55),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                const SizedBox(
+                  width: 10,
+                ),
+                SizedBox(
+                  width: 142,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle Buy Now action
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 225, 143, 55),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Book Demo',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
                   ),
                 ),
-                child: const Text(
-                  'Book Demo',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-            ),
               ],
             ),
           ],
         ),
       ),
     );
+  }
+
+  String body = "";
+  // Transaction details
+  String checksum = "";
+  // Obtain this from your backend
+  String? userID;
+
+  String? phone;
+
+  String merchantTransactionID = '';
+
+  Future<void> fetchProfileData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userID = prefs.getString('userID');
+      phone = prefs.getString('phone_number');
+    });
+  }
+
+  String generateUniqueTransactionId(String userId) {
+    // Hash the user ID to a shorter fixed length
+    String userHash = sha256
+        .convert(utf8.encode(userId))
+        .toString()
+        .substring(0, 8); // 8 characters
+    int timestamp = DateTime.now().millisecondsSinceEpoch ~/
+        1000; // Unix timestamp in seconds
+    int randomNum = Random().nextInt(10000); // Random 4-digit number
+    print("txn_${userHash}_${timestamp}_$randomNum");
+    // Combine components to ensure <= 38 characters
+    return "txn_${userHash}_${timestamp}_$randomNum";
+  }
+
+  void initPhonePeSdk() {
+    PhonePePaymentSdk.init(environmentValue, appId, merchantId, true)
+        .then((isInitialized) {
+      print("PhonePe SDK Initialized: $isInitialized");
+    }).catchError((error) {
+      print("Error initializing PhonePe SDK: $error");
+    });
+  }
+
+  void startTransaction() {
+    PhonePePaymentSdk.startTransaction(body, callback, checksum, packageName)
+        .then((response) {
+      if (response != null) {
+        String status = response['status'].toString();
+        if (status == 'SUCCESS') {
+          print("Payment Successful");
+          checkStatus();
+        } else {
+          print("Payment Failed: ${response['error']}");
+          Fluttertoast.showToast(msg: "Payment Failed");
+        }
+      } else {
+        print("Transaction Incomplete");
+        Fluttertoast.showToast(msg: 'Transaction Incomplete');
+      }
+    }).catchError((error) {
+      print("Error during transaction: $error");
+    });
+  }
+
+  getChecksum(int am) {
+    final reqData = {
+      "merchantId": merchantId,
+      "merchantTransactionId": merchantTransactionID,
+      "merchantUserId": userID,
+      "amount": am,
+      "callbackUrl": callback,
+      "mobileNumber": "+91$phone",
+      "paymentInstrument": {"type": "PAY_PAGE"}
+    };
+    String base64body = base64.encode(utf8.encode(json.encode(reqData)));
+    checksum =
+        '${sha256.convert(utf8.encode(base64body + apiEndPoint + saltKey)).toString()}###$saltIndex';
+
+    return base64body;
+  }
+
+  void checkStatus() async {
+    String url =
+        "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/$merchantId/$merchantTransactionID";
+
+    String concat = "/pg/v1/status/$merchantId/$merchantTransactionID$saltKey";
+
+    var bytes = utf8.encode(concat);
+
+    var digest = sha256.convert(bytes).toString();
+
+    String xVerify = "$digest###$saltIndex";
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "X-VERIFY": xVerify,
+      "X-MERCHANT-ID": merchantId
+    };
+
+    await http.get(Uri.parse(url), headers: headers).then((value) {
+      Map<String, dynamic> response = jsonDecode(value.body);
+
+      try {
+        if (response["success"] &&
+            response["code"] == "PAYMENT_SUCCESS" &&
+            response["data"]["state"] == "COMPLETED") {
+          Fluttertoast.showToast(msg: response["code"]);
+          print(response);
+        } else {
+          Fluttertoast.showToast(msg: response["code"]);
+        }
+      } catch (e) {
+        Fluttertoast.showToast(msg: "error");
+      }
+    });
   }
 }
 
