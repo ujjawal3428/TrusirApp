@@ -213,8 +213,8 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
       // Add the new item to the beginning of the list
       recentlyViewed.insert(0, item);
       // Ensure the list doesn't exceed 5 items
-      if (recentlyViewed.length > 7) {
-        recentlyViewed = recentlyViewed.sublist(0, 7);
+      if (recentlyViewed.length > 5) {
+        recentlyViewed = recentlyViewed.sublist(0, 5);
       }
     });
     saveRecentlyViewed();
@@ -457,6 +457,7 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
                       ),
                     ),
                   );
+                  addToRecentlyViewed(item);
                 },
                 child: Container(
                   width: 150,
