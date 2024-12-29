@@ -17,8 +17,8 @@ class _AddtestseriesState extends State<Addtestseries> {
   String? selectedSubject;
   final TextEditingController _testNameController = TextEditingController();
   String? photo;
-  String? answer;
-  String? question;
+  String answer = '';
+  String question = '';
   List<String> _courses = [];
   String extension = '';
 
@@ -74,58 +74,68 @@ class _AddtestseriesState extends State<Addtestseries> {
     }
   }
 
-  Future<String?> handleFileSelection(BuildContext context) async {
+  Future<String?> handleFileSelection(
+      BuildContext context, String existingUrls) async {
     try {
-      // Use FilePicker to select a file
-      final result = await FilePicker.platform.pickFiles();
+      // Use FilePicker to select multiple files
+      final result = await FilePicker.platform.pickFiles(allowMultiple: true);
 
-      if (result != null && result.files.single.path != null) {
-        final filePath = result.files.single.path!;
-        final fileName = result.files.single.name;
-        final fileSize = result.files.single.size; // File size in bytes
+      if (result != null && result.files.isNotEmpty) {
+        String updatedUrls = existingUrls;
 
-        // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
-        if (fileSize > 2 * 1024 * 1024) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content:
-                  Text('File size exceeds 2MB. Please select a smaller file.'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-          return null; // Exit the method
+        for (final file in result.files) {
+          final filePath = file.path;
+          final fileName = file.name;
+          final fileSize = file.size; // File size in bytes
+
+          if (filePath == null) {
+            continue;
+          }
+
+          // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
+          if (fileSize > 2 * 1024 * 1024) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('$fileName exceeds 2MB. Skipping upload.'),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+            continue;
+          }
+
+          // Determine file type
+          final fileType = fileName.endsWith('.jpg') ||
+                  fileName.endsWith('.jpeg') ||
+                  fileName.endsWith('.png')
+              ? 'photo'
+              : 'document';
+
+          // Upload the file and get the path
+          final uploadedPath = await uploadFile(filePath, fileType);
+
+          if (uploadedPath != 'null') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('$fileName uploaded successfully!'),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+            print('$fileName uploaded successfully: $uploadedPath');
+            updatedUrls = updatedUrls.isEmpty
+                ? uploadedPath
+                : '$updatedUrls,$uploadedPath';
+          } else {
+            print('Failed to upload $fileName.');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to upload $fileName.'),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+          }
         }
 
-        // Determine file type (use "document" for docx/pdf, "photo" for images)
-        final fileType = fileName.endsWith('.jpg') ||
-                fileName.endsWith('.jpeg') ||
-                fileName.endsWith('.png')
-            ? 'photo'
-            : 'document';
-
-        // Upload the file and get the path
-        final uploadedPath = await uploadFile(filePath, fileType);
-
-        if (uploadedPath != 'null') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('File Uploaded Successfully!'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-          print('File uploaded successfully: $uploadedPath');
-          return uploadedPath;
-        } else {
-          print('Failed to upload the file.');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  'Failed to upload the file.(Only upload pdf, docx and image)'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-          return null;
-        }
+        return updatedUrls;
       } else {
         print('No file selected.');
         ScaffoldMessenger.of(context).showSnackBar(
@@ -134,18 +144,17 @@ class _AddtestseriesState extends State<Addtestseries> {
             duration: Duration(seconds: 1),
           ),
         );
-        return null;
+        return existingUrls;
       }
     } catch (e) {
       print('Error during file selection: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content:
-              Text('Failed to Upload file.(Only upload pdf, docx and image)'),
+          content: Text('An error occurred while uploading files.'),
           duration: Duration(seconds: 1),
         ),
       );
-      return null;
+      return existingUrls;
     }
   }
 
@@ -222,6 +231,7 @@ class _AddtestseriesState extends State<Addtestseries> {
       "date": currentDate,
       "time": currentTime,
     };
+    print("${postData["question"]}  ${postData["answer"]}");
 
     // Send the POST request
     const apiUrl =
@@ -254,7 +264,6 @@ class _AddtestseriesState extends State<Addtestseries> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      
       height: MediaQuery.of(context).size.height * 0.42,
       width: MediaQuery.of(context).size.width,
       child: Padding(
@@ -264,7 +273,9 @@ class _AddtestseriesState extends State<Addtestseries> {
           child: ListView(
             children: [
               // Test Name
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               Container(
                 color: Colors.white,
                 child: TextFormField(
@@ -284,8 +295,8 @@ class _AddtestseriesState extends State<Addtestseries> {
                       borderRadius: BorderRadius.circular(22),
                       borderSide: const BorderSide(color: Colors.grey),
                     ),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+                    contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 17),
                     isDense: true,
                   ),
                   validator: (value) {
@@ -342,8 +353,8 @@ class _AddtestseriesState extends State<Addtestseries> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  question != null
-                      ? _buildFilePreview(question!)
+                  question.isNotEmpty
+                      ? _buildFilePreview(question)
                       : SizedBox(
                           height: 40,
                           width: 150,
@@ -354,7 +365,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                             ),
                             onPressed: () async {
                               final selectedFile =
-                                  await handleFileSelection(context);
+                                  await handleFileSelection(context, question);
                               if (selectedFile != null) {
                                 setState(() {
                                   question = selectedFile;
@@ -368,8 +379,8 @@ class _AddtestseriesState extends State<Addtestseries> {
                             ),
                           ),
                         ),
-                  answer != null
-                      ? _buildFilePreview(answer!)
+                  answer.isNotEmpty
+                      ? _buildFilePreview(answer)
                       : SizedBox(
                           height: 40,
                           width: 150,
@@ -380,7 +391,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                             ),
                             onPressed: () async {
                               final selectedFile =
-                                  await handleFileSelection(context);
+                                  await handleFileSelection(context, answer);
                               if (selectedFile != null) {
                                 setState(() {
                                   answer = selectedFile;
@@ -415,12 +426,12 @@ class _AddtestseriesState extends State<Addtestseries> {
       child: GestureDetector(
         onTap: () {
           if (_formKey.currentState!.validate()) {
-            if (question == null) {
+            if (question == '') {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Upload Question')),
               );
               return;
-            } else if (answer == null) {
+            } else if (answer == '') {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Upload Answer')),
               );
