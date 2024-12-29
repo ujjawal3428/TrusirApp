@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/student/your_doubt.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class StudentDoubts {
@@ -342,6 +343,17 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+                const Spacer(),
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const YourDoubtPage(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.menu))
               ],
             ),
           ),

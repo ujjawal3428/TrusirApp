@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/parents_doubts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ParentsDoubt {
@@ -309,6 +310,17 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                   fontWeight: FontWeight.w700,
                 ),
               ),
+              const Spacer(),
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ParentsDoubtsPage(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.menu))
             ],
           ),
         ),
