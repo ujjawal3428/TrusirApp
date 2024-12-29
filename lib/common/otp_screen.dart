@@ -281,6 +281,16 @@ class _OTPScreenState extends State<OTPScreen> {
                             if (value.isNotEmpty && index < 3) {
                               FocusScope.of(context)
                                   .requestFocus(focusNodes[index + 1]);
+                            } else if (value.isEmpty && index > 0) {
+                              FocusScope.of(context)
+                                  .requestFocus(focusNodes[index - 1]);
+                            }
+
+                            bool allFilled = otpControllers.every(
+                                (controller) => controller.text.isNotEmpty);
+                            if (allFilled) {
+                              FocusScope.of(context).unfocus();
+                              onPost(widget.phonenum, context);
                             }
                           },
                         ),
