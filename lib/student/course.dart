@@ -128,7 +128,7 @@ class CourseCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                  width: 10,
+                  width: 7,
                 ),
                 const Text(
                   '₹5000', // Placeholder for original price
@@ -139,29 +139,66 @@ class CourseCard extends StatelessWidget {
                     color: Colors.grey,
                   ),
                 ),
+                const SizedBox(
+                  width: 7,
+                ),
+                 const Text(
+                  '50% OFF', // Placeholder for original price
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontFamily: 'Poppins',
+                    color: Colors.red,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
-            SizedBox(
-              width: double.infinity,
+            Row(
+              children: [
+                SizedBox(
+                  width: 142,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle Buy Now action
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Buy Now',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10,),
+                 SizedBox(
+              width: 142,
               child: ElevatedButton(
                 onPressed: () {
                   // Handle Buy Now action
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: const Color.fromARGB(255, 225, 143, 55),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 child: const Text(
-                  'Buy Now',
+                  'Book Demo',
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: 'Poppins',
                   ),
                 ),
               ),
+            ),
+              ],
             ),
           ],
         ),

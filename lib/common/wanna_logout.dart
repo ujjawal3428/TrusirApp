@@ -23,8 +23,8 @@ class WanaLogout extends StatelessWidget {
         children: [
           // Main content with padding and scroll view
           Padding(
-            padding: const EdgeInsets.only(top: 50.0, left: 20.0, right: 20.0),
-            child: SingleChildScrollView(
+            padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+            child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -40,7 +40,7 @@ class WanaLogout extends StatelessWidget {
                     },
                   ),
                   const SizedBox(height: 160),
-
+              
                   // Online Payment Button
                   Center(
                     child: Image.asset(
@@ -50,7 +50,7 @@ class WanaLogout extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 40),
-
+              
                   // Logout Confirmation Text
                   const Center(
                     child: Text(
@@ -65,7 +65,7 @@ class WanaLogout extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 50),
-
+              
                   // Cancel Button
                   Center(
                     child: GestureDetector(
@@ -79,7 +79,7 @@ class WanaLogout extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 5),
-
+              
                   // Logout Button
                   Center(
                     child: GestureDetector(

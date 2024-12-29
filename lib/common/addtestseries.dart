@@ -254,42 +254,47 @@ class _AddtestseriesState extends State<Addtestseries> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.38,
+      
+      height: MediaQuery.of(context).size.height * 0.42,
       width: MediaQuery.of(context).size.width,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
               // Test Name
-              TextFormField(
-                controller: _testNameController,
-                decoration: InputDecoration(
-                  labelText: 'Test Name',
-                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(22),
-                    borderSide: const BorderSide(color: Colors.grey),
+              const SizedBox(height: 10,),
+              Container(
+                color: Colors.white,
+                child: TextFormField(
+                  controller: _testNameController,
+                  decoration: InputDecoration(
+                    labelText: 'Test Name',
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(22),
+                      borderSide: const BorderSide(color: Colors.grey),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(22),
+                      borderSide: const BorderSide(color: Colors.grey),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(22),
+                      borderSide: const BorderSide(color: Colors.grey),
+                    ),
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+                    isDense: true,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(22),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(22),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
-                  isDense: true,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the test name';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the test name';
-                  }
-                  return null;
-                },
               ),
               const SizedBox(height: 20),
               // Subject Dropdown

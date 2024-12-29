@@ -240,6 +240,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                         const EdgeInsets.only(right: 16, left: 16, top: 10),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 1,
+                     
                       decoration: BoxDecoration(
                         color: containerColors[index % containerColors.length],
                         borderRadius: BorderRadius.circular(22),
@@ -280,7 +281,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     bool isAnswerDownloaded = downloadedFiles.containsKey(answerFilename);
 
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(15.0),
       child: Column(
         children: [
           Row(
@@ -288,6 +289,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                
                   children: [
                     Text(
                       test['test_name'],
@@ -298,13 +300,19 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w400)),
                     const SizedBox(height: 10),
-                    Text(test['date'],
-                        style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w400)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(test['date'],
+                            style: const TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w400)),
+                                Text(test['time'], style: const TextStyle(fontSize: 14)),
+                      ],
+                    ),
                   ],
                 ),
               ),
-              Text(test['time'], style: const TextStyle(fontSize: 14)),
+              
             ],
           ),
           const SizedBox(height: 10),
@@ -317,7 +325,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                   onDownload: () =>
                       _downloadFile(test['question'], questionFilename),
                   inDownload: () => _openFile(questionFilename)),
-              const SizedBox(width: 20),
+              const SizedBox(width: 27),
               _buildDownloadButton(
                   label: 'Answer',
                   isDownloaded: isAnswerDownloaded,
@@ -340,8 +348,8 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     return InkWell(
       onTap: isDownloaded ? inDownload : onDownload,
       child: Container(
-        width: 150,
-        height: 37,
+        width: 135,
+        height: 32,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(32),

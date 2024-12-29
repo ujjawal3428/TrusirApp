@@ -162,12 +162,13 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(
-                                left: 20.0, top: 20, bottom: 20),
+                                left: 20.0, top: 12, bottom: 12),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   name,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 22,
@@ -180,6 +181,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                     children: [
                                       Text(
                                         '$area, ',
+                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -189,6 +191,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                       ),
                                       Text(
                                         city,
+                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -230,8 +233,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               borderRadius: BorderRadius.circular(15),
                               child: Image.network(
                                 profile,
-                                width: 92,
-                                height: 92,
+                                width: 85,
+                                height: 85,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return const Center(

@@ -446,17 +446,17 @@ class _AttendancePageState extends State<AttendancePage> {
         body: SingleChildScrollView(
             child: Column(children: [
           Padding(
-            padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
+            padding: const EdgeInsets.only(left: 15, top: 5, right: 15),
             child: _buildSlotList(),
           ),
           // Calendar Section
           Padding(
             padding:
-                const EdgeInsets.only(top: 10, left: 15, bottom: 15, right: 20),
+                const EdgeInsets.only(top: 10, left: 15, bottom: 8, right: 20),
             child: Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.only(left: 10,right: 10),
               width: 380,
-              height: 360,
+              height: 330,
               decoration: BoxDecoration(
                 color: Colors.white70,
                 borderRadius: BorderRadius.circular(20),
@@ -664,9 +664,7 @@ class _AttendancePageState extends State<AttendancePage> {
               ],
             ),
           ),
-          const SizedBox(
-            height: 50,
-          ),
+        
         ])));
   }
 
