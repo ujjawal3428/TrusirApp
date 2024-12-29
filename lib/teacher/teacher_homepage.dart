@@ -49,52 +49,64 @@ class Teacherhomepage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header with logo and language selector
+                const SizedBox(height: 40),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'trusir',
+                      'Trusir.com',
                       style: TextStyle(
-                        color: Colors.purple,
-                        fontSize: 22,
+                        color: Color(0xFF48116A),
+                        fontSize: 25,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Poppins',
                       ),
                     ),
                     DropdownButton<String>(
-                      items: const [
+                      items: [
                         DropdownMenuItem(
-                          value: 'English',
-                          child: Text('Language',
-                              style: TextStyle(fontFamily: 'Poppins')),
+                          value: 'Language',
+                          child: Column(
+                            children: [
+                              InkWell(
+                                onTap: () {},
+                                child: const Text('English',
+                                    style: TextStyle(fontFamily: 'Poppins')),
+                              ),
+                              InkWell(
+                                onTap: () {},
+                                child: const Text('Hindi',
+                                    style: TextStyle(fontFamily: 'Poppins')),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                       onChanged: (value) {},
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-
-                // Welcome text
+                const SizedBox(height: 25),
                 const Text(
                   'Welcome To Trusir',
                   style: TextStyle(
-                    fontSize: 34,
+                    fontSize: 35,
                     height: 1.0,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
                     fontFamily: 'Poppins',
                   ),
                 ),
-                const Divider(color: Colors.black, thickness: 2, endIndent: 10),
+                const Divider(
+                    color: Colors.black, thickness: 3, endIndent: 230),
                 const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping male and female teaching service.',
                   style: TextStyle(
                     fontSize: 20,
+                    height: 1.6,
                     fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
                     color: Color(0xFF001241),
-                    height: 1.1,
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -135,7 +147,7 @@ class Teacherhomepage extends StatelessWidget {
                     'Our Services',
                     style: TextStyle(
                       fontSize: 22,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                       color: Color(0xFF00081D),
                       fontFamily: 'Poppins',
                     ),
@@ -265,11 +277,8 @@ class Teacherhomepage extends StatelessWidget {
           Positioned(
               left: 0,
               right: 0,
-              bottom: 0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: _buildRegistrationButton(context),
-              )),
+              bottom: -10,
+              child: _buildRegistrationButton(context)),
           Positioned(
             right: 13,
             top: MediaQuery.of(context).size.height * 0.5 - 28,
@@ -324,8 +333,8 @@ class Teacherhomepage extends StatelessWidget {
         },
         child: Image.asset(
           'assets/registeration.png',
-          width: double.infinity,
-          height: 100,
+          width: 360,
+          height: 70,
           fit: BoxFit.contain,
         ),
       ),

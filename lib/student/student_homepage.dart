@@ -50,14 +50,29 @@ class StudentHomepage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                  const SizedBox(height: 40),
-                const Text(
-                  'Trusir.com',
-                  style: TextStyle(
-                     color: Color(0xFF48116A),
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins',
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Trusir.com',
+                      style: TextStyle(
+                         color: Color(0xFF48116A),
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    DropdownButton<String>(
+                      items: const [
+                        DropdownMenuItem(
+                          value: 'English',
+                          child: Text('Language',
+                              style: TextStyle(fontFamily: 'Poppins')),
+                        ),
+                      ],
+                      onChanged: (value) {},
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 25),
                
@@ -161,8 +176,9 @@ class StudentHomepage extends StatelessWidget {
                           'Get the Best Tutor for your child',
                           style: TextStyle(
                             fontSize: 22,
-                            fontWeight: FontWeight.w500,
-                            height: 1,
+                            height: 1.6,
+                    
+                    fontWeight: FontWeight.w500,
                             color: Color(0xFF00081D),
                             fontFamily: 'Poppins',
                           ),
@@ -179,10 +195,10 @@ class StudentHomepage extends StatelessWidget {
                           'Get the best learning support for your child',
                           style: TextStyle(
                             fontSize: 20,
-                            height: 1,
-                            fontWeight: FontWeight.w400,
+                            height: 1.6,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
                             color: Color(0xFFBCBCBC),
-                            fontFamily: 'Poppins',
                           ),
                         ),
                       ),
@@ -197,10 +213,11 @@ class StudentHomepage extends StatelessWidget {
                           'For all your learning support needs such as homework, test, school project and examinations; we are here to give you the best support.',
                           style: TextStyle(
                             fontSize: 20,
-                            height: 1,
+                          
                             color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Poppins',
+                           height: 1.6,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -216,10 +233,10 @@ class StudentHomepage extends StatelessWidget {
                             'The best tutors are here',
                             style: TextStyle(
                               fontSize: 20,
-                              height: 1,
-                              fontWeight: FontWeight.w500,
+                              height: 1.6,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
                               color: Color(0xFFBCBCBC),
-                              fontFamily: 'Poppins',
                             ),
                           ),
                         ),
@@ -234,10 +251,11 @@ class StudentHomepage extends StatelessWidget {
                           'Our tutors are seasoned professionals, screened and given relevant training on a monthly basis to deliver the excellent results you desire.',
                           style: TextStyle(
                             fontSize: 20,
-                            height: 1,
+                          
                             color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Poppins',
+                            height: 1.6,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -267,9 +285,10 @@ class StudentHomepage extends StatelessWidget {
                     'Explore our offerings',
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.w500,
                       color: Color(0xFF2B395F),
-                      fontFamily: 'Poppins',
+                      height: 1.6,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -368,12 +387,12 @@ class StudentHomepage extends StatelessWidget {
           ),
           Positioned(
             right: 13,
-            top: MediaQuery.of(context).size.height * 0.5 - -130,
+            top: MediaQuery.of(context).size.height * 0.5 - 0,
             child: SizedBox(
               height: 50,
               width: 50,
               child: FloatingActionButton(
-                heroTag: 'whatsappButton', // Add unique tag
+                heroTag: 'whatsappButton',
                 backgroundColor: Colors.transparent,
                 onPressed: () {
                   _launchWhatsApp('919797472922', 'Hi');
@@ -386,7 +405,7 @@ class StudentHomepage extends StatelessWidget {
           ),
           Positioned(
             right: 13,
-            top: MediaQuery.of(context).size.height * 0.58 - -130,
+            top: MediaQuery.of(context).size.height * 0.58 - 0,
             child: SizedBox(
               height: 50,
               width: 50,
@@ -420,7 +439,7 @@ class StudentHomepage extends StatelessWidget {
         },
         child: Image.asset(
           'assets/registeration.png',
-          width: 330,
+          width: 360,
           height: 70,
           fit: BoxFit.contain,
         ),
