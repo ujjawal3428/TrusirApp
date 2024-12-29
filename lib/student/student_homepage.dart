@@ -49,6 +49,7 @@ class StudentHomepage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                 const SizedBox(height: 20),
                 const Text(
                   'trusir',
                   style: TextStyle(
@@ -58,7 +59,8 @@ class StudentHomepage extends StatelessWidget {
                     fontFamily: 'Poppins',
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
+               
 
                 // Welcome text
                 const Text(
@@ -76,9 +78,8 @@ class StudentHomepage extends StatelessWidget {
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
                   style: TextStyle(
                     fontSize: 20,
-                    height: 1.1,
+                    height: 1.3,
                     fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w400,
                     color: Color(0xFF001241),
                   ),
                 ),
@@ -361,12 +362,12 @@ class StudentHomepage extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            bottom: 0,
+            bottom: -10,
             child: _buildRegistrationButton(context),
           ),
           Positioned(
             right: 13,
-            top: MediaQuery.of(context).size.height * 0.5 - 28,
+            top: MediaQuery.of(context).size.height * 0.5 - -130,
             child: SizedBox(
               height: 50,
               width: 50,
@@ -384,7 +385,7 @@ class StudentHomepage extends StatelessWidget {
           ),
           Positioned(
             right: 13,
-            top: MediaQuery.of(context).size.height * 0.58 - 28,
+            top: MediaQuery.of(context).size.height * 0.58 - -130,
             child: SizedBox(
               height: 50,
               width: 50,
@@ -418,8 +419,8 @@ class StudentHomepage extends StatelessWidget {
         },
         child: Image.asset(
           'assets/registeration.png',
-          width: double.infinity,
-          height: 100,
+          width: 330,
+          height: 70,
           fit: BoxFit.contain,
         ),
       ),
