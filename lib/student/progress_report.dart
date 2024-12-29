@@ -356,7 +356,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
       ),
       child: Container(
         width: 386,
-        height: 160,
+        height: 120,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [
@@ -418,7 +418,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                   child: Image.asset(
                     'assets/listaim@3x.png',
                     width: 100,
-                    height: 105,
+                    height: 95,
                   ),
                 ),
               ),
@@ -437,8 +437,8 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
         child: Text(
           'Previous months Reports',
           style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w600,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
             color: Colors.black,
           ),
           textAlign: TextAlign.center,
@@ -464,7 +464,7 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
       padding: const EdgeInsets.only(left: 18.0, right: 18, top: 0, bottom: 10),
       child: Container(
         width: 386,
-        height: 136,
+        height: 126,
         decoration: BoxDecoration(
           color: getContainerColor(index),
           borderRadius: BorderRadius.circular(10),
@@ -487,8 +487,8 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
               child: Image.asset(
                 color: currentCircleColors[0],
                 'assets/circleright.png',
-                width: 160,
-                height: 160,
+                width: 150,
+                height: 150,
               ),
             ),
             Padding(
@@ -542,11 +542,11 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                 padding:
                     const EdgeInsets.only(left: 10, right: 10, bottom: 10.0),
                 child: Container(
-                  height: 48,
+                  height: 35,
                   width: 357,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
-                    vertical: 5,
+                   
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),

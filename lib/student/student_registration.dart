@@ -1191,8 +1191,13 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             .map((item) => DropdownMenuItem(
                   value: item,
                   child: Text(item),
-                ))
+                  
+                ),
+                
+             
+                )
             .toList(),
+            
       ),
     );
   }
