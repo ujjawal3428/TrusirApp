@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StudentPaymentPage extends StatefulWidget {
   const StudentPaymentPage({super.key});
@@ -15,7 +18,7 @@ class _StudentPaymentPageState extends State<StudentPaymentPage> {
   String appId = ""; // Replace with your App ID
   String merchantId = "PGTESTPAYUAT86"; // Replace with your Merchant ID
   String packageName =
-      "com.phonepe.simulator"; // Change to "com.phonepe.app" for production
+      "com.trusir.simulator"; // Change to "com.phonepe.app" for production
   String body = ""; // Transaction details
   String checksum = ""; // Obtain this from your backend
   String apiEndPoint = "/pg/v1/pay";
@@ -26,12 +29,43 @@ class _StudentPaymentPageState extends State<StudentPaymentPage> {
   //     'PRODUCTION';
   // String saltKey = "77c97305-4c07-4586-829a-03767fea9e64";
   String saltIndex = "1";
+  String? userID;
+  String? phone;
+  String merchantTransactionID = '';
+
+  Future<void> fetchProfileData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userID = prefs.getString('userID');
+      phone = prefs.getString('phone_number');
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    initialize();
+  }
+
+  void initialize() async {
+    await fetchProfileData();
+    merchantTransactionID = generateUniqueTransactionId(userID!);
     body = getChecksum().toString();
     initPhonePeSdk();
+  }
+
+  String generateUniqueTransactionId(String userId) {
+    // Hash the user ID to a shorter fixed length
+    String userHash = sha256
+        .convert(utf8.encode(userId))
+        .toString()
+        .substring(0, 8); // 8 characters
+    int timestamp = DateTime.now().millisecondsSinceEpoch ~/
+        1000; // Unix timestamp in seconds
+    int randomNum = Random().nextInt(10000); // Random 4-digit number
+
+    // Combine components to ensure <= 38 characters
+    return "txn_${userHash}_${timestamp}_$randomNum";
   }
 
   void initPhonePeSdk() {
@@ -64,11 +98,11 @@ class _StudentPaymentPageState extends State<StudentPaymentPage> {
   getChecksum() {
     final reqData = {
       "merchantId": merchantId,
-      "merchantTransactionId": "t_52554",
-      "merchantUserId": "MUID123",
-      "amount": 10,
+      "merchantTransactionId": merchantTransactionID,
+      "merchantUserId": userID,
+      "amount": 29900,
       "callbackUrl": callback,
-      "mobileNumber": "9999999999",
+      "mobileNumber": "+91$phone",
       "paymentInstrument": {"type": "PAY_PAGE"}
     };
     String base64body = base64.encode(utf8.encode(json.encode(reqData)));

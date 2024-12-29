@@ -58,6 +58,7 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
   final TextEditingController _searchController = TextEditingController();
   bool isTeacherSelected = false;
   List<KnowledgeItem> recentlyViewed = [];
+  List<KnowledgeItem> allgks = [];
   List<String> categories = [];
   String selectedCategory = '';
   String selectedSubcategory = '';
@@ -101,7 +102,29 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
     }
   }
 
+  Future<List<KnowledgeItem>> fetchAllGks() async {
+    const String apiUrl = "$baseUrl/get-gks";
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final List<dynamic> jsonResponse = jsonDecode(response.body);
+        return jsonResponse
+            .map((item) => KnowledgeItem.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception('Failed to load gks');
+      }
+    } catch (e) {
+      print("Error fetching all gks: $e");
+      return [];
+    }
+  }
+
   void initialize() async {
+    final gks = await fetchAllGks();
+    setState(() {
+      allgks = gks;
+    });
     await fetchcategories();
     setState(() {
       selectedCategory = categories[0];
@@ -317,16 +340,29 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
   }
 
   Widget _buildSearchBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
-      child: TextField(
-        controller: _searchController,
-        decoration: InputDecoration(
-          hintText: 'Search...',
-          border: OutlineInputBorder(
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return SearchDialog(
+              allGks: allgks, // Pass fetchAllGks method
+            );
+          },
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          height: 50,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey, width: 2),
             borderRadius: BorderRadius.circular(10),
           ),
-          suffixIcon: const Icon(Icons.search),
+          child: const Row(
+            children: [Text('Search..'), Spacer(), Icon(Icons.search)],
+          ),
         ),
       ),
     );
@@ -564,6 +600,115 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
             ),
           ),
       ],
+    );
+  }
+}
+
+class SearchDialog extends StatefulWidget {
+  final List<KnowledgeItem> allGks;
+
+  const SearchDialog({super.key, required this.allGks});
+
+  @override
+  State<SearchDialog> createState() => _SearchDialogState();
+}
+
+class _SearchDialogState extends State<SearchDialog> {
+  List<KnowledgeItem> allGks = [];
+  List<KnowledgeItem> filteredGks = [];
+  final TextEditingController _searchDialogController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    allGks = widget.allGks;
+    filteredGks = List.from(allGks);
+    _searchDialogController.addListener(() {
+      filterGks(_searchDialogController.text);
+    });
+  }
+
+  void filterGks(String query) {
+    final lowerCaseQuery = query.toLowerCase();
+    setState(() {
+      filteredGks = allGks.where((gk) {
+        return gk.title.toString().toLowerCase().contains(lowerCaseQuery) ||
+            gk.description.toString().toLowerCase().contains(lowerCaseQuery) ||
+            gk.category.toString().toLowerCase().contains(lowerCaseQuery) ||
+            gk.subCategory.toString().toLowerCase().contains(lowerCaseQuery);
+      }).toList();
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchDialogController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Search GK'),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchDialogController,
+              decoration: const InputDecoration(
+                hintText: 'Search...',
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                prefixIcon: Icon(Icons.search),
+              ),
+              onChanged: filterGks,
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredGks.length,
+              itemBuilder: (context, index) {
+                final gk = filteredGks[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SpecificExtraKnowledge(
+                          title: gk.title,
+                          imagePath: gk.image,
+                          content: gk.description,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Card(
+                    child: ListTile(
+                      leading: Image.network(gk.image, fit: BoxFit.cover),
+                      title: Text('Title: ${gk.title}'),
+                      subtitle: SizedBox(
+                        height: 80,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('Description: ${gk.description}'),
+                            const SizedBox(height: 5),
+                            Text(
+                                'Category: ${gk.category} Sub-Category:${gk.subCategory}'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
