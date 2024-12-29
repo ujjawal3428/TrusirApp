@@ -234,52 +234,56 @@ class _OTPScreenState extends State<OTPScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.generate(4, (index) {
                   return Container(
-                    height: 60,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(18),
-                      border: Border.all(
-                          color: const Color.fromARGB(255, 177, 177, 177),
-                          width: 1.5),
-                    ),
-                    child: TextFormField(
-                      controller: otpControllers[index],
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      focusNode: focusNodes[index],
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      maxLength: 1,
-                      decoration: const InputDecoration(
-                        contentPadding:
-                            EdgeInsets.only(left: 10, right: 10, top: 10),
-                        counterText: '',
-                        border: InputBorder.none,
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(
+                            color: const Color.fromARGB(255, 177, 177, 177),
+                            width: 1.5),
                       ),
-                      style: const TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      onChanged: (value) {
-                        if (value.isNotEmpty && index < 3) {
-                          // Move to the next field
-                          FocusScope.of(context)
-                              .requestFocus(focusNodes[index + 1]);
-                        } else if (value.isEmpty && index > 0) {
-                          // Clear the current field
-                          otpControllers[index].clear();
-
-                          // Move to the previous field
-                          FocusScope.of(context)
-                              .requestFocus(focusNodes[index - 1]);
-
-                          // Clear the previous field value
-                          otpControllers[index - 1].clear();
-                        }
-                      },
-                    ),
-                  );
+                      child: RawKeyboardListener(
+                        focusNode:
+                            FocusNode(), // Use a separate focus node for the listener
+                        onKey: (RawKeyEvent event) {
+                          if (event
+                                  .isKeyPressed(LogicalKeyboardKey.backspace) &&
+                              otpControllers[index].text.isEmpty &&
+                              index > 0) {
+                            // Move to the previous field when backspace is pressed
+                            FocusScope.of(context)
+                                .requestFocus(focusNodes[index - 1]);
+                          }
+                        },
+                        child: TextFormField(
+                          controller: otpControllers[index],
+                          focusNode: focusNodes[index],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          maxLength: 1,
+                          decoration: const InputDecoration(
+                            contentPadding:
+                                EdgeInsets.only(left: 10, right: 10, top: 10),
+                            counterText: '',
+                            border: InputBorder.none,
+                          ),
+                          style: const TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          onChanged: (value) {
+                            if (value.isNotEmpty && index < 3) {
+                              FocusScope.of(context)
+                                  .requestFocus(focusNodes[index + 1]);
+                            }
+                          },
+                        ),
+                      ));
                 }),
               ),
               const SizedBox(
