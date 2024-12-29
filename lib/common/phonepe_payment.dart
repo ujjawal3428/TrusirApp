@@ -16,6 +16,8 @@ class PaymentPageState extends State<PaymentPage> {
       "com.phonepe.simulator"; // Change to "com.phonepe.app" for production
   String body = ""; // Transaction details
   String checksum = ""; // Obtain this from your backend
+  String apiEndPoint = "/pg/v1/pay";
+  String callback = "TrusirApp";
 
   @override
   void initState() {
@@ -33,7 +35,7 @@ class PaymentPageState extends State<PaymentPage> {
   }
 
   void startTransaction() {
-    PhonePePaymentSdk.startTransaction(body, "TrusirApp", checksum, packageName)
+    PhonePePaymentSdk.startTransaction(body, callback, checksum, packageName)
         .then((response) {
       if (response != null) {
         String status = response['status'].toString();
@@ -48,6 +50,20 @@ class PaymentPageState extends State<PaymentPage> {
     }).catchError((error) {
       print("Error during transaction: $error");
     });
+  }
+
+  getChecksum() {
+    final reqData = {
+      {
+        "merchantId": merchantId,
+        "merchantTransactionId": "t_52554",
+        "merchantUserId": "MUID123",
+        "amount": 10000,
+        "callbackUrl": callback,
+        "mobileNumber": "9999999999",
+        "paymentInstrument": {"type": "PAY_PAGE"}
+      }
+    };
   }
 
   @override

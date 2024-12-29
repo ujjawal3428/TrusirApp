@@ -87,6 +87,8 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
           subcategory =
               jsonResponse.map((item) => item['name'] as String).toList();
           selectedCategory = category;
+          selectedSubcategory = subcategory[0];
+          fetchGks();
         });
 
         // Print the subcategory names for debugging
@@ -97,6 +99,18 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
     } catch (e) {
       print("Error fetching subcategories for $category: $e");
     }
+  }
+
+  void initialize() async {
+    await fetchcategories();
+    setState(() {
+      selectedCategory = categories[0];
+    });
+    await fetchSubCategories(selectedCategory);
+    setState(() {
+      selectedSubcategory = subcategory[0];
+      fetchGks();
+    });
   }
 
   Future<void> fetchcategories() async {
@@ -186,7 +200,7 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
   @override
   void initState() {
     super.initState();
-    fetchcategories();
+    initialize();
     loadRecentlyViewed();
   }
 
@@ -240,42 +254,42 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
                     : _buildCategoryList(),
                 subcategory.isEmpty
                     ? selectedCategory.isNotEmpty
-                        ? const Column(
+                        ? Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     vertical: 20.0, horizontal: 16.0),
                                 child: Text(
-                                  'Sub-Categories',
-                                  style: TextStyle(
+                                  selectedCategory,
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                   height: 50,
                                   child: Center(
                                       child:
                                           Text('No Sub-Categories available'))),
                             ],
                           )
-                        : const Column(
+                        : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     vertical: 20.0, horizontal: 16.0),
                                 child: Text(
-                                  'Sub-Categories',
-                                  style: TextStyle(
+                                  selectedCategory,
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                   height: 50,
                                   child: Center(
                                       child:
@@ -359,6 +373,7 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
       child: TextButton(
         onPressed: () {
           fetchSubCategories(category);
+          setState(() {});
         },
         child: Text(
           category,
@@ -373,42 +388,69 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
   }
 
   Widget _buildThumbnailGallery() {
-    return SizedBox(
-      height: 200,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: gks.length,
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              addToRecentlyViewed(gks[index]); // Add item to recently viewed
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SpecificExtraKnowledge(
-                    title: gks[index].title,
-                    imagePath: gks[index].image,
-                    content: gks[index].description,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+          child: Text(
+            selectedSubcategory,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 150,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: gks.length,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            itemBuilder: (context, index) {
+              final item = gks[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SpecificExtraKnowledge(
+                        title: item.title,
+                        imagePath: item.image,
+                        content: item.description,
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 150,
+                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage(item.image),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      color: Colors.black54,
+                      child: Text(
+                        item.title,
+                        style: const TextStyle(color: Colors.white),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ),
                 ),
               );
             },
-            child: Container(
-              width: 230,
-              margin: const EdgeInsets.only(left: 16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.purple[100],
-                image: DecorationImage(
-                  image: NetworkImage(gks[index].image),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          );
-        },
-      ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -416,11 +458,11 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
           child: Text(
-            'Sub-Categories',
-            style: TextStyle(
+            selectedCategory,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
