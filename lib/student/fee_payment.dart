@@ -133,7 +133,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                 size: 20,
                 color: Color.fromARGB(255, 28, 37, 136),
               ),
-              SizedBox(width: 1),
+              
               Text(
                 '₹ 10,000.00',
                 style: TextStyle(
@@ -168,7 +168,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                         padding: const EdgeInsets.only(left: 17.0, right: 17),
                         child: Container(
                           width: 386,
-                          height: 160,
+                          height: 120,
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
                               colors: [
@@ -195,7 +195,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                 const Expanded(
                                   child: Padding(
                                     padding:
-                                        EdgeInsets.only(left: 10.0, top: 20),
+                                        EdgeInsets.only(left: 10.0, top: 10),
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -269,7 +269,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                               left: 20.0, right: 20, bottom: 14),
                           child: Container(
                             width: 386,
-                            height: 136,
+                            height: 120,
                             decoration: BoxDecoration(
                               color: cardColor, // Apply dynamic color
                               borderRadius: BorderRadius.circular(12),
