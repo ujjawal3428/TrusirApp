@@ -254,6 +254,7 @@ class _OTPScreenState extends State<OTPScreen> {
                             // Move to the previous field when backspace is pressed
                             FocusScope.of(context)
                                 .requestFocus(focusNodes[index - 1]);
+                            otpControllers[index].clear();
                           }
                         },
                         child: TextFormField(
