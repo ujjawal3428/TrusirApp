@@ -49,37 +49,38 @@ class StudentHomepage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 const SizedBox(height: 20),
+                 const SizedBox(height: 40),
                 const Text(
-                  'trusir',
+                  'Trusir.com',
                   style: TextStyle(
-                    color: Colors.purple,
+                     color: Color(0xFF48116A),
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Poppins',
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 25),
                
 
                 // Welcome text
                 const Text(
                   'Welcome To Trusir',
                   style: TextStyle(
-                    fontSize: 34,
+                    fontSize: 35,
                     height: 1.0,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
                     fontFamily: 'Poppins',
                   ),
                 ),
-                const Divider(color: Colors.black, thickness: 2, endIndent: 10),
+                const Divider(color: Colors.black, thickness: 3, endIndent: 230),
                 const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
                   style: TextStyle(
                     fontSize: 20,
-                    height: 1.3,
+                    height: 1.6,
                     fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w500,
                     color: Color(0xFF001241),
                   ),
                 ),
