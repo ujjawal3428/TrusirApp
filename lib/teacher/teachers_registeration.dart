@@ -909,7 +909,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Padding(
-                    padding: EdgeInsets.only(right: 90),
+                    padding: EdgeInsets.only(right: 80),
                     child: Text(
                       'Signature',
                       style:

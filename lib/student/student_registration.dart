@@ -616,7 +616,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     updateStudentForms(int.parse(value!));
                   });
                 },
-                items: List.generate(7, (index) => (index + 1).toString()),
+                items: List.generate(3, (index) => (index + 1).toString()),
               ),
 
               // Dynamically Generated Forms
@@ -671,13 +671,29 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                              const Center(
+                    child: Text(
+                      'Free',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 20.0,
+                        color: Colors.green,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
                             Center(
                               child: Text(
                                 '299/-',
                                 style: TextStyle(
                                   fontFamily: 'Poppins',
-                                  fontSize: 20.0,
-                                  color: Colors.purple.shade900,
+                                  fontSize: 18.0,
+                                   decoration: TextDecoration.lineThrough,
+                        decorationColor: Colors.grey.shade700,
+                                  color: Colors.purple.shade700,
                                   fontWeight: FontWeight.w300,
                                 ),
                               ),
