@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/student/teacher_profile_page.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:trusir/common/api.dart'; // Assuming you've added your base URL here
@@ -10,14 +11,6 @@ class TeacherProfileScreen extends StatefulWidget {
 
   @override
   TeacherProfileScreenState createState() => TeacherProfileScreenState();
-}
-
-Future<void> openDialer(String phoneNumber) async {
-  final Uri launchUri = Uri(
-    scheme: 'tel',
-    path: phoneNumber,
-  );
-  await launchUrl(launchUri);
 }
 
 class TeacherProfileScreenState extends State<TeacherProfileScreen> {
@@ -101,7 +94,8 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
                       final teacher = teachers[index];
 
                       return GestureDetector(
-                        onTap: () => openDialer(teacher.mobile),
+                        onTap: () => showPopupDialog(
+                            context, teacher.phone, teacher.userID),
                         child: Stack(
                           clipBehavior: Clip.hardEdge,
                           children: [
@@ -123,7 +117,7 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
                                     height: 101,
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
-                                        image: NetworkImage(teacher.image),
+                                        image: NetworkImage(teacher.profile),
                                         fit: BoxFit.cover,
                                       ),
                                       borderRadius: BorderRadius.circular(10),
@@ -141,7 +135,7 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
                                   const SizedBox(height: 6),
                                   // Phone Number
                                   Text(
-                                    teacher.mobile,
+                                    teacher.phone,
                                     style: const TextStyle(
                                       fontSize: 16,
                                       color: Colors.grey,
@@ -177,7 +171,7 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: Text(
-                                      teacher.tClass,
+                                      teacher.teacherClass,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -198,29 +192,178 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
   }
 }
 
+class PopupScreen extends StatelessWidget {
+  final String phone;
+  final String userID;
+  const PopupScreen({super.key, required this.phone, required this.userID});
+
+  Future<void> openDialer(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.all(16),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 200,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.lightBlue.shade100,
+                borderRadius: BorderRadius.circular(22),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  openDialer(phone);
+                },
+                child: const Text(
+                  "Call Teacher",
+                  style: TextStyle(
+                      fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Button for "I'm a Teacher"
+            Container(
+              width: 200,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.orange.shade100,
+                borderRadius: BorderRadius.circular(22),
+              ),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            TeacherProfilePage(userID: userID)),
+                  );
+                },
+                child: const Text(
+                  "View Profile",
+                  style: TextStyle(
+                      fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+void showPopupDialog(BuildContext context, String phone, String userID) {
+  showDialog(
+    context: context,
+    barrierColor: Colors.black.withValues(alpha: 0.3),
+    builder: (BuildContext context) {
+      return PopupScreen(phone: phone, userID: userID);
+    },
+  );
+}
+
 class Teacher {
+  final int id;
   final String name;
+  final String userID;
+  final String fatherName;
+  final String motherName;
+  final String gender;
+  final String teacherClass;
   final String subject;
-  final String tClass;
-  final String mobile;
-  final String image;
+  final String dob;
+  final String phone;
+  final String role;
+  final String school;
+  final String medium;
+  final String state;
+  final String city;
+  final String address;
+  final String area;
+  final String pincode;
+  final String qualification;
+  final String experience;
+  final String adhaarFront;
+  final String adhaarBack;
+  final String profile;
+  final String timeSlot;
 
   Teacher({
+    required this.id,
     required this.name,
+    required this.userID,
+    required this.fatherName,
+    required this.motherName,
+    required this.gender,
+    required this.teacherClass,
     required this.subject,
-    required this.tClass,
-    required this.mobile,
-    required this.image,
+    required this.dob,
+    required this.phone,
+    required this.role,
+    required this.school,
+    required this.medium,
+    required this.state,
+    required this.city,
+    required this.address,
+    required this.area,
+    required this.pincode,
+    required this.qualification,
+    required this.experience,
+    required this.adhaarFront,
+    required this.adhaarBack,
+    required this.profile,
+    required this.timeSlot,
   });
 
-  // Factory method to create a Teacher object from JSON
+  // Factory method to parse JSON data
   factory Teacher.fromJson(Map<String, dynamic> json) {
     return Teacher(
-      name: json['name'],
-      tClass: json['class'] ?? 'N/A',
+      id: json['id'],
+      name: json['name'] ?? 'N/A',
+      userID: json['userID'] ?? 'N/A',
+      fatherName: json['father_name'] ?? 'N/A',
+      motherName: json['mother_name'] ?? 'N/A',
+      gender: json['gender'] ?? 'N/A',
+      teacherClass: json['class'] ?? 'N/A',
       subject: json['subject'] ?? 'N/A',
-      mobile: json['phone'],
-      image: json['profile'],
+      dob: json['DOB'] ?? 'N/A',
+      phone: json['phone'] ?? 'N/A',
+      role: json['role'] ?? 'N/A',
+      school: json['school'] ?? 'N/A',
+      medium: json['medium'] ?? 'N/A',
+      state: json['state'] ?? 'N/A',
+      city: json['city'] ?? 'N/A',
+      address: json['address'] ?? 'N/A',
+      area: json['area'] ?? 'N/A',
+      pincode: json['pincode'] ?? 'N/A',
+      qualification: json['qualification'] ?? 'N/A',
+      experience: json['experience'] ?? 'N/A',
+      adhaarFront: json['adhaar_front'] ?? 'N/A',
+      adhaarBack: json['adhaar_back'] ?? 'N/A',
+      profile: json['profile'] ?? 'N/A',
+      timeSlot: json['time_slot'] ?? 'N/A',
     );
   }
 }

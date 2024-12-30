@@ -36,9 +36,9 @@ class TeacherBottomNavigationBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            buildIconWithLabel(0, Icons.home, 'Home'),
-            buildIconWithLabel(1, Icons.school, 'Courses'),
-            buildIconWithLabel(2, Icons.menu, 'Menu'),
+            buildIconWithLabel(0, Icons.home_rounded, 'Home'),
+            buildIconWithLabel(1, Icons.book_rounded, 'Courses'),
+            buildIconWithLabel(2, Icons.settings_rounded, 'Menu'),
           ],
         ),
       ),

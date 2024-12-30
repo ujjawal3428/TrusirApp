@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trusir/student/menu.dart';
+import 'package:trusir/common/menu.dart';
 import 'package:http/http.dart' as http;
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/otp_screen.dart';
