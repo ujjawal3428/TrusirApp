@@ -454,7 +454,7 @@ class _AttendancePageState extends State<AttendancePage> {
             padding:
                 const EdgeInsets.only(top: 10, left: 15, bottom: 8, right: 20),
             child: Container(
-              padding: const EdgeInsets.only(left: 10,right: 10),
+              padding: const EdgeInsets.only(left: 10, right: 10),
               width: 380,
               height: 330,
               decoration: BoxDecoration(
@@ -654,17 +654,16 @@ class _AttendancePageState extends State<AttendancePage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                _buildSummaryCard('Total Classes Taken',
-                    _summaryData['total_classes_taken'], Colors.yellow),
                 _buildSummaryCard(
                     'Present', _summaryData['present'], Colors.green),
                 _buildSummaryCard('Absent', _summaryData['absent'], Colors.red),
                 _buildSummaryCard(
                     'Holiday', _summaryData['No class'], Colors.grey.shade400),
+                _buildSummaryCard('Total Classes Taken',
+                    _summaryData['total_classes_taken'], Colors.yellow),
               ],
             ),
           ),
-        
         ])));
   }
 

@@ -147,6 +147,14 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
                                       color: Colors.grey,
                                     ),
                                   ),
+                                  const SizedBox(height: 6),
+                                  Text(
+                                    teacher.subject,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -169,7 +177,7 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
                                       borderRadius: BorderRadius.circular(4),
                                     ),
                                     child: Text(
-                                      teacher.subject,
+                                      teacher.tClass,
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -193,12 +201,14 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
 class Teacher {
   final String name;
   final String subject;
+  final String tClass;
   final String mobile;
   final String image;
 
   Teacher({
     required this.name,
     required this.subject,
+    required this.tClass,
     required this.mobile,
     required this.image,
   });
@@ -207,7 +217,8 @@ class Teacher {
   factory Teacher.fromJson(Map<String, dynamic> json) {
     return Teacher(
       name: json['name'],
-      subject: json['class'] ?? 'N/A',
+      tClass: json['class'] ?? 'N/A',
+      subject: json['subject'] ?? 'N/A',
       mobile: json['phone'],
       image: json['profile'],
     );

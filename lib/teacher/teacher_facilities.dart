@@ -15,23 +15,33 @@ class StudentProfile {
   final String phone;
   final String subject;
   final String userID;
+  final String studentClass;
+  final String school;
+  final String dob;
+  final String address;
 
-  StudentProfile({
-    required this.name,
-    required this.image,
-    required this.phone,
-    required this.subject,
-    required this.userID,
-  });
+  StudentProfile(
+      {required this.name,
+      required this.image,
+      required this.phone,
+      required this.subject,
+      required this.userID,
+      required this.dob,
+      required this.school,
+      required this.address,
+      required this.studentClass});
 
   factory StudentProfile.fromJson(Map<String, dynamic> json) {
     return StudentProfile(
-      name: json['name'],
-      image: json['profile'],
-      phone: json['phone'],
-      subject: json['subject'],
-      userID: json['userID'],
-    );
+        name: json['name'],
+        image: json['profile'],
+        phone: json['phone'],
+        subject: json['subject'],
+        userID: json['userID'],
+        studentClass: json['class'],
+        dob: json['DOB'],
+        school: json['school'],
+        address: json['address']);
   }
 }
 
@@ -371,6 +381,11 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                           subject: studentProfile.subject,
                                           image: studentProfile.image,
                                           userID: studentProfile.userID,
+                                          address: studentProfile.address,
+                                          dob: studentProfile.dob,
+                                          school: studentProfile.school,
+                                          studentClass:
+                                              studentProfile.studentClass,
                                         ),
                                       ),
                                     );

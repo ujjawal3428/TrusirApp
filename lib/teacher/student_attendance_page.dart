@@ -567,13 +567,13 @@ class _StudentAttendancePageState extends State<StudentAttendancePage> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                _buildSummaryCard('Total Classes Taken',
-                    _summaryData['total_classes_taken'], Colors.yellow),
                 _buildSummaryCard(
                     'Present', _summaryData['present'], Colors.green),
                 _buildSummaryCard('Absent', _summaryData['absent'], Colors.red),
                 _buildSummaryCard(
                     'Holiday', _summaryData['No class'], Colors.grey.shade400),
+                _buildSummaryCard('Total Classes Taken',
+                    _summaryData['total_classes_taken'], Colors.yellow),
               ],
             ),
           ),

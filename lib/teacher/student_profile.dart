@@ -14,6 +14,10 @@ class StudentProfileScreen extends StatelessWidget {
   final String subject;
   final String image;
   final String userID;
+  final String dob;
+  final String address;
+  final String studentClass;
+  final String school;
 
   const StudentProfileScreen(
       {super.key,
@@ -21,7 +25,11 @@ class StudentProfileScreen extends StatelessWidget {
       required this.phone,
       required this.subject,
       required this.image,
-      required this.userID});
+      required this.userID,
+      required this.dob,
+      required this.address,
+      required this.school,
+      required this.studentClass});
 
   Widget _buildContent(BuildContext context, BoxConstraints constraints) {
     return Scaffold(
@@ -179,6 +187,10 @@ class StudentProfileScreen extends StatelessWidget {
                                     phone: phone,
                                     profile: image,
                                     subject: subject,
+                                    dob: dob,
+                                    address: address,
+                                    school: school,
+                                    studentClass: studentClass,
                                   ),
                                 ),
                               );
