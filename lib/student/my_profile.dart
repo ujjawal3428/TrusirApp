@@ -46,12 +46,11 @@ class MyProfileScreenState extends State<MyProfileScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isLargeScreen = screenWidth > 600;
 
-    final rowColors = [
-      const Color.fromARGB(255, 255, 199, 221),
-      const Color.fromARGB(255, 199, 236, 255),
-      const Color.fromARGB(255, 255, 185, 185),
-      const Color.fromARGB(255, 191, 184, 255),
-      Colors.green.shade100
+    const rowColors = [
+      Color.fromARGB(255, 255, 199, 221),
+      Color.fromARGB(255, 199, 236, 255),
+      Color.fromARGB(255, 255, 185, 185),
+      Color.fromARGB(255, 191, 184, 255),
     ];
 
     return Scaffold(
@@ -146,7 +145,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                               name!,
                               style: TextStyle(
                                 fontSize: isLargeScreen ? 22 : 20,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w900,
                                 color: const Color(0xFF48116A),
                               ),
                             ),
@@ -174,9 +173,6 @@ class MyProfileScreenState extends State<MyProfileScreen> {
               isLargeScreen,
               rowColors[1],
             ),
-            const SizedBox(height: 10),
-            buildInfoRow('assets/location@2x.png', 'Address', address!,
-                isLargeScreen, rowColors[4]),
             const SizedBox(height: 10),
             buildInfoRow(
               'assets/graduation@3x.png',
@@ -215,7 +211,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
             height: isLargeScreen ? 100 : 65,
             decoration: BoxDecoration(
               color: backgroundColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: Padding(
               padding: const EdgeInsets.all(4.0),
@@ -233,7 +229,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
               width: isLargeScreen ? 400 : 306,
               decoration: BoxDecoration(
                 color: backgroundColor,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(22),
               ),
               child: Padding(
                 padding: const EdgeInsets.only(

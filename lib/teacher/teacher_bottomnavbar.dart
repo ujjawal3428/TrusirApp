@@ -36,16 +36,16 @@ class TeacherBottomNavigationBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            buildIconWithLabel(0, 'assets/home@3x.png', 'Home'),
-            buildIconWithLabel(1, 'assets/course@3x.png', 'Courses'),
-            buildIconWithLabel(2, 'assets/menu@3x.png', 'Menu'),
+            buildIconWithLabel(0, Icons.home, 'Home'),
+            buildIconWithLabel(1, Icons.school, 'Courses'),
+            buildIconWithLabel(2, Icons.menu, 'Menu'),
           ],
         ),
       ),
     );
   }
 
-  Widget buildIconWithLabel(int index, String iconPath, String title) {
+  Widget buildIconWithLabel(int index, IconData iconData, String title) {
     bool isSelected = currentIndex == index;
 
     return GestureDetector(
@@ -68,28 +68,16 @@ class TeacherBottomNavigationBar extends StatelessWidget {
                         end: Alignment.bottomRight,
                       ).createShader(bounds);
                     },
-                    child: ColorFiltered(
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
-                      ),
-                      child: Image.asset(
-                        iconPath,
-                        width: 27,
-                        height: 29,
-                      ),
+                    child: Icon(
+                      iconData,
+                      size: 27,
+                      color: Colors.white,
                     ),
                   )
-                : ColorFiltered(
-                    colorFilter: ColorFilter.mode(
-                      Colors.grey.shade700,
-                      BlendMode.srcIn,
-                    ),
-                    child: Image.asset(
-                      iconPath,
-                      width: 27,
-                      height: 29,
-                    ),
+                : Icon(
+                    iconData,
+                    size: 27,
+                    color: Colors.grey.shade700,
                   ),
           ),
           const SizedBox(height: 4),

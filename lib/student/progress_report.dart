@@ -360,9 +360,11 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [
-              Color(0xFFC22054),
               Color(0xFF48116A),
+              Color(0xFFC22054),
             ],
+            begin: Alignment.topCenter, // Start the gradient at the top
+            end: Alignment.bottomCenter,
           ),
           borderRadius: BorderRadius.circular(22),
           boxShadow: [
@@ -546,7 +548,6 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                   width: 357,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
-                   
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),

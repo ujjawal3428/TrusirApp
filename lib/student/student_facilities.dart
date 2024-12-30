@@ -140,11 +140,13 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [
-                          Color(0xFFC22054),
-                          Color(0xFF48116A),
+                          Color(0xFF48116A), // Darker color for the top
+                          Color(0xFFC22054), // Lighter color for the bottom
                         ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                        begin: Alignment
+                            .topCenter, // Start the gradient at the top
+                        end: Alignment
+                            .bottomCenter, // End the gradient at the bottom
                       ),
                       borderRadius: BorderRadius.circular(22),
                       boxShadow: [
@@ -181,7 +183,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                     children: [
                                       Text(
                                         '$area, ',
-                                         overflow: TextOverflow.ellipsis,
+                                        overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -191,7 +193,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                       ),
                                       Text(
                                         city,
-                                         overflow: TextOverflow.ellipsis,
+                                        overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 16,
@@ -233,8 +235,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               borderRadius: BorderRadius.circular(15),
                               child: Image.network(
                                 profile,
-                                width: 85,
-                                height: 85,
+                                width: 75,
+                                height: 75,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return const Center(

@@ -124,7 +124,9 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
               fontWeight: FontWeight.w700,
             ),
           ),
-           SizedBox(width: MediaQuery.of(context).size.width * 0.08,),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.08,
+          ),
           const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -133,7 +135,6 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                 size: 20,
                 color: Color.fromARGB(255, 28, 37, 136),
               ),
-              
               Text(
                 '₹ 10,000.00',
                 style: TextStyle(
@@ -172,11 +173,12 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
                               colors: [
-                                Color(0xFFC22054),
                                 Color(0xFF48116A),
+                                Color(0xFFC22054),
                               ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
+                              begin: Alignment
+                                  .topCenter, // Start the gradient at the top
+                              end: Alignment.bottomCenter,
                             ),
                             borderRadius: BorderRadius.circular(22),
                             boxShadow: [
@@ -368,13 +370,15 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                   child: const Text('Load More...'),
                                 ),
                         ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: _buildPayButton(context),
-                      )
+                   
                     ],
                   ),
                 ),
+                Positioned(
+                            bottom: -22,
+                            left: 0,
+                            right: 0,
+                            child: _buildPayButton(context)),
               ],
             ),
     );
@@ -393,7 +397,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
         },
         child: Image.asset(
           'assets/pay_fee.png',
-          width: double.infinity,
+          width: 300,
           height: 100,
           fit: BoxFit.contain,
         ),

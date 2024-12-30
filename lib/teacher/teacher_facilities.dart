@@ -180,11 +180,13 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [
-                          Color(0xFFC22054),
                           Color(0xFF48116A),
+                          Color(0xFFC22054),
                         ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                          begin: Alignment
+                            .topCenter, // Start the gradient at the top
+                        end: Alignment
+                            .bottomCenter,
                       ),
                       borderRadius: BorderRadius.circular(22),
                       boxShadow: [
@@ -259,8 +261,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               borderRadius: BorderRadius.circular(22),
                               child: Image.network(
                                 profile,
-                                width: 92,
-                                height: 92,
+                                width: 75,
+                                height: 75,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return const Center(
