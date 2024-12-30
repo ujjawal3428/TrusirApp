@@ -728,6 +728,24 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 0.0),
+          child: Row(
+            children: [
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset('assets/back_button.png', height: 50)),
+            ],
+          ),
+        ),
+        toolbarHeight: 70,
+      ),
       backgroundColor: Colors.grey[50],
       body: SingleChildScrollView(
         child: Padding(
@@ -735,14 +753,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Back button at top left
-              GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Image.asset('assets/back_button.png', height: 50)),
-              const SizedBox(height: 20),
-              // Top image
               Center(
                 child: Image.asset(
                   'assets/groupregister.png',

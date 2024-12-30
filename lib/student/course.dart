@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/toggle_button.dart';
 import 'package:trusir/student/main_screen.dart';
 
 class Course {
@@ -409,33 +410,47 @@ class _CoursePageState extends State<CoursePage> {
         ),
         toolbarHeight: 70,
       ),
-      body: FutureBuilder<List<Course>>(
-        future: fetchCourses(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Failed to load courses: ${snapshot.error}'),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text('No courses available'),
-            );
-          } else {
-            final courses = snapshot.data!;
-            return ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              itemCount: courses.length,
-              itemBuilder: (context, index) {
-                final course = courses[index];
-                return CourseCard(course: course);
+      body: Column(
+        children: [
+          FilterSwitch(
+            option1: 'My Courses',
+            option2: 'Demo Courses',
+            option3: 'More Courses',
+            initialSelectedIndex: 0, // Start with Option 1 selected
+            onChanged: (selectedIndex) {},
+          ),
+          Expanded(
+            child: FutureBuilder<List<Course>>(
+              future: fetchCourses(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Failed to load courses: ${snapshot.error}'),
+                  );
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Text('No courses available'),
+                  );
+                } else {
+                  final courses = snapshot.data!;
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    itemCount: courses.length,
+                    itemBuilder: (context, index) {
+                      final course = courses[index];
+                      return CourseCard(course: course);
+                    },
+                  );
+                }
               },
-            );
-          }
-        },
+            ),
+          ),
+        ],
       ),
     );
   }

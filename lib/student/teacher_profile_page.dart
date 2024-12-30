@@ -98,7 +98,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
                   child: Image.asset('assets/back_button.png', height: 50)),
               const SizedBox(width: 20),
               const Text(
-                'My Profile',
+                'Teacher Profile',
                 style: TextStyle(
                   color: Color(0xFF48116A),
                   fontSize: 25,

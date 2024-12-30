@@ -683,7 +683,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                               ),
                                               const Center(
                                                 child: Text(
-                                                  'Call Teacher',
+                                                  'Enquiry Office',
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 14,

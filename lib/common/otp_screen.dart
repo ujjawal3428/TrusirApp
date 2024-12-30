@@ -200,13 +200,14 @@ class _OTPScreenState extends State<OTPScreen> {
             ],
           ),
         ),
-        toolbarHeight: 50,
+        toolbarHeight: 70,
       ),
       backgroundColor: Colors.grey[50],
+      resizeToAvoidBottomInset: true,
       body: Padding(
         padding: const EdgeInsets.only(left: 24.0, right: 24, top: 150),
         child: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

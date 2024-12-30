@@ -74,7 +74,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               child: Icon(
                 iconData,
                 size: 29,
-                color: isSelected ? Colors.white : Colors.grey.shade700,
+                color: isSelected ? Colors.white : Colors.grey.shade300,
               ),
             ),
           ),

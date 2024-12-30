@@ -303,7 +303,7 @@ class _GKPageState extends State<GKPage> {
               children: [
                 SingleChildScrollView(
                   child: SizedBox(
-                    height: (gksList.length * 130.0)
+                    height: (gksList.length * 150.0)
                         .clamp(0, MediaQuery.of(context).size.height * 0.65),
                     child: ListView.builder(
                       padding: const EdgeInsets.all(10.0),

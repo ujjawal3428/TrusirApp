@@ -696,6 +696,25 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 1.0),
+          child: Row(
+            children: [
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset('assets/back_button.png', height: 50)),
+              const SizedBox(width: 20),
+            ],
+          ),
+        ),
+        toolbarHeight: 70,
+      ),
       backgroundColor: Colors.grey.shade50,
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
@@ -704,12 +723,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Image.asset('assets/back_button.png', height: 50)),
-              const SizedBox(height: 20), // Top image
+              // Top image
               Center(
                 child: Image.asset(
                   'assets/studentregisteration@4x.png',
@@ -731,7 +745,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     updateStudentForms(int.parse(value!));
                   });
                 },
-                items: List.generate(7, (index) => (index + 1).toString()),
+                items: List.generate(3, (index) => (index + 1).toString()),
               ),
 
               // Dynamically Generated Forms
@@ -1291,7 +1305,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 );
         },
         child: Image.asset(
-          'assets/registeration.png',
+          'assets/register.png',
           width: double.infinity,
           height: 100,
           fit: BoxFit.contain,

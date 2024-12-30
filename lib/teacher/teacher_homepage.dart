@@ -50,10 +50,10 @@ class Teacherhomepage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 40),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Trusir.com',
                       style: TextStyle(
                         color: Color(0xFF48116A),
@@ -61,28 +61,6 @@ class Teacherhomepage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Poppins',
                       ),
-                    ),
-                    DropdownButton<String>(
-                      items: [
-                        DropdownMenuItem(
-                          value: 'Language',
-                          child: Column(
-                            children: [
-                              InkWell(
-                                onTap: () {},
-                                child: const Text('English',
-                                    style: TextStyle(fontFamily: 'Poppins')),
-                              ),
-                              InkWell(
-                                onTap: () {},
-                                child: const Text('Hindi',
-                                    style: TextStyle(fontFamily: 'Poppins')),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                      onChanged: (value) {},
                     ),
                   ],
                 ),
@@ -277,7 +255,7 @@ class Teacherhomepage extends StatelessWidget {
           Positioned(
               left: 0,
               right: 0,
-              bottom: -10,
+              bottom: 5,
               child: _buildRegistrationButton(context)),
           Positioned(
             right: 13,

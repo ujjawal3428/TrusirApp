@@ -49,33 +49,22 @@ class StudentHomepage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 const SizedBox(height: 40),
-                Row(
+                const SizedBox(height: 40),
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Trusir.com',
                       style: TextStyle(
-                         color: Color(0xFF48116A),
+                        color: Color(0xFF48116A),
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Poppins',
                       ),
                     ),
-                    DropdownButton<String>(
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'English',
-                          child: Text('Language',
-                              style: TextStyle(fontFamily: 'Poppins')),
-                        ),
-                      ],
-                      onChanged: (value) {},
-                    ),
                   ],
                 ),
                 const SizedBox(height: 25),
-               
 
                 // Welcome text
                 const Text(
@@ -87,7 +76,8 @@ class StudentHomepage extends StatelessWidget {
                     fontFamily: 'Poppins',
                   ),
                 ),
-                const Divider(color: Colors.black, thickness: 3, endIndent: 230),
+                const Divider(
+                    color: Colors.black, thickness: 3, endIndent: 230),
                 const SizedBox(height: 10),
                 const Text(
                   'Trusir is a registered and trusted Indian company that offers Home to Home tuition service. We have a clear vision of helping students achieve their academic goals through one-to-one teaching.',
@@ -177,8 +167,7 @@ class StudentHomepage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 22,
                             height: 1.6,
-                    
-                    fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w500,
                             color: Color(0xFF00081D),
                             fontFamily: 'Poppins',
                           ),
@@ -196,8 +185,8 @@ class StudentHomepage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 20,
                             height: 1.6,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
                             color: Color(0xFFBCBCBC),
                           ),
                         ),
@@ -213,11 +202,10 @@ class StudentHomepage extends StatelessWidget {
                           'For all your learning support needs such as homework, test, school project and examinations; we are here to give you the best support.',
                           style: TextStyle(
                             fontSize: 20,
-                          
                             color: Colors.black,
-                           height: 1.6,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
+                            height: 1.6,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -234,8 +222,8 @@ class StudentHomepage extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 20,
                               height: 1.6,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
+                              fontFamily: 'Poppins',
+                              fontWeight: FontWeight.w500,
                               color: Color(0xFFBCBCBC),
                             ),
                           ),
@@ -251,11 +239,10 @@ class StudentHomepage extends StatelessWidget {
                           'Our tutors are seasoned professionals, screened and given relevant training on a monthly basis to deliver the excellent results you desire.',
                           style: TextStyle(
                             fontSize: 20,
-                          
                             color: Colors.black,
                             height: 1.6,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -287,8 +274,8 @@ class StudentHomepage extends StatelessWidget {
                       fontSize: 20,
                       color: Color(0xFF2B395F),
                       height: 1.6,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -382,7 +369,7 @@ class StudentHomepage extends StatelessWidget {
           Positioned(
             left: 0,
             right: 0,
-            bottom: -10,
+            bottom: 5,
             child: _buildRegistrationButton(context),
           ),
           Positioned(

@@ -180,13 +180,13 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [
-                          Color(0xFF48116A),
-                          Color(0xFFC22054),
+                          Color(0xFF48116A), // Darker color for the top
+                          Color(0xFFC22054), // Lighter color for the bottom
                         ],
-                          begin: Alignment
+                        begin: Alignment
                             .topCenter, // Start the gradient at the top
                         end: Alignment
-                            .bottomCenter,
+                            .bottomCenter, // End the gradient at the bottom
                       ),
                       borderRadius: BorderRadius.circular(22),
                       boxShadow: [

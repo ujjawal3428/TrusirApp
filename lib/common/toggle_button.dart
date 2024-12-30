@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class FilterSwitch extends StatefulWidget {
   final String option1;
   final String option2;
+  final String option3;
   final ValueChanged<int> onChanged;
   final int initialSelectedIndex;
 
   const FilterSwitch({
     required this.option1,
     required this.option2,
+    required this.option3,
     required this.onChanged,
     this.initialSelectedIndex = 0,
     super.key,
@@ -51,10 +53,14 @@ class FilterSwitchState extends State<FilterSwitch> {
             AnimatedPositioned(
               duration: const Duration(milliseconds: 400),
               curve: Curves.easeOutCubic,
-              left: _selectedIndex == 0 ? 4 : (350 / 2) - 4,
+              left: _selectedIndex == 0
+                  ? 4
+                  : _selectedIndex == 1
+                      ? (350 / 3) + 4
+                      : (2 * (350 / 3)) + 4,
               top: 4,
               child: Container(
-                width: (350 / 2) - 8,
+                width: (350 / 3) - 8,
                 height: 38,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 119, 0, 255),
@@ -80,7 +86,7 @@ class FilterSwitchState extends State<FilterSwitch> {
                           fontWeight: _selectedIndex == 0
                               ? FontWeight.bold
                               : FontWeight.normal,
-                          fontSize: 15,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -98,7 +104,25 @@ class FilterSwitchState extends State<FilterSwitch> {
                           fontWeight: _selectedIndex == 1
                               ? FontWeight.bold
                               : FontWeight.normal,
-                          fontSize: 15,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => _onOptionTap(2),
+                    child: Center(
+                      child: Text(
+                        widget.option3,
+                        style: TextStyle(
+                          color:
+                              _selectedIndex == 2 ? Colors.white : Colors.black,
+                          fontWeight: _selectedIndex == 2
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          fontSize: 14,
                         ),
                       ),
                     ),
