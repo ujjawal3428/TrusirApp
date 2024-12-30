@@ -403,8 +403,10 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
     return Center(
       child: GestureDetector(
         onTap: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => StudentDoubtScreen()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const StudentDoubtScreen()));
         },
         child: Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 40),

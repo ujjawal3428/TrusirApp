@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/login_page.dart';
-import 'package:trusir/student/my_profile.dart';
 import 'package:trusir/student/popup_splash_screen.dart';
 
 class ProfilePopup extends StatefulWidget {
@@ -100,89 +99,6 @@ class _ProfilePopupState extends State<ProfilePopup> {
     );
   }
 
-  Widget _buildProfileHeader() {
-    return Container(
-      padding: const EdgeInsets.all(7),
-      decoration: BoxDecoration(
-        color: Colors.purple.shade50,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Hero(
-            tag: 'profile_image',
-            child: CircleAvatar(
-              radius: 40,
-              backgroundImage: selectedProfile?['profile'] != null
-                  ? NetworkImage(selectedProfile!['profile'])
-                  : const AssetImage('assets/rakesh@3x.png') as ImageProvider,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  selectedProfile?['name'] ?? 'Your Name',
-                  style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.purple,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Subject: ${selectedProfile?['subject'] ?? 'N/A'}',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14,
-                    color: Colors.grey[800],
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Class: ${selectedProfile?['class'] ?? 'N/A'}',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 14,
-                    color: Colors.grey[800],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MyProfileScreen()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                  ),
-                  child: const Text(
-                    'View Profile',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return profiles != null
@@ -221,14 +137,11 @@ class _ProfilePopupState extends State<ProfilePopup> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: _buildProfileHeader(),
-                        ),
-                        Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Container(
+                            height: 300,
                             decoration: BoxDecoration(
-                              color: Colors.grey[100],
+                              color: Colors.purple[50],
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: FutureBuilder<List<Map<String, dynamic>>>(
@@ -246,10 +159,10 @@ class _ProfilePopupState extends State<ProfilePopup> {
                                       snapshot.data ?? [];
                                   double containerHeight =
                                       (data.length * 120.0).clamp(0, 350);
-
                                   return SizedBox(
                                     height: containerHeight,
                                     child: ListView.builder(
+                                      shrinkWrap: true,
                                       itemCount: data.length,
                                       itemBuilder: (context, index) {
                                         return Padding(

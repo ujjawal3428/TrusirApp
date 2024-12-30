@@ -1,6 +1,12 @@
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import 'package:trusir/common/api.dart';
 
@@ -18,6 +24,8 @@ class _AddtestseriesState extends State<Addtestseries> {
   final TextEditingController _testNameController = TextEditingController();
   String? photo;
   String answer = '';
+  bool isQuestion = false;
+  bool isAnswer = false;
   String question = '';
   List<String> _courses = [];
   String extension = '';
@@ -74,15 +82,44 @@ class _AddtestseriesState extends State<Addtestseries> {
     }
   }
 
-  Future<String?> handleFileSelection(
-      BuildContext context, String existingUrls) async {
+  Future<void> _requestPermissions() async {
+    if (await Permission.storage.isGranted &&
+        await Permission.camera.isGranted) {
+      return;
+    }
+
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
+
+      // Skip permissions for Android versions below API 30
+      if (androidInfo.version.sdkInt < 30) {
+        return;
+      }
+
+      if (await Permission.photos.isGranted ||
+          await Permission.videos.isGranted ||
+          await Permission.camera.isGranted) {
+        return;
+      }
+
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.photos,
+        Permission.videos,
+        Permission.camera
+      ].request();
+
+      if (statuses.values.any((status) => !status.isGranted)) {
+        openAppSettings();
+      }
+    }
+  }
+
+  Future<void> handleFileSelection(BuildContext context) async {
     try {
       // Use FilePicker to select multiple files
-      final result = await FilePicker.platform.pickFiles(allowMultiple: true);
+      final result = await FilePicker.platform.pickFiles();
 
       if (result != null && result.files.isNotEmpty) {
-        String updatedUrls = existingUrls;
-
         for (final file in result.files) {
           final filePath = file.path;
           final fileName = file.name;
@@ -94,12 +131,8 @@ class _AddtestseriesState extends State<Addtestseries> {
 
           // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
           if (fileSize > 2 * 1024 * 1024) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('$fileName exceeds 2MB. Skipping upload.'),
-                duration: const Duration(seconds: 2),
-              ),
-            );
+            Fluttertoast.showToast(
+                msg: '$fileName exceeds 2MB. Skipping upload.');
             continue;
           }
 
@@ -114,47 +147,33 @@ class _AddtestseriesState extends State<Addtestseries> {
           final uploadedPath = await uploadFile(filePath, fileType);
 
           if (uploadedPath != 'null') {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('$fileName uploaded successfully!'),
-                duration: const Duration(seconds: 1),
-              ),
-            );
-            print('$fileName uploaded successfully: $uploadedPath');
-            updatedUrls = updatedUrls.isEmpty
-                ? uploadedPath
-                : '$updatedUrls,$uploadedPath';
+            Fluttertoast.showToast(
+                msg: '$fileName uploaded successfully: $uploadedPath');
+
+            if (isQuestion) {
+              setState(() {
+                question = uploadedPath;
+                isQuestion = false;
+              });
+            } else if (isAnswer) {
+              setState(() {
+                answer = uploadedPath;
+                isAnswer = false;
+              });
+            }
           } else {
-            print('Failed to upload $fileName.');
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('Failed to upload $fileName.'),
-                duration: const Duration(seconds: 1),
-              ),
-            );
+            Fluttertoast.showToast(msg: 'Failed to upload file');
+            return;
           }
         }
-
-        return updatedUrls;
       } else {
-        print('No file selected.');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No file selected'),
-            duration: Duration(seconds: 1),
-          ),
-        );
-        return existingUrls;
+        Fluttertoast.showToast(msg: 'No file selected.');
+        return;
       }
     } catch (e) {
-      print('Error during file selection: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('An error occurred while uploading files.'),
-          duration: Duration(seconds: 1),
-        ),
-      );
-      return existingUrls;
+      Fluttertoast.showToast(msg: 'Error during file selection: $e');
+
+      return;
     }
   }
 
@@ -193,7 +212,7 @@ class _AddtestseriesState extends State<Addtestseries> {
         extension == 'png') {
       return Icons.image;
     } else {
-      return Icons.insert_drive_file; // Default icon for unknown file types
+      return Icons.insert_drive_file;
     }
   }
 
@@ -208,7 +227,85 @@ class _AddtestseriesState extends State<Addtestseries> {
         extension == 'jpeg') {
       return Colors.green;
     } else {
-      return Colors.grey; // Default color for unknown file types
+      return Colors.grey;
+    }
+  }
+
+  Future<String> uploadImage() async {
+    await _requestPermissions();
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+    if (image == null) {
+      Fluttertoast.showToast(msg: 'No image selected.');
+      return 'null';
+    }
+
+    // Compress the image
+    final compressedImage = await compressImage(File(image.path));
+
+    if (compressedImage == null) {
+      Fluttertoast.showToast(msg: 'Failed to compress image.');
+      return 'null';
+    }
+
+    final uri = Uri.parse('$baseUrl/api/upload-profile');
+    final request = http.MultipartRequest('POST', uri);
+
+    // Add the compressed image file to the request
+    request.files
+        .add(await http.MultipartFile.fromPath('photo', compressedImage.path));
+
+    // Send the request
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      // Parse the response to extract the download URL
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse.containsKey('download_url')) {
+        if (isQuestion) {
+          setState(() {
+            question = jsonResponse['download_url'];
+            isQuestion = false;
+          });
+        } else if (isAnswer) {
+          setState(() {
+            answer = jsonResponse['download_url'];
+            isAnswer = false;
+          });
+        }
+        return jsonResponse['download_url'] as String;
+      } else {
+        Fluttertoast.showToast(msg: 'Download URL not found in the response.');
+        return 'null';
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: 'Failed to upload image: ${response.statusCode}');
+      return 'null';
+    }
+  }
+
+// Function to compress image
+  Future<XFile?> compressImage(File file) async {
+    final String targetPath =
+        '${file.parent.path}/compressed_${file.uri.pathSegments.last}';
+
+    try {
+      final compressedFile = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        targetPath,
+        quality: 85, // Adjust quality to achieve ~2MB size
+        minWidth: 1920, // Adjust resolution as needed
+        minHeight: 1080, // Adjust resolution as needed
+      );
+
+      return compressedFile;
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error compressing image: $e');
+      return null;
     }
   }
 
@@ -363,14 +460,85 @@ class _AddtestseriesState extends State<Addtestseries> {
                               elevation: 4,
                               backgroundColor: Colors.white,
                             ),
-                            onPressed: () async {
-                              final selectedFile =
-                                  await handleFileSelection(context, question);
-                              if (selectedFile != null) {
-                                setState(() {
-                                  question = selectedFile;
-                                });
-                              }
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                barrierColor:
+                                    Colors.black.withValues(alpha: 0.3),
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    insetPadding: const EdgeInsets.all(16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            width: 200,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color: Colors.lightBlue.shade100,
+                                              borderRadius:
+                                                  BorderRadius.circular(22),
+                                            ),
+                                            child: TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                setState(() {
+                                                  isQuestion = true;
+                                                });
+                                                uploadImage();
+                                              },
+                                              child: const Text(
+                                                "Camera",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Poppins'),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                          // Button for "I'm a Teacher"
+                                          Container(
+                                            width: 200,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color: Colors.orange.shade100,
+                                              borderRadius:
+                                                  BorderRadius.circular(22),
+                                            ),
+                                            child: TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                setState(() {
+                                                  isQuestion = true;
+                                                });
+                                                handleFileSelection(context);
+                                              },
+                                              child: const Text(
+                                                "Upload File",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Poppins'),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
                             },
                             icon: const Icon(Icons.upload_file),
                             label: const Text(
@@ -389,14 +557,85 @@ class _AddtestseriesState extends State<Addtestseries> {
                               elevation: 4,
                               backgroundColor: Colors.white,
                             ),
-                            onPressed: () async {
-                              final selectedFile =
-                                  await handleFileSelection(context, answer);
-                              if (selectedFile != null) {
-                                setState(() {
-                                  answer = selectedFile;
-                                });
-                              }
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                barrierColor:
+                                    Colors.black.withValues(alpha: 0.3),
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    insetPadding: const EdgeInsets.all(16),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(16.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            width: 200,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color: Colors.lightBlue.shade100,
+                                              borderRadius:
+                                                  BorderRadius.circular(22),
+                                            ),
+                                            child: TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                setState(() {
+                                                  isAnswer = true;
+                                                });
+                                                uploadImage();
+                                              },
+                                              child: const Text(
+                                                "Camera",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Poppins'),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 16),
+                                          // Button for "I'm a Teacher"
+                                          Container(
+                                            width: 200,
+                                            height: 50,
+                                            decoration: BoxDecoration(
+                                              color: Colors.orange.shade100,
+                                              borderRadius:
+                                                  BorderRadius.circular(22),
+                                            ),
+                                            child: TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                                setState(() {
+                                                  isAnswer = true;
+                                                });
+                                                handleFileSelection(context);
+                                              },
+                                              child: const Text(
+                                                "Upload File",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    color: Colors.black,
+                                                    fontFamily: 'Poppins'),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
                             },
                             icon: const Icon(Icons.upload_file),
                             label: const Text(

@@ -212,7 +212,7 @@ class DrawPadState extends State<DrawPad> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => StudentDoubtScreen(drawing: downloadUrl),
+            builder: (context) => const StudentDoubtScreen(),
           ),
         );
       } else {

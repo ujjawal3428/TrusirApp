@@ -1,9 +1,14 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/login_page.dart';
@@ -127,6 +132,118 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
 
   Set<String> selectedSlots = {}; // Store selected time slots
   String? uploadedPath;
+
+  Future<String> uploadImage(String path) async {
+    await _requestPermissions();
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+    if (image == null) {
+      Fluttertoast.showToast(msg: 'No image selected.');
+      return 'null';
+    }
+
+    // Compress the image
+    final compressedImage = await compressImage(File(image.path));
+
+    if (compressedImage == null) {
+      Fluttertoast.showToast(msg: 'Failed to compress image.');
+      return 'null';
+    }
+
+    final uri = Uri.parse('$baseUrl/api/upload-profile');
+    final request = http.MultipartRequest('POST', uri);
+
+    // Add the compressed image file to the request
+    request.files
+        .add(await http.MultipartFile.fromPath('photo', compressedImage.path));
+
+    // Send the request
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      // Parse the response to extract the download URL
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse.containsKey('download_url')) {
+        setState(() {
+          if (path == 'photo') {
+            formData.photoPath = jsonResponse['download_url'];
+          } else if (path == 'adhaarFront') {
+            formData.aadharFrontPath = jsonResponse['download_url'];
+          } else if (path == 'adhaarBack') {
+            formData.aadharBackPath = jsonResponse['download_url'];
+          } else if (path == 'sign') {
+            formData.signaturePath = jsonResponse['download_url'];
+          }
+        });
+
+        return jsonResponse['download_url'] as String;
+      } else {
+        Fluttertoast.showToast(msg: 'Download URL not found in the response.');
+        return 'null';
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: 'Failed to upload image: ${response.statusCode}');
+      return 'null';
+    }
+  }
+
+// Function to compress image
+  Future<XFile?> compressImage(File file) async {
+    final String targetPath =
+        '${file.parent.path}/compressed_${file.uri.pathSegments.last}';
+
+    try {
+      final compressedFile = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        targetPath,
+        quality: 85, // Adjust quality to achieve ~2MB size
+        minWidth: 1920, // Adjust resolution as needed
+        minHeight: 1080, // Adjust resolution as needed
+      );
+
+      return compressedFile;
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error compressing image: $e');
+      return null;
+    }
+  }
+
+  Future<void> _requestPermissions() async {
+    if (await Permission.storage.isGranted &&
+        await Permission.camera.isGranted) {
+      return;
+    }
+
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
+
+      // Skip permissions for Android versions below API 30
+      if (androidInfo.version.sdkInt < 30) {
+        return;
+      }
+
+      if (await Permission.photos.isGranted ||
+          await Permission.videos.isGranted ||
+          await Permission.camera.isGranted) {
+        return;
+      }
+
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.photos,
+        Permission.videos,
+        Permission.camera
+      ].request();
+
+      if (statuses.values.any((status) => !status.isGranted)) {
+        openAppSettings();
+      }
+    }
+  }
+
   Future<String> uploadFile(String filePath, String fileType) async {
     final uri = Uri.parse('$baseUrl/api/upload-profile');
     final request = http.MultipartRequest('POST', uri); // Correct HTTP method
@@ -251,7 +368,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     }
   }
 
-  Future<String> uploadImage(XFile imageFile) async {
+  Future<String> uploadImageSelective(XFile imageFile) async {
     final uri = Uri.parse('$baseUrl/api/upload-profile');
     final request = http.MultipartRequest('POST', uri);
 
@@ -304,7 +421,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
 
       if (pickedFile != null) {
         // Upload the image and get the path
-        final uploadedPath = await uploadImage(pickedFile);
+        final uploadedPath = await uploadImageSelective(pickedFile);
         if (uploadedPath != 'null') {
           setState(() {
             // Example: Update the first student's photo path
@@ -715,7 +832,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               ),
               const SizedBox(height: 10),
               _buildDropdownField(
-                'Board Name',
+                'Preferred Board',
                 selectedValue: formData.board,
                 onChanged: (value) {
                   setState(() {
@@ -856,7 +973,75 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           ? 'Upload Image'
                           : 'Update Image',
                       width: 170, onTap: () {
-                    handleImageSelection('profilephoto');
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withValues(alpha: 0.3),
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlue.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      uploadImage('photo');
+                                    },
+                                    child: const Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                // Button for "I'm a Teacher"
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      handleImageSelection('profilephoto');
+                                    },
+                                    child: const Text(
+                                      "Upload File",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
                   }, displayPath: formData.photoPath),
                 ],
               ),
@@ -878,7 +1063,76 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           ? 'Upload File'
                           : 'Update File',
                       width: 170, onTap: () {
-                    handleFileSelection(context, 'aadharFrontPath');
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withValues(alpha: 0.3),
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlue.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      uploadImage('adhaarFront');
+                                    },
+                                    child: const Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                // Button for "I'm a Teacher"
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      handleFileSelection(
+                                          context, 'aadharFrontPath');
+                                    },
+                                    child: const Text(
+                                      "Upload File",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
                   }, displayPath: formData.aadharFrontPath),
                 ],
               ),
@@ -899,6 +1153,76 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           ? 'Upload File'
                           : 'Update File',
                       width: 170, onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withValues(alpha: 0.3),
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlue.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      uploadImage('adhaarBack');
+                                    },
+                                    child: const Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                // Button for "I'm a Teacher"
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      handleFileSelection(
+                                          context, 'aadharBackPath');
+                                    },
+                                    child: const Text(
+                                      "Upload File",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
                     handleFileSelection(context, 'aadharBackPath');
                   }, displayPath: formData.aadharBackPath),
                 ],
@@ -920,7 +1244,75 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       formData.signaturePath == null
                           ? 'Upload Image'
                           : 'Update Image', onTap: () {
-                    handleImageSelection('signature');
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withValues(alpha: 0.3),
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlue.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      uploadImage('sign');
+                                    },
+                                    child: const Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                // Button for "I'm a Teacher"
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      handleImageSelection('signature');
+                                    },
+                                    child: const Text(
+                                      "Upload File",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
                   }, width: 166, displayPath: formData.signaturePath),
                 ],
               ),
