@@ -881,9 +881,9 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 items: ['English', 'Hindi'],
               ),
               const SizedBox(height: 10),
-              _buildDropdownField(
+              _buildMultiSelectDropdownField(
                 'Subject',
-                selectedValue: subject,
+                selectedValues: [],
                 onChanged: (value) {
                   setState(() {
                     subject = value;
@@ -1579,6 +1579,87 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
           isDense: true,
         ),
+      ),
+    );
+  }
+
+  Widget _buildMultiSelectDropdownField(
+    String hintText, {
+    required List<String> selectedValues,
+    required ValueChanged<String> onChanged,
+    required List<String> items,
+  }) {
+    return Container(
+      height: 58,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
+        ],
+      ),
+      child: DropdownButtonFormField<String>(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Required';
+          }
+          return null;
+        },
+        decoration: InputDecoration(
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+          isDense: true,
+        ),
+        items: items
+            .map(
+              (item) => DropdownMenuItem(
+                value: item,
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return CheckboxListTile(
+                      title: Text(item),
+                      value: selectedValues.contains(item),
+                      onChanged: (bool? isChecked) {
+                        if (isChecked == true) {
+                          if (!selectedValues.contains(item)) {
+                            selectedValues.add(item);
+                          }
+                        } else {
+                          selectedValues.remove(item);
+                        }
+                        // Convert the list to a comma-separated string
+                        final selectedString = selectedValues.join(', ');
+                        onChanged(
+                            selectedString); // Pass the string to the parent
+                        setState(() {}); // Update the UI for this item
+                      },
+                      controlAffinity: ListTileControlAffinity.leading,
+                    );
+                  },
+                ),
+              ),
+            )
+            .toList(),
+        onChanged: (_) {
+          // No need for action here since selection happens in the checkbox
+        },
+        isExpanded: true,
       ),
     );
   }
