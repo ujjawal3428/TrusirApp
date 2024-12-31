@@ -104,6 +104,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   final TextEditingController _phoneController = TextEditingController();
   bool userSkipped = false;
   List<Location> locations = [];
+  List<String> selectedSubjects = [];
 
   // Filtered lists
   List<String> states = [];
@@ -930,15 +931,16 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           items: ['10th', '11th', '12th'],
         ),
         const SizedBox(height: 10),
-        _buildDropdownField(
+        _buildMultiSelectDropdownField(
           'Subject',
-          selectedValue: studentForms[index].subject,
-          onChanged: (value) {
+          selectedValues: selectedSubjects,
+          onChanged: (List<String> values) {
             setState(() {
-              studentForms[index].subject = value;
+              selectedSubjects = values;
+              studentForms[index].subject = selectedSubjects.join(',');
             });
           },
-          items: ['Science', 'Arts'],
+          items: _courses,
         ),
         const SizedBox(height: 10),
         _buildDropdownField(
@@ -1108,7 +1110,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   );
                 },
               );
-            }, width: 170, displayPath: studentForms[index].photoPath),
+            }, width: 171, displayPath: studentForms[index].photoPath),
           ],
         ),
         const SizedBox(height: 10),
@@ -1371,6 +1373,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }) {
     return Container(
       width: double.infinity,
+      height: 150, // Set a fixed height for the container
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -1382,18 +1385,13 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           ),
         ],
       ),
-      child: TextFormField(
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Required';
-          }
-          return null;
-        },
+      child: TextField(
         textCapitalization: TextCapitalization.words,
         onChanged: onChanged,
         maxLines: null, // Allows the text to wrap and grow vertically
         textAlignVertical:
             TextAlignVertical.top, // Ensures text starts from the top
+        expands: true, // Makes the TextField expand to fit its parent container
         decoration: InputDecoration(
           labelText: hintText,
           floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -1530,6 +1528,101 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             )
             .toList(),
       ),
+    );
+  }
+
+  Widget _buildMultiSelectDropdownField(
+    String hintText, {
+    required List<String> selectedValues,
+    required ValueChanged<List<String>> onChanged,
+    required List<String> items,
+  }) {
+    String selectedText = selectedValues.join(', ');
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Container(
+          height: 58,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(22),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade200,
+                blurRadius: 4,
+                spreadRadius: 2,
+              ),
+            ],
+          ),
+          child: DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              labelText: hintText,
+              floatingLabelBehavior: FloatingLabelBehavior.auto,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(22),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(22),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(22),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 17,
+              ),
+              isDense: true,
+            ),
+            items: items
+                .map(
+                  (item) => DropdownMenuItem(
+                    value: item,
+                    child: StatefulBuilder(
+                      builder: (context, setStateInner) {
+                        return CheckboxListTile(
+                          title: Text(item),
+                          value: selectedValues.contains(item),
+                          onChanged: (bool? isChecked) {
+                            if (isChecked == true) {
+                              if (!selectedValues.contains(item)) {
+                                selectedValues.add(item);
+                              }
+                            } else {
+                              selectedValues.remove(item);
+                            }
+                            // Update the concatenated text
+                            selectedText = selectedValues.join(', ');
+
+                            // Pass the updated list to the parent
+                            onChanged(selectedValues);
+                            setStateInner(() {}); // Update the UI for this item
+                            setState(() {}); // Update the display string
+                          },
+                          controlAffinity: ListTileControlAffinity.leading,
+                        );
+                      },
+                    ),
+                  ),
+                )
+                .toList(),
+            onChanged: (_) {
+              // No need for action here since selection happens in the checkbox
+            },
+            isExpanded: true,
+            value: null,
+            hint: selectedText.isNotEmpty
+                ? Text(
+                    selectedText,
+                    style: const TextStyle(color: Colors.black),
+                  )
+                : null,
+          ),
+        );
+      },
     );
   }
 

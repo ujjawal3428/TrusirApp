@@ -104,10 +104,6 @@ class TeacherRegistrationPage extends StatefulWidget {
 
 class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   String? gender;
-  String? city;
-  String? medium;
-  String? preferredClass;
-  String? subject;
   DateTime? selectedDOB;
   bool agreeToTerms = false;
 
@@ -128,6 +124,10 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   List<String> pincodes = [];
   List<String> _courses = [];
   bool userSkipped = false;
+  List<String> selectedSubjects = [];
+  List<String> selectedClass = [];
+  List<String> selectedMedium = [];
+  List<String> selectedBoard = [];
   bool isLoading = true;
 
   Set<String> selectedSlots = {}; // Store selected time slots
@@ -841,12 +841,13 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 ],
               ),
               const SizedBox(height: 10),
-              _buildDropdownField(
+              _buildMultiSelectDropdownField(
                 'Preferred Board',
-                selectedValue: formData.board,
-                onChanged: (value) {
+                selectedValues: selectedBoard,
+                onChanged: (List<String> values) {
                   setState(() {
-                    formData.board = value;
+                    selectedBoard = values;
+                    formData.board = selectedBoard.join(',');
                   });
                 },
                 items: ['BSEB', 'CBSE', 'ICSE'],
@@ -857,25 +858,25 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               }),
               const SizedBox(height: 10),
               // Dropdowns
-              _buildDropdownField(
+              _buildMultiSelectDropdownField(
                 'Preferred Class',
-                selectedValue: preferredClass,
-                onChanged: (value) {
+                selectedValues: selectedClass,
+                onChanged: (List<String> values) {
                   setState(() {
-                    preferredClass = value;
-                    formData.preferredclass = preferredClass;
+                    selectedClass = values;
+                    formData.preferredclass = selectedClass.join(',');
                   });
                 },
                 items: ['10th', '11th', '12th'],
               ),
               const SizedBox(height: 10),
-              _buildDropdownField(
-                'Medium',
-                selectedValue: medium,
-                onChanged: (value) {
+              _buildMultiSelectDropdownField(
+                'Preferred Medium',
+                selectedValues: selectedMedium,
+                onChanged: (List<String> values) {
                   setState(() {
-                    medium = value;
-                    formData.medium = medium;
+                    selectedMedium = values;
+                    formData.medium = selectedMedium.join(',');
                   });
                 },
                 items: ['English', 'Hindi'],
@@ -883,11 +884,11 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               const SizedBox(height: 10),
               _buildMultiSelectDropdownField(
                 'Subject',
-                selectedValues: [],
-                onChanged: (value) {
+                selectedValues: selectedSubjects,
+                onChanged: (List<String> values) {
                   setState(() {
-                    subject = value;
-                    formData.subject = subject;
+                    selectedSubjects = values;
+                    formData.subject = selectedSubjects.join(',');
                   });
                 },
                 items: _courses,
@@ -982,7 +983,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       formData.photoPath == null
                           ? 'Upload Image'
                           : 'Update Image',
-                      width: 170, onTap: () {
+                      width: 171, onTap: () {
                     showDialog(
                       context: context,
                       barrierColor: Colors.black.withValues(alpha: 0.3),
@@ -1323,7 +1324,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                         );
                       },
                     );
-                  }, width: 166, displayPath: formData.signaturePath),
+                  }, width: 171, displayPath: formData.signaturePath),
                 ],
               ),
               const SizedBox(height: 10),
@@ -1446,6 +1447,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   }) {
     return Container(
       width: double.infinity,
+      height: 150, // Set a fixed height for the container
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -1463,6 +1465,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         maxLines: null, // Allows the text to wrap and grow vertically
         textAlignVertical:
             TextAlignVertical.top, // Ensures text starts from the top
+        expands: true, // Makes the TextField expand to fit its parent container
         decoration: InputDecoration(
           labelText: hintText,
           floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -1586,81 +1589,95 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   Widget _buildMultiSelectDropdownField(
     String hintText, {
     required List<String> selectedValues,
-    required ValueChanged<String> onChanged,
+    required ValueChanged<List<String>> onChanged,
     required List<String> items,
   }) {
-    return Container(
-      height: 58,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey.shade200, blurRadius: 4, spreadRadius: 2),
-        ],
-      ),
-      child: DropdownButtonFormField<String>(
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Required';
-          }
-          return null;
-        },
-        decoration: InputDecoration(
-          labelText: hintText,
-          floatingLabelBehavior: FloatingLabelBehavior.auto,
-          border: OutlineInputBorder(
+    String selectedText = selectedValues.join(', ');
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return Container(
+          height: 58,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(22),
-            borderSide: const BorderSide(color: Colors.grey),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(22),
-            borderSide: const BorderSide(color: Colors.grey),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(22),
-            borderSide: const BorderSide(color: Colors.grey),
-          ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
-          isDense: true,
-        ),
-        items: items
-            .map(
-              (item) => DropdownMenuItem(
-                value: item,
-                child: StatefulBuilder(
-                  builder: (context, setState) {
-                    return CheckboxListTile(
-                      title: Text(item),
-                      value: selectedValues.contains(item),
-                      onChanged: (bool? isChecked) {
-                        if (isChecked == true) {
-                          if (!selectedValues.contains(item)) {
-                            selectedValues.add(item);
-                          }
-                        } else {
-                          selectedValues.remove(item);
-                        }
-                        // Convert the list to a comma-separated string
-                        final selectedString = selectedValues.join(', ');
-                        onChanged(
-                            selectedString); // Pass the string to the parent
-                        setState(() {}); // Update the UI for this item
-                      },
-                      controlAffinity: ListTileControlAffinity.leading,
-                    );
-                  },
-                ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade200,
+                blurRadius: 4,
+                spreadRadius: 2,
               ),
-            )
-            .toList(),
-        onChanged: (_) {
-          // No need for action here since selection happens in the checkbox
-        },
-        isExpanded: true,
-      ),
+            ],
+          ),
+          child: DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              labelText: hintText,
+              floatingLabelBehavior: FloatingLabelBehavior.auto,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(22),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(22),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(22),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 17,
+              ),
+              isDense: true,
+            ),
+            items: items
+                .map(
+                  (item) => DropdownMenuItem(
+                    value: item,
+                    child: StatefulBuilder(
+                      builder: (context, setStateInner) {
+                        return CheckboxListTile(
+                          title: Text(item),
+                          value: selectedValues.contains(item),
+                          onChanged: (bool? isChecked) {
+                            if (isChecked == true) {
+                              if (!selectedValues.contains(item)) {
+                                selectedValues.add(item);
+                              }
+                            } else {
+                              selectedValues.remove(item);
+                            }
+                            // Update the concatenated text
+                            selectedText = selectedValues.join(', ');
+
+                            // Pass the updated list to the parent
+                            onChanged(selectedValues);
+                            setStateInner(() {}); // Update the UI for this item
+                            setState(() {}); // Update the display string
+                          },
+                          controlAffinity: ListTileControlAffinity.leading,
+                        );
+                      },
+                    ),
+                  ),
+                )
+                .toList(),
+            onChanged: (_) {
+              // No need for action here since selection happens in the checkbox
+            },
+            isExpanded: true,
+            value: null,
+            hint: selectedText.isNotEmpty
+                ? Text(
+                    selectedText,
+                    style: const TextStyle(color: Colors.black),
+                  )
+                : null,
+          ),
+        );
+      },
     );
   }
 
