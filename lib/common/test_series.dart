@@ -240,7 +240,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                         const EdgeInsets.only(right: 16, left: 16, top: 10),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 1,
-                     
+
                       decoration: BoxDecoration(
                         color: containerColors[index % containerColors.length],
                         borderRadius: BorderRadius.circular(22),
@@ -289,7 +289,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                
                   children: [
                     Text(
                       test['test_name'],
@@ -306,13 +305,13 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                         Text(test['date'],
                             style: const TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.w400)),
-                                Text(test['time'], style: const TextStyle(fontSize: 14)),
+                        Text(test['time'],
+                            style: const TextStyle(fontSize: 14)),
                       ],
                     ),
                   ],
                 ),
               ),
-              
             ],
           ),
           const SizedBox(height: 10),
