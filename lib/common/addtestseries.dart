@@ -54,34 +54,6 @@ class _AddtestseriesState extends State<Addtestseries> {
     fetchAllCourses();
   }
 
-  Future<String> uploadFile(String filePath, String fileType) async {
-    final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri); // Correct HTTP method
-
-    // Add the file to the request with the correct field name
-    request.files.add(await http.MultipartFile.fromPath(
-        'photo', filePath)); // Field name is 'photo'
-
-    // Send the request
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      // Parse the response to extract the download URL
-      final responseBody = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-
-      if (jsonResponse.containsKey('download_url')) {
-        return jsonResponse['download_url'] as String;
-      } else {
-        print('Download URL not found in the response.');
-        return 'null';
-      }
-    } else {
-      print('Failed to upload file: ${response.statusCode}');
-      return 'null';
-    }
-  }
-
   Future<void> _requestPermissions() async {
     if (await Permission.storage.isGranted &&
         await Permission.camera.isGranted) {
@@ -114,66 +86,101 @@ class _AddtestseriesState extends State<Addtestseries> {
     }
   }
 
+  Future<String> uploadFile(String filePath, String fileType) async {
+    final uri = Uri.parse('$baseUrl/api/upload-profile');
+    final request = http.MultipartRequest('POST', uri);
+
+    // Add the file to the request with the correct field name
+    request.files.add(await http.MultipartFile.fromPath('photo', filePath));
+
+    // Send the request
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse.containsKey('download_url')) {
+        return jsonResponse['download_url'] as String;
+      } else {
+        print('Download URL not found in the response.');
+        return 'null';
+      }
+    } else {
+      print('Failed to upload file: ${response.statusCode}');
+      return 'null';
+    }
+  }
+
   Future<void> handleFileSelection(BuildContext context) async {
     try {
-      // Use FilePicker to select multiple files
-      final result = await FilePicker.platform.pickFiles();
+      final result = await FilePicker.platform.pickFiles(allowMultiple: true);
 
       if (result != null && result.files.isNotEmpty) {
+        List<String> uploadedUrls = [];
+
         for (final file in result.files) {
           final filePath = file.path;
           final fileName = file.name;
-          final fileSize = file.size; // File size in bytes
+          final fileSize = file.size;
 
           if (filePath == null) {
             continue;
           }
 
-          // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
           if (fileSize > 2 * 1024 * 1024) {
             Fluttertoast.showToast(
                 msg: '$fileName exceeds 2MB. Skipping upload.');
             continue;
           }
 
-          // Determine file type
           final fileType = fileName.endsWith('.jpg') ||
                   fileName.endsWith('.jpeg') ||
                   fileName.endsWith('.png')
               ? 'photo'
               : 'document';
 
-          // Upload the file and get the path
           final uploadedPath = await uploadFile(filePath, fileType);
 
           if (uploadedPath != 'null') {
+            uploadedUrls.add(uploadedPath);
             Fluttertoast.showToast(
                 msg: '$fileName uploaded successfully: $uploadedPath');
-
-            if (isQuestion) {
-              setState(() {
-                question = uploadedPath;
-                isQuestion = false;
-              });
-            } else if (isAnswer) {
-              setState(() {
-                answer = uploadedPath;
-                isAnswer = false;
-              });
-            }
           } else {
-            Fluttertoast.showToast(msg: 'Failed to upload file');
-            return;
+            Fluttertoast.showToast(msg: 'Failed to upload file: $fileName');
           }
+        }
+
+        if (uploadedUrls.isNotEmpty) {
+          final resultString = uploadedUrls.join(', ');
+
+          if (uploadedUrls.length > 1) {
+            Fluttertoast.showToast(
+                msg: 'All files uploaded successfully: $resultString');
+          } else {
+            Fluttertoast.showToast(
+                msg: 'File uploaded successfully: ${uploadedUrls[0]}');
+          }
+
+          setState(() {
+            if (isQuestion) {
+              question = resultString;
+              isQuestion = false;
+              print(question);
+            } else if (isAnswer) {
+              answer = resultString;
+              isAnswer = false;
+              print(answer);
+            }
+          });
+        } else {
+          Fluttertoast.showToast(msg: 'No files uploaded.');
         }
       } else {
         Fluttertoast.showToast(msg: 'No file selected.');
-        return;
       }
     } catch (e) {
       Fluttertoast.showToast(msg: 'Error during file selection: $e');
-
-      return;
     }
   }
 
