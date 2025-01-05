@@ -91,7 +91,9 @@ class _OTPScreenState extends State<OTPScreen> {
     });
 
     try {
-      await verifyOTP(phone, otp);
+      // await verifyOTP(phone, otp);
+      await fetchUserData(phone);
+      showVerificationDialog(context);
     } finally {
       // Hide progress indicator
       setState(() {

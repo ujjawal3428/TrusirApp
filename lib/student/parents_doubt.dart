@@ -1,7 +1,13 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/parents_doubts.dart';
@@ -57,6 +63,108 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
       }
     } catch (e) {
       print("Error launching WhatsApp: $e");
+    }
+  }
+
+  Future<void> _requestPermissions() async {
+    if (await Permission.storage.isGranted &&
+        await Permission.camera.isGranted) {
+      return;
+    }
+
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
+
+      // Skip permissions for Android versions below API 30
+      if (androidInfo.version.sdkInt < 30) {
+        return;
+      }
+
+      if (await Permission.photos.isGranted ||
+          await Permission.videos.isGranted ||
+          await Permission.camera.isGranted) {
+        return;
+      }
+
+      Map<Permission, PermissionStatus> statuses = await [
+        Permission.photos,
+        Permission.videos,
+        Permission.camera
+      ].request();
+
+      if (statuses.values.any((status) => !status.isGranted)) {
+        openAppSettings();
+      }
+    }
+  }
+
+  Future<String> uploadImage() async {
+    await _requestPermissions();
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+    if (image == null) {
+      Fluttertoast.showToast(msg: 'No image selected.');
+      return 'null';
+    }
+
+    // Compress the image
+    final compressedImage = await compressImage(File(image.path));
+
+    if (compressedImage == null) {
+      Fluttertoast.showToast(msg: 'Failed to compress image.');
+      return 'null';
+    }
+
+    final uri = Uri.parse('$baseUrl/api/upload-profile');
+    final request = http.MultipartRequest('POST', uri);
+
+    // Add the compressed image file to the request
+    request.files
+        .add(await http.MultipartFile.fromPath('photo', compressedImage.path));
+
+    // Send the request
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      // Parse the response to extract the download URL
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse.containsKey('download_url')) {
+        setState(() {
+          formData.photo = jsonResponse['download_url'];
+        });
+        return jsonResponse['download_url'] as String;
+      } else {
+        Fluttertoast.showToast(msg: 'Download URL not found in the response.');
+        return 'null';
+      }
+    } else {
+      Fluttertoast.showToast(
+          msg: 'Failed to upload image: ${response.statusCode}');
+      return 'null';
+    }
+  }
+
+// Function to compress image
+  Future<XFile?> compressImage(File file) async {
+    final String targetPath =
+        '${file.parent.path}/compressed_${file.uri.pathSegments.last}';
+
+    try {
+      final compressedFile = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        targetPath,
+        quality: 85, // Adjust quality to achieve ~2MB size
+        minWidth: 1920, // Adjust resolution as needed
+        minHeight: 1080, // Adjust resolution as needed
+      );
+
+      return compressedFile;
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error compressing image: $e');
+      return null;
     }
   }
 
@@ -201,7 +309,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
     }
   }
 
-  Future<void> handleFileSelection(BuildContext context) async {
+  Future<void> handleFileSelection() async {
     try {
       // Use FilePicker to select a file
       final result = await FilePicker.platform.pickFiles();
@@ -446,7 +554,99 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                     ? _buildFilePreview(formData.photo!)
                                     : GestureDetector(
                                         onTap: () {
-                                          handleFileSelection(context);
+                                          showDialog(
+                                            context: context,
+                                            barrierColor: Colors.black
+                                                .withValues(alpha: 0.3),
+                                            builder: (BuildContext context) {
+                                              return Dialog(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                insetPadding:
+                                                    const EdgeInsets.all(16),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Container(
+                                                        width: 200,
+                                                        height: 50,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors
+                                                              .lightBlue
+                                                              .shade100,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(22),
+                                                        ),
+                                                        child: TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                            uploadImage();
+                                                          },
+                                                          child: const Text(
+                                                            "Camera",
+                                                            style: TextStyle(
+                                                                fontSize: 18,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'Poppins'),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 16),
+                                                      // Button for "I'm a Teacher"
+                                                      Container(
+                                                        width: 200,
+                                                        height: 50,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors
+                                                              .orange.shade100,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(22),
+                                                        ),
+                                                        child: TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                            handleFileSelection();
+                                                          },
+                                                          child: const Text(
+                                                            "Upload File",
+                                                            style: TextStyle(
+                                                                fontSize: 18,
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'Poppins'),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
                                         },
                                         child: Padding(
                                           padding: const EdgeInsets.all(1.0),

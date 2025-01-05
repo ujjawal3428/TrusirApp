@@ -34,7 +34,6 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
   void initState() {
     super.initState();
     fetchDoubts();
-
     _loadDownloadedFiles();
   }
 

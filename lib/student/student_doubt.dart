@@ -343,7 +343,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
     }
   }
 
-  Future<void> handleFileSelection(BuildContext context) async {
+  Future<void> handleFileSelection() async {
     try {
       // Use FilePicker to select a file
       final result = await FilePicker.platform.pickFiles();
@@ -732,8 +732,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                                                 onPressed: () {
                                                                   Navigator.pop(
                                                                       context);
-                                                                  handleFileSelection(
-                                                                      context);
+                                                                  handleFileSelection();
                                                                 },
                                                                 child:
                                                                     const Text(

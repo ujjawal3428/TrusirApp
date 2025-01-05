@@ -37,7 +37,7 @@ class Course {
 }
 
 class CourseCard extends StatefulWidget {
-  final Course course;
+  final Map<String, dynamic> course;
 
   const CourseCard({super.key, required this.course});
 
@@ -78,7 +78,7 @@ class _CourseCardState extends State<CourseCard> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    widget.course.image,
+                    widget.course['image']!,
                     width: double.infinity,
                     height: 180,
                     fit: BoxFit.cover,
@@ -117,7 +117,7 @@ class _CourseCardState extends State<CourseCard> {
             ),
             const SizedBox(height: 12),
             Text(
-              widget.course.name,
+              widget.course['courseName']!,
               style: const TextStyle(
                 fontSize: 18,
                 fontFamily: 'Poppins',
@@ -126,7 +126,7 @@ class _CourseCardState extends State<CourseCard> {
             ),
             const SizedBox(height: 2),
             Text(
-              widget.course.subject,
+              widget.course['subject']!,
               style: const TextStyle(
                 fontSize: 14,
                 fontFamily: 'Poppins',
@@ -137,7 +137,7 @@ class _CourseCardState extends State<CourseCard> {
             Row(
               children: [
                 Text(
-                  '₹${widget.course.amount}',
+                  '₹${widget.course['newamount']}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontFamily: 'Poppins',
@@ -148,9 +148,9 @@ class _CourseCardState extends State<CourseCard> {
                 const SizedBox(
                   width: 7,
                 ),
-                const Text(
-                  '₹5000', // Placeholder for original price
-                  style: TextStyle(
+                Text(
+                  '₹${widget.course['oldamount']}', // Placeholder for original price
+                  style: const TextStyle(
                     fontSize: 14,
                     fontFamily: 'Poppins',
                     decoration: TextDecoration.lineThrough,
@@ -172,56 +172,85 @@ class _CourseCardState extends State<CourseCard> {
             ),
             const SizedBox(height: 10),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 142,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      merchantTransactionID =
-                          generateUniqueTransactionId(userID!);
-                      body = getChecksum(int.parse('${widget.course.amount}00'))
-                          .toString();
-                      startTransaction();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurple,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'Buy Now',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ),
-                ),
+                widget.course['status'] == 'demo' ||
+                        widget.course['status'] == null
+                    ? SizedBox(
+                        width: 142,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            merchantTransactionID =
+                                generateUniqueTransactionId(userID!);
+                            body = getChecksum(int.parse(
+                                    '${widget.course['newamount']}00'))
+                                .toString();
+                            startTransaction();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            'Buy Now',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
                 const SizedBox(
                   width: 10,
                 ),
-                SizedBox(
-                  width: 142,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Handle Buy Now action
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 225, 143, 55),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                widget.course['status'] == 'bought' ||
+                        widget.course['status'] == 'demo'
+                    ? SizedBox(
+                        width: 142,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Handle Buy Now action
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blueAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            'Know More',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ),
+                      )
+                    : SizedBox(
+                        width: 142,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Handle Buy Now action
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 225, 143, 55),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text(
+                            'Book Demo',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      'Book Demo',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Poppins',
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ],
@@ -366,9 +395,87 @@ class _CoursePageState extends State<CoursePage> {
     }
   }
 
+  List<Map<String, dynamic>> filteredCourses = [];
+  int _selectedIndex = 0;
+
+  final List<Map<String, dynamic>> _courses = [
+    {
+      "courseName": "Maths Basic",
+      "class": "11",
+      "subject": "Maths",
+      "image":
+          "https://admin.trusir.com/uploads/profile/profile_1736064683.jpeg",
+      "oldamount": "2000",
+      "newamount": "200",
+      "date_of_purchase": "01-01-2025",
+      "status": "bought"
+    },
+    {
+      "courseName": "English Basic",
+      "class": "11",
+      "subject": "English",
+      "image":
+          "https://admin.trusir.com/uploads/profile/profile_1736064683.jpeg",
+      "oldamount": "299",
+      "newamount": "200",
+      "date_of_purchase": "02-01-2025",
+      "status": "bought"
+    },
+    {
+      "courseName": "Hindi Basic",
+      "class": "11",
+      "subject": "Hindi",
+      "image":
+          "https://admin.trusir.com/uploads/profile/profile_1736064683.jpeg",
+      "oldamount": "500",
+      "newamount": "200",
+      "date_of_purchase": "05-01-2025",
+      "status": "demo"
+    },
+    {
+      "courseName": "SST Basic",
+      "class": "11",
+      "subject": "SST",
+      "image":
+          "https://admin.trusir.com/uploads/profile/profile_1736064683.jpeg",
+      "oldamount": "200",
+      "newamount": "200",
+      "date_of_purchase": "04-01-2025",
+      "status": "demo"
+    },
+    {
+      "courseName": "Sanskrit Basic",
+      "class": "11",
+      "subject": "Sanskrit",
+      "image":
+          "https://admin.trusir.com/uploads/profile/profile_1736064683.jpeg",
+      "oldamount": "600",
+      "newamount": "200",
+      "date_of_purchase": "03-01-2025",
+      "status": null
+    }
+  ];
+
+  void _filterCourses(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (index == 0) {
+        filteredCourses =
+            _courses.where((course) => course["status"] == "bought").toList();
+      } else if (index == 1) {
+        filteredCourses =
+            _courses.where((course) => course["status"] == "demo").toList();
+      } else if (index == 2) {
+        filteredCourses =
+            _courses.where((course) => course["status"] == null).toList();
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    _filterCourses(_selectedIndex);
     fetchCourses();
   }
 
@@ -416,40 +523,19 @@ class _CoursePageState extends State<CoursePage> {
             option1: 'My Courses',
             option2: 'Demo Courses',
             option3: 'More Courses',
-            initialSelectedIndex: 0, // Start with Option 1 selected
-            onChanged: (selectedIndex) {},
+            initialSelectedIndex: _selectedIndex,
+            onChanged: _filterCourses,
           ),
           Expanded(
-            child: FutureBuilder<List<Course>>(
-              future: fetchCourses(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Failed to load courses: ${snapshot.error}'),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(
-                    child: Text('No courses available'),
-                  );
-                } else {
-                  final courses = snapshot.data!;
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    itemCount: courses.length,
-                    itemBuilder: (context, index) {
-                      final course = courses[index];
-                      return CourseCard(course: course);
-                    },
-                  );
-                }
-              },
-            ),
-          ),
+              child: ListView.builder(
+            shrinkWrap: true,
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            itemCount: filteredCourses.length,
+            itemBuilder: (context, index) {
+              final course = filteredCourses[index];
+              return CourseCard(course: course);
+            },
+          )),
         ],
       ),
     );
