@@ -32,7 +32,7 @@ class TeacherRegistrationData {
   String? city;
   String? area;
   String? pincode;
-  String? timeslot;
+  Map<String, bool>? timeslot;
   String? school;
   String? caddress;
   String? board;
@@ -59,7 +59,7 @@ class TeacherRegistrationData {
       'subject': subject,
       'school': school,
       'board': board,
-      'timeslot': timeslot,
+      ...?timeslot,
       'state': state,
       'city': city,
       'area': area,
@@ -609,7 +609,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
           "school": teacher.school,
           "board": teacher.board,
           "state": teacher.state,
-          "timeslot": teacher.timeslot,
+          ...teacher.timeslot!,
           "city": teacher.city,
           "area": teacher.area,
           "pincode": teacher.pincode,
@@ -1821,16 +1821,36 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
 }
 
 class TimeSlotField extends StatefulWidget {
-  final TeacherRegistrationData
+  final dynamic
       formData; // Assuming you have a FormData class with timeslot field
 
-  const TimeSlotField({super.key, required this.formData});
+  const TimeSlotField({
+    super.key,
+    required this.formData,
+  });
 
   @override
   TimeSlotFieldState createState() => TimeSlotFieldState();
 }
 
 class TimeSlotFieldState extends State<TimeSlotField> {
+  final Map<String, String> slotToApiKey = {
+    '6-7 AM': 't6am_7am',
+    '7-8 AM': 't7am_8am',
+    '8-9 AM': 't8am_9am',
+    '9-10 AM': 't9am_10am',
+    '10-11 AM': 't10am_11am',
+    '11-12 PM': 't11am_12pm',
+    '12-1 PM': 't12pm_1pm',
+    '1-2 PM': 't1pm_2pm',
+    '2-3 PM': 't2pm_3pm',
+    '3-4 PM': 't3pm_4pm',
+    '4-5 PM': 't4pm_5pm',
+    '5-6 PM': 't5pm_6pm',
+    '6-7 PM': 't6pm_7pm',
+    '7-8 PM': 't7pm_8pm',
+  };
+
   final List<String> morningSlots = [
     '6-7 AM',
     '7-8 AM',
@@ -1844,7 +1864,7 @@ class TimeSlotFieldState extends State<TimeSlotField> {
     '1-2 PM',
     '2-3 PM',
     '3-4 PM',
-    '4-5PM'
+    '4-5 PM'
   ];
   final List<String> eveningSlots = ['5-6 PM', '6-7 PM', '7-8 PM'];
 
@@ -1857,8 +1877,11 @@ class TimeSlotFieldState extends State<TimeSlotField> {
       } else {
         selectedSlots.add(slot);
       }
-      // Update the timeslot in the formData
-      widget.formData.timeslot = selectedSlots.join(", ");
+
+      // Update the timeslot field in the form data
+      widget.formData.timeslot = slotToApiKey.map((key, apiKey) {
+        return MapEntry(apiKey, selectedSlots.contains(key));
+      });
     });
   }
 

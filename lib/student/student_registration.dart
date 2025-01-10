@@ -29,38 +29,39 @@ class StudentRegistrationData {
   String? subject;
   String? state;
   String? city;
+  List<String> cities = [];
+  List<String> pins = [];
   String? area;
   String? pincode;
   String? address;
-  String? timeslot;
+  Map<String, bool>? timeslot; // Changed to Map
   String? photoPath;
   String? aadharFrontPath;
   String? aadharBackPath;
   bool? agreetoterms;
-  List<String> cities = [];
-  List<String> pins = [];
 
   Map<String, dynamic> toJson() {
     final DateFormat dateFormatter = DateFormat('yyyy-MM-dd');
     return {
-      'studentName': studentName,
-      'fathersName': fathersName,
-      'mothersName': mothersName,
+      'name': studentName,
+      'father_name': fathersName,
+      'mother_name': mothersName,
       'gender': gender,
-      'dob': dob != null ? dateFormatter.format(dob!) : null,
-      'schoolName': schoolName,
+      'DOB': dob != null ? dateFormatter.format(dob!) : null,
+      'school': schoolName,
       'medium': medium,
-      'studentClass': studentClass,
+      'class': studentClass,
       'subject': subject,
       'state': state,
       'city': city,
       'area': area,
       'pincode': pincode,
       'address': address,
-      'time_slot': timeslot,
-      'photoPath': photoPath,
-      'aadharfrontPath': aadharFrontPath,
-      'aadharbackPath': aadharBackPath,
+      ...?timeslot, // Merge timeslot map directly into the payload
+      'profile': photoPath,
+      'adhaar_front': aadharFrontPath,
+      'adhaar_back': aadharBackPath,
+      'agree_to_terms': agreetoterms,
     };
   }
 }
@@ -277,20 +278,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     }
   }
 
-  // List to store selected slots for each student form
-  final List<Set<String>> selectedSlots = [];
   String? uploadedPath;
-
-  // List to store selected slot strings for each student form
-  final List<String> selectedSlotsString = [];
-
-  void updateSelectedSlots(int index) {
-    setState(() {
-      selectedSlotsString[index] = selectedSlots[index].join(", ");
-      studentForms[index].timeslot =
-          selectedSlotsString[index]; // Assuming this field exists
-    });
-  }
 
   Future<void> fetchAllCourses() async {
     final url = Uri.parse('$baseUrl/all-course');
@@ -343,6 +331,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             duration: Duration(seconds: 2),
           ),
         );
+        print(studentFormsData[0].timeslot);
+        print(studentFormsData[1].timeslot);
         return; // Stop execution if any field is invalid
       }
     }
@@ -367,8 +357,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           "city": student.city,
           "area": student.area,
           "pincode": student.pincode,
+          ...student.timeslot!,
           "address": student.address,
-          "time_slot": student.timeslot,
           "profile": student.photoPath,
           "adhaar_front": student.aadharFrontPath,
           "adhaar_back": student.aadharBackPath,
@@ -1725,6 +1715,23 @@ class TimeSlotField extends StatefulWidget {
 }
 
 class TimeSlotFieldState extends State<TimeSlotField> {
+  final Map<String, String> slotToApiKey = {
+    '6-7 AM': 't6am_7am',
+    '7-8 AM': 't7am_8am',
+    '8-9 AM': 't8am_9am',
+    '9-10 AM': 't9am_10am',
+    '10-11 AM': 't10am_11am',
+    '11-12 PM': 't11am_12pm',
+    '12-1 PM': 't12pm_1pm',
+    '1-2 PM': 't1pm_2pm',
+    '2-3 PM': 't2pm_3pm',
+    '3-4 PM': 't3pm_4pm',
+    '4-5 PM': 't4pm_5pm',
+    '5-6 PM': 't5pm_6pm',
+    '6-7 PM': 't6pm_7pm',
+    '7-8 PM': 't7pm_8pm',
+  };
+
   final List<String> morningSlots = [
     '6-7 AM',
     '7-8 AM',
@@ -1738,7 +1745,7 @@ class TimeSlotFieldState extends State<TimeSlotField> {
     '1-2 PM',
     '2-3 PM',
     '3-4 PM',
-    '4-5PM'
+    '4-5 PM'
   ];
   final List<String> eveningSlots = ['5-6 PM', '6-7 PM', '7-8 PM'];
 
@@ -1751,8 +1758,11 @@ class TimeSlotFieldState extends State<TimeSlotField> {
       } else {
         selectedSlots.add(slot);
       }
-      // Update the timeslot in the formData
-      widget.formData.timeslot = selectedSlots.join(", ");
+
+      // Update the timeslot field in the form data
+      widget.formData.timeslot = slotToApiKey.map((key, apiKey) {
+        return MapEntry(apiKey, selectedSlots.contains(key));
+      });
     });
   }
 
