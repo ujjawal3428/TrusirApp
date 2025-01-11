@@ -30,6 +30,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
   String city = '';
   String phone = '';
   String userID = '';
+  bool isWeb = false;
 
   final Map<String, Map<String, double>> imageSizes = {
     'assets/myprofile.png': {'width': 50, 'height': 50},
@@ -67,7 +68,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
+    screenWidth > 600 ? isWeb = true : false;
     double tileWidth = 116;
     double tileHeight = 140;
     if (screenWidth > 600) {
@@ -113,15 +114,18 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
             ),
           ),
         ],
-        toolbarHeight: 50,
+        toolbarHeight: 70,
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: LayoutBuilder(
           builder: (context, constraints) {
             return Padding(
-              padding: const EdgeInsets.only(
-                  left: 20.0, right: 20, top: 10, bottom: 10),
+              padding: EdgeInsets.only(
+                  left: isWeb ? 50 : 20.0,
+                  right: isWeb ? 50 : 20.0,
+                  top: isWeb ? 30 : 10.0,
+                  bottom: isWeb ? 30 : 10.0),
               child: Column(children: [
                 GestureDetector(
                   onTap: () {
@@ -134,9 +138,12 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                     );
                   },
                   child: Container(
-                    width: constraints.maxWidth > 388
-                        ? 388
-                        : constraints.maxWidth - 40,
+                    width: isWeb
+                        ? double.infinity
+                        : constraints.maxWidth > 388
+                            ? 388
+                            : constraints.maxWidth - 40,
+                    height: isWeb ? 150 : null,
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
                         colors: [
@@ -159,21 +166,26 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                       ],
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: isWeb
+                          ? MainAxisAlignment.center
+                          : MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 20.0, top: 12, bottom: 12),
+                            padding: EdgeInsets.only(
+                                left: isWeb ? 60 : 20.0, top: 12, bottom: 12),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: isWeb
+                                  ? MainAxisAlignment.center
+                                  : MainAxisAlignment.start,
                               children: [
                                 Text(
                                   name,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 22,
+                                      fontSize: isWeb ? 25 : 22,
                                       fontFamily: 'Poppins',
                                       fontWeight: FontWeight.w700),
                                 ),
@@ -184,9 +196,9 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                       Text(
                                         '$area, ',
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 16,
+                                          fontSize: isWeb ? 19 : 16,
                                           fontFamily: 'Poppins',
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -194,9 +206,9 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                       Text(
                                         city,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           color: Colors.white,
-                                          fontSize: 16,
+                                          fontSize: isWeb ? 19 : 16,
                                           fontFamily: 'Poppins',
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -208,10 +220,10 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   padding: const EdgeInsets.only(top: 2.0),
                                   child: Text(
                                     phone,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: 'Poppins',
-                                      fontSize: 11,
+                                      fontSize: isWeb ? 16 : 11,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -221,7 +233,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(right: 12.0),
+                          padding: EdgeInsets.only(right: isWeb ? 50 : 12.0),
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white10,
@@ -235,8 +247,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               borderRadius: BorderRadius.circular(15),
                               child: Image.network(
                                 profile,
-                                width: 75,
-                                height: 75,
+                                width: isWeb ? 130 : 75,
+                                height: isWeb ? 130 : 75,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return const Center(
@@ -263,9 +275,11 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       crossAxisCount: constraints.maxWidth > 600 ? 4 : 3,
-                      crossAxisSpacing: 17,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: tileWidth / tileHeight,
+                      crossAxisSpacing: isWeb ? 30 : 17,
+                      mainAxisSpacing: isWeb ? 30 : 10,
+                      childAspectRatio: isWeb
+                          ? tileWidth / tileHeight * 1.5
+                          : tileWidth / tileHeight,
                       children: [
                         buildTile(
                             context,
@@ -280,7 +294,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               builder: (context) => const MyProfileScreen(),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0x80FFF59D),
@@ -295,7 +309,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   const TeacherProfileScreen(),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0xFFF8BBD0),
@@ -311,7 +325,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               ),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0xFFFFCDD2),
@@ -325,7 +339,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               builder: (context) => const FeePaymentScreen(),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0x33FF00E5),
@@ -340,7 +354,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   TestSeriesScreen(userID: userID),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0x80FFE082),
@@ -355,7 +369,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                   const ProgressReportScreen(),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0x80F48FB1),
@@ -369,7 +383,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               builder: (context) => const StudentDoubtScreen(),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0xFFB3E5FC),
@@ -383,7 +397,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               builder: (context) => const ParentsDoubtScreen(),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0x80FFF59D),
@@ -397,7 +411,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               builder: (context) => const ExtraKnowledge(),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0x80FFF59D),
@@ -411,7 +425,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               builder: (context) => const GKPage(),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0x80FFE082),
@@ -425,7 +439,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               builder: (context) => const NoticeScreen(),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0x33FF00E5),
@@ -439,7 +453,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               builder: (context) => SettingsScreen(),
                             ),
                           );
-                        }),
+                        }, isWeb),
                         buildTile(
                             context,
                             const Color(0xFFFFCDD2),
@@ -453,7 +467,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               builder: (context) => const VideoKnowledge(),
                             ),
                           );
-                        }),
+                        }, isWeb),
                       ],
                     );
                   }),
@@ -466,9 +480,17 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     );
   }
 
-  Widget buildTile(BuildContext context, Color color, String imagePath,
-      String title, double tileWidth, double tileHeight, VoidCallback onTap) {
-    final imageSize = imageSizes[imagePath] ?? {'width': 40.0, 'height': 40.0};
+  Widget buildTile(
+      BuildContext context,
+      Color color,
+      String imagePath,
+      String title,
+      double tileWidth,
+      double tileHeight,
+      VoidCallback onTap,
+      bool isWeb) {
+    final imageSize = imageSizes[imagePath] ??
+        {'width': isWeb ? 100 : 40.0, 'height': isWeb ? 100 : 40.0};
     final screenWidth = MediaQuery.of(context).size.width;
     final scaleFactor = screenWidth < 360 ? 0.7 : 1.0;
 
@@ -479,7 +501,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
       onTap: onTap,
       child: Container(
         width: tileWidth,
-        height: tileHeight,
+        height: isWeb ? tileHeight * 0.4 : tileHeight,
         decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(22),

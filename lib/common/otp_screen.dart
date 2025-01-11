@@ -185,6 +185,9 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isWeb =
+        MediaQuery.of(context).size.width > 900; // Detecting web screens
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
@@ -198,38 +201,42 @@ class _OTPScreenState extends State<OTPScreen> {
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Image.asset('assets/back_button.png', height: 50)),
+                  child: Image.asset('assets/back_button.png',
+                      height: isWeb ? 60 : 50)), // Adjust back button size
             ],
           ),
         ),
-        toolbarHeight: 70,
+        toolbarHeight: isWeb ? 90 : 70, // Adjust toolbar height for web
       ),
       backgroundColor: Colors.grey[50],
       resizeToAvoidBottomInset: true,
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.only(left: 24.0, right: 24, bottom: 40),
+          padding: EdgeInsets.symmetric(
+            horizontal: isWeb ? 100 : 24.0, // Adjust padding for web
+            vertical: 40,
+          ),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   'Enter OTP',
                   style: TextStyle(
                     fontFamily: 'Poppins',
-                    fontSize: 35,
+                    fontSize: isWeb ? 45 : 35, // Increase font size for web
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF48116A),
+                    color: const Color(0xFF48116A),
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
+                Text(
                   'Enter the verification code \nwe just sent on your phone number.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Poppins',
-                    fontSize: 16,
+                    fontSize: isWeb ? 18 : 16, // Adjust font size for web
                     color: Colors.redAccent,
                   ),
                 ),
@@ -238,73 +245,76 @@ class _OTPScreenState extends State<OTPScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: List.generate(4, (index) {
                     return Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(
-                              color: const Color.fromARGB(255, 177, 177, 177),
-                              width: 1.5),
+                      height:
+                          isWeb ? 80 : 60, // Increase container size for web
+                      width:
+                          isWeb ? 80 : 60, // Increase container width for web
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(
+                          color: const Color.fromARGB(255, 177, 177, 177),
+                          width: 1.5,
                         ),
-                        child: RawKeyboardListener(
-                          focusNode:
-                              FocusNode(), // Use a separate focus node for the listener
-                          onKey: (RawKeyEvent event) {
-                            if (event.isKeyPressed(
-                                    LogicalKeyboardKey.backspace) &&
-                                otpControllers[index].text.isEmpty &&
-                                index > 0) {
-                              // Move to the previous field when backspace is pressed
+                      ),
+                      child: RawKeyboardListener(
+                        focusNode:
+                            FocusNode(), // Use a separate focus node for the listener
+                        onKey: (RawKeyEvent event) {
+                          if (event
+                                  .isKeyPressed(LogicalKeyboardKey.backspace) &&
+                              otpControllers[index].text.isEmpty &&
+                              index > 0) {
+                            // Move to the previous field when backspace is pressed
+                            FocusScope.of(context)
+                                .requestFocus(focusNodes[index - 1]);
+                            otpControllers[index].clear();
+                          }
+                        },
+                        child: TextFormField(
+                          controller: otpControllers[index],
+                          focusNode: focusNodes[index],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          maxLength: 1,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(
+                                left: 10, right: 10, top: isWeb ? 20 : 10),
+                            counterText: '',
+                            border: InputBorder.none,
+                          ),
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize:
+                                isWeb ? 30 : 24, // Adjust text size for web
+                            fontWeight: FontWeight.bold,
+                          ),
+                          onChanged: (value) {
+                            if (value.isNotEmpty && index < 3) {
+                              FocusScope.of(context)
+                                  .requestFocus(focusNodes[index + 1]);
+                            } else if (value.isEmpty && index > 0) {
                               FocusScope.of(context)
                                   .requestFocus(focusNodes[index - 1]);
-                              otpControllers[index].clear();
+                            }
+
+                            bool allFilled = otpControllers.every(
+                                (controller) => controller.text.isNotEmpty);
+                            if (allFilled) {
+                              FocusScope.of(context).unfocus();
+                              onPost(widget.phonenum, context);
                             }
                           },
-                          child: TextFormField(
-                            controller: otpControllers[index],
-                            focusNode: focusNodes[index],
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
-                            ],
-                            textAlign: TextAlign.center,
-                            keyboardType: TextInputType.number,
-                            maxLength: 1,
-                            decoration: const InputDecoration(
-                              contentPadding:
-                                  EdgeInsets.only(left: 10, right: 10, top: 10),
-                              counterText: '',
-                              border: InputBorder.none,
-                            ),
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            onChanged: (value) {
-                              if (value.isNotEmpty && index < 3) {
-                                FocusScope.of(context)
-                                    .requestFocus(focusNodes[index + 1]);
-                              } else if (value.isEmpty && index > 0) {
-                                FocusScope.of(context)
-                                    .requestFocus(focusNodes[index - 1]);
-                              }
-
-                              bool allFilled = otpControllers.every(
-                                  (controller) => controller.text.isNotEmpty);
-                              if (allFilled) {
-                                FocusScope.of(context).unfocus();
-                                onPost(widget.phonenum, context);
-                              }
-                            },
-                          ),
-                        ));
+                        ),
+                      ),
+                    );
                   }),
                 ),
-                const SizedBox(
-                  height: 70,
-                ),
-                _buildVerifyButton(),
+                const SizedBox(height: 70),
+                _buildVerifyButton(isWeb),
               ],
             ),
           ),
@@ -313,7 +323,7 @@ class _OTPScreenState extends State<OTPScreen> {
     );
   }
 
-  Widget _buildVerifyButton() {
+  Widget _buildVerifyButton(bool isWeb) {
     return Center(
       child: isVerifying
           ? const CircularProgressIndicator() // Show progress indicator
@@ -322,6 +332,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 onPost(widget.phonenum, context);
               },
               child: Image.asset(
+                height: isWeb ? 150 : null,
                 'assets/verify.png',
                 width: double.infinity,
                 fit: BoxFit.contain,

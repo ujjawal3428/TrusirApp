@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/menu.dart';
@@ -52,6 +54,23 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('phone_number', phonenum);
     print('Phone Number Stored to shared preferences: $phonenum');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+      if (_currentPage < pageContent.length - 1) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+      _pageController.animateToPage(
+        _currentPage,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   final List<Map<String, String>> pageContent = [
@@ -179,33 +198,18 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: constraints.maxHeight,
+            // Switch between web and mobile layout
+            final isWeb = constraints.maxWidth > 900;
+
+            return Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: responsive.horizontalPadding,
+                vertical: responsive.verticalPadding,
               ),
-              child: IntrinsicHeight(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: responsive.horizontalPadding,
-                    vertical: responsive.verticalPadding,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildHeader(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.04),
-                        _buildCarousel(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.04),
-                        _buildPageIndicators(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.04),
-                        _buildPhoneInput(responsive),
-                        SizedBox(height: responsive.safeHeight * 0.04),
-                        _buildSendOTPButton(responsive),
-                      ],
-                    ),
-                  ),
-                ),
+              child: SingleChildScrollView(
+                child: isWeb
+                    ? _buildWebLayout(responsive)
+                    : _buildMobileLayout(responsive),
               ),
             );
           },
@@ -214,18 +218,75 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     );
   }
 
-  Widget _buildHeader(ResponsiveDimensions responsive) {
+// Web layout: Carousel on the left, Phone input on the right
+  Widget _buildWebLayout(ResponsiveDimensions responsive) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // Left side: Carousel
+        Expanded(
+          flex: 2,
+          child: Column(
+            children: [
+              SizedBox(height: responsive.safeHeight * 0.03),
+              _buildCarousel(responsive, true),
+              SizedBox(height: responsive.safeHeight * 0.03),
+              _buildPageIndicators(responsive, true),
+            ],
+          ),
+        ),
+        // Spacing between sections
+        // Right side: Phone input
+        Expanded(
+          flex: 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(responsive, true),
+              SizedBox(height: responsive.safeHeight * 0.1),
+              _buildPhoneInput(responsive, true),
+              SizedBox(height: responsive.safeHeight * 0.04),
+              _buildSendOTPButton(responsive),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+// Mobile layout: Stacked vertical layout
+  Widget _buildMobileLayout(ResponsiveDimensions responsive) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildHeader(responsive, false),
+        SizedBox(height: responsive.safeHeight * 0.04),
+        _buildCarousel(responsive, false),
+        SizedBox(height: responsive.safeHeight * 0.04),
+        _buildPageIndicators(responsive, false),
+        SizedBox(height: responsive.safeHeight * 0.04),
+        _buildPhoneInput(responsive, false),
+        SizedBox(height: responsive.safeHeight * 0.04),
+        _buildSendOTPButton(responsive),
+      ],
+    );
+  }
+
+  Widget _buildHeader(ResponsiveDimensions responsive, bool isWeb) {
+    return Row(
+      mainAxisAlignment:
+          isWeb ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [_buildSkipButton(responsive)],
     );
   }
 
-  Widget _buildCarousel(ResponsiveDimensions responsive) {
+  Widget _buildCarousel(ResponsiveDimensions responsive, bool isWeb) {
     return SizedBox(
-      height: 400,
-      width: 600,
+      height: isWeb ? 600 : 400,
+      width: isWeb ? 800 : 600,
       child: PageView.builder(
+        physics:
+            const BouncingScrollPhysics(), // Standard touch physics for mobile
         controller: _pageController,
         itemCount: pageContent.length,
         onPageChanged: (int page) {
@@ -237,56 +298,131 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
           final hasText = pageContent[index]['title']!.isNotEmpty ||
               pageContent[index]['subtitle']!.isNotEmpty;
 
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (hasText) ...[
-                Text(
-                  pageContent[index]['title']!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w900,
-                    color: Color.fromRGBO(72, 17, 106, 1),
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-                Text(
-                  pageContent[index]['subtitle']!,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: responsive.subtitleSize,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromRGBO(194, 32, 84, 1),
-                    fontFamily: 'Poppins-semi bold',
-                  ),
-                ),
-              ],
-              Expanded(
-                child: Image.asset(
-                  pageContent[index]['imagePath']!,
-                  width: responsive.carouselImageWidth,
-                  height: responsive.carouselImageHeight,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ],
-          );
+          return isWeb
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_ios),
+                      onPressed: () {
+                        if (_currentPage > 0) {
+                          _currentPage--;
+                          _pageController.previousPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (hasText) ...[
+                          Text(
+                            pageContent[index]['title']!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: isWeb ? 30 : 25,
+                              fontWeight: FontWeight.w900,
+                              color: const Color.fromRGBO(72, 17, 106, 1),
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          SizedBox(height: isWeb ? 16 : 8),
+                          Text(
+                            pageContent[index]['subtitle']!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: isWeb ? 22 : responsive.subtitleSize,
+                              fontWeight: FontWeight.bold,
+                              color: const Color.fromRGBO(194, 32, 84, 1),
+                              fontFamily: 'Poppins-semi bold',
+                            ),
+                          ),
+                        ],
+                        Expanded(
+                          child: Image.asset(
+                            pageContent[index]['imagePath']!,
+                            width: isWeb ? 500 : responsive.carouselImageWidth,
+                            height:
+                                isWeb ? 400 : responsive.carouselImageHeight,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ],
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.arrow_forward_ios),
+                      onPressed: () {
+                        if (_currentPage < pageContent.length - 1) {
+                          _currentPage++;
+                          _pageController.nextPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
+                    ),
+                  ],
+                )
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (hasText) ...[
+                      Text(
+                        pageContent[index]['title']!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: isWeb ? 30 : 25,
+                          fontWeight: FontWeight.w900,
+                          color: const Color.fromRGBO(72, 17, 106, 1),
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                      SizedBox(height: isWeb ? 16 : 8),
+                      Text(
+                        pageContent[index]['subtitle']!,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: isWeb ? 22 : responsive.subtitleSize,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromRGBO(194, 32, 84, 1),
+                          fontFamily: 'Poppins-semi bold',
+                        ),
+                      ),
+                    ],
+                    Expanded(
+                      child: Image.asset(
+                        pageContent[index]['imagePath']!,
+                        width: isWeb ? 500 : responsive.carouselImageWidth,
+                        height: isWeb ? 400 : responsive.carouselImageHeight,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
+                );
         },
       ),
     );
   }
 
-  Widget _buildPageIndicators(ResponsiveDimensions responsive) {
+  Widget _buildPageIndicators(ResponsiveDimensions responsive, bool isWeb) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(pageContent.length, (index) {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          margin:
-              EdgeInsets.symmetric(horizontal: responsive.screenWidth * 0.01),
-          height: responsive.screenWidth * 0.03,
-          width: responsive.screenWidth * 0.03,
+          margin: EdgeInsets.symmetric(
+            horizontal: isWeb
+                ? responsive.screenWidth * 0.005
+                : responsive.screenWidth * 0.01,
+          ),
+          height: isWeb
+              ? responsive.screenWidth * 0.02
+              : responsive.screenWidth * 0.03,
+          width: isWeb
+              ? responsive.screenWidth * 0.02
+              : responsive.screenWidth * 0.03,
           decoration: BoxDecoration(
             color: _currentPage == index
                 ? const Color.fromRGBO(72, 17, 106, 1)
@@ -298,13 +434,15 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     );
   }
 
-  Widget _buildPhoneInput(ResponsiveDimensions responsive) {
+  Widget _buildPhoneInput(ResponsiveDimensions responsive, bool isWeb) {
     return Stack(
       children: [
         // Background shape for the input field
         Container(
           width: double.infinity,
-          height: responsive.safeHeight * 0.08,
+          height: isWeb
+              ? responsive.safeHeight * 0.1
+              : responsive.safeHeight * 0.08,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(35),
@@ -319,7 +457,9 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
         ),
         Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: responsive.screenWidth * 0.04,
+            horizontal: isWeb
+                ? responsive.screenWidth * 0.02
+                : responsive.screenWidth * 0.04,
             vertical: responsive.safeHeight * 0.01,
           ),
           child: Center(
@@ -328,20 +468,32 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                 // Country flag icon
                 Image.asset(
                   'assets/indianflag.png',
-                  width: responsive.flagIconSize,
-                  height: responsive.flagIconSize,
+                  width: isWeb
+                      ? responsive.flagIconSize * 0.4
+                      : responsive.flagIconSize,
+                  height: isWeb
+                      ? responsive.flagIconSize * 0.4
+                      : responsive.flagIconSize,
                 ),
-                SizedBox(width: responsive.screenWidth * 0.02),
+                SizedBox(
+                    width: isWeb
+                        ? responsive.screenWidth * 0.01
+                        : responsive.screenWidth * 0.02),
                 // Country code text
                 Text(
                   "+91 |",
                   style: TextStyle(
-                    fontSize: responsive.screenWidth * 0.04,
+                    fontSize: isWeb
+                        ? responsive.screenWidth * 0.015
+                        : responsive.screenWidth * 0.04,
                     color: Colors.black,
                     fontFamily: 'Poppins',
                   ),
                 ),
-                SizedBox(width: responsive.screenWidth * 0.02),
+                SizedBox(
+                    width: isWeb
+                        ? responsive.screenWidth * 0.01
+                        : responsive.screenWidth * 0.02),
                 // Mobile number input field
                 Expanded(
                   child: TextFormField(
@@ -361,19 +513,24 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                     onChanged: (value) {
                       if (value.length == 10) {
                         FocusScope.of(context)
-                            .unfocus(); // Dismiss keyboard after 6 digits
+                            .unfocus(); // Dismiss keyboard after 10 digits
                       }
                     },
                     controller: _phonecontroller,
+                    textAlignVertical: isWeb ? TextAlignVertical.center : null,
                     style: TextStyle(
-                      fontSize: responsive.screenWidth * 0.04,
+                      fontSize: isWeb
+                          ? responsive.screenWidth * 0.015
+                          : responsive.screenWidth * 0.04,
                       color: Colors.black,
                       fontFamily: 'Poppins',
                     ),
                     decoration: InputDecoration(
                       hintText: 'Mobile Number',
                       hintStyle: TextStyle(
-                        fontSize: responsive.screenWidth * 0.04,
+                        fontSize: isWeb
+                            ? responsive.screenWidth * 0.015
+                            : responsive.screenWidth * 0.04,
                         color: Colors.grey,
                         fontFamily: 'Poppins',
                       ),

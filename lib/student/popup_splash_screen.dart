@@ -87,10 +87,11 @@ class PopUpSplashScreenState extends State<PopUpSplashScreen> {
         await prefs.setString('address', responseData['address']);
         await prefs.setString('area', responseData['area']);
         await prefs.setString('pincode', responseData['pincode']);
-        await prefs.setString('adhaar_front', responseData['adhaar_front']);
-        await prefs.setString('adhaar_back', responseData['adhaar_back']);
-        await prefs.setString('profile', responseData['profile']);
-        await prefs.setString('time_slot', responseData['time_slot']);
+        await prefs.setString(
+            'adhaar_front', responseData['adhaar_front'] ?? 'N/A');
+        await prefs.setString(
+            'adhaar_back', responseData['adhaar_back'] ?? 'N/A');
+        await prefs.setString('profile', responseData['profile'] ?? 'N/A');
 
         // Navigate to the next screen
         Navigator.pushReplacement(

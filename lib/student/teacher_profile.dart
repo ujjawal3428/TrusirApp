@@ -71,124 +71,129 @@ class TeacherProfileScreenState extends State<TeacherProfileScreen> {
           ),
           toolbarHeight: 70,
         ),
-        body: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Column(children: [
-                // Display the teacher profiles in a grid view
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 20, bottom: 8),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 14,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 0.72,
-                    ),
-                    itemCount: teachers.length,
-                    itemBuilder: (context, index) {
-                      final teacher = teachers[index];
+        body: teachers.isEmpty
+            ? const Center(child: Text('No Teachers Assigned Yet'))
+            : isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                    child: Column(children: [
+                    // Display the teacher profiles in a grid view
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, top: 20, bottom: 8),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 14,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 0.72,
+                        ),
+                        itemCount: teachers.length,
+                        itemBuilder: (context, index) {
+                          final teacher = teachers[index];
 
-                      return GestureDetector(
-                        onTap: () => showPopupDialog(
-                            context, teacher.phone, teacher.userID),
-                        child: Stack(
-                          clipBehavior: Clip.hardEdge,
-                          children: [
-                            Container(
-                              width: 180,
-                              height: 251,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(20),
-                                border:
-                                    Border.all(color: Colors.grey, width: 1),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Image from network
-                                  Container(
-                                    width: 98,
-                                    height: 101,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: NetworkImage(teacher.profile),
-                                        fit: BoxFit.cover,
+                          return GestureDetector(
+                            onTap: () => showPopupDialog(
+                                context, teacher.phone, teacher.userID),
+                            child: Stack(
+                              clipBehavior: Clip.hardEdge,
+                              children: [
+                                Container(
+                                  width: 180,
+                                  height: 251,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                        color: Colors.grey, width: 1),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Image from network
+                                      Container(
+                                        width: 98,
+                                        height: 101,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image:
+                                                NetworkImage(teacher.profile),
+                                            fit: BoxFit.cover,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
                                       ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
+                                      const SizedBox(height: 10),
+                                      // Name Text
+                                      Text(
+                                        teacher.name,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      // Phone Number
+                                      Text(
+                                        teacher.phone,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      Text(
+                                        teacher.subject,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  const SizedBox(height: 10),
-                                  // Name Text
-                                  Text(
-                                    teacher.name,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  // Phone Number
-                                  Text(
-                                    teacher.phone,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    teacher.subject,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                                ),
 
-                            // Tag
-                            Positioned(
-                              top: -10,
-                              left: -30,
-                              child: Transform.rotate(
-                                angle: -0.785398,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 0, left: 0, right: 0),
-                                  child: Container(
-                                    width: 150,
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 25, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.purple.shade100,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: Text(
-                                      teacher.teacherClass,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
+                                // Tag
+                                Positioned(
+                                  top: -10,
+                                  left: -30,
+                                  child: Transform.rotate(
+                                    angle: -0.785398,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 0, left: 0, right: 0),
+                                      child: Container(
+                                        width: 150,
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 25, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: Colors.purple.shade100,
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        child: Text(
+                                          teacher.teacherClass,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                )
-              ])));
+                          );
+                        },
+                      ),
+                    )
+                  ])));
   }
 }
 
