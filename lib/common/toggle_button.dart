@@ -22,6 +22,7 @@ class FilterSwitch extends StatefulWidget {
 
 class FilterSwitchState extends State<FilterSwitch> {
   late int _selectedIndex;
+  bool isWeb = false;
 
   @override
   void initState() {
@@ -40,9 +41,10 @@ class FilterSwitchState extends State<FilterSwitch> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQuery.of(context).size.width > 600 ? isWeb = true : false;
     return Center(
       child: Container(
-        width: 350,
+        width: isWeb ? 450 : 350,
         height: 50,
         decoration: BoxDecoration(
           border: Border.all(color: Colors.transparent, width: 2),
@@ -53,14 +55,20 @@ class FilterSwitchState extends State<FilterSwitch> {
             AnimatedPositioned(
               duration: const Duration(milliseconds: 400),
               curve: Curves.easeOutCubic,
-              left: _selectedIndex == 0
-                  ? 4
-                  : _selectedIndex == 1
-                      ? (350 / 3) + 4
-                      : (2 * (350 / 3)) + 4,
+              left: isWeb
+                  ? _selectedIndex == 0
+                      ? 4
+                      : _selectedIndex == 1
+                          ? (450 / 3) + 4
+                          : (2 * (450 / 3)) + 4
+                  : _selectedIndex == 0
+                      ? 4
+                      : _selectedIndex == 1
+                          ? (350 / 3) + 4
+                          : (2 * (350 / 3)) + 4,
               top: 4,
               child: Container(
-                width: (350 / 3) - 8,
+                width: (isWeb ? 450 / 3 : 350 / 3) - 8,
                 height: 38,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 119, 0, 255),
@@ -86,7 +94,7 @@ class FilterSwitchState extends State<FilterSwitch> {
                           fontWeight: _selectedIndex == 0
                               ? FontWeight.bold
                               : FontWeight.normal,
-                          fontSize: 14,
+                          fontSize: isWeb ? 18 : 14,
                         ),
                       ),
                     ),
@@ -104,7 +112,7 @@ class FilterSwitchState extends State<FilterSwitch> {
                           fontWeight: _selectedIndex == 1
                               ? FontWeight.bold
                               : FontWeight.normal,
-                          fontSize: 14,
+                          fontSize: isWeb ? 18 : 14,
                         ),
                       ),
                     ),
@@ -122,7 +130,7 @@ class FilterSwitchState extends State<FilterSwitch> {
                           fontWeight: _selectedIndex == 2
                               ? FontWeight.bold
                               : FontWeight.normal,
-                          fontSize: 14,
+                          fontSize: isWeb ? 18 : 14,
                         ),
                       ),
                     ),

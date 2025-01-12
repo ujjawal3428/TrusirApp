@@ -17,7 +17,26 @@ class WanaLogout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isWeb = MediaQuery.of(context).size.width > 600;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Padding(
+          padding: const EdgeInsets.only(left: 1.0),
+          child: Row(
+            children: [
+              GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Image.asset('assets/back_button.png', height: 50)),
+            ],
+          ),
+        ),
+        toolbarHeight: 70,
+      ),
       backgroundColor: Colors.grey[50],
       body: Stack(
         children: [
@@ -29,18 +48,7 @@ class WanaLogout extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Back Button
-                  IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back_ios_rounded,
-                      color: Color(0xFF48116A),
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                  const SizedBox(height: 160),
-              
+
                   // Online Payment Button
                   Center(
                     child: Image.asset(
@@ -50,7 +58,7 @@ class WanaLogout extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 40),
-              
+
                   // Logout Confirmation Text
                   const Center(
                     child: Text(
@@ -65,7 +73,7 @@ class WanaLogout extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 50),
-              
+
                   // Cancel Button
                   Center(
                     child: GestureDetector(
@@ -73,13 +81,14 @@ class WanaLogout extends StatelessWidget {
                         Navigator.pop(context);
                       }, // Calls _onEnquire on tap
                       child: Image.asset(
+                        height: isWeb ? 150 : null,
                         'assets/cancelbutton.png',
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
                   const SizedBox(height: 5),
-              
+
                   // Logout Button
                   Center(
                     child: GestureDetector(
@@ -87,6 +96,7 @@ class WanaLogout extends StatelessWidget {
                         logout(context);
                       }, // Calls _onEnquire on tap
                       child: Image.asset(
+                        height: isWeb ? 150 : null,
                         'assets/logoutbutton.png',
                         fit: BoxFit.cover,
                       ),

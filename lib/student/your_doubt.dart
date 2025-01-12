@@ -291,12 +291,20 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
       ),
       backgroundColor: Colors.grey[50],
       body: doubtsList.isEmpty && !isLoading && initialLoadComplete
-          ? const Center(
+          ? Center(
               child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Text(
-                  'No doubts available',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'No doubts available',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildCreateButton(),
+                  ],
                 ),
               ),
             )

@@ -50,20 +50,21 @@ class TeacherCourseCard extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    course.image,
-                    width: double.infinity,
-                    height: 180,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Center(
-                        child: Icon(
-                          Icons.error,
-                          size: 40,
-                          color: Colors.red,
-                        ),
-                      );
-                    },
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: Image.network(
+                      course.image,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Center(
+                          child: Icon(
+                            Icons.error,
+                            size: 40,
+                            color: Colors.red,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 Positioned(
@@ -158,23 +159,28 @@ class TeacherCoursePage extends StatelessWidget {
         amount: '1500',
         name: 'Mathematics Basics',
         subject: 'Mathematics',
-        image: 'https://via.placeholder.com/150',
+        image:
+            'https://admin.trusir.com/uploads/profile/profile_1736527860.jpg',
       ),
       TeacherCourse(
         id: 2,
         amount: '2000',
         name: 'Science Experiments',
         subject: 'Science',
-        image: 'https://via.placeholder.com/150',
+        image:
+            'https://admin.trusir.com/uploads/profile/profile_1736527860.jpg',
       ),
       TeacherCourse(
         id: 3,
         amount: '1800',
         name: 'English Grammar',
         subject: 'English',
-        image: 'https://via.placeholder.com/150',
+        image:
+            'https://admin.trusir.com/uploads/profile/profile_1736527860.jpg',
       ),
     ];
+
+    bool isWeb = MediaQuery.of(context).size.width > 600;
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -251,7 +257,9 @@ class TeacherCoursePage extends StatelessWidget {
           ),
         ),
       ),
-      body: ListView.builder(
+      body: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: isWeb ? 2 : 1, mainAxisExtent: isWeb ? 550 : 400),
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         itemCount: courses.length,
         itemBuilder: (context, index) {

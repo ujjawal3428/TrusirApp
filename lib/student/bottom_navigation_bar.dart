@@ -38,7 +38,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           children: [
             buildIconWithLabel(0, Icons.home_rounded, 'Home'),
             buildIconWithLabel(1, Icons.book_rounded, 'Courses'),
-            buildIconWithLabel(2, Icons.settings_rounded, 'Menu'),
+            buildIconWithLabel(2, Icons.menu_rounded, 'Menu'),
           ],
         ),
       ),

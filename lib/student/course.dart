@@ -46,6 +46,7 @@ class CourseCard extends StatefulWidget {
 }
 
 class _CourseCardState extends State<CourseCard> {
+  bool isWeb = false;
   @override
   void initState() {
     super.initState();
@@ -55,8 +56,10 @@ class _CourseCardState extends State<CourseCard> {
 
   @override
   Widget build(BuildContext context) {
+    isWeb = MediaQuery.of(context).size.width > 600;
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: EdgeInsets.symmetric(
+          horizontal: isWeb ? 30 : 16, vertical: isWeb ? 15 : 8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -69,7 +72,7 @@ class _CourseCardState extends State<CourseCard> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(isWeb ? 30 : 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -80,7 +83,7 @@ class _CourseCardState extends State<CourseCard> {
                   child: Image.network(
                     widget.course['image']!,
                     width: double.infinity,
-                    height: 180,
+                    height: isWeb ? 300 : 180,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return const Center(
@@ -103,12 +106,12 @@ class _CourseCardState extends State<CourseCard> {
                       color: Colors.pink,
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Best Seller',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                        fontSize: isWeb ? 18 : 14,
                       ),
                     ),
                   ),
@@ -118,8 +121,8 @@ class _CourseCardState extends State<CourseCard> {
             const SizedBox(height: 12),
             Text(
               widget.course['courseName']!,
-              style: const TextStyle(
-                fontSize: 18,
+              style: TextStyle(
+                fontSize: isWeb ? 21 : 18,
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
               ),
@@ -127,8 +130,8 @@ class _CourseCardState extends State<CourseCard> {
             const SizedBox(height: 2),
             Text(
               widget.course['subject']!,
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: isWeb ? 18 : 14,
                 fontFamily: 'Poppins',
                 color: Colors.black54,
               ),
@@ -177,7 +180,8 @@ class _CourseCardState extends State<CourseCard> {
                 widget.course['status'] == 'demo' ||
                         widget.course['status'] == null
                     ? SizedBox(
-                        width: 142,
+                        width: isWeb ? 200 : 142,
+                        height: isWeb ? 40 : null,
                         child: ElevatedButton(
                           onPressed: () {
                             merchantTransactionID =
@@ -209,7 +213,8 @@ class _CourseCardState extends State<CourseCard> {
                 widget.course['status'] == 'bought' ||
                         widget.course['status'] == 'demo'
                     ? SizedBox(
-                        width: 142,
+                        width: isWeb ? 200 : 142,
+                        height: isWeb ? 40 : null,
                         child: ElevatedButton(
                           onPressed: () {
                             // Handle Buy Now action
@@ -230,7 +235,8 @@ class _CourseCardState extends State<CourseCard> {
                         ),
                       )
                     : SizedBox(
-                        width: 142,
+                        width: isWeb ? 200 : 142,
+                        height: isWeb ? 40 : null,
                         child: ElevatedButton(
                           onPressed: () {
                             // Handle Buy Now action
@@ -397,6 +403,7 @@ class _CoursePageState extends State<CoursePage> {
 
   List<Map<String, dynamic>> filteredCourses = [];
   int _selectedIndex = 0;
+  bool isWeb = false;
 
   final List<Map<String, dynamic>> _courses = [
     {
@@ -481,6 +488,8 @@ class _CoursePageState extends State<CoursePage> {
 
   @override
   Widget build(BuildContext context) {
+    isWeb = MediaQuery.of(context).size.width > 600;
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -527,15 +536,28 @@ class _CoursePageState extends State<CoursePage> {
             onChanged: _filterCourses,
           ),
           Expanded(
-              child: ListView.builder(
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            itemCount: filteredCourses.length,
-            itemBuilder: (context, index) {
-              final course = filteredCourses[index];
-              return CourseCard(course: course);
-            },
-          )),
+              child: isWeb
+                  ? GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, mainAxisExtent: 560),
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      itemCount: filteredCourses.length,
+                      itemBuilder: (context, index) {
+                        final course = filteredCourses[index];
+                        return CourseCard(course: course);
+                      },
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      itemCount: filteredCourses.length,
+                      itemBuilder: (context, index) {
+                        final course = filteredCourses[index];
+                        return CourseCard(course: course);
+                      },
+                    )),
         ],
       ),
     );

@@ -12,6 +12,7 @@ class SettingsScreen extends StatelessWidget {
   SettingsScreen({super.key});
 
   String userID = '';
+  bool isWeb = false;
 
   Future<void> fetchuserID() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -20,6 +21,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    isWeb = MediaQuery.of(context).size.width > 600;
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -56,480 +58,192 @@ class SettingsScreen extends StatelessWidget {
         toolbarHeight: 70,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade200,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: SizedBox(
-                        width: 37,
-                        height: 37,
-                        child: Image.asset(
-                          'assets/editprofile.png',
-                          fit: BoxFit.cover,
+        physics: const BouncingScrollPhysics(),
+        child: SizedBox(
+          child: Column(
+            children: [
+              SizedBox(height: isWeb ? null : 30),
+              _settingscard(
+                  context,
+                  isWeb ? 80 : 50,
+                  isWeb ? 40 : 30,
+                  isWeb ? 70 : 55,
+                  isWeb ? 450 : 306,
+                  'assets/editprofile.png',
+                  Colors.blue.shade200,
+                  () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EditProfileScreen(),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const EditProfileScreen(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        height: 55,
-                        width: 306,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.5),
-                              offset: const Offset(2, 2),
-                              blurRadius: 4,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.only(
-                              left: 20, top: 10, bottom: 10, right: 10),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Edit Profile',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 15),
-                                  child: Icon(Icons.arrow_forward_ios_rounded),
-                                ),
-                              ],
-                            ),
-                          ),
+                  'Edit Profile'),
+              SizedBox(height: isWeb ? 10 : 20),
+              _settingscard(
+                  context,
+                  isWeb ? 80 : 50,
+                  isWeb ? 40 : 30,
+                  isWeb ? 70 : 55,
+                  isWeb ? 450 : 306,
+                  'assets/pensp@3x.png',
+                  Colors.indigo.shade200,
+                  () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const YourDoubtPage(),
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.indigo.shade200,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Image.asset(
-                          'assets/pensp@3x.png',
-                          fit: BoxFit.cover,
+                  'Your Doubts'),
+              SizedBox(height: isWeb ? 10 : 20),
+              _settingscard(
+                  context,
+                  isWeb ? 80 : 50,
+                  isWeb ? 40 : 30,
+                  isWeb ? 70 : 55,
+                  isWeb ? 450 : 306,
+                  'assets/men.png',
+                  Colors.blue.shade200,
+                  () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ParentsDoubtsPage(),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const YourDoubtPage(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        height: 55,
-                        width: 306,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.5),
-                              offset: const Offset(2, 2),
-                              blurRadius: 4,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.only(
-                              left: 20, top: 10, bottom: 10, right: 5),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Your Doubts',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 15),
-                                  child: Icon(Icons.arrow_forward_ios_rounded),
-                                ),
-                              ],
-                            ),
-                          ),
+                  'Parents Doubts'),
+              SizedBox(height: isWeb ? 10 : 20),
+              _settingscard(
+                  context,
+                  isWeb ? 80 : 50,
+                  isWeb ? 40 : 30,
+                  isWeb ? 70 : 55,
+                  isWeb ? 450 : 306,
+                  'assets/aboutus.png',
+                  Colors.purple.shade100,
+                  () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutUsPage(),
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.pink.shade100,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: Image.asset(
-                          'assets/men.png',
-                          fit: BoxFit.cover,
+                  'About Us'),
+              SizedBox(height: isWeb ? 10 : 20),
+              _settingscard(
+                  context,
+                  isWeb ? 80 : 50,
+                  isWeb ? 40 : 30,
+                  isWeb ? 70 : 55,
+                  isWeb ? 450 : 306,
+                  'assets/phone@2x.png',
+                  Colors.indigo.shade200,
+                  () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Contactus(),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ParentsDoubtsPage(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        height: 55,
-                        width: 306,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.5),
-                              offset: const Offset(2, 2),
-                              blurRadius: 4,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.only(
-                              left: 20, top: 10, bottom: 10, right: 5),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Parents Doubts',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 15),
-                                  child: Icon(Icons.arrow_forward_ios_rounded),
-                                ),
-                              ],
-                            ),
-                          ),
+                  'Contact Us'),
+              SizedBox(height: isWeb ? 10 : 20),
+              _settingscard(
+                  context,
+                  isWeb ? 80 : 50,
+                  isWeb ? 40 : 30,
+                  isWeb ? 70 : 55,
+                  isWeb ? 450 : 306,
+                  'assets/tnc.png',
+                  Colors.pink.shade200,
+                  () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TermsAndConditionsPage(),
                         ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade200,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: Image.asset(
-                          'assets/aboutus.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AboutUsPage(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        height: 55,
-                        width: 306,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.5),
-                              offset: const Offset(2, 2),
-                              blurRadius: 4,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.only(
-                              left: 20, top: 10, bottom: 10, right: 5),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'About Us',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 15),
-                                  child: Icon(Icons.arrow_forward_ios_rounded),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.purple.shade100,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: Image.asset(
-                          'assets/phone@2x.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Contactus(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        height: 55,
-                        width: 306,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.5),
-                              offset: const Offset(2, 2),
-                              blurRadius: 4,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.only(
-                              left: 20, top: 10, bottom: 10, right: 5),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Contact Us',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 15),
-                                  child: Icon(Icons.arrow_forward_ios_rounded),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.indigo.shade200,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Center(
-                      child: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: Image.asset(
-                          'assets/tnc.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Flexible(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const TermsAndConditionsPage(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        height: 55,
-                        width: 306,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.5),
-                              offset: const Offset(2, 2),
-                              blurRadius: 4,
-                            ),
-                          ],
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.only(
-                              left: 20, top: 10, bottom: 10, right: 5),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'Terms & Conditions',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 15),
-                                  child: Icon(Icons.arrow_forward_ios_rounded),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-          ],
+                  'Terms & Conditions'),
+              SizedBox(height: isWeb ? 10 : 20),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _settingscard(
+      BuildContext context,
+      double containerSize,
+      double imageSize,
+      double newContainerheight,
+      double newcontainerwidth,
+      String image,
+      Color color,
+      VoidCallback onTap,
+      String title) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10.0, right: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: containerSize,
+            height: containerSize,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Center(
+              child: SizedBox(
+                width: imageSize,
+                height: imageSize,
+                child: Image.asset(
+                  image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: isWeb ? 50 : 10),
+          Flexible(
+            child: GestureDetector(
+              onTap: onTap,
+              child: Container(
+                height: newContainerheight,
+                width: newcontainerwidth,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.5),
+                      offset: const Offset(2, 2),
+                      blurRadius: 4,
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, top: 10, bottom: 10, right: 5),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(right: 15),
+                          child: Icon(Icons.arrow_forward_ios_rounded),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

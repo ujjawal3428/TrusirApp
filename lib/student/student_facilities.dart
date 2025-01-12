@@ -68,7 +68,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    screenWidth > 600 ? isWeb = true : false;
+    isWeb = screenWidth > 600;
     double tileWidth = 116;
     double tileHeight = 140;
     if (screenWidth > 600) {
@@ -247,8 +247,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               borderRadius: BorderRadius.circular(15),
                               child: Image.network(
                                 profile,
-                                width: isWeb ? 130 : 75,
-                                height: isWeb ? 130 : 75,
+                                width: isWeb ? 120 : 75,
+                                height: isWeb ? 120 : 75,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return const Center(
@@ -490,9 +490,9 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
       VoidCallback onTap,
       bool isWeb) {
     final imageSize = imageSizes[imagePath] ??
-        {'width': isWeb ? 100 : 40.0, 'height': isWeb ? 100 : 40.0};
+        {'width': isWeb ? 200 : 40.0, 'height': isWeb ? 200 : 40.0};
     final screenWidth = MediaQuery.of(context).size.width;
-    final scaleFactor = screenWidth < 360 ? 0.7 : 1.0;
+    final scaleFactor = screenWidth < 360 ? 0.7 : 1.3;
 
     // Create a lighter version of the background color for the border
     final borderColor = HSLColor.fromColor(color).withLightness(0.95).toColor();
@@ -535,7 +535,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 12 * scaleFactor,
+                  fontSize: isWeb ? 13 * scaleFactor : 12 * scaleFactor,
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w500,
                 ),

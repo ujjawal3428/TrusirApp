@@ -33,19 +33,22 @@ class Teacherhomepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isWeb = MediaQuery.of(context).size.width > 600;
     return Scaffold(
       backgroundColor: Colors.grey[50],
       body: Stack(
         children: [
           // Main Scrollable Content
           SingleChildScrollView(
-            padding: const EdgeInsets.only(
-              left: 16.0,
-              right: 16.0,
-              top: 16.0,
-              // Add bottom padding to prevent content from being hidden behind the fixed button
-              bottom: 100.0,
-            ),
+            padding: isWeb
+                ? const EdgeInsets.only(left: 50, right: 30.0, bottom: 100)
+                : const EdgeInsets.only(
+                    left: 16.0,
+                    right: 16.0,
+                    top: 16.0,
+                    // Add bottom padding to prevent content from being hidden behind the fixed button
+                    bottom: 100.0,
+                  ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -91,23 +94,26 @@ class Teacherhomepage extends StatelessWidget {
 
                 // Services ListView (Horizontal)
                 SizedBox(
-                  height: 200,
+                  height: isWeb ? 300 : 200,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: [
                       _serviceCard(
+                        isWeb: isWeb,
                         title: 'Annual Gift Hamper',
                         imagePath: 'assets/girlimage@4x.png',
                         backgroundColor:
                             const Color.fromARGB(214, 193, 226, 252),
                       ),
                       _serviceCard(
+                        isWeb: isWeb,
                         title: '100% Trusted & Satisfied',
                         imagePath: 'assets/girlimage@4x.png',
                         backgroundColor:
                             const Color.fromARGB(210, 251, 197, 216),
                       ),
                       _serviceCard(
+                        isWeb: isWeb,
                         title: 'Trusted App',
                         imagePath: 'assets/girlimage@4x.png',
                         backgroundColor:
@@ -119,14 +125,14 @@ class Teacherhomepage extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // Our Services title
-                const Padding(
-                  padding: EdgeInsets.only(left: 8.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
                     'Our Services',
                     style: TextStyle(
-                      fontSize: 22,
+                      fontSize: isWeb ? 28 : 22,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF00081D),
+                      color: const Color(0xFF00081D),
                       fontFamily: 'Poppins',
                     ),
                   ),
@@ -139,6 +145,7 @@ class Teacherhomepage extends StatelessWidget {
                     child: Column(
                       children: [
                         Image.asset(
+                          height: isWeb ? 5000 : null,
                           'assets/g1@4x.png',
                           fit: BoxFit.cover,
                         ),
@@ -253,18 +260,19 @@ class Teacherhomepage extends StatelessWidget {
 
           // Fixed Registration Button
           Positioned(
-              left: 0,
-              right: 0,
-              bottom: 5,
-              child: _buildRegistrationButton(context)),
+            left: 0,
+            right: 0,
+            bottom: 5,
+            child: _buildRegistrationButton(context),
+          ),
           Positioned(
             right: 13,
-            top: MediaQuery.of(context).size.height * 0.5 - 28,
+            top: MediaQuery.of(context).size.height * 0.4 - 0,
             child: SizedBox(
-              height: 50,
-              width: 50,
+              height: isWeb ? 80 : 50,
+              width: isWeb ? 80 : 50,
               child: FloatingActionButton(
-                heroTag: 'whatsappButton', // Add unique tag
+                heroTag: 'whatsappButton',
                 backgroundColor: Colors.transparent,
                 onPressed: () {
                   _launchWhatsApp('919797472922', 'Hi');
@@ -277,10 +285,12 @@ class Teacherhomepage extends StatelessWidget {
           ),
           Positioned(
             right: 13,
-            top: MediaQuery.of(context).size.height * 0.58 - 28,
+            top: isWeb
+                ? MediaQuery.of(context).size.height * 0.55 - 0
+                : MediaQuery.of(context).size.height * 0.48 - 0,
             child: SizedBox(
-              height: 50,
-              width: 50,
+              height: isWeb ? 80 : 50,
+              width: isWeb ? 80 : 50,
               child: FloatingActionButton(
                 heroTag: 'callButton', // Add unique tag
                 backgroundColor: Colors.transparent,
@@ -299,6 +309,7 @@ class Teacherhomepage extends StatelessWidget {
   }
 
   Widget _buildRegistrationButton(BuildContext context) {
+    bool isWeb = MediaQuery.of(context).size.width > 600;
     return Center(
       child: GestureDetector(
         onTap: () {
@@ -311,8 +322,8 @@ class Teacherhomepage extends StatelessWidget {
         },
         child: Image.asset(
           'assets/registeration.png',
-          width: 360,
-          height: 70,
+          width: isWeb ? 460 : 360,
+          height: isWeb ? 150 : 70,
           fit: BoxFit.contain,
         ),
       ),
@@ -323,10 +334,11 @@ class Teacherhomepage extends StatelessWidget {
     required String title,
     required String imagePath,
     required Color backgroundColor,
+    required bool isWeb,
   }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
-      width: 160,
+      width: isWeb ? 300 : 160,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: BorderRadius.circular(20),

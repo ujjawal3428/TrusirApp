@@ -83,6 +83,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isWeb = MediaQuery.of(context).size.width > 600;
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -121,18 +122,18 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                     );
                   },
                   child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: isWeb ? 20 : 10, vertical: isWeb ? 10 : 5),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Edit Profile',
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: isWeb ? 20 : 12,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF48116A),
+                        color: const Color(0xFF48116A),
                       ),
                     ),
                   ),
@@ -144,107 +145,229 @@ class MyProfileScreenState extends State<Teacherpfpage> {
         toolbarHeight: 70,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              width: 428,
-              height: 180,
-              child: Stack(
+        child: isWeb
+            ? Row(
                 children: [
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    child: Column(
-                      children: [
-                        Container(
-                          width: 130,
-                          height: 130,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: NetworkImage(profilePhoto),
-                              fit: BoxFit.cover,
+                  Expanded(
+                    flex: 1,
+                    child: SizedBox(
+                      width: 428,
+                      height: 400,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            left: 0,
+                            right: 0,
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 300,
+                                  height: 300,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: NetworkImage(profilePhoto),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 7),
+                                Text(
+                                  name,
+                                  style: const TextStyle(
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF48116A),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      children: [
+                        buildInfoRow(
+                          isWeb,
+                          'assets/male@2x.png',
+                          'Age & Gender',
+                          '$age, $gender',
+                          imageBackgroundColor: Colors.blue.shade100,
+                          textBackgroundColor: Colors.blue.shade50,
                         ),
-                        const SizedBox(height: 7),
-                        Text(
-                          name,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF48116A),
+                        const SizedBox(height: 10),
+                        buildInfoRow(
+                          isWeb,
+                          'assets/location@2x.png',
+                          'Address',
+                          address,
+                          imageBackgroundColor: Colors.green.shade100,
+                          textBackgroundColor: Colors.green.shade50,
+                        ),
+                        const SizedBox(height: 10),
+                        buildInfoRow(
+                          isWeb,
+                          'assets/degree@2x.png',
+                          'Graduation',
+                          graduation,
+                          imageBackgroundColor: Colors.yellow.shade100,
+                          textBackgroundColor: Colors.yellow.shade50,
+                        ),
+                        const SizedBox(height: 10),
+                        buildInfoRow(
+                          isWeb,
+                          'assets/medal@2x.png',
+                          'Experience',
+                          experience,
+                          imageBackgroundColor: Colors.red.shade100,
+                          textBackgroundColor: Colors.red.shade50,
+                        ),
+                        const SizedBox(height: 10),
+                        buildInfoRow(
+                          isWeb,
+                          'assets/pensp@3x.png',
+                          'Subjects',
+                          subjects,
+                          imageBackgroundColor: Colors.purple.shade100,
+                          textBackgroundColor: Colors.purple.shade50,
+                        ),
+                        const SizedBox(height: 10),
+                        buildInfoRow(
+                          isWeb,
+                          'assets/ab@2x.png',
+                          'Language',
+                          language,
+                          imageBackgroundColor: Colors.orange.shade100,
+                          textBackgroundColor: Colors.orange.shade50,
+                        ),
+                        const SizedBox(height: 10),
+                        buildInfoRow(
+                          isWeb,
+                          'assets/phone@2x.png',
+                          'Phone Number',
+                          '+91-$phoneNumber',
+                          imageBackgroundColor: Colors.teal.shade100,
+                          textBackgroundColor: Colors.teal.shade50,
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : Column(
+                children: [
+                  SizedBox(
+                    width: 428,
+                    height: 180,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          child: Column(
+                            children: [
+                              Container(
+                                width: 130,
+                                height: 130,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: NetworkImage(profilePhoto),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 7),
+                              Text(
+                                name,
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF48116A),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
+                  buildInfoRow(
+                    isWeb,
+                    'assets/male@2x.png',
+                    'Age & Gender',
+                    '$age, $gender',
+                    imageBackgroundColor: Colors.blue.shade100,
+                    textBackgroundColor: Colors.blue.shade50,
+                  ),
+                  const SizedBox(height: 10),
+                  buildInfoRow(
+                    isWeb,
+                    'assets/location@2x.png',
+                    'Address',
+                    address,
+                    imageBackgroundColor: Colors.green.shade100,
+                    textBackgroundColor: Colors.green.shade50,
+                  ),
+                  const SizedBox(height: 10),
+                  buildInfoRow(
+                    isWeb,
+                    'assets/degree@2x.png',
+                    'Graduation',
+                    graduation,
+                    imageBackgroundColor: Colors.yellow.shade100,
+                    textBackgroundColor: Colors.yellow.shade50,
+                  ),
+                  const SizedBox(height: 10),
+                  buildInfoRow(
+                    isWeb,
+                    'assets/medal@2x.png',
+                    'Experience',
+                    experience,
+                    imageBackgroundColor: Colors.red.shade100,
+                    textBackgroundColor: Colors.red.shade50,
+                  ),
+                  const SizedBox(height: 10),
+                  buildInfoRow(
+                    isWeb,
+                    'assets/pensp@3x.png',
+                    'Subjects',
+                    subjects,
+                    imageBackgroundColor: Colors.purple.shade100,
+                    textBackgroundColor: Colors.purple.shade50,
+                  ),
+                  const SizedBox(height: 10),
+                  buildInfoRow(
+                    isWeb,
+                    'assets/ab@2x.png',
+                    'Language',
+                    language,
+                    imageBackgroundColor: Colors.orange.shade100,
+                    textBackgroundColor: Colors.orange.shade50,
+                  ),
+                  const SizedBox(height: 10),
+                  buildInfoRow(
+                    isWeb,
+                    'assets/phone@2x.png',
+                    'Phone Number',
+                    '+91-$phoneNumber',
+                    imageBackgroundColor: Colors.teal.shade100,
+                    textBackgroundColor: Colors.teal.shade50,
+                  ),
+                  const SizedBox(height: 10),
                 ],
               ),
-            ),
-            buildInfoRow(
-              'assets/male@2x.png',
-              'Age & Gender',
-              '$age, $gender',
-              imageBackgroundColor: Colors.blue.shade100,
-              textBackgroundColor: Colors.blue.shade50,
-            ),
-            const SizedBox(height: 10),
-            buildInfoRow(
-              'assets/location@2x.png',
-              'Address',
-              address,
-              imageBackgroundColor: Colors.green.shade100,
-              textBackgroundColor: Colors.green.shade50,
-            ),
-            const SizedBox(height: 10),
-            buildInfoRow(
-              'assets/degree@2x.png',
-              'Graduation',
-              graduation,
-              imageBackgroundColor: Colors.yellow.shade100,
-              textBackgroundColor: Colors.yellow.shade50,
-            ),
-            const SizedBox(height: 10),
-            buildInfoRow(
-              'assets/medal@2x.png',
-              'Experience',
-              experience,
-              imageBackgroundColor: Colors.red.shade100,
-              textBackgroundColor: Colors.red.shade50,
-            ),
-            const SizedBox(height: 10),
-            buildInfoRow(
-              'assets/pensp@3x.png',
-              'Subjects',
-              subjects,
-              imageBackgroundColor: Colors.purple.shade100,
-              textBackgroundColor: Colors.purple.shade50,
-            ),
-            const SizedBox(height: 10),
-            buildInfoRow(
-              'assets/ab@2x.png',
-              'Language',
-              language,
-              imageBackgroundColor: Colors.orange.shade100,
-              textBackgroundColor: Colors.orange.shade50,
-            ),
-            const SizedBox(height: 10),
-            buildInfoRow(
-              'assets/phone@2x.png',
-              'Phone Number',
-              '+91-$phoneNumber',
-              imageBackgroundColor: Colors.teal.shade100,
-              textBackgroundColor: Colors.teal.shade50,
-            ),
-            const SizedBox(height: 10),
-          ],
-        ),
       ),
     );
   }
 
   Widget buildInfoRow(
+    bool isWeb,
     String iconPath,
     String title,
     String value, {
@@ -257,8 +380,8 @@ class MyProfileScreenState extends State<Teacherpfpage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 55,
-            height: 63,
+            width: isWeb ? 80 : 55,
+            height: isWeb ? 80 : 63,
             decoration: BoxDecoration(
               color: imageBackgroundColor,
               borderRadius: BorderRadius.circular(10),
@@ -274,8 +397,8 @@ class MyProfileScreenState extends State<Teacherpfpage> {
           const SizedBox(width: 10),
           Flexible(
             child: Container(
-              height: 63,
-              width: 306,
+              height: isWeb ? 80 : 63,
+              width: isWeb ? 400 : 306,
               decoration: BoxDecoration(
                 color: textBackgroundColor,
                 borderRadius: BorderRadius.circular(15),
@@ -291,9 +414,9 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     value.isNotEmpty ? value : 'Loading...',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      fontSize: 16,
+                      fontSize: isWeb ? 20 : 16,
                     ),
                   ),
                 ),
