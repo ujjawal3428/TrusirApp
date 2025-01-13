@@ -1425,7 +1425,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                         ],
                       ),
                       const SizedBox(height: 20),
-                      TimeSlotField(formData: formData),
+                      TimeSlotField(formData: formData, isWeb: isWeb),
                       const SizedBox(height: 20),
 
                       // Terms and Conditions Checkbox
@@ -1440,7 +1440,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                               });
                             },
                           ),
-                          const Text('I agree with the '),
+                          const Text('I agree with the ',
+                              style: TextStyle(fontSize: 20)),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -1455,6 +1456,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                               'Terms and Conditions',
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
+                                fontSize: 20,
                                 color: Colors.blue,
                               ),
                             ),
@@ -2104,7 +2106,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       ],
                     ),
                     const SizedBox(height: 10),
-                    TimeSlotField(formData: formData),
+                    TimeSlotField(formData: formData, isWeb: isWeb),
                     const SizedBox(height: 10),
 
                     // Terms and Conditions Checkbox
@@ -2611,13 +2613,10 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
 }
 
 class TimeSlotField extends StatefulWidget {
-  final dynamic
-      formData; // Assuming you have a FormData class with timeslot field
+  final dynamic formData;
+  final bool isWeb; // Assuming you have a FormData class with timeslot field
 
-  const TimeSlotField({
-    super.key,
-    required this.formData,
-  });
+  const TimeSlotField({super.key, required this.formData, required this.isWeb});
 
   @override
   TimeSlotFieldState createState() => TimeSlotFieldState();
@@ -2707,56 +2706,130 @@ class TimeSlotFieldState extends State<TimeSlotField> {
     return Container(
       color: Colors.grey[50],
       padding: const EdgeInsets.all(5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Hours of Availability',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 20.0,
-              color: Colors.purple.shade900,
-              fontWeight: FontWeight.w600,
+      child: widget.isWeb
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hours of Availability',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 20.0,
+                    color: Colors.purple.shade900,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Morning Hours',
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 8.0),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: morningSlots.map(buildSlot).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 20.0),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Afternoon Hours',
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 8.0),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: afternoonSlots.map(buildSlot).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 20.0),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Evening Hours',
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 8.0),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: eveningSlots.map(buildSlot).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hours of Availability',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 20.0,
+                    color: Colors.purple.shade900,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'Morning Hours',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8.0),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: morningSlots.map(buildSlot).toList(),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'Afternoon Hours',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8.0),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: afternoonSlots.map(buildSlot).toList(),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'Evening Hours',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8.0),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: eveningSlots.map(buildSlot).toList(),
+                  ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 16.0),
-          const Text(
-            'Morning Hours',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8.0),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: morningSlots.map(buildSlot).toList(),
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          const Text(
-            'Afternoon Hours',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8.0),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: afternoonSlots.map(buildSlot).toList(),
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          const Text(
-            'Evening Hours',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8.0),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: eveningSlots.map(buildSlot).toList(),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

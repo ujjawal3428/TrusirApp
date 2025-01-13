@@ -842,445 +842,908 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }
 
   Widget _buildStudentForm(int index) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Divider(),
-        const SizedBox(height: 10),
-        Text(
-          'Student ${index + 1}',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-        ),
-        const SizedBox(height: 10),
-        _buildTextField('Student Name', onChanged: (value) {
-          studentForms[index].studentName = value;
-        }),
-        const SizedBox(height: 10),
-        _buildTextField("Father's Name", onChanged: (value) {
-          studentForms[index].fathersName = value;
-        }),
-        const SizedBox(height: 10),
-        _buildTextField("Mother's Name", onChanged: (value) {
-          studentForms[index].mothersName = value;
-        }),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Expanded(
-              child: _buildDropdownField(
-                'Gender',
-                selectedValue:
-                    studentForms[index].gender, // Use unique value per student
+    bool isWeb = MediaQuery.of(context).size.width > 600;
+    return isWeb
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Divider(),
+              const SizedBox(height: 10),
+              Text(
+                'Student ${index + 1}',
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              const SizedBox(height: 10),
+              _buildTextField('Student Name', onChanged: (value) {
+                studentForms[index].studentName = value;
+              }),
+              const SizedBox(height: 10),
+              _buildTextField("Father's Name", onChanged: (value) {
+                studentForms[index].fathersName = value;
+              }),
+              const SizedBox(height: 10),
+              _buildTextField("Mother's Name", onChanged: (value) {
+                studentForms[index].mothersName = value;
+              }),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildDropdownField(
+                      'Gender',
+                      selectedValue: studentForms[index]
+                          .gender, // Use unique value per student
+                      onChanged: (value) {
+                        setState(() {
+                          studentForms[index].gender =
+                              value; // Update only this student's gender
+                        });
+                      },
+                      items: ['Male', 'Female', 'Other'],
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: _buildTextFieldWithIcon(
+                      'DOB',
+                      Icons.calendar_today,
+                      onTap: () => _selectDOB(context,
+                          index), // Pass the index to identify which student
+                      value: studentForms[index].dob != null
+                          ? "${studentForms[index].dob!.day}/${studentForms[index].dob!.month}/${studentForms[index].dob!.year}"
+                          : null,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              _buildTextField('School Name', onChanged: (value) {
+                studentForms[index].schoolName = value;
+              }),
+              const SizedBox(height: 10),
+              _buildDropdownField(
+                'Medium',
+                selectedValue: studentForms[index].medium,
                 onChanged: (value) {
                   setState(() {
-                    studentForms[index].gender =
-                        value; // Update only this student's gender
+                    studentForms[index].medium = value;
                   });
                 },
-                items: ['Male', 'Female', 'Other'],
+                items: _courses,
               ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: _buildTextFieldWithIcon(
-                'DOB',
-                Icons.calendar_today,
-                onTap: () => _selectDOB(
-                    context, index), // Pass the index to identify which student
-                value: studentForms[index].dob != null
-                    ? "${studentForms[index].dob!.day}/${studentForms[index].dob!.month}/${studentForms[index].dob!.year}"
-                    : null,
+              const SizedBox(height: 10),
+              _buildDropdownField(
+                'Class',
+                selectedValue: studentForms[index].studentClass,
+                onChanged: (value) {
+                  setState(() {
+                    studentForms[index].studentClass = value;
+                  });
+                },
+                items: ['10th', '11th', '12th'],
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 10),
-        _buildTextField('School Name', onChanged: (value) {
-          studentForms[index].schoolName = value;
-        }),
-        const SizedBox(height: 10),
-        _buildDropdownField(
-          'Medium',
-          selectedValue: studentForms[index].medium,
-          onChanged: (value) {
-            setState(() {
-              studentForms[index].medium = value;
-            });
-          },
-          items: _courses,
-        ),
-        const SizedBox(height: 10),
-        _buildDropdownField(
-          'Class',
-          selectedValue: studentForms[index].studentClass,
-          onChanged: (value) {
-            setState(() {
-              studentForms[index].studentClass = value;
-            });
-          },
-          items: ['10th', '11th', '12th'],
-        ),
-        const SizedBox(height: 10),
-        _buildMultiSelectDropdownField(
-          'Subject',
-          selectedValues: selectedSubjects,
-          onChanged: (List<String> values) {
-            setState(() {
-              selectedSubjects = values;
-              studentForms[index].subject = selectedSubjects.join(',');
-            });
-          },
-          items: _courses,
-        ),
-        const SizedBox(height: 10),
-        _buildDropdownField(
-          'State',
-          selectedValue: studentForms[index].state,
-          onChanged: (value) {
-            setState(() {
-              studentForms[index].state = value;
-              studentForms[index].city = null;
-              studentForms[index].pincode = null;
+              const SizedBox(height: 10),
+              _buildMultiSelectDropdownField(
+                'Subject',
+                selectedValues: selectedSubjects,
+                onChanged: (List<String> values) {
+                  setState(() {
+                    selectedSubjects = values;
+                    studentForms[index].subject = selectedSubjects.join(',');
+                  });
+                },
+                items: _courses,
+              ),
+              const SizedBox(height: 10),
+              _buildDropdownField(
+                'State',
+                selectedValue: studentForms[index].state,
+                onChanged: (value) {
+                  setState(() {
+                    studentForms[index].state = value;
+                    studentForms[index].city = null;
+                    studentForms[index].pincode = null;
 
-              studentForms[index].cities = locations
-                  .where((loc) => loc.state == value)
-                  .map((loc) => loc.name)
-                  .toSet()
-                  .toList();
-            });
-          },
-          items: states,
-        ),
-        const SizedBox(height: 10),
-        GestureDetector(
-          onTap: () {
-            if (studentForms[index].state == null) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Please select a state first.'),
-                duration: Duration(seconds: 2),
-              ));
-            } else {
-              null;
-            }
-          },
-          child: _buildDropdownField(
-            'City/Town',
-            selectedValue: studentForms[index].city,
-            onChanged: (value) {
-              setState(() {
-                studentForms[index].city = value;
-                studentForms[index].pincode = null;
-                studentForms[index].pins = locations
-                    .where((loc) => loc.name == value)
-                    .map((loc) => loc.pincode)
-                    .toSet()
-                    .toList();
-              });
-            },
-            items: studentForms[index].cities,
-          ),
-        ),
-        const SizedBox(height: 10),
-        _buildTextField('Mohalla/Area', onChanged: (value) {
-          studentForms[index].area = value;
-        }),
-        const SizedBox(height: 10),
-        GestureDetector(
-          onTap: () {
-            if (studentForms[index].state == null) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Please select a state first.'),
-                duration: Duration(seconds: 2),
-              ));
-            } else if (studentForms[index].city == null) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Please select a city first.'),
-                duration: Duration(seconds: 2),
-              ));
-            } else {
-              null;
-            }
-          },
-          child: _buildDropdownField(
-            'Pincode',
-            selectedValue: studentForms[index].pincode,
-            onChanged: (value) {
-              setState(() {
-                studentForms[index].pincode = value;
-              });
-            },
-            items: studentForms[index].pins,
-          ),
-        ),
-        const SizedBox(height: 10),
-        // Full address
-        _buildAddressField('Full Address', onChanged: (value) {
-          studentForms[index].address = value;
-        }),
-        const SizedBox(height: 20),
+                    studentForms[index].cities = locations
+                        .where((loc) => loc.state == value)
+                        .map((loc) => loc.name)
+                        .toSet()
+                        .toList();
+                  });
+                },
+                items: states,
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {
+                  if (studentForms[index].state == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please select a state first.'),
+                      duration: Duration(seconds: 2),
+                    ));
+                  } else {
+                    null;
+                  }
+                },
+                child: _buildDropdownField(
+                  'City/Town',
+                  selectedValue: studentForms[index].city,
+                  onChanged: (value) {
+                    setState(() {
+                      studentForms[index].city = value;
+                      studentForms[index].pincode = null;
+                      studentForms[index].pins = locations
+                          .where((loc) => loc.name == value)
+                          .map((loc) => loc.pincode)
+                          .toSet()
+                          .toList();
+                    });
+                  },
+                  items: studentForms[index].cities,
+                ),
+              ),
+              const SizedBox(height: 10),
+              _buildTextField('Mohalla/Area', onChanged: (value) {
+                studentForms[index].area = value;
+              }),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {
+                  if (studentForms[index].state == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please select a state first.'),
+                      duration: Duration(seconds: 2),
+                    ));
+                  } else if (studentForms[index].city == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please select a city first.'),
+                      duration: Duration(seconds: 2),
+                    ));
+                  } else {
+                    null;
+                  }
+                },
+                child: _buildDropdownField(
+                  'Pincode',
+                  selectedValue: studentForms[index].pincode,
+                  onChanged: (value) {
+                    setState(() {
+                      studentForms[index].pincode = value;
+                    });
+                  },
+                  items: studentForms[index].pins,
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Full address
+              _buildAddressField('Full Address', onChanged: (value) {
+                studentForms[index].address = value;
+              }),
+              const SizedBox(height: 20),
 
-        // Photo Upload Section
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(right: 60),
-              child: Text(
-                'Profile Photo',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              // Photo Upload Section
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 60),
+                    child: Text(
+                      'Profile Photo',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  _buildFileUploadField('Upload Image', isFile: false,
+                      onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withValues(alpha: 0.3),
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlue.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      uploadImage(index, 'photo');
+                                    },
+                                    child: const Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                // Button for "I'm a Teacher"
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      handleImageSelection(
+                                          'profilephoto', index);
+                                    },
+                                    child: const Text(
+                                      "Upload File",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }, width: 171, displayPath: studentForms[index].photoPath),
+                ],
               ),
-            ),
-            _buildFileUploadField('Upload Image', isFile: false, onTap: () {
-              showDialog(
-                context: context,
-                barrierColor: Colors.black.withValues(alpha: 0.3),
-                builder: (BuildContext context) {
-                  return Dialog(
-                    backgroundColor: Colors.transparent,
-                    insetPadding: const EdgeInsets.all(16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 19),
+                    child: Text(
+                      'Aadhar Card Front',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    child: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 200,
-                            height: 50,
+                  ),
+                  _buildFileUploadField('Upload File', isFile: true, onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withValues(alpha: 0.3),
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
-                              color: Colors.lightBlue.shade100,
-                              borderRadius: BorderRadius.circular(22),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                uploadImage(index, 'photo');
-                              },
-                              child: const Text(
-                                "Camera",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Poppins'),
-                              ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlue.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      uploadImage(index, 'adhaarFront');
+                                    },
+                                    child: const Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                // Button for "I'm a Teacher"
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      handleFileSelection(
+                                          context, index, 'aadharFrontPath');
+                                    },
+                                    child: const Text(
+                                      "Upload File",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 16),
-                          // Button for "I'm a Teacher"
-                          Container(
-                            width: 200,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.orange.shade100,
-                              borderRadius: BorderRadius.circular(22),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                handleImageSelection('profilephoto', index);
-                              },
-                              child: const Text(
-                                "Upload File",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Poppins'),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            }, width: 171, displayPath: studentForms[index].photoPath),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(right: 19),
-              child: Text(
-                'Aadhar Card Front',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        );
+                      },
+                    );
+                  },
+                      width: 170,
+                      displayPath: studentForms[index].aadharFrontPath),
+                ],
               ),
-            ),
-            _buildFileUploadField('Upload File', isFile: true, onTap: () {
-              showDialog(
-                context: context,
-                barrierColor: Colors.black.withValues(alpha: 0.3),
-                builder: (BuildContext context) {
-                  return Dialog(
-                    backgroundColor: Colors.transparent,
-                    insetPadding: const EdgeInsets.all(16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: Text(
+                      'Aadhar Card Back',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    child: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 200,
-                            height: 50,
+                  ),
+                  _buildFileUploadField('Upload File', isFile: true, onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withValues(alpha: 0.3),
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
-                              color: Colors.lightBlue.shade100,
-                              borderRadius: BorderRadius.circular(22),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                uploadImage(index, 'adhaarFront');
-                              },
-                              child: const Text(
-                                "Camera",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Poppins'),
-                              ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlue.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      uploadImage(index, 'adhaarBack');
+                                    },
+                                    child: const Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                // Button for "I'm a Teacher"
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      handleFileSelection(
+                                          context, index, 'aadharBackPath');
+                                    },
+                                    child: const Text(
+                                      "Upload File",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 16),
-                          // Button for "I'm a Teacher"
-                          Container(
-                            width: 200,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.orange.shade100,
-                              borderRadius: BorderRadius.circular(22),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                handleFileSelection(
-                                    context, index, 'aadharFrontPath');
-                              },
-                              child: const Text(
-                                "Upload File",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Poppins'),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            }, width: 170, displayPath: studentForms[index].aadharFrontPath),
-          ],
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(right: 20),
-              child: Text(
-                'Aadhar Card Back',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        );
+                      },
+                    );
+                  },
+                      width: 170,
+                      displayPath: studentForms[index].aadharBackPath),
+                ],
               ),
-            ),
-            _buildFileUploadField('Upload File', isFile: true, onTap: () {
-              showDialog(
-                context: context,
-                barrierColor: Colors.black.withValues(alpha: 0.3),
-                builder: (BuildContext context) {
-                  return Dialog(
-                    backgroundColor: Colors.transparent,
-                    insetPadding: const EdgeInsets.all(16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+              const SizedBox(height: 30),
+              TimeSlotField(
+                formData: studentForms[index],
+                isWeb: isWeb,
+              ), // Pass index to handle each form's state
+              const SizedBox(height: 10),
+              // Add more fields as needed
+            ],
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Divider(),
+              const SizedBox(height: 10),
+              Text(
+                'Student ${index + 1}',
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              const SizedBox(height: 10),
+              _buildTextField('Student Name', onChanged: (value) {
+                studentForms[index].studentName = value;
+              }),
+              const SizedBox(height: 10),
+              _buildTextField("Father's Name", onChanged: (value) {
+                studentForms[index].fathersName = value;
+              }),
+              const SizedBox(height: 10),
+              _buildTextField("Mother's Name", onChanged: (value) {
+                studentForms[index].mothersName = value;
+              }),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildDropdownField(
+                      'Gender',
+                      selectedValue: studentForms[index]
+                          .gender, // Use unique value per student
+                      onChanged: (value) {
+                        setState(() {
+                          studentForms[index].gender =
+                              value; // Update only this student's gender
+                        });
+                      },
+                      items: ['Male', 'Female', 'Other'],
                     ),
-                    child: Container(
-                      padding: const EdgeInsets.all(16.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 200,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.lightBlue.shade100,
-                              borderRadius: BorderRadius.circular(22),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                uploadImage(index, 'adhaarBack');
-                              },
-                              child: const Text(
-                                "Camera",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Poppins'),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          // Button for "I'm a Teacher"
-                          Container(
-                            width: 200,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.orange.shade100,
-                              borderRadius: BorderRadius.circular(22),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                handleFileSelection(
-                                    context, index, 'aadharBackPath');
-                              },
-                              child: const Text(
-                                "Upload File",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Poppins'),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: _buildTextFieldWithIcon(
+                      'DOB',
+                      Icons.calendar_today,
+                      onTap: () => _selectDOB(context,
+                          index), // Pass the index to identify which student
+                      value: studentForms[index].dob != null
+                          ? "${studentForms[index].dob!.day}/${studentForms[index].dob!.month}/${studentForms[index].dob!.year}"
+                          : null,
                     ),
-                  );
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              _buildTextField('School Name', onChanged: (value) {
+                studentForms[index].schoolName = value;
+              }),
+              const SizedBox(height: 10),
+              _buildDropdownField(
+                'Medium',
+                selectedValue: studentForms[index].medium,
+                onChanged: (value) {
+                  setState(() {
+                    studentForms[index].medium = value;
+                  });
                 },
-              );
-            }, width: 170, displayPath: studentForms[index].aadharBackPath),
-          ],
-        ),
-        const SizedBox(height: 30),
-        TimeSlotField(
-          formData: studentForms[index],
-        ), // Pass index to handle each form's state
-        const SizedBox(height: 10),
-        // Add more fields as needed
-      ],
-    );
+                items: _courses,
+              ),
+              const SizedBox(height: 10),
+              _buildDropdownField(
+                'Class',
+                selectedValue: studentForms[index].studentClass,
+                onChanged: (value) {
+                  setState(() {
+                    studentForms[index].studentClass = value;
+                  });
+                },
+                items: ['10th', '11th', '12th'],
+              ),
+              const SizedBox(height: 10),
+              _buildMultiSelectDropdownField(
+                'Subject',
+                selectedValues: selectedSubjects,
+                onChanged: (List<String> values) {
+                  setState(() {
+                    selectedSubjects = values;
+                    studentForms[index].subject = selectedSubjects.join(',');
+                  });
+                },
+                items: _courses,
+              ),
+              const SizedBox(height: 10),
+              _buildDropdownField(
+                'State',
+                selectedValue: studentForms[index].state,
+                onChanged: (value) {
+                  setState(() {
+                    studentForms[index].state = value;
+                    studentForms[index].city = null;
+                    studentForms[index].pincode = null;
+
+                    studentForms[index].cities = locations
+                        .where((loc) => loc.state == value)
+                        .map((loc) => loc.name)
+                        .toSet()
+                        .toList();
+                  });
+                },
+                items: states,
+              ),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {
+                  if (studentForms[index].state == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please select a state first.'),
+                      duration: Duration(seconds: 2),
+                    ));
+                  } else {
+                    null;
+                  }
+                },
+                child: _buildDropdownField(
+                  'City/Town',
+                  selectedValue: studentForms[index].city,
+                  onChanged: (value) {
+                    setState(() {
+                      studentForms[index].city = value;
+                      studentForms[index].pincode = null;
+                      studentForms[index].pins = locations
+                          .where((loc) => loc.name == value)
+                          .map((loc) => loc.pincode)
+                          .toSet()
+                          .toList();
+                    });
+                  },
+                  items: studentForms[index].cities,
+                ),
+              ),
+              const SizedBox(height: 10),
+              _buildTextField('Mohalla/Area', onChanged: (value) {
+                studentForms[index].area = value;
+              }),
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () {
+                  if (studentForms[index].state == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please select a state first.'),
+                      duration: Duration(seconds: 2),
+                    ));
+                  } else if (studentForms[index].city == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please select a city first.'),
+                      duration: Duration(seconds: 2),
+                    ));
+                  } else {
+                    null;
+                  }
+                },
+                child: _buildDropdownField(
+                  'Pincode',
+                  selectedValue: studentForms[index].pincode,
+                  onChanged: (value) {
+                    setState(() {
+                      studentForms[index].pincode = value;
+                    });
+                  },
+                  items: studentForms[index].pins,
+                ),
+              ),
+              const SizedBox(height: 10),
+              // Full address
+              _buildAddressField('Full Address', onChanged: (value) {
+                studentForms[index].address = value;
+              }),
+              const SizedBox(height: 20),
+
+              // Photo Upload Section
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 60),
+                    child: Text(
+                      'Profile Photo',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  _buildFileUploadField('Upload Image', isFile: false,
+                      onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withValues(alpha: 0.3),
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlue.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      uploadImage(index, 'photo');
+                                    },
+                                    child: const Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                // Button for "I'm a Teacher"
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      handleImageSelection(
+                                          'profilephoto', index);
+                                    },
+                                    child: const Text(
+                                      "Upload File",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }, width: 171, displayPath: studentForms[index].photoPath),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 19),
+                    child: Text(
+                      'Aadhar Card Front',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  _buildFileUploadField('Upload File', isFile: true, onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withValues(alpha: 0.3),
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlue.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      uploadImage(index, 'adhaarFront');
+                                    },
+                                    child: const Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                // Button for "I'm a Teacher"
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      handleFileSelection(
+                                          context, index, 'aadharFrontPath');
+                                    },
+                                    child: const Text(
+                                      "Upload File",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                      width: 170,
+                      displayPath: studentForms[index].aadharFrontPath),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: Text(
+                      'Aadhar Card Back',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  _buildFileUploadField('Upload File', isFile: true, onTap: () {
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withValues(alpha: 0.3),
+                      builder: (BuildContext context) {
+                        return Dialog(
+                          backgroundColor: Colors.transparent,
+                          insetPadding: const EdgeInsets.all(16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.lightBlue.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      uploadImage(index, 'adhaarBack');
+                                    },
+                                    child: const Text(
+                                      "Camera",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                // Button for "I'm a Teacher"
+                                Container(
+                                  width: 200,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade100,
+                                    borderRadius: BorderRadius.circular(22),
+                                  ),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      handleFileSelection(
+                                          context, index, 'aadharBackPath');
+                                    },
+                                    child: const Text(
+                                      "Upload File",
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.black,
+                                          fontFamily: 'Poppins'),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                      width: 170,
+                      displayPath: studentForms[index].aadharBackPath),
+                ],
+              ),
+              const SizedBox(height: 30),
+              TimeSlotField(
+                formData: studentForms[index],
+                isWeb: isWeb,
+              ), // Pass index to handle each form's state
+              const SizedBox(height: 10),
+              // Add more fields as needed
+            ],
+          );
   }
 
   Widget _buildRegisterButton(BuildContext context) {
@@ -1311,9 +1774,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     double height = 58,
     required ValueChanged<String> onChanged,
   }) {
+    bool isWeb = MediaQuery.of(context).size.width > 600;
     return Container(
       height: height,
-      width: double.infinity,
+      width: isWeb ? 700 : double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -1350,7 +1814,14 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding: EdgeInsets.symmetric(
-              horizontal: 16, vertical: height == 126 ? 50 : 17),
+              horizontal: 16,
+              vertical: isWeb
+                  ? height == 126
+                      ? 50
+                      : 21
+                  : height == 126
+                      ? 50
+                      : 17),
           isDense: true,
         ),
       ),
@@ -1410,9 +1881,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   Widget _buildPhoneField(
     String hintText,
   ) {
+    bool isWeb = MediaQuery.of(context).size.width > 600;
     return Container(
       height: 58,
-      width: double.infinity,
+      width: isWeb ? 700 : double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -1457,7 +1929,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 17),
           isDense: true,
         ),
       ),
@@ -1470,9 +1942,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     required ValueChanged<String?> onChanged,
     required List<String> items,
   }) {
+    bool isWeb = MediaQuery.of(context).size.width > 600;
     return Container(
       height: 58,
-      width: double.infinity,
+      width: isWeb ? 700 : double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -1506,7 +1979,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 17),
           isDense: true,
         ),
         items: items
@@ -1527,6 +2000,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     required ValueChanged<List<String>> onChanged,
     required List<String> items,
   }) {
+    bool isWeb = MediaQuery.of(context).size.width > 600;
     String selectedText = selectedValues.join(', ');
 
     return StatefulBuilder(
@@ -1561,9 +2035,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 borderRadius: BorderRadius.circular(22),
                 borderSide: const BorderSide(color: Colors.grey),
               ),
-              contentPadding: const EdgeInsets.symmetric(
+              contentPadding: EdgeInsets.symmetric(
                 horizontal: 16,
-                vertical: 17,
+                vertical: isWeb ? 21 : 17,
               ),
               isDense: true,
             ),
@@ -1702,13 +2176,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 }
 
 class TimeSlotField extends StatefulWidget {
-  final dynamic
-      formData; // Assuming you have a FormData class with timeslot field
+  final dynamic formData;
+  final bool isWeb; // Assuming you have a FormData class with timeslot field
 
-  const TimeSlotField({
-    super.key,
-    required this.formData,
-  });
+  const TimeSlotField({super.key, required this.formData, required this.isWeb});
 
   @override
   TimeSlotFieldState createState() => TimeSlotFieldState();
@@ -1798,56 +2269,130 @@ class TimeSlotFieldState extends State<TimeSlotField> {
     return Container(
       color: Colors.grey[50],
       padding: const EdgeInsets.all(5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Hours of Availability',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 20.0,
-              color: Colors.purple.shade900,
-              fontWeight: FontWeight.w600,
+      child: widget.isWeb
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hours of Availability',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 20.0,
+                    color: Colors.purple.shade900,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Morning Hours',
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 8.0),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: morningSlots.map(buildSlot).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 20.0),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Afternoon Hours',
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 8.0),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: afternoonSlots.map(buildSlot).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(width: 20.0),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Evening Hours',
+                          style: TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 8.0),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: eveningSlots.map(buildSlot).toList(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hours of Availability',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 20.0,
+                    color: Colors.purple.shade900,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'Morning Hours',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8.0),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: morningSlots.map(buildSlot).toList(),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'Afternoon Hours',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8.0),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: afternoonSlots.map(buildSlot).toList(),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                const Text(
+                  'Evening Hours',
+                  style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 8.0),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: eveningSlots.map(buildSlot).toList(),
+                  ),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 16.0),
-          const Text(
-            'Morning Hours',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8.0),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: morningSlots.map(buildSlot).toList(),
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          const Text(
-            'Afternoon Hours',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8.0),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: afternoonSlots.map(buildSlot).toList(),
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          const Text(
-            'Evening Hours',
-            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8.0),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: eveningSlots.map(buildSlot).toList(),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
