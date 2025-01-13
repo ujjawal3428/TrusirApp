@@ -44,65 +44,67 @@ class WanaLogout extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
             child: Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Back Button
-
-                  // Online Payment Button
-                  Center(
-                    child: Image.asset(
-                      'assets/wanna_logout.png',
-                      width: 200,
-                      height: 200,
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-
-                  // Logout Confirmation Text
-                  const Center(
-                    child: Text(
-                      'Are you sure you want to Logout?',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 50),
-
-                  // Cancel Button
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      }, // Calls _onEnquire on tap
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Back Button
+                
+                    // Online Payment Button
+                    Center(
                       child: Image.asset(
-                        height: isWeb ? 150 : null,
-                        'assets/cancelbutton.png',
-                        fit: BoxFit.cover,
+                        'assets/wanna_logout.png',
+                        width: 200,
+                        height: 200,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-
-                  // Logout Button
-                  Center(
-                    child: GestureDetector(
-                      onTap: () {
-                        logout(context);
-                      }, // Calls _onEnquire on tap
-                      child: Image.asset(
-                        height: isWeb ? 150 : null,
-                        'assets/logoutbutton.png',
-                        fit: BoxFit.cover,
+                    const SizedBox(height: 40),
+                
+                    // Logout Confirmation Text
+                    const Center(
+                      child: Text(
+                        'Are you sure you want to Logout?',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromARGB(255, 0, 0, 0),
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 50),
+                
+                    // Cancel Button
+                    Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        }, // Calls _onEnquire on tap
+                        child: Image.asset(
+                          height: isWeb ? 150 : null,
+                          'assets/cancelbutton.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                
+                    // Logout Button
+                    Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          logout(context);
+                        }, // Calls _onEnquire on tap
+                        child: Image.asset(
+                          height: isWeb ? 150 : null,
+                          'assets/logoutbutton.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

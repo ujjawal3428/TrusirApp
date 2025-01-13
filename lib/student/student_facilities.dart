@@ -480,6 +480,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     );
   }
 
+
   Widget buildTile(
       BuildContext context,
       Color color,
@@ -492,7 +493,11 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     final imageSize = imageSizes[imagePath] ??
         {'width': isWeb ? 200 : 40.0, 'height': isWeb ? 200 : 40.0};
     final screenWidth = MediaQuery.of(context).size.width;
-    final scaleFactor = screenWidth < 360 ? 0.7 : 1.3;
+    
+    // Updated scaling logic
+    final scaleFactor = isWeb 
+        ? (screenWidth < 1200 ? 1.8 : 2.2)  // Larger scale for web
+        : (screenWidth < 360 ? 0.7 : 1.3);   // Original mobile scaling
 
     // Create a lighter version of the background color for the border
     final borderColor = HSLColor.fromColor(color).withLightness(0.95).toColor();
@@ -511,7 +516,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withValues(alpha: 0.3),
+                color: Colors.grey.withAlpha(77),
                 spreadRadius: 3,
                 blurRadius: 15,
                 offset: const Offset(0, 10),
@@ -535,7 +540,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: isWeb ? 13 * scaleFactor : 12 * scaleFactor,
+                  fontSize: isWeb ? 13 * (scaleFactor * 0.6) : 12 * scaleFactor,
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w500,
                 ),
