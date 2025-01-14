@@ -464,6 +464,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
           ),
           child: Center(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Country flag icon
                 Image.asset(

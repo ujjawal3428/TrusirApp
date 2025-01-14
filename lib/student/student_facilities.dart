@@ -139,7 +139,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                   },
                   child: Container(
                     width: isWeb
-                        ? double.infinity
+                        ? 1000
                         : constraints.maxWidth > 388
                             ? 388
                             : constraints.maxWidth - 40,
@@ -480,7 +480,6 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     );
   }
 
-
   Widget buildTile(
       BuildContext context,
       Color color,
@@ -491,13 +490,13 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
       VoidCallback onTap,
       bool isWeb) {
     final imageSize = imageSizes[imagePath] ??
-        {'width': isWeb ? 200 : 40.0, 'height': isWeb ? 200 : 40.0};
+        {'width': isWeb ? 180 : 40.0, 'height': isWeb ? 180 : 40.0};
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     // Updated scaling logic
-    final scaleFactor = isWeb 
-        ? (screenWidth < 1200 ? 1.8 : 2.2)  // Larger scale for web
-        : (screenWidth < 360 ? 0.7 : 1.3);   // Original mobile scaling
+    final scaleFactor = isWeb
+        ? (screenWidth < 1200 ? 1.8 : 1.7) // Larger scale for web
+        : (screenWidth < 360 ? 0.7 : 1.3); // Original mobile scaling
 
     // Create a lighter version of the background color for the border
     final borderColor = HSLColor.fromColor(color).withLightness(0.95).toColor();

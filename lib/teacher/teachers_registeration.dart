@@ -1424,9 +1424,9 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 40),
                       TimeSlotField(formData: formData, isWeb: isWeb),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 50),
 
                       // Terms and Conditions Checkbox
                       Row(
@@ -1463,7 +1463,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 40),
                       // Registration Fee
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
