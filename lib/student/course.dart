@@ -14,14 +14,16 @@ class Course {
   final int id;
   final String amount;
   final String name;
-  final String subject;
+  final String courseClass;
+  final String newAmount;
   final String image;
 
   Course({
     required this.id,
     required this.amount,
     required this.name,
-    required this.subject,
+    required this.courseClass,
+    required this.newAmount,
     required this.image,
   });
 
@@ -30,14 +32,15 @@ class Course {
       id: json['id'],
       amount: json['amount'],
       name: json['name'],
-      subject: json['class'],
+      courseClass: json['class'],
+      newAmount: json['new_amount'],
       image: json['image'],
     );
   }
 }
 
 class CourseCard extends StatefulWidget {
-  final Map<String, dynamic> course;
+  final Course course;
 
   const CourseCard({super.key, required this.course});
 
@@ -57,6 +60,9 @@ class _CourseCardState extends State<CourseCard> {
   @override
   Widget build(BuildContext context) {
     isWeb = MediaQuery.of(context).size.width > 600;
+    double discount = int.parse(widget.course.newAmount) /
+        int.parse(widget.course.amount) *
+        100;
     return Container(
       margin: EdgeInsets.symmetric(
           horizontal: isWeb ? 30 : 16, vertical: isWeb ? 15 : 8),
@@ -81,7 +87,7 @@ class _CourseCardState extends State<CourseCard> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
-                    widget.course['image']!,
+                    widget.course.image,
                     width: double.infinity,
                     height: isWeb ? 300 : 180,
                     fit: BoxFit.cover,
@@ -120,7 +126,7 @@ class _CourseCardState extends State<CourseCard> {
             ),
             const SizedBox(height: 12),
             Text(
-              widget.course['courseName']!,
+              widget.course.name,
               style: TextStyle(
                 fontSize: isWeb ? 21 : 18,
                 fontFamily: 'Poppins',
@@ -128,21 +134,21 @@ class _CourseCardState extends State<CourseCard> {
               ),
             ),
             const SizedBox(height: 2),
-            Text(
-              widget.course['subject']!,
-              style: TextStyle(
-                fontSize: isWeb ? 18 : 14,
-                fontFamily: 'Poppins',
-                color: Colors.black54,
-              ),
-            ),
+            // Text(
+            //   widget.course['subject']!,
+            //   style: TextStyle(
+            //     fontSize: isWeb ? 18 : 14,
+            //     fontFamily: 'Poppins',
+            //     color: Colors.black54,
+            //   ),
+            // ),
             const SizedBox(height: 5),
             Row(
               children: [
                 Text(
-                  '₹${widget.course['newamount']}',
+                  '₹${widget.course.newAmount}',
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 18,
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.bold,
                     color: Colors.deepPurple,
@@ -152,23 +158,24 @@ class _CourseCardState extends State<CourseCard> {
                   width: 7,
                 ),
                 Text(
-                  '₹${widget.course['oldamount']}', // Placeholder for original price
+                  '₹${widget.course.amount}', // Placeholder for original price
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     fontFamily: 'Poppins',
                     decoration: TextDecoration.lineThrough,
+                    decorationColor: Colors.grey,
                     color: Colors.grey,
                   ),
                 ),
                 const SizedBox(
                   width: 7,
                 ),
-                const Text(
-                  '50% OFF', // Placeholder for original price
-                  style: TextStyle(
-                    fontSize: 10,
+                Text(
+                  '$discount% OFF', // Placeholder for original price
+                  style: const TextStyle(
+                    fontSize: 14,
                     fontFamily: 'Poppins',
-                    color: Colors.red,
+                    color: Colors.green,
                   ),
                 ),
               ],
@@ -177,86 +184,87 @@ class _CourseCardState extends State<CourseCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                widget.course['status'] == 'demo' ||
-                        widget.course['status'] == null
-                    ? SizedBox(
-                        width: isWeb ? 200 : 142,
-                        height: isWeb ? 40 : null,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            merchantTransactionID =
-                                generateUniqueTransactionId(userID!);
-                            body = getChecksum(int.parse(
-                                    '${widget.course['newamount']}00'))
-                                .toString();
-                            startTransaction();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepPurple,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: const Text(
-                            'Buy Now',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                        ),
-                      )
-                    : const SizedBox(),
+                // widget.course['status'] == 'demo' ||
+                //         widget.course['status'] == null
+                //     ?
+                SizedBox(
+                  width: isWeb ? 200 : 142,
+                  height: isWeb ? 40 : null,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      merchantTransactionID =
+                          generateUniqueTransactionId(userID!);
+                      body =
+                          getChecksum(int.parse('${widget.course.newAmount}00'))
+                              .toString();
+                      startTransaction();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Buy Now',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
+                ),
+                // : const SizedBox(),
                 const SizedBox(
                   width: 10,
                 ),
-                widget.course['status'] == 'bought' ||
-                        widget.course['status'] == 'demo'
-                    ? SizedBox(
-                        width: isWeb ? 200 : 142,
-                        height: isWeb ? 40 : null,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Handle Buy Now action
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: const Text(
-                            'Know More',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                        ),
-                      )
-                    : SizedBox(
-                        width: isWeb ? 200 : 142,
-                        height: isWeb ? 40 : null,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            // Handle Buy Now action
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 225, 143, 55),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: const Text(
-                            'Book Demo',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Poppins',
-                            ),
-                          ),
-                        ),
+                // widget.course['status'] == 'bought' ||
+                //         widget.course['status'] == 'demo'
+                //  SizedBox(
+                //     width: isWeb ? 200 : 142,
+                //     height: isWeb ? 40 : null,
+                //     child: ElevatedButton(
+                //       onPressed: () {
+                //         // Handle Buy Now action
+                //       },
+                //       style: ElevatedButton.styleFrom(
+                //         backgroundColor: Colors.blueAccent,
+                //         shape: RoundedRectangleBorder(
+                //           borderRadius: BorderRadius.circular(8),
+                //         ),
+                //       ),
+                //       child: const Text(
+                //         'Know More',
+                //         style: TextStyle(
+                //           color: Colors.white,
+                //           fontFamily: 'Poppins',
+                //         ),
+                //       ),
+                //     ),
+                //   )
+                // :
+                SizedBox(
+                  width: isWeb ? 200 : 142,
+                  height: isWeb ? 40 : null,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle Buy Now action
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 225, 143, 55),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
+                    ),
+                    child: const Text(
+                      'Book Demo',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ],
@@ -390,91 +398,35 @@ class CoursePage extends StatefulWidget {
 
 class _CoursePageState extends State<CoursePage> {
   Future<List<Course>> fetchCourses() async {
-    final url = Uri.parse('$baseUrl/all-course');
+    final url = Uri.parse('$baseUrl/get-courses');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
-      return data.map((json) => Course.fromJson(json)).toList();
+      final responseData = data.map((json) => Course.fromJson(json)).toList();
+      _courses = responseData;
+      return _courses;
     } else {
       throw Exception('Failed to fetch courses');
     }
   }
 
-  List<Map<String, dynamic>> filteredCourses = [];
+  List<Course> _courses = [];
+
+  List<Course> filteredCourses = [];
   int _selectedIndex = 0;
   bool isWeb = false;
 
-  final List<Map<String, dynamic>> _courses = [
-    {
-      "courseName": "Maths Basic",
-      "class": "11",
-      "subject": "Maths",
-      "image":
-          "https://admin.trusir.com/uploads/profile/profile_1736064683.jpeg",
-      "oldamount": "2000",
-      "newamount": "200",
-      "date_of_purchase": "01-01-2025",
-      "status": "bought"
-    },
-    {
-      "courseName": "English Basic",
-      "class": "11",
-      "subject": "English",
-      "image":
-          "https://admin.trusir.com/uploads/profile/profile_1736064683.jpeg",
-      "oldamount": "299",
-      "newamount": "200",
-      "date_of_purchase": "02-01-2025",
-      "status": "bought"
-    },
-    {
-      "courseName": "Hindi Basic",
-      "class": "11",
-      "subject": "Hindi",
-      "image":
-          "https://admin.trusir.com/uploads/profile/profile_1736064683.jpeg",
-      "oldamount": "500",
-      "newamount": "200",
-      "date_of_purchase": "05-01-2025",
-      "status": "demo"
-    },
-    {
-      "courseName": "SST Basic",
-      "class": "11",
-      "subject": "SST",
-      "image":
-          "https://admin.trusir.com/uploads/profile/profile_1736064683.jpeg",
-      "oldamount": "200",
-      "newamount": "200",
-      "date_of_purchase": "04-01-2025",
-      "status": "demo"
-    },
-    {
-      "courseName": "Sanskrit Basic",
-      "class": "11",
-      "subject": "Sanskrit",
-      "image":
-          "https://admin.trusir.com/uploads/profile/profile_1736064683.jpeg",
-      "oldamount": "600",
-      "newamount": "200",
-      "date_of_purchase": "03-01-2025",
-      "status": null
-    }
-  ];
-
-  void _filterCourses(int index) {
+  void _filterCourses(int index) async {
+    await fetchCourses();
     setState(() {
       _selectedIndex = index;
       if (index == 0) {
-        filteredCourses =
-            _courses.where((course) => course["status"] == "bought").toList();
+        filteredCourses = _courses;
       } else if (index == 1) {
-        filteredCourses =
-            _courses.where((course) => course["status"] == "demo").toList();
+        filteredCourses = _courses;
       } else if (index == 2) {
-        filteredCourses =
-            _courses.where((course) => course["status"] == null).toList();
+        filteredCourses = _courses;
       }
     });
   }
@@ -483,7 +435,6 @@ class _CoursePageState extends State<CoursePage> {
   void initState() {
     super.initState();
     _filterCourses(_selectedIndex);
-    fetchCourses();
   }
 
   @override
@@ -531,7 +482,7 @@ class _CoursePageState extends State<CoursePage> {
           FilterSwitch(
             option1: 'My Courses',
             option2: 'Demo Courses',
-            option3: 'More Courses',
+            option3: 'All Courses',
             initialSelectedIndex: _selectedIndex,
             onChanged: _filterCourses,
           ),

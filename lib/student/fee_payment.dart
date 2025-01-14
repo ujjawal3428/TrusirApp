@@ -48,6 +48,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
   bool isLoadingMore = false;
   int currentPage = 1;
   bool hasMore = true;
+  double totalAmount = 0;
 
   final apiBase = '$baseUrl/fee-report/';
 
@@ -68,6 +69,10 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
           // Append new data
           feepayment.addAll(data.map((json) => Fees.fromJson(json)));
         }
+        totalAmount = feepayment.fold<double>(
+          0.0,
+          (sum, fee) => sum + double.parse(fee.amount),
+        );
 
         isLoading = false;
         isLoadingMore = false;
@@ -132,17 +137,17 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.08,
           ),
-          const Row(
+          Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 Icons.wallet_rounded,
                 size: 20,
                 color: Color.fromARGB(255, 28, 37, 136),
               ),
               Text(
-                '₹ 10,000.00',
-                style: TextStyle(
+                '₹ $totalAmount',
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,

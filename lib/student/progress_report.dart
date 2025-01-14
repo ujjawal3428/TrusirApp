@@ -163,14 +163,16 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     page++;
     try {
       List<dynamic> newReports = await fetchProgressReports(page: page);
-      if (newReports.isEmpty) {
-        setState(() {
-          reportempty = true; // No more data available
-        });
-      } else {
-        setState(() {
-          _loadedReports.addAll(newReports);
-        });
+      if (mounted) {
+        if (newReports.isEmpty) {
+          setState(() {
+            reportempty = true; // No more data available
+          });
+        } else {
+          setState(() {
+            _loadedReports.addAll(newReports);
+          });
+        }
       }
     } catch (e) {
       print('Error loading more reports: $e');
@@ -180,10 +182,12 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
   void _loadInitialReports() async {
     try {
       List<dynamic> initialReports = await fetchProgressReports();
-      setState(() {
-        _loadedReports = initialReports;
-        reportempty = initialReports.isEmpty;
-      });
+      if (mounted) {
+        setState(() {
+          _loadedReports = initialReports;
+          reportempty = initialReports.isEmpty;
+        });
+      }
     } catch (e) {
       print('Error loading initial reports: $e');
     }
