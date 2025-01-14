@@ -203,16 +203,18 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
-                                      Text(
-                                        city,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: isWeb ? 19 : 16,
-                                          fontFamily: 'Poppins',
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
+                                      isWeb
+                                          ? Text(
+                                              city,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: isWeb ? 19 : 16,
+                                                fontFamily: 'Poppins',
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            )
+                                          : const SizedBox(),
                                     ],
                                   ),
                                 ),
@@ -496,7 +498,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     // Updated scaling logic
     final scaleFactor = isWeb
         ? (screenWidth < 1200 ? 1.8 : 1.7) // Larger scale for web
-        : (screenWidth < 360 ? 0.7 : 1.3); // Original mobile scaling
+        : (screenWidth < 360 ? 0.7 : 1.0); // Original mobile scaling
 
     // Create a lighter version of the background color for the border
     final borderColor = HSLColor.fromColor(color).withLightness(0.95).toColor();
