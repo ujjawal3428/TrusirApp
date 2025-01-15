@@ -26,8 +26,7 @@ class TeacherEnquiryPage extends StatefulWidget {
   TeacherEnquiryPage({super.key});
 
   final TextEditingController _namecontroller = TextEditingController();
-  final TextEditingController _qualificationcontroller =
-      TextEditingController();
+  final TextEditingController _qualificationcontroller = TextEditingController();
   final TextEditingController _citycontroller = TextEditingController();
   final TextEditingController _pincodecontroller = TextEditingController();
 
@@ -70,16 +69,12 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
       final response = await http.post(url, headers: headers, body: body);
 
       if (response.statusCode == 200) {
-        // Successfully submitted
-
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const Teacherhomepage()),
         );
-
         print(body);
       } else {
-        // Handle error
         print('Failed to submit form: ${response.body}');
       }
     } catch (e) {
@@ -89,6 +84,9 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.grey[50],
@@ -101,10 +99,21 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
           child: Row(
             children: [
               GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Image.asset('assets/back_button.png', height: 50)),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxHeight: 50,
+                    maxWidth: 50,
+                  ),
+                  child: Image.asset(
+                    'assets/back_button.png',
+                    height: 50,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
               const SizedBox(width: 20),
               const Text(
                 'Teacher Enquiry',
@@ -127,12 +136,19 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Image.asset(
-                  'assets/Teacher_Enquiry2.png',
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth * 0.8,
+                    maxHeight: screenHeight * 0.3,
+                  ),
+                  child: Image.asset(
+                    'assets/Teacher_Enquiry2.png',
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
+              const SizedBox(height: 20),
 
-              // Text Box with Image Background
               _buildTextFieldWithBackground(
                   hintText: 'Teacher Name',
                   controllers: widget._namecontroller),
@@ -173,29 +189,34 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
               ),
               const SizedBox(height: 15),
 
-              // Qualification Field
               _buildTextFieldWithBackground(
                   hintText: 'Qualification',
                   controllers: widget._qualificationcontroller),
               const SizedBox(height: 10),
 
-              // City / Town Field
               _buildTextFieldWithBackground(
-                  hintText: 'City / Town', controllers: widget._citycontroller),
+                  hintText: 'City / Town', 
+                  controllers: widget._citycontroller),
               const SizedBox(height: 10),
 
-              // Pincode Field
               _buildPinFieldWithBackground(
-                  hintText: 'Pincode', controllers: widget._pincodecontroller),
-              const SizedBox(height: 10),
+                  hintText: 'Pincode', 
+                  controllers: widget._pincodecontroller),
+              SizedBox(height: screenHeight * 0.02),
 
               // Enquire Button
               Center(
                 child: GestureDetector(
                   onTap: _onEnquire,
-                  child: Image.asset(
-                    'assets/enquire.png',
-                    fit: BoxFit.cover,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: screenWidth * 0.4,
+                      maxHeight: 60,
+                    ),
+                    child: Image.asset(
+                      'assets/enquire.png',
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),
@@ -206,10 +227,12 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
     );
   }
 
-  Widget _buildTextFieldWithBackground(
-      {required String hintText, required TextEditingController controllers}) {
+  Widget _buildTextFieldWithBackground({
+    required String hintText, 
+    required TextEditingController controllers
+  }) {
     return Container(
-      height: 58,
+      height: 55,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -246,7 +269,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
           isDense: true,
         ),
       ),
@@ -258,7 +281,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
     required TextEditingController controllers,
   }) {
     return Container(
-      height: 58,
+      height: 55,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -282,12 +305,11 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
         controller: controllers,
         keyboardType: TextInputType.number,
         maxLength: 6,
-        buildCounter: (_,
-                {required currentLength, required isFocused, maxLength}) =>
-            null, // Hides counter
+        buildCounter: (_, {required currentLength, required isFocused, maxLength}) =>
+            null,
         onChanged: (value) {
           if (value.length == 6) {
-            FocusScope.of(context).unfocus(); // Dismiss keyboard after 6 digits
+            FocusScope.of(context).unfocus();
           }
         },
         decoration: InputDecoration(
@@ -306,7 +328,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
           isDense: true,
         ),
       ),

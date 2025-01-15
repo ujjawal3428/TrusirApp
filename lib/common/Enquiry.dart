@@ -65,7 +65,7 @@ class EnquiryPage extends StatelessWidget {
         toolbarHeight: 50,
       ),
       body: Padding(
-        padding: const EdgeInsets.only(top: 40, left: 16.0, right: 16),
+        padding: const EdgeInsets.only(top: 20, left: 16.0, right: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -116,7 +116,6 @@ class EnquiryPage extends StatelessWidget {
                     'Poppins', 
               ),
             ),
-            const SizedBox(height: 25),
         
             SafeArea(
               child: Row(
@@ -149,7 +148,6 @@ class EnquiryPage extends StatelessWidget {
                 ],
               ),
             ),
-           const  SizedBox(height: 20,),
           ],
         ),
       ),

@@ -145,7 +145,7 @@ class Teacherhomepage extends StatelessWidget {
                     child: Column(
                       children: [
                         Image.asset(
-                          height: isWeb ? 5000 : null,
+                          height: isWeb ? 2000 : null,
                           'assets/g1@4x.png',
                           fit: BoxFit.cover,
                         ),
@@ -273,7 +273,6 @@ class Teacherhomepage extends StatelessWidget {
               width: isWeb ? 80 : 50,
               child: FloatingActionButton(
                 heroTag: 'whatsappButton',
-                backgroundColor: Colors.transparent,
                 onPressed: () {
                   _launchWhatsApp('919797472922', 'Hi');
                 },
@@ -292,8 +291,7 @@ class Teacherhomepage extends StatelessWidget {
               height: isWeb ? 80 : 50,
               width: isWeb ? 80 : 50,
               child: FloatingActionButton(
-                heroTag: 'callButton', // Add unique tag
-                backgroundColor: Colors.transparent,
+                heroTag: 'callButton', 
                 onPressed: () {
                   openDialer('9797472922');
                 },
@@ -322,8 +320,8 @@ class Teacherhomepage extends StatelessWidget {
         },
         child: Image.asset(
           'assets/registeration.png',
-          width: isWeb ? 460 : 360,
-          height: isWeb ? 150 : 70,
+          width: isWeb ? 380 : 280,
+          height: isWeb ? 80 : 120,
           fit: BoxFit.contain,
         ),
       ),

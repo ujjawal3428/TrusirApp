@@ -719,8 +719,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               Center(
                 child: Image.asset(
                   'assets/studentregisteration@4x.png',
-                  width: isWeb ? 600 : 386,
-                  height: isWeb ? null : 261,
+                  width: isWeb ? 400 : 256,
+                  height: isWeb ? null : 200,
                 ),
               ),
               isWeb
@@ -1861,10 +1861,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     double height = 58,
     required ValueChanged<String> onChanged,
   }) {
-    bool isWeb = MediaQuery.of(context).size.width > 600;
+    bool isWeb = MediaQuery.of(context).size.width > 500;
     return Container(
       height: height,
-      width: isWeb ? 700 : double.infinity,
+      width: isWeb ? 500 : 700,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -1908,7 +1908,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       : 21
                   : height == 126
                       ? 50
-                      : 17),
+                      : 23),
           isDense: true,
         ),
       ),
@@ -1921,7 +1921,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }) {
     return Container(
       width: double.infinity,
-      height: 150, // Set a fixed height for the container
+      height: 150,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -1968,10 +1968,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   Widget _buildPhoneField(
     String hintText,
   ) {
-    bool isWeb = MediaQuery.of(context).size.width > 600;
+    bool isWeb = MediaQuery.of(context).size.width > 500;
     return Container(
       height: 58,
-      width: isWeb ? 700 : double.infinity,
+      width: isWeb ? 500 : 700,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -2016,7 +2016,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 17),
+              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 23),
           isDense: true,
         ),
       ),
@@ -2032,7 +2032,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     bool isWeb = MediaQuery.of(context).size.width > 600;
     return Container(
       height: 58,
-      width: isWeb ? 700 : double.infinity,
+      width: isWeb ? 500 : double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -2066,7 +2066,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 17),
+              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 23),
           isDense: true,
         ),
         items: items

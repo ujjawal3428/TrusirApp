@@ -760,7 +760,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       Center(
                         child: Image.asset(
                           'assets/groupregister.png',
-                          width: 600,
+                          width: 400,
                         ),
                       ),
                       // Teacher's basic information
@@ -2276,10 +2276,10 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     double height = 58,
     required ValueChanged<String> onChanged,
   }) {
-    bool isWeb = MediaQuery.of(context).size.width > 600;
+    bool isWeb = MediaQuery.of(context).size.width > 500;
     return Container(
       height: height,
-      width: isWeb ? 700 : double.infinity,
+      width: isWeb ? 500 : 700,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -2317,7 +2317,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                       : 21
                   : height == 126
                       ? 50
-                      : 17),
+                      : 23),
           isDense: true,
         ),
       ),
@@ -2329,7 +2329,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   ) {
     bool isWeb = MediaQuery.of(context).size.width > 600;
     return Container(
-      height: 58,
+      height: 50,
       width: isWeb ? 700 : double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -2418,7 +2418,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               ),
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 16,
-                vertical: isWeb ? 21 : 17,
+                vertical: isWeb ? 21 : 23,
               ),
               isDense: true,
             ),
@@ -2508,7 +2508,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 17),
+              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 23),
           isDense: true,
         ),
         items: items
@@ -2561,7 +2561,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 17),
+              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 23),
           suffixIcon: Icon(icon),
           isDense: true,
         ),
@@ -2571,14 +2571,14 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   }
 
   Widget _buildFileUploadField(String placeholder,
-      {double width = 200,
+      {
       required displayPath,
-      required VoidCallback? onTap}) {
+      required VoidCallback? onTap, required int width}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         height: 58,
-        width: width,
+        width: 170,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(22),
