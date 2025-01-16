@@ -124,8 +124,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
               padding: EdgeInsets.only(
                   left: isWeb ? 50 : 20.0,
                   right: isWeb ? 50 : 20.0,
-                  top: isWeb ? 30 : 10.0,
-                  bottom: isWeb ? 30 : 10.0),
+                  top: isWeb ? 10 : 10.0,
+                  bottom: isWeb ? 40 : 10.0),
               child: Column(children: [
                 GestureDetector(
                   onTap: () {
@@ -139,7 +139,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                   },
                   child: Container(
                     width: isWeb
-                        ? 1000
+                        ? 700
                         : constraints.maxWidth > 388
                             ? 388
                             : constraints.maxWidth - 40,
@@ -249,8 +249,8 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                               borderRadius: BorderRadius.circular(15),
                               child: Image.network(
                                 profile,
-                                width: isWeb ? 120 : 75,
-                                height: isWeb ? 120 : 75,
+                                width: isWeb ? 100 : 75,
+                                height: isWeb ? 100 : 75,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return const Center(
@@ -276,7 +276,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                     return GridView.count(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: constraints.maxWidth > 600 ? 4 : 3,
+                      crossAxisCount: constraints.maxWidth > 600 ? 5 : 4,
                       crossAxisSpacing: isWeb ? 30 : 17,
                       mainAxisSpacing: isWeb ? 30 : 10,
                       childAspectRatio: isWeb

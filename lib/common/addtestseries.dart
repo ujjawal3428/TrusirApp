@@ -654,10 +654,9 @@ class _AddtestseriesState extends State<Addtestseries> {
                 ],
               ),
 
-              const SizedBox(height: 20),
               // Submit Button
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(12.0),
                 child: _buildCreateButton(context),
               )
             ],
@@ -692,7 +691,7 @@ class _AddtestseriesState extends State<Addtestseries> {
         child: Image.asset(
           'assets/create_test.png',
           width: double.infinity,
-          height: 80,
+          height: 60,
           fit: BoxFit.contain,
         ),
       ),
