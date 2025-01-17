@@ -433,41 +433,45 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
       }),
     );
   }
-
-  Widget _buildPhoneInput(ResponsiveDimensions responsive, bool isWeb) {
-    return Stack(
-      children: [
-        // Background shape for the input field
-        Container(
-          width: double.infinity,
-          height: isWeb
-              ? responsive.safeHeight * 0.1
-              : responsive.safeHeight * 0.08,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(35),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 4,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
+Widget _buildPhoneInput(ResponsiveDimensions responsive, bool isWeb) {
+  return Stack(
+    children: [
+      // Background shape for the input field
+      Container(
+        width: double.infinity,
+        height: isWeb
+            ? responsive.safeHeight * 0.1
+            : responsive.safeHeight * 0.08,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(35),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              offset: Offset(0, 2),
+            ),
+          ],
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: isWeb
-                ? responsive.screenWidth * 0.02
-                : responsive.screenWidth * 0.04,
-            vertical: responsive.safeHeight * 0.01,
-          ),
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Country flag icon
-                Image.asset(
+      ),
+      // Input content
+      Container(
+        height: isWeb
+            ? responsive.safeHeight * 0.1
+            : responsive.safeHeight * 0.08,
+        padding: EdgeInsets.symmetric(
+          horizontal: isWeb
+              ? responsive.screenWidth * 0.02
+              : responsive.screenWidth * 0.04,
+        ),
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center, // Add this
+            children: [
+              // Country flag icon
+              Center(
+                child: Image.asset(
                   'assets/indianflag.png',
                   width: isWeb
                       ? responsive.flagIconSize * 0.4
@@ -476,12 +480,14 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                       ? responsive.flagIconSize * 0.4
                       : responsive.flagIconSize,
                 ),
-                SizedBox(
-                    width: isWeb
-                        ? responsive.screenWidth * 0.01
-                        : responsive.screenWidth * 0.02),
-                // Country code text
-                Text(
+              ),
+              SizedBox(
+                  width: isWeb
+                      ? responsive.screenWidth * 0.01
+                      : responsive.screenWidth * 0.02),
+              // Country code text
+              Center(
+                child: Text(
                   "+91 |",
                   style: TextStyle(
                     fontSize: isWeb
@@ -491,59 +497,65 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                     fontFamily: 'Poppins',
                   ),
                 ),
-                SizedBox(
-                    width: isWeb
-                        ? responsive.screenWidth * 0.01
-                        : responsive.screenWidth * 0.02),
-                // Mobile number input field
-                Expanded(
-                  child: TextFormField(
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Required';
-                      }
-                      return null;
-                    },
-                    keyboardType: TextInputType.phone,
-                    maxLength: 10,
-                    buildCounter: (_,
-                            {required currentLength,
-                            required isFocused,
-                            maxLength}) =>
-                        null, // Hides counter
-                    onChanged: (value) {
-                      if (value.length == 10) {
-                        FocusScope.of(context)
-                            .unfocus(); // Dismiss keyboard after 10 digits
-                      }
-                    },
-                    controller: _phonecontroller,
-                    textAlignVertical: isWeb ? TextAlignVertical.center : null,
-                    style: TextStyle(
-                      fontSize: isWeb
-                          ? responsive.screenWidth * 0.015
-                          : responsive.screenWidth * 0.04,
-                      color: Colors.black,
-                      fontFamily: 'Poppins',
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Mobile Number',
-                      hintStyle: TextStyle(
+              ),
+              SizedBox(
+                  width: isWeb
+                      ? responsive.screenWidth * 0.01
+                      : responsive.screenWidth * 0.02),
+              // Mobile number input field
+              Expanded(
+                child: Center( // Add this
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 7),
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Required';
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.phone,
+                      maxLength: 10,
+                      buildCounter: (_,
+                              {required currentLength,
+                              required isFocused,
+                              maxLength}) =>
+                          null,
+                      onChanged: (value) {
+                        if (value.length == 10) {
+                          FocusScope.of(context).unfocus();
+                        }
+                      },
+                      controller: _phonecontroller,
+                      textAlignVertical: TextAlignVertical.center, // Modified this
+                      style: TextStyle(
                         fontSize: isWeb
                             ? responsive.screenWidth * 0.015
                             : responsive.screenWidth * 0.04,
-                        color: Colors.grey,
+                        color: Colors.black,
                         fontFamily: 'Poppins',
                       ),
-                      border: InputBorder.none,
+                      decoration: InputDecoration(
+                        hintText: 'Mobile Number',
+                        hintStyle: TextStyle(
+                          fontSize: isWeb
+                              ? responsive.screenWidth * 0.015
+                              : responsive.screenWidth * 0.04,
+                          color: Colors.grey,
+                          fontFamily: 'Poppins',
+                        ),
+                        border: InputBorder.none,
+                        isDense: true, // Add this
+                        contentPadding: EdgeInsets.zero, // Add this
+                      ),
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      ],
-    );
-  }
-}
+      ),
+    ],
+  );
+}}

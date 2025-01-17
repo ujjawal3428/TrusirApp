@@ -66,8 +66,6 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
       final response = await http.post(url, headers: headers, body: body);
 
       if (response.statusCode == 200) {
-        // Successfully submitted
-
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -75,10 +73,8 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
                     enablephone: true,
                   )),
         );
-
         print(body);
       } else {
-        // Handle error
         print('Failed to submit form: ${response.body}');
       }
     } catch (e) {
@@ -89,6 +85,7 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -101,10 +98,21 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
           child: Row(
             children: [
               GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Image.asset('assets/back_button.png', height: 50)),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxHeight: 50,
+                    maxWidth: 50,
+                  ),
+                  child: Image.asset(
+                    'assets/back_button.png',
+                    height: 50,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
               const SizedBox(width: 20),
               const Text(
                 'Student Enquiry',
@@ -127,12 +135,18 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: Image.asset(
-                  'assets/studentenquiry2.png',
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: screenWidth * 0.8,
+                    maxHeight: screenHeight * 0.3,
+                  ),
+                  child: Image.asset(
+                    'assets/studentenquiry2.png',
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
-
-              // Text Boxes with Background Images
+              const SizedBox(height: 20),
               _buildTextFieldWithBackground(
                   hintText: 'Student Name', controllers: _namecontroller),
               const SizedBox(height: 10),
@@ -181,7 +195,7 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
               const SizedBox(height: 10),
               _buildPinFieldWithBackground(
                   hintText: 'Pincode', controllers: _pincodecontroller),
-              SizedBox(height: screenHeight * 0.05),
+              SizedBox(height: screenHeight * 0.02),
 
               // Enquire Button
               Center(
@@ -189,9 +203,15 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
                   onTap: () {
                     _onEnquire(context);
                   },
-                  child: Image.asset(
-                    'assets/enquire.png',
-                    fit: BoxFit.cover,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: screenWidth * 0.4,
+                      maxHeight: 60,
+                    ),
+                    child: Image.asset(
+                      'assets/enquire.png',
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),
@@ -258,12 +278,11 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
         controller: controllers,
         keyboardType: TextInputType.number,
         maxLength: 6,
-        buildCounter: (_,
-                {required currentLength, required isFocused, maxLength}) =>
-            null, // Hides counter
+        buildCounter: (_, {required currentLength, required isFocused, maxLength}) =>
+            null,
         onChanged: (value) {
           if (value.length == 6) {
-            FocusScope.of(context).unfocus(); // Dismiss keyboard after 6 digits
+            FocusScope.of(context).unfocus();
           }
         },
         decoration: InputDecoration(
@@ -289,12 +308,13 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
     );
   }
 
-  Widget _buildTextFieldWithBackground(
-      {required String hintText,
-      required TextEditingController controllers,
-      bool isClass = false}) {
+  Widget _buildTextFieldWithBackground({
+    required String hintText,
+    required TextEditingController controllers,
+    bool isClass = false,
+  }) {
     return Container(
-      height: 58,
+      height: 50,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,

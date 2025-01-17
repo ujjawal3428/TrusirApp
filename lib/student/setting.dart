@@ -127,9 +127,9 @@ class SettingsScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 20),
                   child: _settingscard(
                     context,
-                    120, // Increased container size
-                    80,  // Increased image size
-                    90,  // Increased height
+                    90, // Increased container size
+                    50,  // Increased image size
+                    60,  // Increased height
                     450,
                     settingsItems[i]['image'],
                     settingsItems[i]['color'],
@@ -154,9 +154,9 @@ class SettingsScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 20),
                   child: _settingscard(
                     context,
-                    120, // Increased container size
-                    80,  // Increased image size
-                    90,  // Increased height
+                    90,
+                    50,  
+                    60,  
                     450,
                     settingsItems[i]['image'],
                     settingsItems[i]['color'],

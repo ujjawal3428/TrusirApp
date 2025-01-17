@@ -150,7 +150,7 @@ class StudentHomepage extends StatelessWidget {
                     child: Column(
                       children: [
                         Image.asset(
-                          height: isWeb ? 6000 : null,
+                          height: isWeb ? 2000 : null,
                           'assets/g2@4x.png',
                           fit: BoxFit.cover,
                         ),
@@ -261,19 +261,21 @@ class StudentHomepage extends StatelessWidget {
                 // Row of two images
                 Column(
                   children: [
-                    AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Image.asset(
-                        'assets/t1@3x.png',
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Image.asset(
-                        'assets/t2.jpg',
-                      ),
-                    ),
+                     Center(
+                       child: Image.asset(
+                            height: isWeb ? 200 : null,
+                            'assets/t1@3x.png',
+                            fit: BoxFit.cover,
+                          ),
+                     ),
+                   const SizedBox(height: 10,),
+                     Center(
+                       child: Image.asset(
+                            height: isWeb ? 220 : null,
+                            'assets/t2.jpg',
+                            fit: BoxFit.cover,
+                          ),
+                     ),
                   ],
                 ),
                 const SizedBox(height: 30),
@@ -393,7 +395,6 @@ class StudentHomepage extends StatelessWidget {
               width: isWeb ? 80 : 50,
               child: FloatingActionButton(
                 heroTag: 'whatsappButton',
-                backgroundColor: Colors.transparent,
                 onPressed: () {
                   _launchWhatsApp('919797472922', 'Hi');
                 },
@@ -412,8 +413,7 @@ class StudentHomepage extends StatelessWidget {
               height: isWeb ? 80 : 50,
               width: isWeb ? 80 : 50,
               child: FloatingActionButton(
-                heroTag: 'callButton', // Add unique tag
-                backgroundColor: Colors.transparent,
+                heroTag: 'callButton', 
                 onPressed: () {
                   openDialer('9797472922');
                 },
@@ -442,12 +442,8 @@ class StudentHomepage extends StatelessWidget {
         },
         child: Image.asset(
           'assets/registeration.png',
-          width: isWeb ? 460 : 360,
-          height: isWeb
-              ? 150
-              : isWeb
-                  ? 100
-                  : 70,
+        width: isWeb ? 380 : 280,
+          height: isWeb ? 80 : 120,
           fit: BoxFit.contain,
         ),
       ),
