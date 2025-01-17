@@ -121,7 +121,13 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     fetchAllCourses();
     numberOfStudents = '1';
     fetchLocations();
+    selectedSubjectsPerForm = List.generate(
+      studentForms.length,
+      (_) => [],
+    );
   }
+
+  List<List<String>> selectedSubjectsPerForm = [];
 
   Future<String> uploadImage(int index, String path) async {
     await _requestPermissions();
@@ -281,7 +287,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   String? uploadedPath;
 
   Future<void> fetchAllCourses() async {
-    final url = Uri.parse('$baseUrl/all-course');
+    final url = Uri.parse('$baseUrl/get-courses');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -289,7 +295,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       if (mounted) {
         setState(() {
           _courses = data.map<String>((course) {
-            return course['class'] as String;
+            // Concatenate subject and class into a single string
+            final subject = course['subject'] as String;
+            final courseClass = course['class']
+                as String; // Adjust the key name based on your API response
+            return '$subject $courseClass';
           }).toList();
         });
       }
@@ -509,12 +519,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         uploadedPath = await uploadFile(filePath, fileType);
 
         if (uploadedPath != 'null') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('File Uploaded Successfully!'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          Fluttertoast.showToast(msg: 'File Uploaded Successfully');
           if (path == 'aadharFrontPath') {
             setState(() {
               studentForms[index].aadharFrontPath = uploadedPath;
@@ -524,35 +529,16 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               studentForms[index].aadharBackPath = uploadedPath;
             });
           }
-          print('File uploaded successfully: $uploadedPath');
+          Fluttertoast.showToast(
+              msg: 'File uploaded successfully: $uploadedPath');
         } else {
-          print('Failed to upload the file.');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  'Failed to upload the file.(Only upload pdf, docx and image)'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          Fluttertoast.showToast(msg: 'Failed to upload the file.');
         }
       } else {
-        print('No file selected.');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No file selected'),
-            duration: Duration(seconds: 1),
-          ),
-        );
+        Fluttertoast.showToast(msg: 'No file selected.');
       }
     } catch (e) {
-      print('Error during file selection: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content:
-              Text('Failed to Upload file.(Only upload pdf, docx and image)'),
-          duration: Duration(seconds: 1),
-        ),
-      );
+      Fluttertoast.showToast(msg: 'Error during file selection: $e');
     }
   }
 
@@ -596,13 +582,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 
         // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
         if (fileSize > 2 * 1024 * 1024) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content:
-                  Text('File size exceeds 2MB. Please select a smaller image.'),
-              duration: Duration(seconds: 2),
-            ),
-          );
+          Fluttertoast.showToast(
+              msg: 'File size exceeds 2MB. Please select a smaller image.');
           return;
         }
       }
@@ -619,39 +600,17 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             //')
             //)
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Images Uploaded Successfully!'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-          print('Image uploaded successfully: $uploadedPath');
+
+          Fluttertoast.showToast(
+              msg: 'Image uploaded successfully: $uploadedPath');
         } else {
-          print('Failed to upload the image.');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to upload the image.'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          Fluttertoast.showToast(msg: 'Failed to upload the image.');
         }
       } else {
-        print('No image selected.');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No image selected.'),
-            duration: Duration(seconds: 1),
-          ),
-        );
+        Fluttertoast.showToast(msg: 'No image selected.');
       }
     } catch (e) {
-      print('Error during image selection: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error during image selection: $e'),
-          duration: const Duration(seconds: 1),
-        ),
-      );
+      Fluttertoast.showToast(msg: 'Error during image selection: $e');
     }
   }
 
@@ -660,12 +619,23 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   void updateStudentForms(int count) {
     setState(() {
       if (count > studentForms.length) {
+        // Add new StudentRegistrationData entries
         studentForms.addAll(List.generate(
           count - studentForms.length,
           (_) => StudentRegistrationData(),
         ));
+
+        // Add empty lists for the new forms in selectedSubjectsPerForm
+        selectedSubjectsPerForm.addAll(
+          List.generate(count - selectedSubjectsPerForm.length, (_) => []),
+        );
       } else if (count < studentForms.length) {
+        // Remove extra entries from studentForms
         studentForms.removeRange(count, studentForms.length);
+
+        // Remove extra entries from selectedSubjectsPerForm
+        selectedSubjectsPerForm.removeRange(
+            count, selectedSubjectsPerForm.length);
       }
     });
   }
@@ -974,21 +944,20 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                           studentForms[index].medium = value;
                         });
                       },
-                      items: _courses,
+                      items: ['English', 'Hindi'],
                     ),
                     const SizedBox(width: 50),
-                    _buildMultiSelectDropdownField(
-                      'Subject',
-                      selectedValues: selectedSubjects,
-                      onChanged: (List<String> values) {
-                        setState(() {
-                          selectedSubjects = values;
-                          studentForms[index].subject =
-                              selectedSubjects.join(',');
-                        });
-                      },
-                      items: _courses,
-                    ),
+                    _buildMultiSelectDropdownField('Subject',
+                        selectedValues: selectedSubjectsPerForm[index],
+                        onChanged: (List<String> values) {
+                      setState(() {
+                        selectedSubjects = values;
+                        studentForms[index].subject =
+                            selectedSubjects.join(',');
+                      });
+                    },
+                        items: _courses,
+                        selectedText: studentForms[index].subject ?? 'Select'),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -1447,7 +1416,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     studentForms[index].medium = value;
                   });
                 },
-                items: _courses,
+                items: ['English', 'Hindi'],
               ),
               const SizedBox(height: 10),
               _buildDropdownField(
@@ -1461,17 +1430,16 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 items: ['10th', '11th', '12th'],
               ),
               const SizedBox(height: 10),
-              _buildMultiSelectDropdownField(
-                'Subject',
-                selectedValues: selectedSubjects,
-                onChanged: (List<String> values) {
-                  setState(() {
-                    selectedSubjects = values;
-                    studentForms[index].subject = selectedSubjects.join(',');
-                  });
-                },
-                items: _courses,
-              ),
+              _buildMultiSelectDropdownField('Subject',
+                  selectedValues: selectedSubjectsPerForm[index],
+                  onChanged: (List<String> values) {
+                setState(() {
+                  selectedSubjects = values;
+                  studentForms[index].subject = selectedSubjects.join(',');
+                });
+              },
+                  items: _courses,
+                  selectedText: studentForms[index].subject ?? 'Select'),
               const SizedBox(height: 10),
               _buildDropdownField(
                 'State',
@@ -2086,9 +2054,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     required List<String> selectedValues,
     required ValueChanged<List<String>> onChanged,
     required List<String> items,
+    required String selectedText,
   }) {
     bool isWeb = MediaQuery.of(context).size.width > 600;
-    String selectedText = selectedValues.join(', ');
 
     return StatefulBuilder(
       builder: (context, setState) {

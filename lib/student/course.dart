@@ -15,6 +15,7 @@ class Course {
   final String amount;
   final String name;
   final String courseClass;
+  final String subject;
   final String newAmount;
   final String image;
 
@@ -22,6 +23,7 @@ class Course {
     required this.id,
     required this.amount,
     required this.name,
+    required this.subject,
     required this.courseClass,
     required this.newAmount,
     required this.image,
@@ -32,6 +34,7 @@ class Course {
       id: json['id'],
       amount: json['amount'],
       name: json['name'],
+      subject: json['subject'],
       courseClass: json['class'],
       newAmount: json['new_amount'],
       image: json['image'],
@@ -134,14 +137,14 @@ class _CourseCardState extends State<CourseCard> {
               ),
             ),
             const SizedBox(height: 2),
-            // Text(
-            //   widget.course['subject']!,
-            //   style: TextStyle(
-            //     fontSize: isWeb ? 18 : 14,
-            //     fontFamily: 'Poppins',
-            //     color: Colors.black54,
-            //   ),
-            // ),
+            Text(
+              widget.course.subject,
+              style: TextStyle(
+                fontSize: isWeb ? 18 : 14,
+                fontFamily: 'Poppins',
+                color: Colors.black54,
+              ),
+            ),
             const SizedBox(height: 5),
             Row(
               children: [

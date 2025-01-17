@@ -301,13 +301,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
 
         // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
         if (fileSize > 2 * 1024 * 1024) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content:
-                  Text('File size exceeds 2MB. Please select a smaller file.'),
-              duration: Duration(seconds: 2),
-            ),
-          );
+          Fluttertoast.showToast(
+              msg: 'File size exceeds 2MB. Please select a smaller file.');
           return; // Exit the method
         }
 
@@ -322,12 +317,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         uploadedPath = await uploadFile(filePath, fileType);
 
         if (uploadedPath != 'null') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('File Uploaded Successfully!'),
-              duration: Duration(seconds: 1),
-            ),
-          );
           setState(() {
             // Example: Update the first student's photo path
             if (path == 'aadharFrontPath') {
@@ -336,35 +325,16 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               formData.aadharBackPath = uploadedPath;
             }
           });
-          print('File uploaded successfully: $uploadedPath');
+          Fluttertoast.showToast(
+              msg: 'File uploaded successfully: $uploadedPath');
         } else {
-          print('Failed to upload the file.');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  'Failed to upload the file.(Only upload pdf, docx and image)'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          Fluttertoast.showToast(msg: 'Failed to upload the file.');
         }
       } else {
-        print('No file selected.');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No file selected'),
-            duration: Duration(seconds: 1),
-          ),
-        );
+        Fluttertoast.showToast(msg: 'No file selected.');
       }
     } catch (e) {
-      print('Error during file selection: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-              'Failed to Upload file.(Only upload pdf, docx and jpg, jpeg,png)'),
-          duration: Duration(seconds: 1),
-        ),
-      );
+      Fluttertoast.showToast(msg: 'Error during file selection: $e');
     }
   }
 
@@ -387,11 +357,12 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
       if (jsonResponse.containsKey('download_url')) {
         return jsonResponse['download_url'] as String;
       } else {
-        print('Download URL not found in the response.');
+        Fluttertoast.showToast(msg: 'Download URL not found in the response.');
         return 'null';
       }
     } else {
-      print('Failed to upload image: ${response.statusCode}');
+      Fluttertoast.showToast(
+          msg: 'Failed to upload image: ${response.statusCode}');
       return 'null';
     }
   }
@@ -408,13 +379,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
 
         // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
         if (fileSize > 2 * 1024 * 1024) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content:
-                  Text('File size exceeds 2MB. Please select a smaller image.'),
-              duration: Duration(seconds: 2),
-            ),
-          );
+          Fluttertoast.showToast(
+              msg: 'File size exceeds 2MB. Please select a smaller image.');
           return;
         }
       }
@@ -431,39 +397,16 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
               formData.signaturePath = uploadedPath;
             }
           });
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Images Uploaded Successfully!'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-          print('Image uploaded successfully: $uploadedPath');
+          Fluttertoast.showToast(
+              msg: 'Image uploaded successfully: $uploadedPath');
         } else {
-          print('Failed to upload the image.');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to upload Image'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          Fluttertoast.showToast(msg: 'Failed to upload the image.');
         }
       } else {
-        print('No image selected.');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No image selected'),
-            duration: Duration(seconds: 1),
-          ),
-        );
+        Fluttertoast.showToast(msg: 'No image selected.');
       }
     } catch (e) {
-      print('Error during image selection: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error during image selection: $e'),
-          duration: const Duration(seconds: 1),
-        ),
-      );
+      Fluttertoast.showToast(msg: 'Error during image selection: $e');
     }
   }
 
