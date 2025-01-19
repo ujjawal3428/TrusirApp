@@ -25,6 +25,7 @@ class StudentRegistrationData {
   DateTime? dob;
   String? schoolName;
   String? medium;
+  String? board;
   String? studentClass;
   String? subject;
   String? state;
@@ -51,6 +52,7 @@ class StudentRegistrationData {
       'school': schoolName,
       'medium': medium,
       'class': studentClass,
+      'board': board,
       'subject': subject,
       'state': state,
       'city': city,
@@ -365,6 +367,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           "subject": student.subject,
           "state": student.state,
           "city": student.city,
+          "board": student.board,
           "area": student.area,
           "pincode": student.pincode,
           ...student.timeslot!,
@@ -936,28 +939,50 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildDropdownField(
-                      'Medium',
-                      selectedValue: studentForms[index].medium,
-                      onChanged: (value) {
+                    Expanded(
+                      child: _buildDropdownField(
+                        'Medium',
+                        selectedValue: studentForms[index].medium,
+                        onChanged: (value) {
+                          setState(() {
+                            studentForms[index].medium = value;
+                          });
+                        },
+                        items: ['English', 'Hindi'],
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: _buildDropdownField(
+                        'Board',
+                        selectedValue: studentForms[index].board,
+                        onChanged: (value) {
+                          setState(() {
+                            studentForms[index].board = value;
+                          });
+                        },
+                        items: [
+                          'Central Board of Secondary Education',
+                          'Indian Certificate of Secondary Education',
+                          'Bihar School Examination Board'
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: _buildMultiSelectDropdownField('Subject',
+                          selectedValues: selectedSubjectsPerForm[index],
+                          onChanged: (List<String> values) {
                         setState(() {
-                          studentForms[index].medium = value;
+                          selectedSubjects = values;
+                          studentForms[index].subject =
+                              selectedSubjects.join(',');
                         });
                       },
-                      items: ['English', 'Hindi'],
+                          items: _courses,
+                          selectedText:
+                              studentForms[index].subject ?? 'Select'),
                     ),
-                    const SizedBox(width: 50),
-                    _buildMultiSelectDropdownField('Subject',
-                        selectedValues: selectedSubjectsPerForm[index],
-                        onChanged: (List<String> values) {
-                      setState(() {
-                        selectedSubjects = values;
-                        studentForms[index].subject =
-                            selectedSubjects.join(',');
-                      });
-                    },
-                        items: _courses,
-                        selectedText: studentForms[index].subject ?? 'Select'),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -1430,6 +1455,21 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 items: ['10th', '11th', '12th'],
               ),
               const SizedBox(height: 10),
+              _buildDropdownField(
+                'Board',
+                selectedValue: studentForms[index].board,
+                onChanged: (value) {
+                  setState(() {
+                    studentForms[index].board = value;
+                  });
+                },
+                items: [
+                  'Central Board of Secondary Education',
+                  'Indian Certificate of Secondary Education',
+                  'Bihar School Examination Board'
+                ],
+              ),
+              const SizedBox(height: 10),
               _buildMultiSelectDropdownField('Subject',
                   selectedValues: selectedSubjectsPerForm[index],
                   onChanged: (List<String> values) {
@@ -1441,6 +1481,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   items: _courses,
                   selectedText: studentForms[index].subject ?? 'Select'),
               const SizedBox(height: 10),
+
               _buildDropdownField(
                 'State',
                 selectedValue: studentForms[index].state,
@@ -2034,7 +2075,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 23),
+              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 17),
           isDense: true,
         ),
         items: items

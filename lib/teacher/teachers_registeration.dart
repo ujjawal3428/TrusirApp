@@ -2451,7 +2451,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 23),
+              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 17),
           isDense: true,
         ),
         items: items
@@ -2514,9 +2514,9 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
   }
 
   Widget _buildFileUploadField(String placeholder,
-      {
-      required displayPath,
-      required VoidCallback? onTap, required int width}) {
+      {required displayPath,
+      required VoidCallback? onTap,
+      required int width}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(

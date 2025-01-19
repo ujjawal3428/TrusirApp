@@ -276,7 +276,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                     return GridView.count(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount: constraints.maxWidth > 600 ? 5 : 4,
+                      crossAxisCount: constraints.maxWidth > 600 ? 5 : 3,
                       crossAxisSpacing: isWeb ? 30 : 17,
                       mainAxisSpacing: isWeb ? 30 : 10,
                       childAspectRatio: isWeb
