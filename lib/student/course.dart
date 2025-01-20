@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/toggle_button.dart';
 import 'package:trusir/student/main_screen.dart';
+import 'package:trusir/student/new_coursecard.dart';
 
 class Course {
   final int id;
@@ -217,35 +218,9 @@ class _CourseCardState extends State<CourseCard> {
                     ),
                   ),
                 ),
-                // : const SizedBox(),
                 const SizedBox(
                   width: 10,
                 ),
-                // widget.course['status'] == 'bought' ||
-                //         widget.course['status'] == 'demo'
-                //  SizedBox(
-                //     width: isWeb ? 200 : 142,
-                //     height: isWeb ? 40 : null,
-                //     child: ElevatedButton(
-                //       onPressed: () {
-                //         // Handle Buy Now action
-                //       },
-                //       style: ElevatedButton.styleFrom(
-                //         backgroundColor: Colors.blueAccent,
-                //         shape: RoundedRectangleBorder(
-                //           borderRadius: BorderRadius.circular(8),
-                //         ),
-                //       ),
-                //       child: const Text(
-                //         'Know More',
-                //         style: TextStyle(
-                //           color: Colors.white,
-                //           fontFamily: 'Poppins',
-                //         ),
-                //       ),
-                //     ),
-                //   )
-                // :
                 SizedBox(
                   width: isWeb ? 200 : 142,
                   height: isWeb ? 40 : null,
@@ -480,7 +455,7 @@ class _CoursePageState extends State<CoursePage> {
   List<Course> _courses = [];
   List<CourseDetail> _courseDetails = [];
 
-  List<Course> filteredCourses = [];
+  List<dynamic> filteredCourses = [];
   int _selectedIndex = 0;
   bool isWeb = false;
 
@@ -490,9 +465,9 @@ class _CoursePageState extends State<CoursePage> {
     setState(() {
       _selectedIndex = index;
       if (index == 0) {
-        filteredCourses = _courses;
+        filteredCourses = _courseDetails;
       } else if (index == 1) {
-        filteredCourses = _courses;
+        filteredCourses = _courseDetails;
       } else if (index == 2) {
         filteredCourses = _courses;
       }
@@ -565,7 +540,9 @@ class _CoursePageState extends State<CoursePage> {
                       itemCount: filteredCourses.length,
                       itemBuilder: (context, index) {
                         final course = filteredCourses[index];
-                        return CourseCard(course: course);
+                        return _selectedIndex == 0 || _selectedIndex == 1
+                            ? NewCourseCard(course: course)
+                            : CourseCard(course: course);
                       },
                     )
                   : ListView.builder(
@@ -574,7 +551,9 @@ class _CoursePageState extends State<CoursePage> {
                       itemCount: filteredCourses.length,
                       itemBuilder: (context, index) {
                         final course = filteredCourses[index];
-                        return CourseCard(course: course);
+                        return _selectedIndex == 0 || _selectedIndex == 1
+                            ? NewCourseCard(course: course)
+                            : CourseCard(course: course);
                       },
                     )),
         ],
