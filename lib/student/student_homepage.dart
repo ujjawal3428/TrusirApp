@@ -261,22 +261,64 @@ class StudentHomepage extends StatelessWidget {
                 // Row of two images
                 Column(
                   children: [
-                     Center(
-                       child: Image.asset(
-                            height: isWeb ? 200 : null,
-                            'assets/t1@3x.png',
-                            fit: BoxFit.cover,
-                          ),
-                     ),
-                   const SizedBox(height: 10,),
-                     Center(
-                       child: Image.asset(
-                            height: isWeb ? 220 : null,
-                            'assets/t2.jpg',
-                            fit: BoxFit.cover,
-                          ),
-                     ),
+                    Center(
+                      child: Image.asset(
+                        height: isWeb ? 200 : null,
+                        'assets/t1@3x.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Center(
+                      child: Image.asset(
+                        height: isWeb ? 220 : null,
+                        'assets/t2.jpg',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ],
+                ),
+                const SizedBox(height: 30),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Explore City',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xFF2B395F),
+                      height: 1.6,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+
+                // Subjects Buttons
+                Wrap(
+                  spacing: 5,
+                  runSpacing: 6,
+                  children: [
+                    'Motihari',
+                  ].map((subject) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.purple),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        subject,
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          color: Colors.black,
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
                 const SizedBox(height: 30),
 
@@ -314,6 +356,48 @@ class StudentHomepage extends StatelessWidget {
                     'Class 8',
                     'Class 9',
                     'Class 10',
+                  ].map((subject) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.purple),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        subject,
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          color: Colors.black,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 30),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Explore Boards',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xFF2B395F),
+                      height: 1.6,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+
+                // Subjects Buttons
+                Wrap(
+                  spacing: 5,
+                  runSpacing: 6,
+                  children: [
+                    'Bihar School Examination Board',
+                    'Central Board of Secondary Education',
+                    'Indian Certificate of Secondary Education',
                   ].map((subject) {
                     return Container(
                       padding: const EdgeInsets.symmetric(
@@ -413,7 +497,7 @@ class StudentHomepage extends StatelessWidget {
               height: isWeb ? 80 : 50,
               width: isWeb ? 80 : 50,
               child: FloatingActionButton(
-                heroTag: 'callButton', 
+                heroTag: 'callButton',
                 onPressed: () {
                   openDialer('9797472922');
                 },
@@ -442,7 +526,7 @@ class StudentHomepage extends StatelessWidget {
         },
         child: Image.asset(
           'assets/registeration.png',
-        width: isWeb ? 380 : 280,
+          width: isWeb ? 380 : 280,
           height: isWeb ? 80 : 120,
           fit: BoxFit.contain,
         ),

@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/student/student_registration.dart';
 import 'package:trusir/teacher/teacher_homepage.dart';
+import 'package:trusir/common/service_unavailable_page.dart';
 
 class TeacherEnquiry {
   String? name;
@@ -26,7 +29,8 @@ class TeacherEnquiryPage extends StatefulWidget {
   TeacherEnquiryPage({super.key});
 
   final TextEditingController _namecontroller = TextEditingController();
-  final TextEditingController _qualificationcontroller = TextEditingController();
+  final TextEditingController _qualificationcontroller =
+      TextEditingController();
   final TextEditingController _citycontroller = TextEditingController();
   final TextEditingController _pincodecontroller = TextEditingController();
 
@@ -39,6 +43,35 @@ class TeacherEnquiryPage extends StatefulWidget {
 class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
   bool isMaleSelected = false;
   bool isFemaleSelected = false;
+  bool isLocationServiceable = false;
+  List<Location> locations = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLocations();
+  }
+
+  Future<void> fetchLocations() async {
+    const String apiUrl = "$baseUrl/api/city";
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+
+        // Parse the data into a list of Location objects
+        locations = data.map((json) => Location.fromJson(json)).toList();
+
+        // Populate states list
+      } else {
+        throw Exception("Failed to load locations");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
 
   void _onEnquire() {
     setState(() {
@@ -47,6 +80,9 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
       widget.formData.city = widget._citycontroller.text;
       widget.formData.pincode = widget._pincodecontroller.text;
     });
+
+    isLocationServiceable = locations
+        .any((location) => location.pincode == widget.formData.pincode);
 
     if (widget.formData.gender == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -57,10 +93,10 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
       );
       return;
     }
-    submitForm(context);
+    submitForm(context, isLocationServiceable);
   }
 
-  Future<void> submitForm(BuildContext context) async {
+  Future<void> submitForm(BuildContext context, bool serviceable) async {
     final url = Uri.parse('$baseUrl/api/enquiry-teacher');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(widget.formData.toJson());
@@ -68,14 +104,30 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
     try {
       final response = await http.post(url, headers: headers, body: body);
 
-      if (response.statusCode == 200) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Teacherhomepage()),
-        );
-        print(body);
+      if (!serviceable) {
+        if (response.statusCode == 200) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ServiceUnavailablePage()),
+            (Route<dynamic> route) => false,
+          );
+          Fluttertoast.showToast(msg: 'Form Submitted Successfully');
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Failed to submit form: ${response.body}');
+        }
       } else {
-        print('Failed to submit form: ${response.body}');
+        if (response.statusCode == 200) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Teacherhomepage()),
+          );
+          Fluttertoast.showToast(msg: 'Form Submitted Successfully');
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Failed to submit form: ${response.body}');
+        }
       }
     } catch (e) {
       print('Error occurred: $e');
@@ -195,13 +247,11 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
               const SizedBox(height: 10),
 
               _buildTextFieldWithBackground(
-                  hintText: 'City / Town', 
-                  controllers: widget._citycontroller),
+                  hintText: 'City / Town', controllers: widget._citycontroller),
               const SizedBox(height: 10),
 
               _buildPinFieldWithBackground(
-                  hintText: 'Pincode', 
-                  controllers: widget._pincodecontroller),
+                  hintText: 'Pincode', controllers: widget._pincodecontroller),
               SizedBox(height: screenHeight * 0.02),
 
               // Enquire Button
@@ -227,10 +277,8 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
     );
   }
 
-  Widget _buildTextFieldWithBackground({
-    required String hintText, 
-    required TextEditingController controllers
-  }) {
+  Widget _buildTextFieldWithBackground(
+      {required String hintText, required TextEditingController controllers}) {
     return Container(
       height: 55,
       width: double.infinity,
@@ -305,7 +353,8 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
         controller: controllers,
         keyboardType: TextInputType.number,
         maxLength: 6,
-        buildCounter: (_, {required currentLength, required isFocused, maxLength}) =>
+        buildCounter: (_,
+                {required currentLength, required isFocused, maxLength}) =>
             null,
         onChanged: (value) {
           if (value.length == 6) {

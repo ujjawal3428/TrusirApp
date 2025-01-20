@@ -1,33 +1,20 @@
 import 'package:flutter/material.dart';
-
-class Page2 extends StatelessWidget {
-  const Page2({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: ServiceUnavailablePage(),
-    );
-  }
-}
+import 'package:trusir/common/login_page.dart';
 
 class ServiceUnavailablePage extends StatelessWidget {
   const ServiceUnavailablePage({super.key});
 
-  void _onButtonPressed() {
-    print("Button Pressed");
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold( // Use Scaffold as the base widget
+    return Scaffold(
+      // Use Scaffold as the base widget
       backgroundColor: Colors.white,
-      body: SingleChildScrollView( // Wrap with SingleChildScrollView
+      body: SingleChildScrollView(
+        // Wrap with SingleChildScrollView
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 50), // Optional padding at the top
-
             // Title Text
             const Text(
               'Service Unavailable',
@@ -76,7 +63,12 @@ class ServiceUnavailablePage extends StatelessWidget {
 
             // Go Back Button as Image
             InkWell(
-              onTap: _onButtonPressed,
+              onTap: () => Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const TrusirLoginPage()),
+                (Route<dynamic> route) => false,
+              ),
               child: Image.asset(
                 'assets/back.png',
                 width: 200,

@@ -283,7 +283,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }
 
   Future<void> fetchLocations() async {
-    const String apiUrl = "https://admin.trusir.com/api/city";
+    const String apiUrl = "$baseUrl/api/city";
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -934,11 +934,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                             studentForms[index].board = value;
                           });
                         },
-                        items: [
-                          'Central Board of Secondary Education',
-                          'Indian Certificate of Secondary Education',
-                          'Bihar School Examination Board'
-                        ],
+                        items: ['CBSE', 'ICSE', 'BSEB'],
                       ),
                     ),
                     const SizedBox(width: 20),
@@ -1452,11 +1448,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     studentForms[index].board = value;
                   });
                 },
-                items: [
-                  'Central Board of Secondary Education',
-                  'Indian Certificate of Secondary Education',
-                  'Bihar School Examination Board'
-                ],
+                items: ['CBSE', 'ICSE', 'BSEB'],
               ),
               const SizedBox(height: 10),
               _buildMultiSelectDropdownField('Subject',

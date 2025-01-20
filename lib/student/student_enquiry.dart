@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/student/student_homepage.dart';
+import 'package:trusir/student/student_registration.dart';
+import 'package:trusir/common/service_unavailable_page.dart';
 
 class StudentEnquiry {
   String? name;
@@ -37,6 +40,14 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
   final StudentEnquiry formData = StudentEnquiry();
   bool isMaleSelected = false;
   bool isFemaleSelected = false;
+  List<Location> locations = [];
+  bool isLocationServicable = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchLocations();
+  }
 
   void _onEnquire(BuildContext context) {
     setState(() {
@@ -45,6 +56,8 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
       formData.city = _citycontroller.text;
       formData.pincode = _pincodecontroller.text;
     });
+
+    // Validate gender
     if (formData.gender == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -54,28 +67,70 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
       );
       return;
     }
-    submitForm(context);
+
+    // Search for the pincode in the locations list
+    isLocationServicable =
+        locations.any((location) => location.pincode == formData.pincode);
+
+    // If pincode is available, proceed with form submission
+    submitForm(context, isLocationServicable);
   }
 
-  Future<void> submitForm(BuildContext context) async {
+  Future<void> fetchLocations() async {
+    const String apiUrl = "$baseUrl/api/city";
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+
+        // Parse the data into a list of Location objects
+        locations = data.map((json) => Location.fromJson(json)).toList();
+
+        // Populate states list
+      } else {
+        throw Exception("Failed to load locations");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<void> submitForm(BuildContext context, bool serviceable) async {
     final url = Uri.parse('$baseUrl/api/enquiry-student');
     final headers = {'Content-Type': 'application/json'};
     final body = json.encode(formData.toJson());
 
     try {
       final response = await http.post(url, headers: headers, body: body);
-
-      if (response.statusCode == 200) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const StudentHomepage(
-                    enablephone: true,
-                  )),
-        );
-        print(body);
+      if (!serviceable) {
+        if (response.statusCode == 200) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const ServiceUnavailablePage()),
+            (Route<dynamic> route) => false,
+          );
+          Fluttertoast.showToast(msg: 'Form Submitted Successfully');
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Failed to submit form: ${response.body}');
+        }
       } else {
-        print('Failed to submit form: ${response.body}');
+        if (response.statusCode == 200) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const StudentHomepage(
+                      enablephone: true,
+                    )),
+          );
+          Fluttertoast.showToast(msg: 'Form Submitted Successfully');
+        } else {
+          Fluttertoast.showToast(
+              msg: 'Failed to submit form: ${response.body}');
+        }
       }
     } catch (e) {
       print('Error occurred: $e');
@@ -278,7 +333,8 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
         controller: controllers,
         keyboardType: TextInputType.number,
         maxLength: 6,
-        buildCounter: (_, {required currentLength, required isFocused, maxLength}) =>
+        buildCounter: (_,
+                {required currentLength, required isFocused, maxLength}) =>
             null,
         onChanged: (value) {
           if (value.length == 6) {

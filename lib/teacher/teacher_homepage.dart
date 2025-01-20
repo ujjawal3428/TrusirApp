@@ -162,12 +162,55 @@ class Teacherhomepage extends StatelessWidget {
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
+                    'Explore City',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xFF2B395F),
+                      height: 1.6,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+
+                // Subjects Buttons
+                Wrap(
+                  spacing: 5,
+                  runSpacing: 6,
+                  children: [
+                    'Motihari',
+                  ].map((subject) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.purple),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        subject,
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          color: Colors.black,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 30),
+
+                // Explore our offerings text
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
                     'Explore our offerings',
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.w500,
                       color: Color(0xFF2B395F),
+                      height: 1.6,
                       fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -191,6 +234,48 @@ class Teacherhomepage extends StatelessWidget {
                     'Class 8',
                     'Class 9',
                     'Class 10',
+                  ].map((subject) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8, horizontal: 16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.purple),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        subject,
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          color: Colors.black,
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 30),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Explore Boards',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xFF2B395F),
+                      height: 1.6,
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+
+                // Subjects Buttons
+                Wrap(
+                  spacing: 5,
+                  runSpacing: 6,
+                  children: [
+                    'Bihar School Examination Board',
+                    'Central Board of Secondary Education',
+                    'Indian Certificate of Secondary Education',
                   ].map((subject) {
                     return Container(
                       padding: const EdgeInsets.symmetric(
@@ -291,7 +376,7 @@ class Teacherhomepage extends StatelessWidget {
               height: isWeb ? 80 : 50,
               width: isWeb ? 80 : 50,
               child: FloatingActionButton(
-                heroTag: 'callButton', 
+                heroTag: 'callButton',
                 onPressed: () {
                   openDialer('9797472922');
                 },

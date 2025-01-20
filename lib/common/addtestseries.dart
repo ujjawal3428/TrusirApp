@@ -417,7 +417,7 @@ class _AddtestseriesState extends State<Addtestseries> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.42,
+      height: MediaQuery.of(context).size.height * 0.45,
       width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
@@ -430,11 +430,70 @@ class _AddtestseriesState extends State<Addtestseries> {
                 height: 10,
               ),
               Container(
-                color: Colors.white,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(22),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      offset: const Offset(2, 2),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
                 child: TextFormField(
                   controller: _testNameController,
                   decoration: InputDecoration(
-                    labelText: 'Test Name',
+                      fillColor: Colors.white,
+                      labelText: 'Test Name',
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(22),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(22),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(22),
+                        borderSide: const BorderSide(color: Colors.grey),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 17),
+                      isDense: true),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the test name';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              // Subject Dropdown
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(22),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      offset: const Offset(2, 2),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+                child: DropdownButtonFormField<String>(
+                  value: selectedSubject,
+                  items: _courses.map((String subject) {
+                    return DropdownMenuItem<String>(
+                      value: subject,
+                      child: Text(subject),
+                    );
+                  }).toList(),
+                  decoration: InputDecoration(
+                    labelText: 'Subject',
                     floatingLabelBehavior: FloatingLabelBehavior.auto,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(22),
@@ -452,266 +511,332 @@ class _AddtestseriesState extends State<Addtestseries> {
                         horizontal: 16, vertical: 17),
                     isDense: true,
                   ),
+                  onChanged: (String? value) {
+                    setState(() {
+                      selectedSubject = value;
+                    });
+                  },
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the test name';
+                    if (value == null) {
+                      return 'Please select a subject';
                     }
                     return null;
                   },
                 ),
               ),
               const SizedBox(height: 20),
-              // Subject Dropdown
-              DropdownButtonFormField<String>(
-                value: selectedSubject,
-                items: _courses.map((String subject) {
-                  return DropdownMenuItem<String>(
-                    value: subject,
-                    child: Text(subject),
-                  );
-                }).toList(),
-                decoration: InputDecoration(
-                  labelText: 'Subject',
-                  floatingLabelBehavior: FloatingLabelBehavior.auto,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(22),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(22),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(22),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 17),
-                  isDense: true,
-                ),
-                onChanged: (String? value) {
-                  setState(() {
-                    selectedSubject = value;
-                  });
-                },
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please select a subject';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  isquestionUploading
-                      ? const CircularProgressIndicator()
-                      : question.isNotEmpty
-                          ? _buildFilePreview(question)
-                          : SizedBox(
-                              height: 40,
-                              width: 150,
-                              child: ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 4,
-                                  backgroundColor: Colors.white,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0),
+                    child: isquestionUploading
+                        ? const CircularProgressIndicator()
+                        : Container(
+                            width: 150,
+                            height: 133,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14.40),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.2),
+                                  offset: const Offset(2, 2),
+                                  blurRadius: 4,
                                 ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    barrierColor:
-                                        Colors.black.withValues(alpha: 0.3),
-                                    builder: (BuildContext context) {
-                                      return Dialog(
-                                        backgroundColor: Colors.transparent,
-                                        insetPadding: const EdgeInsets.all(16),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(16.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Container(
-                                                width: 200,
-                                                height: 50,
-                                                decoration: BoxDecoration(
-                                                  color:
-                                                      Colors.lightBlue.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(22),
-                                                ),
-                                                child: TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    setState(() {
-                                                      isQuestion = true;
-                                                    });
-                                                    uploadImage();
-                                                  },
-                                                  child: const Text(
-                                                    "Camera",
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        color: Colors.black,
-                                                        fontFamily: 'Poppins'),
-                                                  ),
-                                                ),
+                              ],
+                            ),
+                            child: question.isNotEmpty
+                                ? _buildFilePreview(question)
+                                : GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        barrierColor:
+                                            Colors.black.withValues(alpha: 0.3),
+                                        builder: (BuildContext context) {
+                                          return Dialog(
+                                            backgroundColor: Colors.transparent,
+                                            insetPadding:
+                                                const EdgeInsets.all(16),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
                                               ),
-                                              const SizedBox(height: 16),
-                                              // Button for "I'm a Teacher"
-                                              Container(
-                                                width: 200,
-                                                height: 50,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.orange.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(22),
-                                                ),
-                                                child: TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    setState(() {
-                                                      isQuestion = true;
-                                                    });
-                                                    handleFileSelection(
-                                                        context);
-                                                  },
-                                                  child: const Text(
-                                                    "Upload File",
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        color: Colors.black,
-                                                        fontFamily: 'Poppins'),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    width: 200,
+                                                    height: 50,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                          .lightBlue.shade100,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              22),
+                                                    ),
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        setState(() {
+                                                          isQuestion = true;
+                                                        });
+                                                        uploadImage();
+                                                      },
+                                                      child: const Text(
+                                                        "Camera",
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  const SizedBox(height: 16),
+                                                  // Button for "I'm a Teacher"
+                                                  Container(
+                                                    width: 200,
+                                                    height: 50,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                          .orange.shade100,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              22),
+                                                    ),
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        setState(() {
+                                                          isQuestion = true;
+                                                        });
+                                                        handleFileSelection(
+                                                            context);
+                                                      },
+                                                      child: const Text(
+                                                        "Upload File",
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
+                                            ),
+                                          );
+                                        },
                                       );
                                     },
-                                  );
-                                },
-                                icon: const Icon(Icons.upload_file),
-                                label: const Text(
-                                  'Upload Questions',
-                                  style: TextStyle(fontSize: 12),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 15),
+                                          child: Image.asset(
+                                            'assets/camera@3x.png',
+                                            width: 46,
+                                            height: 37,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        const Center(
+                                          child: Text(
+                                            'Upload Questions',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        const Center(
+                                          child: Text(
+                                            'Click here',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: isanswerUploading
+                        ? const CircularProgressIndicator()
+                        : Container(
+                            width: 150,
+                            height: 133,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(14.40),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.2),
+                                  offset: const Offset(2, 2),
+                                  blurRadius: 4,
                                 ),
-                              ),
+                              ],
                             ),
-                  isanswerUploading
-                      ? const CircularProgressIndicator()
-                      : answer.isNotEmpty
-                          ? _buildFilePreview(answer)
-                          : SizedBox(
-                              height: 40,
-                              width: 150,
-                              child: ElevatedButton.icon(
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 4,
-                                  backgroundColor: Colors.white,
-                                ),
-                                onPressed: () {
-                                  showDialog(
-                                    context: context,
-                                    barrierColor:
-                                        Colors.black.withValues(alpha: 0.3),
-                                    builder: (BuildContext context) {
-                                      return Dialog(
-                                        backgroundColor: Colors.transparent,
-                                        insetPadding: const EdgeInsets.all(16),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(16.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Container(
-                                                width: 200,
-                                                height: 50,
-                                                decoration: BoxDecoration(
-                                                  color:
-                                                      Colors.lightBlue.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(22),
-                                                ),
-                                                child: TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    setState(() {
-                                                      isAnswer = true;
-                                                    });
-                                                    uploadImage();
-                                                  },
-                                                  child: const Text(
-                                                    "Camera",
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        color: Colors.black,
-                                                        fontFamily: 'Poppins'),
-                                                  ),
-                                                ),
+                            child: answer.isNotEmpty
+                                ? _buildFilePreview(answer)
+                                : GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        barrierColor:
+                                            Colors.black.withValues(alpha: 0.3),
+                                        builder: (BuildContext context) {
+                                          return Dialog(
+                                            backgroundColor: Colors.transparent,
+                                            insetPadding:
+                                                const EdgeInsets.all(16),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
                                               ),
-                                              const SizedBox(height: 16),
-                                              // Button for "I'm a Teacher"
-                                              Container(
-                                                width: 200,
-                                                height: 50,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.orange.shade100,
-                                                  borderRadius:
-                                                      BorderRadius.circular(22),
-                                                ),
-                                                child: TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    setState(() {
-                                                      isAnswer = true;
-                                                    });
-                                                    handleFileSelection(
-                                                        context);
-                                                  },
-                                                  child: const Text(
-                                                    "Upload File",
-                                                    style: TextStyle(
-                                                        fontSize: 18,
-                                                        color: Colors.black,
-                                                        fontFamily: 'Poppins'),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    width: 200,
+                                                    height: 50,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                          .lightBlue.shade100,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              22),
+                                                    ),
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        setState(() {
+                                                          isAnswer = true;
+                                                        });
+                                                        uploadImage();
+                                                      },
+                                                      child: const Text(
+                                                        "Camera",
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  const SizedBox(height: 16),
+                                                  // Button for "I'm a Teacher"
+                                                  Container(
+                                                    width: 200,
+                                                    height: 50,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                          .orange.shade100,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              22),
+                                                    ),
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        setState(() {
+                                                          isAnswer = true;
+                                                        });
+                                                        handleFileSelection(
+                                                            context);
+                                                      },
+                                                      child: const Text(
+                                                        "Upload File",
+                                                        style: TextStyle(
+                                                            fontSize: 18,
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                        ),
+                                            ),
+                                          );
+                                        },
                                       );
                                     },
-                                  );
-                                },
-                                icon: const Icon(Icons.upload_file),
-                                label: const Text(
-                                  'Upload Answers',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ),
-                            ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 15),
+                                          child: Image.asset(
+                                            'assets/camera@3x.png',
+                                            width: 46,
+                                            height: 37,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        const Center(
+                                          child: Text(
+                                            'Upload Answers',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        const Center(
+                                          child: Text(
+                                            'Click here',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                          ),
+                  ),
                 ],
               ),
 

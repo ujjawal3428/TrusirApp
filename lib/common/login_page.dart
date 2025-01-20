@@ -139,7 +139,8 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
   Widget _buildSkipButton() {
     return Center(
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[50]),
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.grey[50], elevation: 0),
         onPressed: () => showPopupDialog(context),
         child: const Row(children: [
           Text(
