@@ -229,8 +229,7 @@ class _NewCourseCardState extends State<NewCourseCard> {
                                 // Handle Buy Now action
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromARGB(255, 225, 143, 55),
+                                backgroundColor: Colors.blueAccent,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),

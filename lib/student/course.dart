@@ -437,7 +437,6 @@ class _CoursePageState extends State<CoursePage> {
   Future<List<CourseDetail>> fetchCourses() async {
     final prefs = await SharedPreferences.getInstance();
     final userID = prefs.getString('userID');
-    print(userID);
     final url = Uri.parse('$baseUrl/get-courses/$userID');
     final response = await http.get(url);
 
@@ -465,9 +464,13 @@ class _CoursePageState extends State<CoursePage> {
     setState(() {
       _selectedIndex = index;
       if (index == 0) {
-        filteredCourses = _courseDetails;
+        filteredCourses = _courseDetails
+            .where((course) =>
+                course.type == 'purchased' || course.type == 'Purchased')
+            .toList();
       } else if (index == 1) {
-        filteredCourses = _courseDetails;
+        filteredCourses =
+            _courseDetails.where((course) => course.type == 'demo').toList();
       } else if (index == 2) {
         filteredCourses = _courses;
       }
@@ -530,32 +533,34 @@ class _CoursePageState extends State<CoursePage> {
             onChanged: _filterCourses,
           ),
           Expanded(
-              child: isWeb
-                  ? GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, mainAxisExtent: 560),
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      itemCount: filteredCourses.length,
-                      itemBuilder: (context, index) {
-                        final course = filteredCourses[index];
-                        return _selectedIndex == 0 || _selectedIndex == 1
-                            ? NewCourseCard(course: course)
-                            : CourseCard(course: course);
-                      },
-                    )
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      itemCount: filteredCourses.length,
-                      itemBuilder: (context, index) {
-                        final course = filteredCourses[index];
-                        return _selectedIndex == 0 || _selectedIndex == 1
-                            ? NewCourseCard(course: course)
-                            : CourseCard(course: course);
-                      },
-                    )),
+              child: filteredCourses.isEmpty
+                  ? const Center(child: Text('No Courses'))
+                  : isWeb
+                      ? GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2, mainAxisExtent: 560),
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          itemCount: filteredCourses.length,
+                          itemBuilder: (context, index) {
+                            final course = filteredCourses[index];
+                            return _selectedIndex == 0 || _selectedIndex == 1
+                                ? NewCourseCard(course: course)
+                                : CourseCard(course: course);
+                          },
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          itemCount: filteredCourses.length,
+                          itemBuilder: (context, index) {
+                            final course = filteredCourses[index];
+                            return _selectedIndex == 0 || _selectedIndex == 1
+                                ? NewCourseCard(course: course)
+                                : CourseCard(course: course);
+                          },
+                        )),
         ],
       ),
     );
