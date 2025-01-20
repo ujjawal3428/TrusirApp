@@ -124,14 +124,20 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
               child: CircularProgressIndicator(),
             )
           : notices.isEmpty
-              ? const Center(
-                  child: Text(
-                    "No Notices Available",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey,
-                    ),
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "No Notices Available",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      _buildAddNoticeButton(context),
+                    ],
                   ),
                 )
               : Stack(

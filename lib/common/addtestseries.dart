@@ -26,6 +26,8 @@ class _AddtestseriesState extends State<Addtestseries> {
   String answer = '';
   bool isQuestion = false;
   bool isAnswer = false;
+  bool isquestionUploading = false;
+  bool isanswerUploading = false;
   String question = '';
   List<String> _courses = [];
   String extension = '';
@@ -113,6 +115,13 @@ class _AddtestseriesState extends State<Addtestseries> {
   }
 
   Future<void> handleFileSelection(BuildContext context) async {
+    setState(() {
+      if (isQuestion) {
+        isquestionUploading = true;
+      } else if (isAnswer) {
+        isanswerUploading = true;
+      }
+    });
     try {
       final result = await FilePicker.platform.pickFiles(allowMultiple: true);
 
@@ -148,12 +157,15 @@ class _AddtestseriesState extends State<Addtestseries> {
                 msg: '$fileName uploaded successfully: $uploadedPath');
           } else {
             Fluttertoast.showToast(msg: 'Failed to upload file: $fileName');
+            setState(() {
+              isquestionUploading = false;
+              isanswerUploading = false;
+            });
           }
         }
 
         if (uploadedUrls.isNotEmpty) {
           final resultString = uploadedUrls.join(', ');
-
           if (uploadedUrls.length > 1) {
             Fluttertoast.showToast(
                 msg: 'All files uploaded successfully: $resultString');
@@ -166,21 +178,33 @@ class _AddtestseriesState extends State<Addtestseries> {
             if (isQuestion) {
               question = resultString;
               isQuestion = false;
-              print(question);
+              isquestionUploading = false;
             } else if (isAnswer) {
               answer = resultString;
               isAnswer = false;
-              print(answer);
+              isanswerUploading = false;
             }
           });
         } else {
           Fluttertoast.showToast(msg: 'No files uploaded.');
+          setState(() {
+            isquestionUploading = false;
+            isanswerUploading = false;
+          });
         }
       } else {
         Fluttertoast.showToast(msg: 'No file selected.');
+        setState(() {
+          isquestionUploading = false;
+          isanswerUploading = false;
+        });
       }
     } catch (e) {
       Fluttertoast.showToast(msg: 'Error during file selection: $e');
+      setState(() {
+        isquestionUploading = false;
+        isanswerUploading = false;
+      });
     }
   }
 
@@ -239,12 +263,23 @@ class _AddtestseriesState extends State<Addtestseries> {
   }
 
   Future<String> uploadImage() async {
+    setState(() {
+      if (isQuestion) {
+        isquestionUploading = true;
+      } else if (isAnswer) {
+        isanswerUploading = true;
+      }
+    });
     await _requestPermissions();
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
     if (image == null) {
       Fluttertoast.showToast(msg: 'No image selected.');
+      setState(() {
+        isquestionUploading = false;
+        isanswerUploading = false;
+      });
       return 'null';
     }
 
@@ -253,6 +288,10 @@ class _AddtestseriesState extends State<Addtestseries> {
 
     if (compressedImage == null) {
       Fluttertoast.showToast(msg: 'Failed to compress image.');
+      setState(() {
+        isquestionUploading = false;
+        isanswerUploading = false;
+      });
       return 'null';
     }
 
@@ -276,21 +315,31 @@ class _AddtestseriesState extends State<Addtestseries> {
           setState(() {
             question = jsonResponse['download_url'];
             isQuestion = false;
+            isquestionUploading = false;
           });
         } else if (isAnswer) {
           setState(() {
             answer = jsonResponse['download_url'];
             isAnswer = false;
+            isanswerUploading = false;
           });
         }
         return jsonResponse['download_url'] as String;
       } else {
         Fluttertoast.showToast(msg: 'Download URL not found in the response.');
+        setState(() {
+          isquestionUploading = false;
+          isanswerUploading = false;
+        });
         return 'null';
       }
     } else {
       Fluttertoast.showToast(
           msg: 'Failed to upload image: ${response.statusCode}');
+      setState(() {
+        isquestionUploading = false;
+        isanswerUploading = false;
+      });
       return 'null';
     }
   }
@@ -457,200 +506,212 @@ class _AddtestseriesState extends State<Addtestseries> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  question.isNotEmpty
-                      ? _buildFilePreview(question)
-                      : SizedBox(
-                          height: 40,
-                          width: 150,
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              elevation: 4,
-                              backgroundColor: Colors.white,
-                            ),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                barrierColor:
-                                    Colors.black.withValues(alpha: 0.3),
-                                builder: (BuildContext context) {
-                                  return Dialog(
-                                    backgroundColor: Colors.transparent,
-                                    insetPadding: const EdgeInsets.all(16),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(16.0),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Container(
-                                            width: 200,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              color: Colors.lightBlue.shade100,
-                                              borderRadius:
-                                                  BorderRadius.circular(22),
-                                            ),
-                                            child: TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                setState(() {
-                                                  isQuestion = true;
-                                                });
-                                                uploadImage();
-                                              },
-                                              child: const Text(
-                                                "Camera",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.black,
-                                                    fontFamily: 'Poppins'),
-                                              ),
-                                            ),
+                  isquestionUploading
+                      ? const CircularProgressIndicator()
+                      : question.isNotEmpty
+                          ? _buildFilePreview(question)
+                          : SizedBox(
+                              height: 40,
+                              width: 150,
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 4,
+                                  backgroundColor: Colors.white,
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    barrierColor:
+                                        Colors.black.withValues(alpha: 0.3),
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        insetPadding: const EdgeInsets.all(16),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(16.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
-                                          const SizedBox(height: 16),
-                                          // Button for "I'm a Teacher"
-                                          Container(
-                                            width: 200,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              color: Colors.orange.shade100,
-                                              borderRadius:
-                                                  BorderRadius.circular(22),
-                                            ),
-                                            child: TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                setState(() {
-                                                  isQuestion = true;
-                                                });
-                                                handleFileSelection(context);
-                                              },
-                                              child: const Text(
-                                                "Upload File",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.black,
-                                                    fontFamily: 'Poppins'),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                width: 200,
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      Colors.lightBlue.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(22),
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    setState(() {
+                                                      isQuestion = true;
+                                                    });
+                                                    uploadImage();
+                                                  },
+                                                  child: const Text(
+                                                    "Camera",
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black,
+                                                        fontFamily: 'Poppins'),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              const SizedBox(height: 16),
+                                              // Button for "I'm a Teacher"
+                                              Container(
+                                                width: 200,
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.orange.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(22),
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    setState(() {
+                                                      isQuestion = true;
+                                                    });
+                                                    handleFileSelection(
+                                                        context);
+                                                  },
+                                                  child: const Text(
+                                                    "Upload File",
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black,
+                                                        fontFamily: 'Poppins'),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    ),
+                                        ),
+                                      );
+                                    },
                                   );
                                 },
-                              );
-                            },
-                            icon: const Icon(Icons.upload_file),
-                            label: const Text(
-                              'Upload Questions',
-                              style: TextStyle(fontSize: 12),
+                                icon: const Icon(Icons.upload_file),
+                                label: const Text(
+                                  'Upload Questions',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                  answer.isNotEmpty
-                      ? _buildFilePreview(answer)
-                      : SizedBox(
-                          height: 40,
-                          width: 150,
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              elevation: 4,
-                              backgroundColor: Colors.white,
-                            ),
-                            onPressed: () {
-                              showDialog(
-                                context: context,
-                                barrierColor:
-                                    Colors.black.withValues(alpha: 0.3),
-                                builder: (BuildContext context) {
-                                  return Dialog(
-                                    backgroundColor: Colors.transparent,
-                                    insetPadding: const EdgeInsets.all(16),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Container(
-                                      padding: const EdgeInsets.all(16.0),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Container(
-                                            width: 200,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              color: Colors.lightBlue.shade100,
-                                              borderRadius:
-                                                  BorderRadius.circular(22),
-                                            ),
-                                            child: TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                setState(() {
-                                                  isAnswer = true;
-                                                });
-                                                uploadImage();
-                                              },
-                                              child: const Text(
-                                                "Camera",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.black,
-                                                    fontFamily: 'Poppins'),
-                                              ),
-                                            ),
+                  isanswerUploading
+                      ? const CircularProgressIndicator()
+                      : answer.isNotEmpty
+                          ? _buildFilePreview(answer)
+                          : SizedBox(
+                              height: 40,
+                              width: 150,
+                              child: ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 4,
+                                  backgroundColor: Colors.white,
+                                ),
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    barrierColor:
+                                        Colors.black.withValues(alpha: 0.3),
+                                    builder: (BuildContext context) {
+                                      return Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        insetPadding: const EdgeInsets.all(16),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(16.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
-                                          const SizedBox(height: 16),
-                                          // Button for "I'm a Teacher"
-                                          Container(
-                                            width: 200,
-                                            height: 50,
-                                            decoration: BoxDecoration(
-                                              color: Colors.orange.shade100,
-                                              borderRadius:
-                                                  BorderRadius.circular(22),
-                                            ),
-                                            child: TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                                setState(() {
-                                                  isAnswer = true;
-                                                });
-                                                handleFileSelection(context);
-                                              },
-                                              child: const Text(
-                                                "Upload File",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.black,
-                                                    fontFamily: 'Poppins'),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                width: 200,
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                  color:
+                                                      Colors.lightBlue.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(22),
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    setState(() {
+                                                      isAnswer = true;
+                                                    });
+                                                    uploadImage();
+                                                  },
+                                                  child: const Text(
+                                                    "Camera",
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black,
+                                                        fontFamily: 'Poppins'),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              const SizedBox(height: 16),
+                                              // Button for "I'm a Teacher"
+                                              Container(
+                                                width: 200,
+                                                height: 50,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.orange.shade100,
+                                                  borderRadius:
+                                                      BorderRadius.circular(22),
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    setState(() {
+                                                      isAnswer = true;
+                                                    });
+                                                    handleFileSelection(
+                                                        context);
+                                                  },
+                                                  child: const Text(
+                                                    "Upload File",
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black,
+                                                        fontFamily: 'Poppins'),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    ),
+                                        ),
+                                      );
+                                    },
                                   );
                                 },
-                              );
-                            },
-                            icon: const Icon(Icons.upload_file),
-                            label: const Text(
-                              'Upload Answers',
-                              style: TextStyle(fontSize: 12),
+                                icon: const Icon(Icons.upload_file),
+                                label: const Text(
+                                  'Upload Answers',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
                 ],
               ),
 

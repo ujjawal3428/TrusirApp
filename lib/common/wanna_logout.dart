@@ -3,10 +3,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/login_page.dart';
 
 class WanaLogout extends StatelessWidget {
-  const WanaLogout({super.key});
+  final String profile;
+  const WanaLogout({super.key, required this.profile});
 
   Future<void> logout(BuildContext context) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     Navigator.pushAndRemoveUntil(
       context,
@@ -49,17 +50,24 @@ class WanaLogout extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Back Button
-                
+
                     // Online Payment Button
                     Center(
-                      child: Image.asset(
-                        'assets/wanna_logout.png',
-                        width: 200,
-                        height: 200,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.grey[50],
+                        radius: 150,
+                        child: ClipOval(
+                          child: Image.network(
+                            profile,
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 40),
-                
+
                     // Logout Confirmation Text
                     const Center(
                       child: Text(
@@ -74,7 +82,7 @@ class WanaLogout extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 50),
-                
+
                     // Cancel Button
                     Center(
                       child: GestureDetector(
@@ -89,7 +97,7 @@ class WanaLogout extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 5),
-                
+
                     // Logout Button
                     Center(
                       child: GestureDetector(

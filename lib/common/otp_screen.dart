@@ -214,7 +214,6 @@ class _OTPScreenState extends State<OTPScreen> {
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: isWeb ? 100 : 24.0, // Adjust padding for web
-            vertical: 40,
           ),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),

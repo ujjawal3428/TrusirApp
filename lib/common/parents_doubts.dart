@@ -298,102 +298,99 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
                 ),
               ),
             )
-          : Stack(
-              children: [
-                Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(10.0),
-                        itemCount: doubtsList.length,
-                        itemBuilder: (context, index) {
-                          final doubt = doubtsList[index];
-                          final filename =
-                              '${doubt.course}_parent_doubt_${doubt.createdAt}';
-                          final isDownloaded =
-                              downloadedFiles.containsKey(filename);
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  ListView.builder(
+                    padding: const EdgeInsets.all(10.0),
+                    itemCount: doubtsList.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final doubt = doubtsList[index];
+                      final filename =
+                          '${doubt.course}_parent_doubt_${doubt.createdAt}';
+                      final isDownloaded =
+                          downloadedFiles.containsKey(filename);
 
-                          // Determine file extension for this item
+                      // Determine file extension for this item
 
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.yellow.shade100,
-                                borderRadius: BorderRadius.circular(16),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.yellow.shade100,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: ListTile(
+                            leading: _buildFilePreview(doubt.image),
+                            title: Text(
+                              doubt.title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
-                              child: ListTile(
-                                leading: _buildFilePreview(doubt.image),
-                                title: Text(
-                                  doubt.title,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Course: ${doubt.course}'),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Status: ${doubt.status}',
                                 ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Course: ${doubt.course}'),
-                                    const SizedBox(height: 2),
-                                    Text(
-                                      'Status: ${doubt.status}',
-                                    ),
-                                    Text('Posted on: ${doubt.createdAt}'),
-                                  ],
+                                Text('Posted on: ${doubt.createdAt}'),
+                              ],
+                            ),
+                            trailing: SizedBox(
+                              height: 20,
+                              width: 80,
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  if (isDownloaded) {
+                                    _openFile(filename);
+                                  } else {
+                                    _downloadFile(doubt.image, filename);
+                                  }
+                                },
+                                icon: Icon(
+                                  isDownloaded
+                                      ? Icons.open_in_new
+                                      : Icons.download,
+                                  size: 17,
                                 ),
-                                trailing: SizedBox(
-                                  height: 20,
-                                  width: 80,
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      if (isDownloaded) {
-                                        _openFile(filename);
-                                      } else {
-                                        _downloadFile(doubt.image, filename);
-                                      }
-                                    },
-                                    icon: Icon(
-                                      isDownloaded
-                                          ? Icons.open_in_new
-                                          : Icons.download,
-                                      size: 17,
-                                    ),
-                                    label: Text(
-                                      isDownloaded ? "Open" : "Download",
-                                      style: const TextStyle(fontSize: 10),
-                                    ),
-                                    style: ElevatedButton.styleFrom(
-                                      padding: const EdgeInsets.all(0),
-                                      foregroundColor: Colors.blue,
-                                    ),
-                                  ),
+                                label: Text(
+                                  isDownloaded ? "Open" : "Download",
+                                  style: const TextStyle(fontSize: 10),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  padding: const EdgeInsets.all(0),
+                                  foregroundColor: Colors.blue,
                                 ),
                               ),
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                    if (isLoading)
-                      const CircularProgressIndicator()
-                    else if (!hasMoreData && doubtsList.isNotEmpty)
-                      const Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Text(
-                          'No more Doubts',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      )
-                    else if (doubtsList.isNotEmpty)
-                      TextButton(
-                        onPressed: fetchDoubts,
-                        child: const Text('Load More'),
+                      );
+                    },
+                  ),
+                  if (isLoading)
+                    const CircularProgressIndicator()
+                  else if (!hasMoreData && doubtsList.isNotEmpty)
+                    const Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: Text(
+                        'No more Doubts',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
-                  ],
-                ),
-              ],
+                    )
+                  else if (doubtsList.isNotEmpty)
+                    TextButton(
+                      onPressed: fetchDoubts,
+                      child: const Text('Load More'),
+                    ),
+                ],
+              ),
             ),
     );
   }

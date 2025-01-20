@@ -392,6 +392,51 @@ class _CourseCardState extends State<CourseCard> {
   }
 }
 
+class CourseDetail {
+  final int id;
+  final String courseID;
+  final String courseName;
+  final String teacherName;
+  final String teacherID;
+  final String studentID;
+  final String image;
+  final String studentName;
+  final String timeSlot;
+  final String type;
+  final String price;
+
+  CourseDetail({
+    required this.id,
+    required this.courseID,
+    required this.courseName,
+    required this.teacherName,
+    required this.teacherID,
+    required this.studentID,
+    required this.image,
+    required this.studentName,
+    required this.timeSlot,
+    required this.type,
+    required this.price,
+  });
+
+  // Factory method for creating an instance from JSON
+  factory CourseDetail.fromJson(Map<String, dynamic> json) {
+    return CourseDetail(
+      id: json['id'],
+      courseID: json['courseID'],
+      courseName: json['courseName'],
+      teacherName: json['teacherName'],
+      teacherID: json['teacherID'],
+      studentID: json['StudentID'],
+      image: json['image'],
+      studentName: json['StudentName'],
+      timeSlot: json['timeSlot'],
+      type: json['type'],
+      price: json['price'],
+    );
+  }
+}
+
 class CoursePage extends StatefulWidget {
   const CoursePage({super.key});
 
@@ -400,7 +445,7 @@ class CoursePage extends StatefulWidget {
 }
 
 class _CoursePageState extends State<CoursePage> {
-  Future<List<Course>> fetchCourses() async {
+  Future<List<Course>> fetchAllCourses() async {
     final url = Uri.parse('$baseUrl/get-courses');
     final response = await http.get(url);
 
@@ -414,13 +459,33 @@ class _CoursePageState extends State<CoursePage> {
     }
   }
 
+  Future<List<CourseDetail>> fetchCourses() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getString('userID');
+    print(userID);
+    final url = Uri.parse('$baseUrl/get-courses/$userID');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      final responseData =
+          data.map((json) => CourseDetail.fromJson(json)).toList();
+      _courseDetails = responseData;
+      return _courseDetails;
+    } else {
+      throw Exception('Failed to fetch courses');
+    }
+  }
+
   List<Course> _courses = [];
+  List<CourseDetail> _courseDetails = [];
 
   List<Course> filteredCourses = [];
   int _selectedIndex = 0;
   bool isWeb = false;
 
   void _filterCourses(int index) async {
+    await fetchAllCourses();
     await fetchCourses();
     setState(() {
       _selectedIndex = index;

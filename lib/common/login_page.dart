@@ -136,17 +136,23 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     );
   }
 
-  Widget _buildSkipButton(ResponsiveDimensions responsive) {
+  Widget _buildSkipButton() {
     return Center(
-      child: GestureDetector(
-        onTap: () {
-          showPopupDialog(context);
-        },
-        child: Image.asset(
-          'assets/skipbutton.png',
-          height: 35,
-          fit: BoxFit.contain,
-        ),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[50]),
+        onPressed: () => showPopupDialog(context),
+        child: const Row(children: [
+          Text(
+            'Skip',
+            style:
+                TextStyle(color: Color.fromRGBO(72, 17, 106, 1), fontSize: 15),
+          ),
+          Icon(
+            Icons.fast_forward,
+            color: Color.fromRGBO(72, 17, 106, 1),
+            size: 25,
+          )
+        ]),
       ),
     );
   }
@@ -276,7 +282,7 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
     return Row(
       mainAxisAlignment:
           isWeb ? MainAxisAlignment.end : MainAxisAlignment.start,
-      children: [_buildSkipButton(responsive)],
+      children: [_buildSkipButton()],
     );
   }
 
@@ -433,129 +439,134 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
       }),
     );
   }
-Widget _buildPhoneInput(ResponsiveDimensions responsive, bool isWeb) {
-  return Stack(
-    children: [
-      // Background shape for the input field
-      Container(
-        width: double.infinity,
-        height: isWeb
-            ? responsive.safeHeight * 0.1
-            : responsive.safeHeight * 0.08,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(35),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 4,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-      ),
-      // Input content
-      Container(
-        height: isWeb
-            ? responsive.safeHeight * 0.1
-            : responsive.safeHeight * 0.08,
-        padding: EdgeInsets.symmetric(
-          horizontal: isWeb
-              ? responsive.screenWidth * 0.02
-              : responsive.screenWidth * 0.04,
-        ),
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center, // Add this
-            children: [
-              // Country flag icon
-              Center(
-                child: Image.asset(
-                  'assets/indianflag.png',
-                  width: isWeb
-                      ? responsive.flagIconSize * 0.4
-                      : responsive.flagIconSize,
-                  height: isWeb
-                      ? responsive.flagIconSize * 0.4
-                      : responsive.flagIconSize,
-                ),
-              ),
-              SizedBox(
-                  width: isWeb
-                      ? responsive.screenWidth * 0.01
-                      : responsive.screenWidth * 0.02),
-              // Country code text
-              Center(
-                child: Text(
-                  "+91 |",
-                  style: TextStyle(
-                    fontSize: isWeb
-                        ? responsive.screenWidth * 0.015
-                        : responsive.screenWidth * 0.04,
-                    color: Colors.black,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-              SizedBox(
-                  width: isWeb
-                      ? responsive.screenWidth * 0.01
-                      : responsive.screenWidth * 0.02),
-              // Mobile number input field
-              Expanded(
-                child: Center( // Add this
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 7),
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                      keyboardType: TextInputType.phone,
-                      maxLength: 10,
-                      buildCounter: (_,
-                              {required currentLength,
-                              required isFocused,
-                              maxLength}) =>
-                          null,
-                      onChanged: (value) {
-                        if (value.length == 10) {
-                          FocusScope.of(context).unfocus();
-                        }
-                      },
-                      controller: _phonecontroller,
-                      textAlignVertical: TextAlignVertical.center, // Modified this
-                      style: TextStyle(
-                        fontSize: isWeb
-                            ? responsive.screenWidth * 0.015
-                            : responsive.screenWidth * 0.04,
-                        color: Colors.black,
-                        fontFamily: 'Poppins',
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Mobile Number',
-                        hintStyle: TextStyle(
-                          fontSize: isWeb
-                              ? responsive.screenWidth * 0.015
-                              : responsive.screenWidth * 0.04,
-                          color: Colors.grey,
-                          fontFamily: 'Poppins',
-                        ),
-                        border: InputBorder.none,
-                        isDense: true, // Add this
-                        contentPadding: EdgeInsets.zero, // Add this
-                      ),
-                    ),
-                  ),
-                ),
+
+  Widget _buildPhoneInput(ResponsiveDimensions responsive, bool isWeb) {
+    return Stack(
+      children: [
+        // Background shape for the input field
+        Container(
+          width: double.infinity,
+          height: isWeb
+              ? responsive.safeHeight * 0.1
+              : responsive.safeHeight * 0.08,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(35),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
         ),
-      ),
-    ],
-  );
-}}
+        // Input content
+        Container(
+          height: isWeb
+              ? responsive.safeHeight * 0.1
+              : responsive.safeHeight * 0.08,
+          padding: EdgeInsets.symmetric(
+            horizontal: isWeb
+                ? responsive.screenWidth * 0.02
+                : responsive.screenWidth * 0.04,
+          ),
+          child: Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center, // Add this
+              children: [
+                // Country flag icon
+                Center(
+                  child: Image.asset(
+                    'assets/indianflag.png',
+                    width: isWeb
+                        ? responsive.flagIconSize * 0.4
+                        : responsive.flagIconSize,
+                    height: isWeb
+                        ? responsive.flagIconSize * 0.4
+                        : responsive.flagIconSize,
+                  ),
+                ),
+                SizedBox(
+                    width: isWeb
+                        ? responsive.screenWidth * 0.01
+                        : responsive.screenWidth * 0.02),
+                // Country code text
+                Center(
+                  child: Text(
+                    "+91 |",
+                    style: TextStyle(
+                      fontSize: isWeb
+                          ? responsive.screenWidth * 0.015
+                          : responsive.screenWidth * 0.04,
+                      color: Colors.black,
+                      fontFamily: 'Poppins',
+                    ),
+                  ),
+                ),
+                SizedBox(
+                    width: isWeb
+                        ? responsive.screenWidth * 0.01
+                        : responsive.screenWidth * 0.02),
+                // Mobile number input field
+                Expanded(
+                  child: Center(
+                    // Add this
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 7),
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Required';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.phone,
+                        maxLength: 10,
+                        buildCounter: (_,
+                                {required currentLength,
+                                required isFocused,
+                                maxLength}) =>
+                            null,
+                        onChanged: (value) {
+                          if (value.length == 10) {
+                            FocusScope.of(context).unfocus();
+                          }
+                        },
+                        controller: _phonecontroller,
+                        textAlignVertical:
+                            TextAlignVertical.center, // Modified this
+                        style: TextStyle(
+                          fontSize: isWeb
+                              ? responsive.screenWidth * 0.015
+                              : responsive.screenWidth * 0.04,
+                          color: Colors.black,
+                          fontFamily: 'Poppins',
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Mobile Number',
+                          hintStyle: TextStyle(
+                            fontSize: isWeb
+                                ? responsive.screenWidth * 0.015
+                                : responsive.screenWidth * 0.04,
+                            color: Colors.grey,
+                            fontFamily: 'Poppins',
+                          ),
+                          border: InputBorder.none,
+                          isDense: true, // Add this
+                          contentPadding:
+                              const EdgeInsets.only(top: 5), // Add this
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

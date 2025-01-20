@@ -4,7 +4,6 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -38,6 +37,7 @@ class _AddGKState extends State<AddGK> {
   final TextEditingController descriptionController = TextEditingController();
   final GK formData = GK();
   String extension = '';
+  bool isimageUploading = false;
 
   Future<void> _requestPermissions() async {
     if (await Permission.storage.isGranted &&
@@ -71,13 +71,101 @@ class _AddGKState extends State<AddGK> {
     }
   }
 
+  Future<String> uploadImageSelective(XFile imageFile) async {
+    final uri = Uri.parse('$baseUrl/api/upload-profile');
+    final request = http.MultipartRequest('POST', uri);
+
+    // Add the image file to the request
+    request.files
+        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
+
+    // Send the request
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      // Parse the response to extract the download URL
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse.containsKey('download_url')) {
+        return jsonResponse['download_url'] as String;
+      } else {
+        print('Download URL not found in the response.');
+        return 'null';
+      }
+    } else {
+      print('Failed to upload image: ${response.statusCode}');
+      return 'null';
+    }
+  }
+
+  Future<void> handleImageSelection() async {
+    setState(() {
+      isimageUploading = true;
+    });
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile =
+          await picker.pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        final fileSize =
+            await pickedFile.length(); // Get the file size in bytes
+
+        // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
+        if (fileSize > 2 * 1024 * 1024) {
+          Fluttertoast.showToast(
+              msg: 'File size exceeds 2MB. Please select a smaller image.');
+          return;
+        }
+      }
+
+      if (pickedFile != null) {
+        // Upload the image and get the path
+        final newuploadedPath = await uploadImageSelective(pickedFile);
+        if (newuploadedPath != 'null') {
+          setState(() {
+            // Example: Update the first student's photo path
+
+            formData.photo = newuploadedPath;
+            isimageUploading = false;
+          });
+
+          Fluttertoast.showToast(
+              msg: 'Image uploaded successfully: $newuploadedPath');
+        } else {
+          Fluttertoast.showToast(msg: 'Failed to upload the image.');
+          setState(() {
+            isimageUploading = false;
+          });
+        }
+      } else {
+        Fluttertoast.showToast(msg: 'No image selected.');
+        setState(() {
+          isimageUploading = false;
+        });
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error during image selection: $e');
+      setState(() {
+        isimageUploading = false;
+      });
+    }
+  }
+
   Future<String> uploadImage() async {
+    setState(() {
+      isimageUploading = true;
+    });
     await _requestPermissions();
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
     if (image == null) {
       Fluttertoast.showToast(msg: 'No image selected.');
+      setState(() {
+        isimageUploading = false;
+      });
       return 'null';
     }
 
@@ -86,6 +174,9 @@ class _AddGKState extends State<AddGK> {
 
     if (compressedImage == null) {
       Fluttertoast.showToast(msg: 'Failed to compress image.');
+      setState(() {
+        isimageUploading = false;
+      });
       return 'null';
     }
 
@@ -107,15 +198,24 @@ class _AddGKState extends State<AddGK> {
       if (jsonResponse.containsKey('download_url')) {
         setState(() {
           formData.photo = jsonResponse['download_url'];
+          setState(() {
+            isimageUploading = false;
+          });
         });
         return jsonResponse['download_url'] as String;
       } else {
         Fluttertoast.showToast(msg: 'Download URL not found in the response.');
+        setState(() {
+          isimageUploading = false;
+        });
         return 'null';
       }
     } else {
       Fluttertoast.showToast(
           msg: 'Failed to upload image: ${response.statusCode}');
+      setState(() {
+        isimageUploading = false;
+      });
       return 'null';
     }
   }
@@ -253,108 +353,6 @@ class _AddGKState extends State<AddGK> {
     }
   }
 
-  Future<String> uploadFile(String filePath, String fileType) async {
-    final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri); // Correct HTTP method
-
-    // Add the file to the request with the correct field name
-    request.files.add(await http.MultipartFile.fromPath(
-        'photo', filePath)); // Field name is 'photo'
-
-    // Send the request
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      // Parse the response to extract the download URL
-      final responseBody = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-
-      if (jsonResponse.containsKey('download_url')) {
-        return jsonResponse['download_url'] as String;
-      } else {
-        print('Download URL not found in the response.');
-        return 'null';
-      }
-    } else {
-      print('Failed to upload file: ${response.statusCode}');
-      return 'null';
-    }
-  }
-
-  Future<void> handleFileSelection(BuildContext context) async {
-    try {
-      // Use FilePicker to select a file
-      final result = await FilePicker.platform.pickFiles();
-
-      if (result != null && result.files.single.path != null) {
-        final filePath = result.files.single.path!;
-        final fileName = result.files.single.name;
-        final fileSize = result.files.single.size; // File size in bytes
-
-        // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
-        if (fileSize > 2 * 1024 * 1024) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content:
-                  Text('File size exceeds 2MB. Please select a smaller file.'),
-              duration: Duration(seconds: 2),
-            ),
-          );
-          return; // Exit the method
-        }
-
-        // Determine file type (use "document" for docx/pdf, "photo" for images)
-        final fileType = fileName.endsWith('.jpg') ||
-                fileName.endsWith('.jpeg') ||
-                fileName.endsWith('.png')
-            ? 'photo'
-            : 'document';
-
-        // Upload the file and get the path
-        final uploadedPath = await uploadFile(filePath, fileType);
-
-        if (uploadedPath != 'null') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('File Uploaded Successfully!'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-          print('File uploaded successfully: $uploadedPath');
-          setState(() {
-            formData.photo = uploadedPath;
-          });
-        } else {
-          print('Failed to upload the file.');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  'Failed to upload the file.(Only upload pdf, docx and image)'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-        }
-      } else {
-        print('No file selected.');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No file selected'),
-            duration: Duration(seconds: 1),
-          ),
-        );
-      }
-    } catch (e) {
-      print('Error during file selection: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content:
-              Text('Failed to Upload file.(Only upload pdf, docx and image)'),
-          duration: Duration(seconds: 1),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -485,142 +483,146 @@ class _AddGKState extends State<AddGK> {
             ),
             const SizedBox(height: 20),
             Center(
-              child: GestureDetector(
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    barrierColor: Colors.black.withValues(alpha: 0.3),
-                    builder: (BuildContext context) {
-                      return Dialog(
-                        backgroundColor: Colors.transparent,
-                        insetPadding: const EdgeInsets.all(16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 200,
-                                height: 50,
+              child: isimageUploading
+                  ? const CircularProgressIndicator()
+                  : GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          barrierColor: Colors.black.withValues(alpha: 0.3),
+                          builder: (BuildContext context) {
+                            return Dialog(
+                              backgroundColor: Colors.transparent,
+                              insetPadding: const EdgeInsets.all(16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.all(16.0),
                                 decoration: BoxDecoration(
-                                  color: Colors.lightBlue.shade100,
-                                  borderRadius: BorderRadius.circular(22),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                                child: TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    uploadImage();
-                                  },
-                                  child: const Text(
-                                    "Camera",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontFamily: 'Poppins'),
-                                  ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 200,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: Colors.lightBlue.shade100,
+                                        borderRadius: BorderRadius.circular(22),
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          uploadImage();
+                                        },
+                                        child: const Text(
+                                          "Camera",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.black,
+                                              fontFamily: 'Poppins'),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    // Button for "I'm a Teacher"
+                                    Container(
+                                      width: 200,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        color: Colors.orange.shade100,
+                                        borderRadius: BorderRadius.circular(22),
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          handleImageSelection();
+                                        },
+                                        child: const Text(
+                                          "Upload File",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.black,
+                                              fontFamily: 'Poppins'),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 16),
-                              // Button for "I'm a Teacher"
-                              Container(
-                                width: 200,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.shade100,
-                                  borderRadius: BorderRadius.circular(22),
-                                ),
-                                child: TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    handleFileSelection(context);
-                                  },
-                                  child: const Text(
-                                    "Upload File",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontFamily: 'Poppins'),
-                                  ),
-                                ),
+                            );
+                          },
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Container(
+                          width: double.infinity, // Responsive width
+                          height: 168,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(14.40),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.5),
+                                offset: const Offset(2, 2),
+                                blurRadius: 4,
                               ),
                             ],
                           ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(1.0),
+                            child: Center(
+                              child: formData.photo != null
+                                  ? _buildFilePreview(formData.photo!)
+                                  : Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 30),
+                                          child: Image.asset(
+                                            'assets/camera@3x.png',
+                                            width: 46,
+                                            height: 37,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        const Center(
+                                          child: Text(
+                                            'Upload Image',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        const Center(
+                                          child: Text(
+                                            'Click Here',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                            ),
+                          ),
                         ),
-                      );
-                    },
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Container(
-                    width: double.infinity, // Responsive width
-                    height: 168,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(14.40),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.5),
-                          offset: const Offset(2, 2),
-                          blurRadius: 4,
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: Center(
-                        child: formData.photo != null
-                            ? _buildFilePreview(formData.photo!)
-                            : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 30),
-                                    child: Image.asset(
-                                      'assets/camera@3x.png',
-                                      width: 46,
-                                      height: 37,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  const Center(
-                                    child: Text(
-                                      'Upload Image',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  const Center(
-                                    child: Text(
-                                      'Click Here',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
                       ),
                     ),
-                  ),
-                ),
-              ),
             ),
             const Spacer(),
             const Center(

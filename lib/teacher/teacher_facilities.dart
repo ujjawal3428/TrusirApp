@@ -151,7 +151,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const WanaLogout()),
+                MaterialPageRoute(
+                    builder: (context) => WanaLogout(profile: profile)),
               );
             },
             child: Padding(

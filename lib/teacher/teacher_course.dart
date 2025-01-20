@@ -259,7 +259,9 @@ class TeacherCoursePage extends StatelessWidget {
       ),
       body: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: isWeb ? 2 : 1, mainAxisExtent: isWeb ? 550 : 400),
+            crossAxisCount: isWeb ? 2 : 1,
+            mainAxisExtent: isWeb ? 550 : null,
+            childAspectRatio: 16 / 14),
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         itemCount: courses.length,
         itemBuilder: (context, index) {

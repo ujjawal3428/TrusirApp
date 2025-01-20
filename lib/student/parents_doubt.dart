@@ -39,6 +39,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
   TextEditingController descriptionController = TextEditingController();
   final ParentsDoubt formData = ParentsDoubt();
   String extension = '';
+  bool isimageUploading = false;
 
   Future<void> openDialer(String phoneNumber) async {
     final Uri launchUri = Uri(
@@ -100,11 +101,17 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
 
   Future<String> uploadImage() async {
     await _requestPermissions();
+    setState(() {
+      isimageUploading = true;
+    });
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
     if (image == null) {
       Fluttertoast.showToast(msg: 'No image selected.');
+      setState(() {
+        isimageUploading = false;
+      });
       return 'null';
     }
 
@@ -113,6 +120,9 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
 
     if (compressedImage == null) {
       Fluttertoast.showToast(msg: 'Failed to compress image.');
+      setState(() {
+        isimageUploading = false;
+      });
       return 'null';
     }
 
@@ -134,15 +144,22 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
       if (jsonResponse.containsKey('download_url')) {
         setState(() {
           formData.photo = jsonResponse['download_url'];
+          isimageUploading = false;
         });
         return jsonResponse['download_url'] as String;
       } else {
         Fluttertoast.showToast(msg: 'Download URL not found in the response.');
+        setState(() {
+          isimageUploading = false;
+        });
         return 'null';
       }
     } else {
       Fluttertoast.showToast(
           msg: 'Failed to upload image: ${response.statusCode}');
+      setState(() {
+        isimageUploading = false;
+      });
       return 'null';
     }
   }
@@ -310,6 +327,9 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
   }
 
   Future<void> handleFileSelection() async {
+    setState(() {
+      isimageUploading = true;
+    });
     try {
       // Use FilePicker to select a file
       final result = await FilePicker.platform.pickFiles();
@@ -321,13 +341,11 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
 
         // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
         if (fileSize > 2 * 1024 * 1024) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content:
-                  Text('File size exceeds 2MB. Please select a smaller file.'),
-              duration: Duration(seconds: 2),
-            ),
-          );
+          Fluttertoast.showToast(
+              msg: 'File size exceeds 2MB. Please select a smaller file.');
+          setState(() {
+            isimageUploading = false;
+          });
           return; // Exit the method
         }
 
@@ -342,44 +360,28 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
         final uploadedPath = await uploadFile(filePath, fileType);
 
         if (uploadedPath != 'null') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('File Uploaded Successfully!'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-          print('File uploaded successfully: $uploadedPath');
+          Fluttertoast.showToast(msg: 'File uploaded successfully');
           setState(() {
             formData.photo = uploadedPath;
+            isimageUploading = false;
           });
         } else {
-          print('Failed to upload the file.');
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  'Failed to upload the file.(Only upload pdf, docx and image)'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          Fluttertoast.showToast(msg: 'Failed to upload the file.');
+          setState(() {
+            isimageUploading = false;
+          });
         }
       } else {
-        print('No file selected.');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No file selected'),
-            duration: Duration(seconds: 1),
-          ),
-        );
+        Fluttertoast.showToast(msg: 'No file selected.');
+        setState(() {
+          isimageUploading = false;
+        });
       }
     } catch (e) {
-      print('Error during file selection: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content:
-              Text('Failed to Upload file.(Only upload pdf, docx and image)'),
-          duration: Duration(seconds: 1),
-        ),
-      );
+      Fluttertoast.showToast(msg: 'Error during file selection: $e');
+      setState(() {
+        isimageUploading = false;
+      });
     }
   }
 
@@ -534,168 +536,187 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: Container(
-                                width: constraints.maxWidth *
-                                    0.2, // Responsive width
-                                height: 168,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(14.40),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color:
-                                          Colors.black.withValues(alpha: 0.5),
-                                      offset: const Offset(2, 2),
-                                      blurRadius: 4,
-                                    ),
-                                  ],
-                                ),
-                                child: formData.photo != null
-                                    ? _buildFilePreview(formData.photo!)
-                                    : GestureDetector(
-                                        onTap: () {
-                                          showDialog(
-                                            context: context,
-                                            barrierColor: Colors.black
-                                                .withValues(alpha: 0.3),
-                                            builder: (BuildContext context) {
-                                              return Dialog(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                insetPadding:
-                                                    const EdgeInsets.all(16),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                                child: Container(
-                                                  padding: const EdgeInsets.all(
-                                                      16.0),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                  ),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Container(
-                                                        width: 200,
-                                                        height: 50,
+                              child: isimageUploading
+                                  ? const CircularProgressIndicator()
+                                  : Container(
+                                      width: constraints.maxWidth *
+                                          0.2, // Responsive width
+                                      height: 168,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(14.40),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black
+                                                .withValues(alpha: 0.5),
+                                            offset: const Offset(2, 2),
+                                            blurRadius: 4,
+                                          ),
+                                        ],
+                                      ),
+                                      child: formData.photo != null
+                                          ? _buildFilePreview(formData.photo!)
+                                          : GestureDetector(
+                                              onTap: () {
+                                                showDialog(
+                                                  context: context,
+                                                  barrierColor: Colors.black
+                                                      .withValues(alpha: 0.3),
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return Dialog(
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      insetPadding:
+                                                          const EdgeInsets.all(
+                                                              16),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                      ),
+                                                      child: Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(16.0),
                                                         decoration:
                                                             BoxDecoration(
-                                                          color: Colors
-                                                              .lightBlue
-                                                              .shade100,
+                                                          color: Colors.white,
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(22),
+                                                                  .circular(20),
                                                         ),
-                                                        child: TextButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                            uploadImage();
-                                                          },
-                                                          child: const Text(
-                                                            "Camera",
-                                                            style: TextStyle(
-                                                                fontSize: 18,
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Container(
+                                                              width: 200,
+                                                              height: 50,
+                                                              decoration:
+                                                                  BoxDecoration(
                                                                 color: Colors
-                                                                    .black,
-                                                                fontFamily:
-                                                                    'Poppins'),
+                                                                    .lightBlue
+                                                                    .shade100,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            22),
+                                                              ),
+                                                              child: TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  uploadImage();
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                  "Camera",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontFamily:
+                                                                          'Poppins'),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 16),
+                                                            // Button for "I'm a Teacher"
+                                                            Container(
+                                                              width: 200,
+                                                              height: 50,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .orange
+                                                                    .shade100,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            22),
+                                                              ),
+                                                              child: TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                  handleFileSelection();
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                  "Upload File",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontFamily:
+                                                                          'Poppins'),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(1.0),
+                                                child: Center(
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 30),
+                                                        child: Image.asset(
+                                                          'assets/camera@3x.png',
+                                                          width: 46,
+                                                          height: 37,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      const Center(
+                                                        child: Text(
+                                                          'Upload Image',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 14,
                                                           ),
                                                         ),
                                                       ),
                                                       const SizedBox(
-                                                          height: 16),
-                                                      // Button for "I'm a Teacher"
-                                                      Container(
-                                                        width: 200,
-                                                        height: 50,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors
-                                                              .orange.shade100,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(22),
-                                                        ),
-                                                        child: TextButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                            handleFileSelection();
-                                                          },
-                                                          child: const Text(
-                                                            "Upload File",
-                                                            style: TextStyle(
-                                                                fontSize: 18,
-                                                                color: Colors
-                                                                    .black,
-                                                                fontFamily:
-                                                                    'Poppins'),
+                                                        height: 5,
+                                                      ),
+                                                      const Center(
+                                                        child: Text(
+                                                          'Click Here',
+                                                          style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 10,
                                                           ),
                                                         ),
-                                                      ),
+                                                      )
                                                     ],
                                                   ),
                                                 ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(1.0),
-                                          child: Center(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 30),
-                                                  child: Image.asset(
-                                                    'assets/camera@3x.png',
-                                                    width: 46,
-                                                    height: 37,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 10,
-                                                ),
-                                                const Center(
-                                                  child: Text(
-                                                    'Upload Image',
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 14,
-                                                    ),
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                const Center(
-                                                  child: Text(
-                                                    'Click Here',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 10,
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                              ),
+                                    ),
                             ),
                           ],
                         ),

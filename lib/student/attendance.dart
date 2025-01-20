@@ -104,7 +104,7 @@ class _AttendancePageState extends State<AttendancePage> {
 
   Future<List<Course>> fetchCourses() async {
     final url = Uri.parse(
-        '$baseUrl/view-slots/${widget.userID}'); // Replace with your API URL
+        '$baseUrl/get-courses/${widget.userID}'); // Replace with your API URL
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
