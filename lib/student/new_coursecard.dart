@@ -165,7 +165,7 @@ class _NewCourseCardState extends State<NewCourseCard> {
                     widget.course.type == 'Purchased'
                 ? Center(
                     child: SizedBox(
-                      width: isWeb ? 200 : 142,
+                      width: isWeb ? 200 : 300,
                       height: isWeb ? 40 : null,
                       child: ElevatedButton(
                         onPressed: () {
