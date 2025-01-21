@@ -522,7 +522,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
     return Container(
       width: width,
       height: isLargeScreen ? 150 : null,
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+      padding: const EdgeInsets.symmetric( horizontal: 20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF48116A), Color(0xFFC22054)],
@@ -543,7 +543,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
               children: [
                 Text(
                   'Current Month',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w800, ),
                 ),
                 SizedBox(height: 5),
                 Text(

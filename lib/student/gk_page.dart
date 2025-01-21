@@ -163,20 +163,22 @@ class _GKPageState extends State<GKPage> {
 
     if (['jpg', 'jpeg', 'png'].contains(extension)) {
       // Display the image preview
-      return Image.network(
-        fileUrl,
-        width: 50,
-        height: 50,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          return const Icon(Icons.broken_image, color: Colors.grey, size: 50);
-        },
+      return ClipOval(
+        child: Image.network(
+          fileUrl,
+          width: 58,
+          height: 58,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return const Icon(Icons.broken_image, color: Colors.grey, size: 60);
+          },
+        ),
       );
     } else {
       // Display an icon for non-image file types
       return Icon(
         _getIconForFile(fileUrl),
-        size: 50,
+        size: 58,
         color: _getIconColorForFile(fileUrl),
       );
     }
@@ -255,142 +257,154 @@ class _GKPageState extends State<GKPage> {
       });
     }
   }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey[50],
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: Row(
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Image.asset('assets/back_button.png', height: 50)),
-              const SizedBox(width: 20),
-              const Text(
-                'GK',
-                style: TextStyle(
-                  color: Color(0xFF48116A),
-                  fontSize: 25,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-        ),
-        toolbarHeight: 70,
-      ),
+  
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
       backgroundColor: Colors.grey[50],
-      body: gksList.isEmpty && !isLoading && initialLoadComplete
-          ? const Center(
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Text(
-                  'No GKs available',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+      elevation: 0,
+      automaticallyImplyLeading: false,
+      title: Padding(
+        padding: const EdgeInsets.only(left: 10.0),
+        child: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Image.asset('assets/back_button.png', height: 50),
+            ),
+            const SizedBox(width: 20),
+            const Text(
+              'GK',
+              style: TextStyle(
+                color: Color(0xFF48116A),
+                fontSize: 25,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w700,
               ),
-            )
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SingleChildScrollView(
-                  child: SizedBox(
-                    height: (gksList.length * 150.0)
-                        .clamp(0, MediaQuery.of(context).size.height * 0.65),
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(10.0),
-                      itemCount: gksList.length,
-                      itemBuilder: (context, index) {
-                        final gk = gksList[index];
-                        final filename = '${gk.course}_your_gk_${gk.createdAt}';
-                        final isDownloaded =
-                            downloadedFiles.containsKey(filename);
+            ),
+          ],
+        ),
+      ),
+      toolbarHeight: 70,
+    ),
+    backgroundColor: Colors.grey[50],
+    body: gksList.isEmpty && !isLoading && initialLoadComplete
+        ? const Center(
+            child: Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Text(
+                'No GKs available',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+            ),
+          )
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SingleChildScrollView(
+                child: SizedBox(
+                  height: (gksList.length * 150.0)
+                      .clamp(0, MediaQuery.of(context).size.height * 0.65),
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(10.0),
+                    itemCount: gksList.length,
+                    itemBuilder: (context, index) {
+                      final gk = gksList[index];
+                      final filename = '${gk.course}_your_gk_${gk.createdAt}';
+                      final isDownloaded = downloadedFiles.containsKey(filename);
 
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.yellow.shade100,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: ListTile(
-                              leading: _buildFilePreview(gk.image),
-                              title: Text(
-                                gk.title,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Description: ${gk.course}'),
-                                  const SizedBox(height: 2),
-                                  Text('Posted on: ${gk.createdAt}'),
-                                ],
-                              ),
-                              trailing: SizedBox(
-                                height: 20,
-                                width: 80,
-                                child: ElevatedButton.icon(
-                                  onPressed: () {
-                                    if (isDownloaded) {
-                                      _openFile(filename);
-                                    } else {
-                                      _downloadFile(gk.image, filename);
-                                    }
-                                  },
-                                  icon: Icon(
-                                    isDownloaded
-                                        ? Icons.open_in_new
-                                        : Icons.download,
-                                    size: 17,
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.yellow.shade100,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ListTile(
+                                  leading: _buildFilePreview(gk.image),
+                                  title: Text(
+                                    gk.title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                  label: Text(
-                                    isDownloaded ? "Open" : "Download",
-                                    style: const TextStyle(fontSize: 10),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.all(0),
-                                    foregroundColor: Colors.blue,
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(gk.course),
+                                      const SizedBox(height: 2),
+                                      Text('Posted on: ${gk.createdAt}'),
+                                    ],
                                   ),
                                 ),
-                              ),
+                                Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+                                    child: SizedBox(
+                                      height: 30,
+                                      width: 100,
+                                      child: ElevatedButton.icon(
+                                        onPressed: () {
+                                          if (isDownloaded) {
+                                            _openFile(filename);
+                                          } else {
+                                            _downloadFile(gk.image, filename);
+                                          }
+                                        },
+                                        icon: Icon(
+                                          isDownloaded
+                                              ? Icons.open_in_new
+                                              : Icons.download,
+                                          size: 17,
+                                        ),
+                                        label: Text(
+                                          isDownloaded ? "Open" : "Download",
+                                          style: const TextStyle(fontSize: 10),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.all(0),
+                                          foregroundColor: Colors.blue,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ),
-                if (isLoading)
-                  const CircularProgressIndicator()
-                else if (!hasMoreData && gksList.isNotEmpty)
-                  const Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text(
-                      'No more GKs',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  )
-                else if (gksList.isNotEmpty)
-                  TextButton(
-                    onPressed: fetchDoubts,
-                    child: const Text('Load More'),
+              ),
+              if (isLoading)
+                const CircularProgressIndicator()
+              else if (!hasMoreData && gksList.isNotEmpty)
+                const Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Text(
+                    'No more GKs',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-              ],
-            ),
-    );
-  }
+                )
+              else if (gksList.isNotEmpty)
+                TextButton(
+                  onPressed: fetchDoubts,
+                  child: const Text('Load More'),
+                ),
+            ],
+          ),
+  );
+}
 }
 
 class GK {

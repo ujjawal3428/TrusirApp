@@ -340,111 +340,487 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
   }
 
   Widget _buildSearchBar() {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return SearchDialog(
-              allGks: allgks, // Pass fetchAllGks method
+  return GestureDetector(
+    onTap: () {
+      showDialog(
+        context: context,
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              'Search GK',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            elevation: 0,
+          ),
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: TextField(
+                    onChanged: (value) {
+                      // Implement search functionality here
+                      setState(() {
+                        // Filter your gks list based on search value
+                      });
+                    },
+                    style: const TextStyle(fontFamily: 'Poppins'),
+                    decoration: InputDecoration(
+                      hintText: 'Search...',
+                      hintStyle: TextStyle(
+                        fontFamily: 'Poppins',
+                        color: Colors.grey.shade500,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade200),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade200),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.blue.shade400),
+                      ),
+                      prefixIcon: Icon(Icons.search, color: Colors.grey.shade600),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: allgks.length,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemBuilder: (context, index) {
+                    final gk = allgks[index];
+                    return Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.only(bottom: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SpecificExtraKnowledge(
+                                title: gk.title,
+                                imagePath: gk.image,
+                                content: gk.description,
+                              ),
+                            ),
+                          );
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network(
+                                  gk.image,
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      gk.title,
+                                      style: const TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      gk.description,
+                                      style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 13,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue.shade50,
+                                            borderRadius: BorderRadius.circular(6),
+                                          ),
+                                          child: Text(
+                                            gk.category,
+                                            style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12,
+                                              color: Colors.blue.shade700,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.purple.shade50,
+                                            borderRadius: BorderRadius.circular(6),
+                                          ),
+                                          child: Text(
+                                            gk.subCategory,
+                                            style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              fontSize: 12,
+                                              color: Colors.purple.shade700,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Text(
+              'Search..',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                color: Colors.grey.shade600,
+                fontSize: 14,
+              ),
+            ),
+            const Spacer(),
+            Icon(Icons.search, color: Colors.grey.shade600)
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _buildCategoryList() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(
+        height: 45,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: categories.length,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: _buildCategoryChip(categories[index]),
             );
           },
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          height: 50,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, width: 2),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: const Row(
-            children: [Text('Search..'), Spacer(), Icon(Icons.search)],
-          ),
         ),
       ),
-    );
-  }
+    ],
+  );
+}
 
-  Widget _buildCategoryList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
-          child: Text(
-            'Categories',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 40,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: categories.length,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: _buildCategoryChip(categories[index]),
-              );
-            },
-          ),
+Widget _buildCategoryChip(String category) {
+  return Container(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [Colors.blue.shade700, Colors.blue.shade500],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      borderRadius: BorderRadius.circular(12),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.blue.withOpacity(0.2),
+          spreadRadius: 1,
+          blurRadius: 8,
+          offset: const Offset(0, 2),
         ),
       ],
-    );
-  }
-
-  Widget _buildCategoryChip(String category) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.blueGrey,
-        borderRadius: BorderRadius.circular(8),
+    ),
+    child: TextButton(
+      onPressed: () {
+        fetchSubCategories(category);
+        setState(() {});
+      },
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
-      child: TextButton(
-        onPressed: () {
-          fetchSubCategories(category);
-          setState(() {});
-        },
+      child: Text(
+        '${category[0].toUpperCase()}${category.substring(1)}',
+        style: const TextStyle(
+          fontFamily: 'Poppins',
+          fontSize: 15,
+          color: Colors.white,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _buildThumbnailGallery() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
         child: Text(
-          category,
+          '${selectedSubcategory[0].toUpperCase()}${selectedSubcategory.substring(1)}',
           style: const TextStyle(
-            fontSize: 12,
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
+            fontFamily: 'Poppins',
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
           ),
         ),
       ),
-    );
-  }
+      SizedBox(
+        height: 180,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: gks.length,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          itemBuilder: (context, index) {
+            final item = gks[index];
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SpecificExtraKnowledge(
+                      title: item.title,
+                      imagePath: item.image,
+                      content: item.description,
+                    ),
+                  ),
+                );
+                addToRecentlyViewed(item);
+              },
+              child: Container(
+                width: 160,
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                  image: DecorationImage(
+                    image: NetworkImage(item.image),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.7),
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(16),
+                        bottomRight: Radius.circular(16),
+                      ),
+                    ),
+                    child: Text(
+                      item.title,
+                      style: const TextStyle(
+                        fontFamily: 'Poppins',
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    ],
+  );
+}
 
-  Widget _buildThumbnailGallery() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+Widget _buildSubcategoriesSection() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+        child: Text(
+         '${selectedCategory[0].toUpperCase()}${selectedCategory.substring(1)}',
+
+          style: const TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+        ),
+      ),
+      SizedBox(
+        height: 40,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: subcategory.length,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  selectedSubcategory = subcategory[index];
+                });
+                fetchGks();
+              },
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 1,
+                      blurRadius: 6,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Chip(
+                  label: Text(
+                    subcategory[index].isNotEmpty
+      ? '${subcategory[index][0].toUpperCase()}${subcategory[index].substring(1)}'
+      : '',
+                    style: const TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  backgroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildRecentlyViewed() {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Padding(
+        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+        child: Text(
+          'Recently Viewed',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+        ),
+      ),
+      if (recentlyViewed.isEmpty)
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
-            selectedSubcategory,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+            'No recently viewed items',
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 14,
+              color: Colors.grey,
             ),
           ),
-        ),
+        )
+      else
         SizedBox(
-          height: 150,
+          height: 180,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: gks.length,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            itemCount: recentlyViewed.length,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             itemBuilder: (context, index) {
-              final item = gks[index];
+              final item = recentlyViewed[index];
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -457,14 +833,21 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
                       ),
                     ),
                   );
-                  addToRecentlyViewed(item);
                 },
                 child: Container(
-                  width: 150,
+                  width: 160,
                   margin: const EdgeInsets.symmetric(horizontal: 8.0),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                     image: DecorationImage(
                       image: NetworkImage(item.image),
                       fit: BoxFit.cover,
@@ -473,11 +856,23 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.black54,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.7),
+                        borderRadius: const BorderRadius.only(
+                          bottomLeft: Radius.circular(16),
+                          bottomRight: Radius.circular(16),
+                        ),
+                      ),
                       child: Text(
                         item.title,
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(
+                          fontFamily: 'Poppins',
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -487,229 +882,6 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
             },
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildSubcategoriesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
-          child: Text(
-            selectedCategory,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 50,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: subcategory.length,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedSubcategory = subcategory[index];
-                  });
-                  fetchGks();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: Chip(label: Text(subcategory[index])),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRecentlyViewed() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
-          child: Text(
-            'Recently Viewed',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        if (recentlyViewed.isEmpty)
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text('No recently viewed items'),
-          )
-        else
-          SizedBox(
-            height: 150,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: recentlyViewed.length,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              itemBuilder: (context, index) {
-                final item = recentlyViewed[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SpecificExtraKnowledge(
-                          title: item.title,
-                          imagePath: item.image,
-                          content: item.description,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: 150,
-                    margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(10),
-                      image: DecorationImage(
-                        image: NetworkImage(item.image),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        color: Colors.black54,
-                        child: Text(
-                          item.title,
-                          style: const TextStyle(color: Colors.white),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class SearchDialog extends StatefulWidget {
-  final List<KnowledgeItem> allGks;
-
-  const SearchDialog({super.key, required this.allGks});
-
-  @override
-  State<SearchDialog> createState() => _SearchDialogState();
-}
-
-class _SearchDialogState extends State<SearchDialog> {
-  List<KnowledgeItem> allGks = [];
-  List<KnowledgeItem> filteredGks = [];
-  final TextEditingController _searchDialogController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    allGks = widget.allGks;
-    filteredGks = List.from(allGks);
-    _searchDialogController.addListener(() {
-      filterGks(_searchDialogController.text);
-    });
-  }
-
-  void filterGks(String query) {
-    final lowerCaseQuery = query.toLowerCase();
-    setState(() {
-      filteredGks = allGks.where((gk) {
-        return gk.title.toString().toLowerCase().contains(lowerCaseQuery) ||
-            gk.description.toString().toLowerCase().contains(lowerCaseQuery) ||
-            gk.category.toString().toLowerCase().contains(lowerCaseQuery) ||
-            gk.subCategory.toString().toLowerCase().contains(lowerCaseQuery);
-      }).toList();
-    });
-  }
-
-  @override
-  void dispose() {
-    _searchDialogController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search GK'),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchDialogController,
-              decoration: const InputDecoration(
-                hintText: 'Search...',
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                prefixIcon: Icon(Icons.search),
-              ),
-              onChanged: filterGks,
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredGks.length,
-              itemBuilder: (context, index) {
-                final gk = filteredGks[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SpecificExtraKnowledge(
-                          title: gk.title,
-                          imagePath: gk.image,
-                          content: gk.description,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Card(
-                    child: ListTile(
-                      leading: Image.network(gk.image, fit: BoxFit.cover),
-                      title: Text('Title: ${gk.title}'),
-                      subtitle: SizedBox(
-                        height: 80,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Description: ${gk.description}'),
-                            const SizedBox(height: 5),
-                            Text(
-                                'Category: ${gk.category} Sub-Category:${gk.subCategory}'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+    ],
+  );
+}}
