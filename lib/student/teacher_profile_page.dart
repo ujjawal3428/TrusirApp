@@ -259,7 +259,14 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
             height: 63,
             decoration: BoxDecoration(
               color: imageBackgroundColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 4,
+                  offset: const Offset(3, 3),
+                ),
+              ],
             ),
             child: Padding(
               padding: const EdgeInsets.all(5.0),
@@ -276,7 +283,14 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
               width: 306,
               decoration: BoxDecoration(
                 color: textBackgroundColor,
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 4,
+                    offset: const Offset(3, 3),
+                  ),
+                ],
               ),
               child: Padding(
                 padding: const EdgeInsets.only(
