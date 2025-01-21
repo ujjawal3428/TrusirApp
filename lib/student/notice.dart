@@ -181,8 +181,8 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                             Text(
                                               notice.noticetitle,
                                               style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w700,
                                                 color: Colors.black,
                                               ),
                                             ),
@@ -209,7 +209,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                       ),
                                     ),
                                     Positioned(
-                                      top: 10,
+                                      top: 20,
                                       left: 10,
                                       child: Image.asset(
                                         'assets/bell.png',
