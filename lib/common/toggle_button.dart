@@ -22,12 +22,17 @@ class FilterSwitch extends StatefulWidget {
 
 class FilterSwitchState extends State<FilterSwitch> {
   late int _selectedIndex;
-  bool isWeb = false;
 
   @override
   void initState() {
     super.initState();
     _selectedIndex = widget.initialSelectedIndex;
+  }
+
+  void setSelectedIndex(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   void _onOptionTap(int index) {
@@ -41,7 +46,7 @@ class FilterSwitchState extends State<FilterSwitch> {
 
   @override
   Widget build(BuildContext context) {
-    MediaQuery.of(context).size.width > 600 ? isWeb = true : false;
+    bool isWeb = MediaQuery.of(context).size.width > 600;
     return Center(
       child: Container(
         width: isWeb ? 450 : 350,
