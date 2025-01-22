@@ -1,4 +1,10 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/common/api.dart';
+import 'package:trusir/student/course.dart';
+import 'package:trusir/teacher/teacher_facilities.dart';
 import 'package:trusir/teacher/teacher_main_screen.dart';
 
 class TeacherCourse {
@@ -148,8 +154,62 @@ class TeacherCourseCard extends StatelessWidget {
   }
 }
 
-class TeacherCoursePage extends StatelessWidget {
+class TeacherCoursePage extends StatefulWidget {
   const TeacherCoursePage({super.key});
+
+  @override
+  State<TeacherCoursePage> createState() => _TeacherCoursePageState();
+}
+
+class _TeacherCoursePageState extends State<TeacherCoursePage> {
+  final apiBase = '$baseUrl/my-student';
+
+  List<StudentProfile> studentprofile = [];
+  Future<void> fetchStudentProfiles({int page = 1}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
+    final url = '$apiBase/$userID';
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      setState(() {
+        // Initial fetch
+        studentprofile =
+            data.map((json) => StudentProfile.fromJson(json)).toList();
+      });
+      print(studentprofile[0].userID);
+    } else {
+      throw Exception('Failed to load student profiles');
+    }
+  }
+
+  Future<List<CourseDetail>> fetchCourses() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getString('userID');
+    final url = Uri.parse('$baseUrl/get-courses/$userID');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      final responseData =
+          data.map((json) => CourseDetail.fromJson(json)).toList();
+      _courseDetails = responseData;
+      return _courseDetails;
+    } else {
+      throw Exception('Failed to fetch courses');
+    }
+  }
+
+  List<CourseDetail> _courseDetails = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchStudentProfiles();
+    fetchCourses();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +286,7 @@ class TeacherCoursePage extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: List.generate(
-                  5,
+                  studentprofile.length,
                   (index) => Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8),
                     child: TextButton(
@@ -242,7 +302,7 @@ class TeacherCoursePage extends StatelessWidget {
                         // Handle student button click
                       },
                       child: Text(
-                        'Student ${index + 1}',
+                        studentprofile[index].name,
                         style: const TextStyle(
                           color: Colors.deepPurple,
                           fontWeight: FontWeight.bold,
