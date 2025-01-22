@@ -572,14 +572,22 @@ class _CoursePageState extends State<CoursePage> {
               _filterCourses(index);
             },
           ),
-          PageView(
-            controller: _pageController,
-            onPageChanged: _onPageChanged, // Update index on swipe
-            children: [
-              _buildCourseList(0),
-              _buildCourseList(1),
-              _buildCourseList(2),
-            ],
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: _onPageChanged, // Update index on swipe
+              children: [
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _buildCourseList(0),
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _buildCourseList(1),
+                isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _buildCourseList(2),
+              ],
+            ),
           ),
         ],
       ),
@@ -588,35 +596,32 @@ class _CoursePageState extends State<CoursePage> {
 
   // Extracted course list builder into a separate method for reusability
   Widget _buildCourseList(int index) {
-    return isLoading
-        ? const CircularProgressIndicator()
-        : filteredCourses.isEmpty
-            ? const Center(child: Text('No Courses'))
-            : isWeb
-                ? GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, mainAxisExtent: 560),
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    itemCount: filteredCourses.length,
-                    itemBuilder: (context, index) {
-                      final course = filteredCourses[index];
-                      return _selectedIndex == 0 || _selectedIndex == 1
-                          ? NewCourseCard(course: course)
-                          : CourseCard(course: course);
-                    },
-                  )
-                : ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    itemCount: filteredCourses.length,
-                    itemBuilder: (context, index) {
-                      final course = filteredCourses[index];
-                      return _selectedIndex == 0 || _selectedIndex == 1
-                          ? NewCourseCard(course: course)
-                          : CourseCard(course: course);
-                    },
-                  );
+    return filteredCourses.isEmpty
+        ? const Center(child: Text('No Courses'))
+        : isWeb
+            ? GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, mainAxisExtent: 560),
+                shrinkWrap: true,
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                itemCount: filteredCourses.length,
+                itemBuilder: (context, index) {
+                  final course = filteredCourses[index];
+                  return _selectedIndex == 0 || _selectedIndex == 1
+                      ? NewCourseCard(course: course)
+                      : CourseCard(course: course);
+                },
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                itemCount: filteredCourses.length,
+                itemBuilder: (context, index) {
+                  final course = filteredCourses[index];
+                  return _selectedIndex == 0 || _selectedIndex == 1
+                      ? NewCourseCard(course: course)
+                      : CourseCard(course: course);
+                },
+              );
   }
 }
