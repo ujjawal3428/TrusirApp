@@ -275,12 +275,10 @@ class _CourseCardState extends State<CourseCard> {
         .convert(utf8.encode(userId))
         .toString()
         .substring(0, 8); // 8 characters
-    int timestamp = DateTime.now().millisecondsSinceEpoch ~/
-        1000; // Unix timestamp in seconds
     int randomNum = Random().nextInt(10000); // Random 4-digit number
-    print("txn_${userHash}_${timestamp}_$randomNum");
+    print("txn_${userHash}_$randomNum");
     // Combine components to ensure <= 38 characters
-    return "txn_${userHash}_${timestamp}_$randomNum";
+    return "txn_${userHash}_$randomNum";
   }
 
   void initPhonePeSdk() {
@@ -356,7 +354,13 @@ class _CourseCardState extends State<CourseCard> {
             response["code"] == "PAYMENT_SUCCESS" &&
             response["data"]["state"] == "COMPLETED") {
           Fluttertoast.showToast(msg: response["code"]);
-          print(response);
+          int adjustedAmount = (response["data"]['amount'] / 100).toInt();
+          String transactiontype =
+              response["data"]["paymentInstrument"]["type"] == 'CARD'
+                  ? response["data"]["paymentInstrument"]["cardType"]
+                  : response["data"]["paymentInstrument"]["type"];
+          postTransaction(transactiontype, adjustedAmount, widget.course.name,
+              response["data"]["merchantTransactionId"], widget.course.id);
         } else {
           Fluttertoast.showToast(msg: response["code"]);
         }
@@ -364,6 +368,69 @@ class _CourseCardState extends State<CourseCard> {
         Fluttertoast.showToast(msg: "error");
       }
     });
+  }
+}
+
+Future<void> postTransaction(String transactionName, int amount,
+    String transactionType, String transactionID, int courseID) async {
+  final prefs = await SharedPreferences.getInstance();
+  final userID = prefs.getString('userID');
+  // Define the API URL
+  String apiUrl =
+      "$baseUrl/api/buy-course/$userID/$courseID"; // Replace with your API URL
+
+  // Create a Transaction instance
+  final Transaction transaction = Transaction(
+    transactionName: transactionName,
+    amount: amount,
+    transactionType: transactionType,
+    transactionID: transactionID,
+  );
+
+  try {
+    // Make the POST request
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        "Content-Type": "application/json", // Set headers if needed
+        // Optional if authorization is required
+      },
+      body: jsonEncode(transaction.toJson()),
+    );
+
+    // Check the response status
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("Transaction posted successfully: ${response.body}");
+    } else {
+      print(
+          "Failed to post transaction: ${response.statusCode} ${response.body}");
+    }
+  } catch (e) {
+    print("An error occurred: $e");
+  }
+}
+
+class Transaction {
+  final String transactionName;
+  final int amount;
+  final String transactionType;
+  final String transactionID;
+
+  Transaction({
+    required this.transactionName,
+    required this.amount,
+    required this.transactionType,
+    required this.transactionID,
+  });
+
+  // Convert the Transaction object to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      "transactionName": transactionName,
+      "amount": amount,
+      "transactionType": transactionType,
+      "transactionID": transactionID,
+    };
   }
 }
 
@@ -564,10 +631,8 @@ class _CoursePageState extends State<CoursePage> {
             option3: 'All Courses',
             initialSelectedIndex: _selectedIndex,
             onChanged: (index) {
-              _pageController.animateToPage(
+              _pageController.jumpToPage(
                 index,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
               );
               _filterCourses(index);
             },
