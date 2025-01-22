@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -252,17 +253,15 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
 
               _buildPinFieldWithBackground(
                   hintText: 'Pincode', controllers: widget._pincodecontroller),
-              SizedBox(height: screenHeight * 0.02),
+              SizedBox(height: screenHeight * 0.04),
 
               // Enquire Button
               Center(
                 child: GestureDetector(
                   onTap: _onEnquire,
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: screenWidth * 0.4,
-                      maxHeight: 60,
-                    ),
+                  child: SizedBox(
+                      width: kIsWeb ? 300.0 : 300.0,
+                    height: kIsWeb ? 80.0 : 60.0,
                     child: Image.asset(
                       'assets/enquire.png',
                       fit: BoxFit.contain,
