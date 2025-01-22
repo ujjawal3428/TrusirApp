@@ -421,7 +421,10 @@ class CoursePage extends StatefulWidget {
 
 class _CoursePageState extends State<CoursePage> {
   final PageController _pageController = PageController();
-  
+  final GlobalKey<FilterSwitchState> _filterSwitchKey =
+      GlobalKey<FilterSwitchState>();
+  bool isLoading = true;
+
   Future<List<Course>> fetchAllCourses() async {
     final url = Uri.parse('$baseUrl/get-courses');
     final response = await http.get(url);
@@ -461,33 +464,48 @@ class _CoursePageState extends State<CoursePage> {
   bool isWeb = false;
 
   void _filterCourses(int index) async {
-    await fetchAllCourses();
-    await fetchCourses();
     setState(() {
-      _selectedIndex = index;
-      if (index == 0) {
-        filteredCourses = _courseDetails
-            .where((course) =>
-                course.type == 'purchased' || course.type == 'Purchased')
-            .toList();
-      } else if (index == 1) {
-        filteredCourses =
-            _courseDetails.where((course) => course.type == 'demo').toList();
-      } else if (index == 2) {
-        filteredCourses = _courses;
-      }
-        _pageController.animateToPage(
-        index,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      isLoading = true;
     });
+    try {
+      await fetchAllCourses();
+      await fetchCourses();
+      setState(() {
+        _selectedIndex = index;
+        if (index == 0) {
+          filteredCourses = _courseDetails
+              .where((course) =>
+                  course.type == 'purchased' || course.type == 'Purchased')
+              .toList();
+        } else if (index == 1) {
+          filteredCourses =
+              _courseDetails.where((course) => course.type == 'demo').toList();
+        } else if (index == 2) {
+          filteredCourses = _courses;
+        }
+        _pageController.animateToPage(
+          index,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        _filterSwitchKey.currentState?.setSelectedIndex(index);
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
- void _onPageChanged(int index) {
+  void _onPageChanged(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    _filterSwitchKey.currentState?.setSelectedIndex(index);
     _filterCourses(index);
   }
 
@@ -537,26 +555,31 @@ class _CoursePageState extends State<CoursePage> {
         ),
         toolbarHeight: 70,
       ),
-      body:  Column(
+      body: Column(
         children: [
           FilterSwitch(
+            key: _filterSwitchKey,
             option1: 'My Courses',
             option2: 'Demo Courses',
             option3: 'All Courses',
             initialSelectedIndex: _selectedIndex,
-            onChanged: _filterCourses, // No changes here
+            onChanged: (index) {
+              _pageController.animateToPage(
+                index,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+              _filterCourses(index);
+            },
           ),
-          Expanded(
-            // Added PageView here to enable swipe gestures
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: _onPageChanged, // Update index on swipe
-              children: [
-                _buildCourseList(0),
-                _buildCourseList(1),
-                _buildCourseList(2),
-              ],
-            ),
+          PageView(
+            controller: _pageController,
+            onPageChanged: _onPageChanged, // Update index on swipe
+            children: [
+              _buildCourseList(0),
+              _buildCourseList(1),
+              _buildCourseList(2),
+            ],
           ),
         ],
       ),
@@ -565,32 +588,35 @@ class _CoursePageState extends State<CoursePage> {
 
   // Extracted course list builder into a separate method for reusability
   Widget _buildCourseList(int index) {
-    return filteredCourses.isEmpty
-        ? const Center(child: Text('No Courses'))
-        : isWeb
-            ? GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, mainAxisExtent: 560),
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                itemCount: filteredCourses.length,
-                itemBuilder: (context, index) {
-                  final course = filteredCourses[index];
-                  return _selectedIndex == 0 || _selectedIndex == 1
-                      ? NewCourseCard(course: course)
-                      : CourseCard(course: course);
-                },
-              )
-            : ListView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                itemCount: filteredCourses.length,
-                itemBuilder: (context, index) {
-                  final course = filteredCourses[index];
-                  return _selectedIndex == 0 || _selectedIndex == 1
-                      ? NewCourseCard(course: course)
-                      : CourseCard(course: course);
-                },
-              );
+    return isLoading
+        ? const CircularProgressIndicator()
+        : filteredCourses.isEmpty
+            ? const Center(child: Text('No Courses'))
+            : isWeb
+                ? GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, mainAxisExtent: 560),
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    itemCount: filteredCourses.length,
+                    itemBuilder: (context, index) {
+                      final course = filteredCourses[index];
+                      return _selectedIndex == 0 || _selectedIndex == 1
+                          ? NewCourseCard(course: course)
+                          : CourseCard(course: course);
+                    },
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    itemCount: filteredCourses.length,
+                    itemBuilder: (context, index) {
+                      final course = filteredCourses[index];
+                      return _selectedIndex == 0 || _selectedIndex == 1
+                          ? NewCourseCard(course: course)
+                          : CourseCard(course: course);
+                    },
+                  );
   }
 }
