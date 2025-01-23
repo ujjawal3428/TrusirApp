@@ -717,134 +717,165 @@ Widget _buildThumbnailGallery() {
     ],
   );
 }
+
 Widget _buildSubcategoriesSection() {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
-        child: Text(
-          selectedCategory.isNotEmpty
-              ? '${selectedCategory[0].toUpperCase()}${selectedCategory.substring(1)}'
-              : 'Categories',
-          style: const TextStyle(
-            fontFamily: 'Poppins',
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ),
-        ),
-      ),
-      const SizedBox(height: 10),
-      ListView.builder(
-        shrinkWrap: true, // Ensures the ListView takes only the necessary height
-        physics: const NeverScrollableScrollPhysics(), // Disable vertical scrolling for this list
-        itemCount: subcategory.length,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemBuilder: (context, index) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Subcategory title
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Text(
-                  '${subcategory[index][0].toUpperCase()}${subcategory[index].substring(1)}',
-                  style: const TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+  // Efficiently remove duplicates from subcategory list
+  final uniqueSubcategories = subcategory.toSet().toList();
+
+  return Padding(
+    padding: const EdgeInsets.only(top: 10.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Horizontally scrollable subcategories
+        SizedBox(
+          height: 50,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: uniqueSubcategories.length,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemBuilder: (context, index) {
+              final currentSubcategory = uniqueSubcategories[index];
+              return GestureDetector(
+                onTap: () {
+                  selectedCategory = currentSubcategory;
+                  (context as Element).markNeedsBuild();
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: selectedCategory == currentSubcategory
+                        ? Colors.blue
+                        : Colors.grey[300],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                    child: Text(
+                      currentSubcategory.capitalize(),
+                      style: const TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black87,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              // Horizontal list of KnowledgeItems for the subcategory
-              SizedBox(
-                height: 180,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: gks
-                      .where((item) => item.subCategory == subcategory[index])
-                      .toList()
-                      .length,
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  itemBuilder: (context, itemIndex) {
-                    final filteredItems = gks
-                        .where((item) =>
-                            item.subCategory == subcategory[index])
-                        .toList();
-                    final item = filteredItems[itemIndex];
-                    return GestureDetector(
-                      onTap: () {
-                        addToRecentlyViewed(item); // Track recently viewed items
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SpecificExtraKnowledge(
-                              title: item.title,
-                              imagePath: item.image,
-                              content: item.description,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: 160,
-                        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              spreadRadius: 1,
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                          image: DecorationImage(
-                            image: NetworkImage(item.image),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.7),
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(16),
-                                bottomRight: Radius.circular(16),
-                              ),
-                            ),
-                            child: Text(
-                              item.title,
-                              style: const TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 20),
+    
+        // Vertical list of subcategories and their items
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: uniqueSubcategories.length,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemBuilder: (context, index) {
+            final currentSubcategory = uniqueSubcategories[index];
+            final subcategoryItems = gks
+                .where((item) => item.subCategory == currentSubcategory)
+                .toList();
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Subcategory title
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    currentSubcategory.capitalize(),
+                    style: const TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20), // Add spacing between subcategories
-            ],
-          );
-        },
-      ),
-    ],
+                // Horizontal list of KnowledgeItems for the subcategory
+                SizedBox(
+                  height: 180,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: subcategoryItems.length,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    itemBuilder: (context, itemIndex) {
+                      final item = subcategoryItems[itemIndex];
+                      return GestureDetector(
+                        onTap: () {
+                          addToRecentlyViewed(item);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SpecificExtraKnowledge(
+                                title: item.title,
+                                imagePath: item.image,
+                                content: item.description,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 160,
+                          margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                spreadRadius: 1,
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                            image: DecorationImage(
+                              image: NetworkImage(item.image),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
+                                borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(16),
+                                  bottomRight: Radius.circular(16),
+                                ),
+                              ),
+                              child: Text(
+                                item.title,
+                                style: const TextStyle(
+                                  fontFamily: 'Poppins',
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20), 
+              ],
+            );
+          },
+        ),
+      ],
+    ),
   );
 }
-
 
 
 Widget _buildRecentlyViewed() {
@@ -947,4 +978,12 @@ Widget _buildRecentlyViewed() {
         ),
     ],
   );
-}}
+}
+}
+
+// Extension method to capitalize first letter
+extension StringCapitalization on String {
+  String capitalize() {
+    return isEmpty ? this : '${this[0].toUpperCase()}${substring(1)}';
+  }
+}
