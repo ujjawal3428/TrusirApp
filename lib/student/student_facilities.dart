@@ -515,7 +515,6 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
               color.withValues(alpha: 0.6),
               color,
               color,
-              color.withValues(alpha: 0.6),
               color,
               color,
               color.withValues(alpha: 0.6),
