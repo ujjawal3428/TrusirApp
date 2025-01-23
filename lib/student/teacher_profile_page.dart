@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:trusir/common/api.dart';
-import 'package:trusir/teacher/teacher_edit_profile.dart';
 
 class TeacherProfilePage extends StatefulWidget {
   final String userID;
@@ -104,36 +103,6 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
                   fontSize: 25,
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w600,
-                ),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(right: 15),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TeacherEditProfileScreen(),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: const Text(
-                      'Edit Profile',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF48116A),
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ],

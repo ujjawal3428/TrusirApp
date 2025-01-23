@@ -333,12 +333,10 @@ class _NewCourseCardState extends State<NewCourseCard> {
         .convert(utf8.encode(userId))
         .toString()
         .substring(0, 8); // 8 characters
-    int timestamp = DateTime.now().millisecondsSinceEpoch ~/
-        1000; // Unix timestamp in seconds
     int randomNum = Random().nextInt(10000); // Random 4-digit number
-    print("txn_${userHash}_${timestamp}_$randomNum");
+    print("txn_${userHash}_$randomNum");
     // Combine components to ensure <= 38 characters
-    return "txn_${userHash}_${timestamp}_$randomNum";
+    return "txn_${userHash}_$randomNum";
   }
 
   void initPhonePeSdk() {
@@ -414,6 +412,17 @@ class _NewCourseCardState extends State<NewCourseCard> {
             response["code"] == "PAYMENT_SUCCESS" &&
             response["data"]["state"] == "COMPLETED") {
           Fluttertoast.showToast(msg: response["code"]);
+          int adjustedAmount = (response["data"]['amount'] / 100).toInt();
+          String transactiontype =
+              response["data"]["paymentInstrument"]["type"] == 'CARD'
+                  ? response["data"]["paymentInstrument"]["cardType"]
+                  : response["data"]["paymentInstrument"]["type"];
+          postTransaction(
+              transactiontype,
+              adjustedAmount,
+              widget.course.courseName,
+              response["data"]["merchantTransactionId"],
+              widget.course.courseID);
           print(response);
         } else {
           Fluttertoast.showToast(msg: response["code"]);
@@ -422,5 +431,44 @@ class _NewCourseCardState extends State<NewCourseCard> {
         Fluttertoast.showToast(msg: "error");
       }
     });
+  }
+
+  Future<void> postTransaction(String transactionName, int amount,
+      String transactionType, String transactionID, String courseID) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getString('userID');
+    // Define the API URL
+    String apiUrl =
+        "$baseUrl/api/buy-course/$userID/$courseID"; // Replace with your API URL
+
+    // Create a Transaction instance
+    final Transaction transaction = Transaction(
+      transactionName: transactionName,
+      amount: amount,
+      transactionType: transactionType,
+      transactionID: transactionID,
+    );
+
+    try {
+      // Make the POST request
+      final http.Response response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          "Content-Type": "application/json", // Set headers if needed
+          // Optional if authorization is required
+        },
+        body: jsonEncode(transaction.toJson()),
+      );
+
+      // Check the response status
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Transaction posted successfully: ${response.body}");
+      } else {
+        print(
+            "Failed to post transaction: ${response.statusCode} ${response.body}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
+    }
   }
 }

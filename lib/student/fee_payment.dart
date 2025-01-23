@@ -1,36 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:trusir/student/student_payment_page.dart';
+// import 'package:trusir/student/student_payment_page.dart';
 
 class Fees {
-  final String paymenttype;
-  final String transactionid;
-  final String paymentmethod;
+  final String paymentType;
+  final String transactionId;
+  final String paymentMethod;
   final String amount;
   final String date;
   final String time;
 
   Fees({
-    required this.paymenttype,
-    required this.transactionid,
-    required this.paymentmethod,
+    required this.paymentType,
+    required this.transactionId,
+    required this.paymentMethod,
     required this.amount,
     required this.date,
     required this.time,
   });
 
   factory Fees.fromJson(Map<String, dynamic> json) {
+    // Extract date and time from the created_at field
+    final createdAt = json['created_at'] ?? '';
+    final dateTime = DateTime.tryParse(createdAt);
+
+    // Format date and time
+    final formattedDate =
+        dateTime != null ? DateFormat('yyyy-MM-dd').format(dateTime) : '';
+    final formattedTime = dateTime != null
+        ? DateFormat('h:mm a').format(dateTime) // 12-hour format with AM/PM
+        : '';
+
     return Fees(
-      paymenttype: json['payment_type'],
-      paymentmethod: json['payment_method'],
-      date: json['date'],
-      time: json['time'],
-      amount: json['amount'],
-      transactionid: json['transaction_id'],
+      paymentType: json['transactionType'] ?? '',
+      transactionId: json['transactionID'] ?? '',
+      paymentMethod: json['transactionName'] ?? '',
+      amount: json['amount'] ?? '0', // Ensure a default value is provided
+      date: formattedDate,
+      time: formattedTime,
     );
   }
 }
@@ -50,7 +62,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
   bool hasMore = true;
   double totalAmount = 0;
 
-  final apiBase = '$baseUrl/fee-report/';
+  final apiBase = '$baseUrl/get-fee-payment-info/';
 
   Future<void> fetchFeeDetails({int page = 1}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -69,10 +81,18 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
           // Append new data
           feepayment.addAll(data.map((json) => Fees.fromJson(json)));
         }
+
+        // Calculate total amount while filtering out non-numeric values
         totalAmount = feepayment.fold<double>(
           0.0,
-          (sum, fee) => sum + double.parse(fee.amount),
+          (sum, fee) {
+            final feeAmount = double.tryParse(fee.amount) ?? 0.0;
+            return sum + feeAmount;
+          },
         );
+
+        print(totalAmount);
+        print(response.body);
 
         isLoading = false;
         isLoadingMore = false;
@@ -178,7 +198,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                   _buildCurrentMonthCard(
                                       MediaQuery.of(context).size.width * 0.4,
                                       isWideScreen),
-                                  _buildPayButton(context),
+                                  // _buildPayButton(context),
                                 ],
                               ),
                               const SizedBox(width: 40),
@@ -217,7 +237,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                                   .size
                                                   .width *
                                               0.5,
-                                          height: 120,
+                                          height: 140,
                                           decoration: BoxDecoration(
                                             color:
                                                 cardColor, // Apply dynamic color
@@ -239,7 +259,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                          payment.paymenttype,
+                                                          payment.paymentType,
                                                           style:
                                                               const TextStyle(
                                                             fontSize: 16,
@@ -249,7 +269,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                                           ),
                                                         ),
                                                         Text(
-                                                          payment.transactionid,
+                                                          payment.transactionId,
                                                           style:
                                                               const TextStyle(
                                                             fontSize: 14,
@@ -259,7 +279,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                                         const SizedBox(
                                                             height: 18),
                                                         Text(
-                                                          payment.paymentmethod,
+                                                          payment.paymentMethod,
                                                           style:
                                                               const TextStyle(
                                                             fontSize: 14,
@@ -380,7 +400,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                             left: 8, right: 8, bottom: 14),
                                         child: Container(
                                           width: 386,
-                                          height: 120,
+                                          height: 140,
                                           decoration: BoxDecoration(
                                             color:
                                                 cardColor, // Apply dynamic color
@@ -402,7 +422,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                                               .start,
                                                       children: [
                                                         Text(
-                                                          payment.paymenttype,
+                                                          payment.paymentType,
                                                           style:
                                                               const TextStyle(
                                                             fontSize: 16,
@@ -412,7 +432,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                                           ),
                                                         ),
                                                         Text(
-                                                          payment.transactionid,
+                                                          payment.transactionId,
                                                           style:
                                                               const TextStyle(
                                                             fontSize: 14,
@@ -422,7 +442,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                                         const SizedBox(
                                                             height: 18),
                                                         Text(
-                                                          payment.paymentmethod,
+                                                          payment.paymentMethod,
                                                           style:
                                                               const TextStyle(
                                                             fontSize: 14,
@@ -504,11 +524,11 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                   ],
                                 ),
                               ),
-                              Positioned(
-                                  bottom: -22,
-                                  left: 0,
-                                  right: 0,
-                                  child: _buildPayButton(context)),
+                              // Positioned(
+                              //     bottom: -22,
+                              //     left: 0,
+                              //     right: 0,
+                              //     child: _buildPayButton(context)),
                             ],
                           ),
                   ),
@@ -522,7 +542,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
     return Container(
       width: width,
       height: isLargeScreen ? 150 : null,
-      padding: const EdgeInsets.symmetric( horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF48116A), Color(0xFFC22054)],
@@ -543,7 +563,11 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
               children: [
                 Text(
                   'Current Month',
-                  style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w800, ),
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 SizedBox(height: 5),
                 Text(
@@ -567,24 +591,24 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
     );
   }
 
-  Widget _buildPayButton(BuildContext context) {
-    return Center(
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const StudentPaymentPage(),
-            ),
-          );
-        },
-        child: Image.asset(
-          'assets/pay_fee.png',
-          width: 300,
-          height: 100,
-          fit: BoxFit.contain,
-        ),
-      ),
-    );
-  }
+  // Widget _buildPayButton(BuildContext context) {
+  //   return Center(
+  //     child: GestureDetector(
+  //       onTap: () {
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (context) => const StudentPaymentPage(),
+  //           ),
+  //         );
+  //       },
+  //       child: Image.asset(
+  //         'assets/pay_fee.png',
+  //         width: 300,
+  //         height: 100,
+  //         fit: BoxFit.contain,
+  //       ),
+  //     ),
+  //   );
+  // }
 }
