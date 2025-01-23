@@ -299,7 +299,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 243, 238, 192),
+                            const Color.fromARGB(255, 247, 186, 231),
                             'assets/teacherprofile.png',
                             'Teacher Profile',
                             tileWidth,
@@ -314,7 +314,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 255, 197, 237),
+                            const Color.fromARGB(255, 197, 242, 255),
                             'assets/attendance.png',
                             'Attendance',
                             tileWidth,
@@ -330,7 +330,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 255, 195, 201),
+                            const Color.fromARGB(255, 255, 165, 165),
                             'assets/money.png',
                             'Fee Payment',
                             tileWidth,
@@ -359,7 +359,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 255, 233, 169),
+                            const Color.fromARGB(255, 235, 177, 236),
                             'assets/medal.png',
                             'Progress Report',
                             tileWidth,
@@ -416,7 +416,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 255, 245, 157),
+                            const Color.fromARGB(255, 255, 170, 157),
                             'assets/knowledge.png',
                             'General Knowledge',
                             tileWidth,
@@ -430,7 +430,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 255, 237, 182),
+                            const Color.fromARGB(255, 182, 202, 255),
                             'assets/notice.png',
                             'Notice',
                             tileWidth,
@@ -444,7 +444,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color(0x33FF00E5),
+                            const Color.fromARGB(189, 244, 133, 232),
                             'assets/setting.png',
                             'Settings',
                             tileWidth,
@@ -482,92 +482,91 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     );
   }
 
-Widget buildTile(
-  BuildContext context,
-  Color color,
-  String imagePath,
-  String title,
-  double tileWidth,
-  double tileHeight,
-  VoidCallback onTap,
-  bool isWeb,
-) {
-  final imageSize = imageSizes[imagePath] ??
-      {'width': isWeb ? 180 : 40.0, 'height': isWeb ? 180 : 40.0};
-  final screenWidth = MediaQuery.of(context).size.width;
+  Widget buildTile(
+    BuildContext context,
+    Color color,
+    String imagePath,
+    String title,
+    double tileWidth,
+    double tileHeight,
+    VoidCallback onTap,
+    bool isWeb,
+  ) {
+    final imageSize = imageSizes[imagePath] ??
+        {'width': isWeb ? 180 : 40.0, 'height': isWeb ? 180 : 40.0};
+    final screenWidth = MediaQuery.of(context).size.width;
 
-  final scaleFactor = isWeb
-      ? (screenWidth < 1200 ? 1.8 : 1.7)
-      : (screenWidth < 360 ? 0.7 : 1.0);
+    final scaleFactor = isWeb
+        ? (screenWidth < 1200 ? 1.8 : 1.7)
+        : (screenWidth < 360 ? 0.7 : 1.0);
 
-  return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      width: tileWidth,
-      height: isWeb ? tileHeight * 0.4 : tileHeight,
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(22),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 0.5,
-            blurRadius: 4,
-            offset:const Offset(0, 0.1), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: Image.asset(
-                  imagePath,
-                  width: imageSize['width']! * scaleFactor,
-                  height: imageSize['height']! * scaleFactor,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: isWeb ? 13 * (scaleFactor * 0.6) : 12 * scaleFactor,
-                    fontFamily: 'Poppins',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: tileWidth,
+        height: isWeb ? tileHeight * 0.4 : tileHeight,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              color.withValues(alpha: 0.6),
+              color,
+              color,
+              color.withValues(alpha: 0.6),
+              color,
+              color,
+              color.withValues(alpha: 0.6),
             ],
           ),
-          IgnorePointer(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(22),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withOpacity(0.12),
-                    Colors.white.withOpacity(0.05),
-                   Colors.black.withOpacity(0.05),
-                   
-                    Colors.black.withOpacity(0.12),
-                  ],
-                  stops: const [0.0, 0.4, 0.6, 1.0],
+          boxShadow: [
+            // Bottom-right shadow for the raised effect
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              spreadRadius: 1,
+              blurRadius: 6,
+              offset: const Offset(4, 4), // Creates a raised 3D shadow
+            ),
+            // Top-left highlight for a light source effect
+            BoxShadow(
+              color: Colors.white.withOpacity(0.8),
+              spreadRadius: 1,
+              blurRadius: 6,
+              offset: const Offset(-4, -4), // Highlight on the top-left
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Image.asset(
+                imagePath,
+                width: imageSize['width']! * scaleFactor,
+                height: imageSize['height']! * scaleFactor,
+                fit: BoxFit.contain,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: isWeb ? 13 * (scaleFactor * 0.6) : 12 * scaleFactor,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}}
+    );
+  }
+}
