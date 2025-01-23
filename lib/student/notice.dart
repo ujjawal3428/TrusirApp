@@ -50,17 +50,14 @@ class _NoticeScreenState extends State<NoticeScreen> {
 
       setState(() {
         if (page == 1) {
-          // Initial fetch
           notices = data.map((json) => Notice.fromJson(json)).toList();
         } else {
-          // Append new data
           notices.addAll(data.map((json) => Notice.fromJson(json)));
         }
 
         isLoading = false;
         isLoadingMore = false;
 
-        // Check if more data is available
         if (data.isEmpty) {
           hasMore = false;
         }
@@ -96,27 +93,31 @@ class _NoticeScreenState extends State<NoticeScreen> {
         backgroundColor: Colors.grey[50],
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 1.0),
-          child: Row(
-            children: [
-              GestureDetector(
+        title: LayoutBuilder(
+          builder: (context, constraints) {
+            return Row(
+              children: [
+                GestureDetector(
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Image.asset('assets/back_button.png', height: 50)),
-              const SizedBox(width: 20),
-              const Text(
-                'Notice',
-                style: TextStyle(
-                  color: Color(0xFF48116A),
-                  fontSize: 25,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
+                  child: Image.asset('assets/back_button.png', 
+                    height: constraints.maxWidth > 600 ? 50 : 30,
+                  ),
                 ),
-              ),
-            ],
-          ),
+                SizedBox(width: constraints.maxWidth > 600 ? 20 : 10),
+                Text(
+                  'Notice',
+                  style: TextStyle(
+                    color: const Color(0xFF48116A),
+                    fontSize: constraints.maxWidth > 600 ? 25 : 18,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
         toolbarHeight: 70,
       ),
@@ -135,97 +136,108 @@ class _NoticeScreenState extends State<NoticeScreen> {
                     ),
                   ),
                 )
-              : Stack(
-                  children: [
-                    SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: 15,
-                          right: 15,
-                          bottom: 15,
-                          top: 0,
-                        ),
-                        child: Column(
-                          children: [
-                            ...notices.asMap().entries.map((entry) {
-                              int index = entry.key;
-                              Notice notice = entry.value;
+              : LayoutBuilder(
+                  builder: (context, constraints) {
+                    return SingleChildScrollView(
+                      child: Center(
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: constraints.maxWidth > 1200 
+                              ? 1200 
+                              : constraints.maxWidth > 600 
+                                ? 800 
+                                : constraints.maxWidth,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: constraints.maxWidth > 600 ? 20 : 10,
+                              vertical: 15,
+                            ),
+                            child: Column(
+                              children: [
+                                ...notices.asMap().entries.map((entry) {
+                                  int index = entry.key;
+                                  Notice notice = entry.value;
 
-                              // Cycle through colors using the modulus operator
-                              Color cardColor =
-                                  cardColors[index % cardColors.length];
+                                  Color cardColor = 
+                                    cardColors[index % cardColors.length];
 
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 10,
-                                  top: 20,
-                                  right: 10,
-                                ),
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Container(
-                                      width: 386,
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: cardColor,
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 20,
+                                    ),
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        maxWidth: constraints.maxWidth > 600 
+                                          ? 600 
+                                          : constraints.maxWidth - 40,
                                       ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 55, top: 20),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              notice.noticetitle,
-                                              style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.black,
+                                      child: Card(
+                                        color: cardColor,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(20),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 15,
+                                                  top: 5,
+                                                ),
+                                                child: Image.asset(
+                                                  'assets/bell.png',
+                                                  width: 36,
+                                                  height: 36,
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            Text(
-                                              'Posted on : ${notice.date}',
-                                              style: const TextStyle(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.grey,
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: 
+                                                    CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      notice.noticetitle,
+                                                      style: TextStyle(
+                                                        fontSize: constraints.maxWidth > 600 ? 18 : 16,
+                                                        fontWeight: FontWeight.w700,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 5),
+                                                    Text(
+                                                      'Posted on : ${notice.date}',
+                                                      style: TextStyle(
+                                                        fontSize: constraints.maxWidth > 600 ? 13 : 11,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 5),
+                                                    Text(
+                                                      notice.notice,
+                                                      style: TextStyle(
+                                                        fontSize: constraints.maxWidth > 600 ? 13 : 11,
+                                                        fontWeight: FontWeight.w500,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            Text(
-                                              notice.notice,
-                                              style: const TextStyle(
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                    Positioned(
-                                      top: 20,
-                                      left: 10,
-                                      child: Image.asset(
-                                        'assets/bell.png',
-                                        width: 36,
-                                        height: 36,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }),
-                            hasMore
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 20),
-                                    child: isLoadingMore
+                                  );
+                                }),
+                                hasMore
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 20),
+                                      child: isLoadingMore
                                         ? const CircularProgressIndicator()
                                         : TextButton(
                                             onPressed: () {
@@ -237,16 +249,18 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                             },
                                             child: const Text('Load More...'),
                                           ),
-                                  )
-                                : const Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 20),
-                                    child: Text('No more Notices'),
-                                  ),
-                          ],
+                                    )
+                                  : const Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 20),
+                                      child: Text('No more Notices'),
+                                    ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
     );
   }
