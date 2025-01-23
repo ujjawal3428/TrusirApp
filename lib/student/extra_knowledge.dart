@@ -272,6 +272,10 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
             Column(
               children: [
                 _buildSearchBar(),
+                  _buildRecentlyViewed(),
+                   const SizedBox(
+                  height: 20,
+                ),
                 categories.isEmpty
                     ? const Text('No Categories available')
                     : _buildCategoryList(),
@@ -327,10 +331,8 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
                             child: Center(child: Text('Select a Sub-Category')))
                         : const SizedBox()
                     : _buildThumbnailGallery(),
-                _buildRecentlyViewed(),
-                const SizedBox(
-                  height: 20,
-                ),
+              
+               
               ],
             ),
           ],
@@ -716,6 +718,7 @@ Widget _buildThumbnailGallery() {
   );
 }
 
+
 Widget _buildSubcategoriesSection() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -723,8 +726,7 @@ Widget _buildSubcategoriesSection() {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
         child: Text(
-         '${selectedCategory[0].toUpperCase()}${selectedCategory.substring(1)}',
-
+          '${selectedCategory[0].toUpperCase()}${selectedCategory.substring(1)}',
           style: const TextStyle(
             fontFamily: 'Poppins',
             fontSize: 20,
@@ -733,6 +735,7 @@ Widget _buildSubcategoriesSection() {
           ),
         ),
       ),
+      // Horizontal list of subcategories
       SizedBox(
         height: 40,
         child: ListView.builder(
@@ -764,8 +767,8 @@ Widget _buildSubcategoriesSection() {
                 child: Chip(
                   label: Text(
                     subcategory[index].isNotEmpty
-      ? '${subcategory[index][0].toUpperCase()}${subcategory[index].substring(1)}'
-      : '',
+                        ? '${subcategory[index][0].toUpperCase()}${subcategory[index].substring(1)}'
+                        : '',
                     style: const TextStyle(
                       fontFamily: 'Poppins',
                       fontSize: 15,
@@ -780,9 +783,56 @@ Widget _buildSubcategoriesSection() {
           },
         ),
       ),
+      const SizedBox(height: 20),
+      // Vertical list of subcategories
+      ListView.builder(
+        shrinkWrap: true, // Ensures the ListView takes only the necessary height
+        physics: const NeverScrollableScrollPhysics(), // Disable scrolling for this ListView
+        itemCount: subcategory.length,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedSubcategory = subcategory[index];
+              });
+              fetchGks();
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 6.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 1,
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ListTile(
+                title: Text(
+                  subcategory[index].isNotEmpty
+                      ? '${subcategory[index][0].toUpperCase()}${subcategory[index].substring(1)}'
+                      : '',
+                  style: const TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              ),
+            ),
+          );
+        },
+      ),
     ],
   );
 }
+
 
 Widget _buildRecentlyViewed() {
   return Column(
@@ -885,3 +935,5 @@ Widget _buildRecentlyViewed() {
     ],
   );
 }}
+
+
