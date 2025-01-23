@@ -350,7 +350,6 @@ class WideScreenLayout extends StatelessWidget {
     );
   }
 }
-
 class VideoCard extends StatelessWidget {
   final Uri videoUrl;
   final String title;
@@ -372,105 +371,128 @@ class VideoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => VideoPlayerScreen(
-                videoUrl: videoUrl,
-              ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoPlayerScreen(
+              videoUrl: videoUrl,
             ),
-          );
-        },
-        child: Card(
-          margin: EdgeInsets.zero,
-          elevation: 1,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0.0),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AspectRatio(
-                aspectRatio: 16 / 9,
-                child: ClipRRect(
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(0.0)),
+        );
+      },
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Thumbnail with gradient overlay
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(12.0),
+                  ),
                   child: Image.network(
                     thumbnailUrl,
                     fit: BoxFit.cover,
+                    height: 200,
+                    width: double.infinity,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        color: Colors.white,
-                        child: const Center(
-                          child: Icon(
-                            Icons.error,
-                            size: 50.0,
-                            color: Colors.black54,
-                          ),
+                        height: 200,
+                        width: double.infinity,
+                        color: Colors.grey[300],
+                        child: const Icon(
+                          Icons.error,
+                          size: 50,
+                          color: Colors.black54,
                         ),
                       );
                     },
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
+                // Gradient overlay
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.black.withOpacity(0.6),
+                          Colors.transparent,
+                        ],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // Content section
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Channel Picture
+                  CircleAvatar(
+                    radius: 24,
+                    backgroundImage: NetworkImage(channelPicUrl),
+                    backgroundColor: Colors.grey[300],
+                  ),
+                  const SizedBox(width: 10.0),
+                  // Title, description, and upload time
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          radius: 22,
-                          backgroundImage:
-                              NetworkImage(channelPicUrl), // Channel picture
-                          backgroundColor: Colors.grey[300],
+                        Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: GoogleFonts.notoSans().fontFamily,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
                         ),
-                        const SizedBox(width: 8.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              title,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: GoogleFonts.notoSans().fontFamily,
-                                fontSize: 17,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 5.0),
-                            Text(
-                              description,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: GoogleFonts.notoSans().fontFamily,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
+                        const SizedBox(height: 5.0),
+                        Text(
+                          description,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: GoogleFonts.notoSans().fontFamily,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          uploadTime,
+                          style: TextStyle(
+                            fontFamily: GoogleFonts.notoSans().fontFamily,
+                            fontSize: 12,
+                            color: Colors.grey[500],
+                          ),
                         ),
                       ],
                     ),
-                    Text(
-                      uploadTime,
-                      style: TextStyle(
-                        fontFamily: GoogleFonts.notoSans().fontFamily,
-                        fontSize: 12.0,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ));
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
