@@ -717,8 +717,6 @@ Widget _buildThumbnailGallery() {
     ],
   );
 }
-
-
 Widget _buildSubcategoriesSection() {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -726,7 +724,9 @@ Widget _buildSubcategoriesSection() {
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
         child: Text(
-          '${selectedCategory[0].toUpperCase()}${selectedCategory.substring(1)}',
+          selectedCategory.isNotEmpty
+              ? '${selectedCategory[0].toUpperCase()}${selectedCategory.substring(1)}'
+              : 'Categories',
           style: const TextStyle(
             fontFamily: 'Poppins',
             fontSize: 20,
@@ -735,103 +735,116 @@ Widget _buildSubcategoriesSection() {
           ),
         ),
       ),
-      // Horizontal list of subcategories
-      SizedBox(
-        height: 40,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: subcategory.length,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedSubcategory = subcategory[index];
-                });
-                fetchGks();
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 1,
-                      blurRadius: 6,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Chip(
-                  label: Text(
-                    subcategory[index].isNotEmpty
-                        ? '${subcategory[index][0].toUpperCase()}${subcategory[index].substring(1)}'
-                        : '',
-                    style: const TextStyle(
-                      fontFamily: 'Poppins',
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  backgroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-      const SizedBox(height: 20),
-      // Vertical list of subcategories
+      const SizedBox(height: 10),
       ListView.builder(
         shrinkWrap: true, // Ensures the ListView takes only the necessary height
-        physics: const NeverScrollableScrollPhysics(), // Disable scrolling for this ListView
+        physics: const NeverScrollableScrollPhysics(), // Disable vertical scrolling for this list
         itemCount: subcategory.length,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedSubcategory = subcategory[index];
-              });
-              fetchGks();
-            },
-            child: Container(
-              margin: const EdgeInsets.symmetric(vertical: 6.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 1,
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: ListTile(
-                title: Text(
-                  subcategory[index].isNotEmpty
-                      ? '${subcategory[index][0].toUpperCase()}${subcategory[index].substring(1)}'
-                      : '',
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Subcategory title
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Text(
+                  '${subcategory[index][0].toUpperCase()}${subcategory[index].substring(1)}',
                   style: const TextStyle(
                     fontFamily: 'Poppins',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
                   ),
                 ),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               ),
-            ),
+              // Horizontal list of KnowledgeItems for the subcategory
+              SizedBox(
+                height: 180,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: gks
+                      .where((item) => item.subCategory == subcategory[index])
+                      .toList()
+                      .length,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  itemBuilder: (context, itemIndex) {
+                    final filteredItems = gks
+                        .where((item) =>
+                            item.subCategory == subcategory[index])
+                        .toList();
+                    final item = filteredItems[itemIndex];
+                    return GestureDetector(
+                      onTap: () {
+                        addToRecentlyViewed(item); // Track recently viewed items
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SpecificExtraKnowledge(
+                              title: item.title,
+                              imagePath: item.image,
+                              content: item.description,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 160,
+                        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                          image: DecorationImage(
+                            image: NetworkImage(item.image),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(16),
+                                bottomRight: Radius.circular(16),
+                              ),
+                            ),
+                            child: Text(
+                              item.title,
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 20), // Add spacing between subcategories
+            ],
           );
         },
       ),
     ],
   );
 }
+
 
 
 Widget _buildRecentlyViewed() {
@@ -935,5 +948,3 @@ Widget _buildRecentlyViewed() {
     ],
   );
 }}
-
-
