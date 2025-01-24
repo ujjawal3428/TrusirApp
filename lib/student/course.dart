@@ -328,47 +328,148 @@ class _CourseCardState extends State<CourseCard> {
     return base64body;
   }
 
-  void checkStatus() async {
-    String url =
-        "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/$merchantId/$merchantTransactionID";
+  
+ void checkStatus() async {
+  String url =
+      "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/$merchantId/$merchantTransactionID";
 
-    String concat = "/pg/v1/status/$merchantId/$merchantTransactionID$saltKey";
+  String concat = "/pg/v1/status/$merchantId/$merchantTransactionID$saltKey";
 
-    var bytes = utf8.encode(concat);
+  var bytes = utf8.encode(concat);
 
-    var digest = sha256.convert(bytes).toString();
+  var digest = sha256.convert(bytes).toString();
 
-    String xVerify = "$digest###$saltIndex";
+  String xVerify = "$digest###$saltIndex";
 
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-      "X-VERIFY": xVerify,
-      "X-MERCHANT-ID": merchantId
-    };
+  Map<String, String> headers = {
+    "Content-Type": "application/json",
+    "X-VERIFY": xVerify,
+    "X-MERCHANT-ID": merchantId,
+  };
 
-    await http.get(Uri.parse(url), headers: headers).then((value) {
-      Map<String, dynamic> response = jsonDecode(value.body);
+  try {
+    // Wait for 30 seconds before making the request
+    await Future.delayed(const Duration(seconds: 30));
 
-      try {
-        if (response["success"] &&
-            response["code"] == "PAYMENT_SUCCESS" &&
-            response["data"]["state"] == "COMPLETED") {
-          Fluttertoast.showToast(msg: response["code"]);
-          int adjustedAmount = (response["data"]['amount'] / 100).toInt();
-          String transactiontype =
-              response["data"]["paymentInstrument"]["type"] == 'CARD'
-                  ? response["data"]["paymentInstrument"]["cardType"]
-                  : response["data"]["paymentInstrument"]["type"];
-          postTransaction(transactiontype, adjustedAmount, widget.course.name,
-              response["data"]["merchantTransactionId"], widget.course.id);
-        } else {
-          Fluttertoast.showToast(msg: response["code"]);
-        }
-      } catch (e) {
-        Fluttertoast.showToast(msg: "error");
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> responseData = jsonDecode(response.body);
+
+      if (responseData["success"] &&
+          responseData["code"] == "PAYMENT_SUCCESS" &&
+          responseData["data"]["state"] == "COMPLETED") {
+        // Payment Success
+        int adjustedAmount = (responseData["data"]['amount'] / 100).toInt();
+        String transactionType =
+            responseData["data"]["paymentInstrument"]["type"] == 'CARD'
+                ? responseData["data"]["paymentInstrument"]["cardType"]
+                : responseData["data"]["paymentInstrument"]["type"];
+
+        // Show Success Dialog
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Payment Successful"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    'assets/images/success.png', // Replace with your success image path
+                    height: 100,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Your payment of ₹$adjustedAmount was successful via $transactionType.",
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+
+        postTransaction(
+          transactionType,
+          adjustedAmount,
+          widget.course.name,
+          responseData["data"]["merchantTransactionId"],
+          widget.course.id,
+        );
+      } else {
+        // Payment Failed
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Payment Failed"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset(
+                    'assets/images/failure.png', // Replace with your failure image path
+                    height: 100,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Payment failed with code: ${responseData["code"]}. Please try again.",
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
       }
-    });
+    } else {
+      throw Exception("Failed to fetch payment status");
+    }
+  } catch (e) {
+    // Show Error Dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Error"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/images/error.png', // Replace with your error image path
+                height: 100,
+              ),
+              const SizedBox(height: 10),
+              Text("An error occurred: $e"),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
   }
+}
 }
 
 Future<void> postTransaction(String transactionName, int amount,
