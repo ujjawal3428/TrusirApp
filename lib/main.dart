@@ -27,16 +27,16 @@ void main() async {
   );
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor:
-        Colors.grey[50], // Set the navigation bar color to grey
-    systemNavigationBarIconBrightness: Brightness.light,
-  ));
+      systemNavigationBarColor:
+          Colors.grey[200], // Set the navigation bar color to grey
+      systemNavigationBarIconBrightness: Brightness.dark,
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.dark));
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -44,12 +44,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Future<Widget> getInitialPage() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
     final String? role = prefs.getString('role');
     final bool isNewUser = prefs.getBool('new_user') ?? true;
 
     if (role == null) {
-      // No user is logged in
       return const TrusirLoginPage();
     } else if (role == 'student' && isNewUser) {
       return const TrusirLoginPage();
@@ -60,31 +58,135 @@ class _MyAppState extends State<MyApp> {
     } else if (role == 'teacher' && !isNewUser) {
       return const TeacherMainScreen();
     } else {
-      // Fallback to login page if the role is unrecognized
       return const TrusirLoginPage();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Widget>(
-      future: getInitialPage(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: Scaffold(
-              backgroundColor: Colors.grey[50],
-              body: const Center(child: CircularProgressIndicator()),
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Set up fade animation
+    _animationController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+
+    _animationController.forward();
+    navigateToInitialPage();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  Future<void> navigateToInitialPage() async {
+    await Future.delayed(const Duration(seconds: 5)); // Wait for 2 seconds
+    final initialPage = await getInitialPage();
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => initialPage),
+      );
+    }
+  }
+
+  Future<Widget> getInitialPage() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? role = prefs.getString('role');
+    final bool isNewUser = prefs.getBool('new_user') ?? true;
+
+    if (role == null) {
+      return const TrusirLoginPage();
+    } else if (role == 'student' && isNewUser) {
+      return const TrusirLoginPage();
+    } else if (role == 'teacher' && isNewUser) {
+      return const TrusirLoginPage();
+    } else if (role == 'student' && !isNewUser) {
+      return const MainScreen();
+    } else if (role == 'teacher' && !isNewUser) {
+      return const TeacherMainScreen();
+    } else {
+      return const TrusirLoginPage();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF3C006D),
+      body: Stack(
+        children: [
+          // Gradient background
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.accents[3].withValues(alpha: 0.9),
+                  const Color(0xFF3C006D).withValues(alpha: 0.9),
+                  const Color(0xFF5A008F).withValues(alpha: 0.9),
+                  Colors.accents[4].withValues(alpha: 0.5),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
             ),
-          );
-        } else {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: snapshot.data,
-          );
-        }
-      },
+          ),
+          // Logo with fade animation
+          Center(
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(
+                      'assets/trusir_logo.png', // Replace with your logo asset path
+                      width: 200,
+                      height: 200,
+                    ),
+                  ),
+                  const SizedBox(height: 300),
+                  const Text(
+                    'Trusir',
+                    style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w700),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
