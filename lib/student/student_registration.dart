@@ -100,7 +100,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   String? medium;
   String? studentClass;
   dynamic additionals;
-
   String? subject;
   DateTime? selectedDOB;
   bool agreeToTerms = false;
@@ -362,21 +361,27 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
+
       if (mounted) {
         setState(() {
-          _courses = data.map<String>((course) {
-            // Concatenate subject and class into a single string
+          // Use a Set to ensure unique values
+          final Set<String> uniqueCourses = {};
+          final Set<String> uniqueClasses = {};
+
+          for (var course in data) {
+            // Extract the subject and class
             final subject = course['subject'] as String;
-            final courseClass = course['class']
-                as String; // Adjust the key name based on your API response
-            return '$subject $courseClass';
-          }).toList();
-          _classes = data.map<String>((course) {
-            // Concatenate subject and class into a single string
-            final courseClass = course['class']
-                as String; // Adjust the key name based on your API response
-            return courseClass;
-          }).toList();
+            final courseClass =
+                course['class'] as String; // Adjust based on API response
+
+            // Add unique combinations to the sets
+            uniqueCourses.add('$subject $courseClass');
+            uniqueClasses.add(courseClass);
+          }
+
+          // Convert sets back to lists
+          _courses = uniqueCourses.toList();
+          _classes = uniqueClasses.toList();
         });
       }
     } else {
@@ -973,7 +978,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                 studentForms[index].medium = value;
                               });
                             },
-                            items: additionals['mediums'],
+                            items: additionals['mediums'] ?? ['-Select-'],
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -986,7 +991,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                 studentForms[index].board = value;
                               });
                             },
-                            items: additionals['board'],
+                            items: additionals['board'] ?? ['-Select-'],
                           ),
                         ),
                         const SizedBox(width: 20),
