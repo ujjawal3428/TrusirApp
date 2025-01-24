@@ -8,6 +8,7 @@ import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/student/course.dart';
+import 'package:trusir/student/teacher_profile_page.dart';
 
 class NewCourseCard extends StatefulWidget {
   final CourseDetail course;
@@ -169,7 +170,15 @@ class _NewCourseCardState extends State<NewCourseCard> {
                       height: isWeb ? 40 : null,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle Buy Now action
+                          widget.course.teacherID == 'N/A'
+                              ? Fluttertoast.showToast(
+                                  msg: 'No Teachers Assigned Yet')
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TeacherProfilePage(
+                                          userID: widget.course.teacherID)),
+                                );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent,
@@ -226,7 +235,17 @@ class _NewCourseCardState extends State<NewCourseCard> {
                             height: isWeb ? 40 : null,
                             child: ElevatedButton(
                               onPressed: () {
-                                // Handle Buy Now action
+                                widget.course.teacherID == 'N/A'
+                                    ? Fluttertoast.showToast(
+                                        msg: 'No Teachers Assigned Yet')
+                                    : Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TeacherProfilePage(
+                                                    userID: widget
+                                                        .course.teacherID)),
+                                      );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blueAccent,
