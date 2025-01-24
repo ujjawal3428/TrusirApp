@@ -285,7 +285,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                       children: [
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 199, 236, 253),
+                            const Color.fromARGB(255, 170, 224, 249),
                             'assets/myprofile.png',
                             'My Profile',
                             tileWidth,
@@ -299,7 +299,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 247, 186, 231),
+                            const Color.fromARGB(255, 248, 169, 227),
                             'assets/teacherprofile.png',
                             'Teacher Profile',
                             tileWidth,
@@ -314,7 +314,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 197, 242, 255),
+                            const Color.fromARGB(255, 109, 216, 249),
                             'assets/attendance.png',
                             'Attendance',
                             tileWidth,
@@ -344,7 +344,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 255, 180, 248),
+                            const Color.fromARGB(255, 188, 180, 255),
                             'assets/pencil and ruller.png',
                             'Test Series',
                             tileWidth,
@@ -500,26 +500,38 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
         ? (screenWidth < 1200 ? 1.8 : 1.7)
         : (screenWidth < 360 ? 0.7 : 1.0);
 
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Container(
         width: tileWidth,
         height: isWeb ? tileHeight * 0.4 : tileHeight,
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(16),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+          borderRadius: BorderRadius.circular(25),
+          gradient: SweepGradient(
             colors: [
-              color.withValues(alpha: 0.6),
               color,
+              color.withValues(alpha: 0.9),
+              color.withValues(alpha: 0.8),
+              Colors.white54.withValues(alpha: 0.1),
               color,
-              color,
-              color,
-              color.withValues(alpha: 0.6),
+              color
             ],
+            center: Alignment.topRight,
+            startAngle: 0,
+            endAngle: 6,
           ),
+
+          //  RadialGradient(
+          //   colors: [
+          //     color,
+          //     color.withValues(alpha: 0.9),
+          //     color.withValues(alpha: 0.8),
+          //     Colors.white.withValues(alpha: 0.3),
+          //   ],
+          //   center: Alignment.center,
+          //   radius: 0.8,
+          // ),
           boxShadow: [
             // Bottom-right shadow for the raised effect
             BoxShadow(
