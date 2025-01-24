@@ -77,7 +77,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
@@ -505,50 +505,44 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
       child: Container(
         width: tileWidth,
         height: isWeb ? tileHeight * 0.4 : tileHeight,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(25),
-          gradient: SweepGradient(
-            colors: [
-              color,
-              color.withValues(alpha: 0.9),
-              color.withValues(alpha: 0.8),
-              Colors.white54.withValues(alpha: 0.1),
-              color,
-              color
-            ],
-            center: Alignment.topRight,
-            startAngle: 0,
-            endAngle: 6,
-          ),
-
-          //  RadialGradient(
-          //   colors: [
-          //     color,
-          //     color.withValues(alpha: 0.9),
-          //     color.withValues(alpha: 0.8),
-          //     Colors.white.withValues(alpha: 0.3),
-          //   ],
-          //   center: Alignment.center,
-          //   radius: 0.8,
-          // ),
-          boxShadow: [
-            // Bottom-right shadow for the raised effect
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              spreadRadius: 1,
-              blurRadius: 6,
-              offset: const Offset(4, 4), // Creates a raised 3D shadow
-            ),
-            // Top-left highlight for a light source effect
-            BoxShadow(
-              color: Colors.white.withOpacity(0.8),
-              spreadRadius: 1,
-              blurRadius: 6,
-              offset: const Offset(-4, -4), // Highlight on the top-left
-            ),
-          ],
-        ),
+      decoration :BoxDecoration(
+  color: color,
+  borderRadius: BorderRadius.circular(20),
+  gradient: LinearGradient(
+    colors: [
+      const Color.fromARGB(255, 255, 255, 255),
+      color.withOpacity(0.1),
+      color,
+    ],
+    stops: const [0.01, 0.05, 0.2],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  ),
+  boxShadow: [
+    // Light white highlight on top inner edge
+    BoxShadow(
+      color: Colors.white.withOpacity(1),
+      spreadRadius: -1,
+      blurRadius: 2,
+      offset: const Offset(-1, -1),
+    ),
+    // Light black shadow on bottom inner edge
+    BoxShadow(
+      color: Colors.white.withOpacity(0.1),
+      spreadRadius: -1,
+      blurRadius: 2,
+      offset: const Offset(0, -1),
+    ),
+    // Inner bottom shadow
+    BoxShadow(
+      color: Colors.black.withOpacity(0.15), // Slightly darker shadow
+      spreadRadius: -2, // Negative spread for inner shadow
+      blurRadius: 4, // Softer blur
+      offset: const Offset(0, 3), // Offset to position at the bottom
+    ),
+  ],
+)
+,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
