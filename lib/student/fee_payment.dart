@@ -186,353 +186,351 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
               ? const Center(
                   child: CircularProgressIndicator(),
                 )
-              : Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: isWideScreen
-                        ? Row(
+              : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: isWideScreen
+                    ? Row(
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  _buildCurrentMonthCard(
-                                      MediaQuery.of(context).size.width * 0.4,
-                                      isWideScreen),
-                                  // _buildPayButton(context),
-                                ],
-                              ),
-                              const SizedBox(width: 40),
-                              SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 20.0, left: 23),
-                                      child: Text(
-                                        'Previous month',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    ...feepayment.asMap().entries.map((entry) {
-                                      int index = entry.key;
-                                      Fees payment = entry.value;
-
-                                      // Cycle through colors using the modulus operator
-                                      Color cardColor =
-                                          cardColors[index % cardColors.length];
-
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 20.0, right: 20, bottom: 14),
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.5,
-                                          height: 140,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                cardColor, // Apply dynamic color
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 5.0, top: 10),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          payment.paymentType,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          payment.transactionId,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 18),
-                                                        Text(
-                                                          payment.paymentMethod,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 10.0),
-                                                    child: Column(
-                                                      children: [
-                                                        Text(
-                                                          '₹ ${payment.amount}',
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          payment.date,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 18),
-                                                        Text(
-                                                          payment.time,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                                    if (hasMore)
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 20),
-                                        child: isLoadingMore
-                                            ? const CircularProgressIndicator()
-                                            : TextButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    isLoadingMore = true;
-                                                    currentPage++;
-                                                  });
-                                                  fetchFeeDetails(
-                                                      page: currentPage);
-                                                },
-                                                child:
-                                                    const Text('Load More...'),
-                                              ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )
-                        : Stack(
-                            children: [
-                              SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const SizedBox(height: 10),
-                                    _buildCurrentMonthCard(
-                                        MediaQuery.of(context).size.width * 0.9,
-                                        isWideScreen),
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.only(top: 20.0, left: 23),
-                                      child: Text(
-                                        'Previous month',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    ...feepayment.asMap().entries.map((entry) {
-                                      int index = entry.key;
-                                      Fees payment = entry.value;
-
-                                      // Cycle through colors using the modulus operator
-                                      Color cardColor =
-                                          cardColors[index % cardColors.length];
-
-                                      return Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 8, right: 8, bottom: 14),
-                                        child: Container(
-                                          width: 386,
-                                          height: 140,
-                                          decoration: BoxDecoration(
-                                            color:
-                                                cardColor, // Apply dynamic color
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 5.0, top: 10),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Text(
-                                                          payment.paymentType,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          payment.transactionId,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 18),
-                                                        Text(
-                                                          payment.paymentMethod,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                                Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 10.0),
-                                                    child: Column(
-                                                      children: [
-                                                        Text(
-                                                          '₹ ${payment.amount}',
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          payment.date,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 18),
-                                                        Text(
-                                                          payment.time,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }),
-                                    if (hasMore)
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 20),
-                                        child: isLoadingMore
-                                            ? const CircularProgressIndicator()
-                                            : TextButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    isLoadingMore = true;
-                                                    currentPage++;
-                                                  });
-                                                  fetchFeeDetails(
-                                                      page: currentPage);
-                                                },
-                                                child:
-                                                    const Text('Load More...'),
-                                              ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              // Positioned(
-                              //     bottom: -22,
-                              //     left: 0,
-                              //     right: 0,
-                              //     child: _buildPayButton(context)),
+                              _buildCurrentMonthCard(
+                                  MediaQuery.of(context).size.width * 0.4,
+                                  isWideScreen),
+                              // _buildPayButton(context),
                             ],
                           ),
-                  ),
-                );
+                          const SizedBox(width: 40),
+                          SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(height: 10),
+                                const Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 20.0, left: 23),
+                                  child: Text(
+                                    'Previous month',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                ...feepayment.asMap().entries.map((entry) {
+                                  int index = entry.key;
+                                  Fees payment = entry.value;
+              
+                                  // Cycle through colors using the modulus operator
+                                  Color cardColor =
+                                      cardColors[index % cardColors.length];
+              
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 20.0, right: 20, bottom: 14),
+                                    child: Container(
+                                      width: MediaQuery.of(context)
+                                              .size
+                                              .width *
+                                          0.5,
+                                      height: 140,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            cardColor, // Apply dynamic color
+                                        borderRadius:
+                                            BorderRadius.circular(12),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.only(
+                                                        left: 5.0, top: 10),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                  children: [
+                                                    Text(
+                                                      payment.paymentType,
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      payment.transactionId,
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                        height: 18),
+                                                    Text(
+                                                      payment.paymentMethod,
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment:
+                                                  Alignment.centerRight,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.only(
+                                                        top: 10.0),
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      '₹ ${payment.amount}',
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      payment.date,
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                        height: 18),
+                                                    Text(
+                                                      payment.time,
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                                if (hasMore)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: isLoadingMore
+                                        ? const CircularProgressIndicator()
+                                        : TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                isLoadingMore = true;
+                                                currentPage++;
+                                              });
+                                              fetchFeeDetails(
+                                                  page: currentPage);
+                                            },
+                                            child:
+                                                const Text('Load More...'),
+                                          ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+                    : Stack(
+                        children: [
+                          SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const SizedBox(height: 10),
+                                _buildCurrentMonthCard(
+                                    MediaQuery.of(context).size.width * 0.9,
+                                    isWideScreen),
+                                const Padding(
+                                  padding:
+                                      EdgeInsets.only(top: 20.0, left: 23),
+                                  child: Text(
+                                    'Previous month',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                ...feepayment.asMap().entries.map((entry) {
+                                  int index = entry.key;
+                                  Fees payment = entry.value;
+              
+                                  // Cycle through colors using the modulus operator
+                                  Color cardColor =
+                                      cardColors[index % cardColors.length];
+              
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8, right: 8, bottom: 14),
+                                    child: Container(
+                                      width: 386,
+                                      height: 140,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            cardColor, // Apply dynamic color
+                                        borderRadius:
+                                            BorderRadius.circular(12),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.only(
+                                                        left: 5.0, top: 10),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                  children: [
+                                                    Text(
+                                                      payment.paymentType,
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      payment.transactionId,
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                        height: 18),
+                                                    Text(
+                                                      payment.paymentMethod,
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment:
+                                                  Alignment.centerRight,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.only(
+                                                        top: 10.0),
+                                                child: Column(
+                                                  children: [
+                                                    Text(
+                                                      '₹ ${payment.amount}',
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      payment.date,
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                        height: 18),
+                                                    Text(
+                                                      payment.time,
+                                                      style:
+                                                          const TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                                if (hasMore)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20),
+                                    child: isLoadingMore
+                                        ? const CircularProgressIndicator()
+                                        : TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                isLoadingMore = true;
+                                                currentPage++;
+                                              });
+                                              fetchFeeDetails(
+                                                  page: currentPage);
+                                            },
+                                            child:
+                                                const Text('Load More...'),
+                                          ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          // Positioned(
+                          //     bottom: -22,
+                          //     left: 0,
+                          //     right: 0,
+                          //     child: _buildPayButton(context)),
+                        ],
+                      ),
+              );
         }),
       ),
     );
