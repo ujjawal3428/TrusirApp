@@ -173,18 +173,21 @@ class _SplashScreenState extends State<SplashScreen>
                       height: 200,
                     ),
                   ),
-                  const SizedBox(height: 300),
-                  const Text(
-                    'Trusir',
-                    style: TextStyle(
-                        fontSize: 25,
-                        color: Colors.white70,
-                        fontWeight: FontWeight.w700),
-                  )
                 ],
               ),
             ),
           ),
+          const Positioned(
+              left: 150,
+              right: 0,
+              bottom: 110,
+              child: Text(
+                'Trusir',
+                style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700),
+              ))
         ],
       ),
     );
