@@ -37,6 +37,7 @@ dependencies:
   crypto: 
   fluttertoast:
   flutter_image_compress: 
+  flutter_inner_shadow: ^0.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

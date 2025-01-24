@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SpecificExtraKnowledge extends StatefulWidget {
+class SpecificExtraKnowledge extends StatelessWidget {
   final String title;
   final String imagePath;
   final String content;
@@ -11,20 +11,6 @@ class SpecificExtraKnowledge extends StatefulWidget {
     required this.imagePath,
     required this.content,
   });
-
-  @override
-  SpecificExtraKnowledgeState createState() => SpecificExtraKnowledgeState();
-}
-
-class SpecificExtraKnowledgeState extends State<SpecificExtraKnowledge> {
-  bool _showFullContent = false;
-
-  // This function is triggered when the "Read More" button is pressed
-  void _toggleContentVisibility() {
-    setState(() {
-      _showFullContent = !_showFullContent;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,86 +27,81 @@ class SpecificExtraKnowledgeState extends State<SpecificExtraKnowledge> {
                 onTap: () {
                   Navigator.pop(context);
                 },
-                child: Image.asset('assets/back_button.png', height: 50),
+                child: Image.asset(
+                  'assets/back_button.png',
+                  height: 40,
+                ),
               ),
               const SizedBox(width: 10),
-              Text(widget.title)
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    color: Color(0xFF48116A),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ],
           ),
         ),
         toolbarHeight: 70,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Full-width Image before Title
-          Container(
-            height: 300,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(widget.imagePath),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Article Title
-                  Text(
-                    widget.title,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF48116A),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0, left: 16, right: 16, bottom: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Image with rounded corners and shadow
+              Container(
+                height: 200,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey, width: 0.5),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
                     ),
+                  ],
+                  image: DecorationImage(
+                    image: NetworkImage(imagePath),
+                    fit: BoxFit.contain,
                   ),
-                  const SizedBox(height: 10),
-                  // Article Content (Show full content after 'Read More' is clicked)
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Text(
-                        widget.content,
-                        style: const TextStyle(
-                            fontSize: 16, color: Colors.black87),
-                      ),
-                    ),
-                  ),
-                  // Read More Button (Only visible when content is collapsed)
-                  if (!_showFullContent)
-                    Align(
-                      alignment: Alignment.center,
-                      child: ElevatedButton(
-                        onPressed: _toggleContentVisibility,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF48116A),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 40,
-                            vertical: 12,
-                          ),
-                        ),
-                        child: const Text(
-                          'Read More',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                ],
+                ),
               ),
-            ),
+              const SizedBox(height: 8),
+               Padding(
+                 padding: const EdgeInsets.only(top: 8.0, left: 2, right: 8,),
+                 child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF48116A),
+                    fontFamily: 'Poppins'
+                  ),
+                  textAlign: TextAlign.start,
+                               ),
+               ),
+               const SizedBox(height: 8),
+              // Content
+              Text(
+                content,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontFamily: 'Poppins',
+                  color: Colors.black87,
+                  height: 1.5,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

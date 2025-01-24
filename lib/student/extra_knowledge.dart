@@ -457,6 +457,7 @@ class _ExtraKnowledgeState extends State<ExtraKnowledge> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                       ),
+                                      maxLines: 2,
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
@@ -699,6 +700,7 @@ Widget _buildThumbnailGallery() {
                         fontWeight: FontWeight.w500,
                       ),
                       overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                   ),
                 ),
@@ -975,8 +977,9 @@ Widget _buildRecentlyViewed() {
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
+                      height: 40,
                       width: double.infinity,
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
                       decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.7),
                         borderRadius: const BorderRadius.only(
@@ -984,15 +987,19 @@ Widget _buildRecentlyViewed() {
                           bottomRight: Radius.circular(16),
                         ),
                       ),
-                      child: Text(
-                        item.title,
-                        style: const TextStyle(
-                          fontFamily: 'Poppins',
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
+                      child: Center(
+                        child: Text(
+                          item.title,
+                          style: const TextStyle(
+                            fontFamily: 'Poppins',
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                            textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ),

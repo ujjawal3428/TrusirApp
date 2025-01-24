@@ -77,7 +77,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
         elevation: 0,
@@ -162,8 +162,9 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                           spreadRadius: 3,
                           blurRadius: 15,
                           offset: const Offset(0, 10),
+                          
                         ),
-                      ],
+                    ],
                     ),
                     child: Row(
                       mainAxisAlignment: isWeb
