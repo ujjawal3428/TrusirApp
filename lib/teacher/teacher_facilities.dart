@@ -858,8 +858,6 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
       tileHeight *= 1.2;
     }
 
-    final borderColor = HSLColor.fromColor(color).withLightness(0.95).toColor();
-
     return GestureDetector(
       onTap: onTap,
       child: FractionallySizedBox(
@@ -868,20 +866,49 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
           height: tileHeight,
           width: tileWidth,
           decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(22),
-              border: Border.all(
-                color: borderColor,
-                width: 2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.3),
-                  spreadRadius: 3,
-                  blurRadius: 15,
-                  offset: const Offset(0, 10),
-                ),
-              ]),
+          color: color,
+          borderRadius: BorderRadius.circular(25),
+          gradient: SweepGradient(
+            colors: [
+              color,
+              color.withValues(alpha: 0.9),
+              color.withValues(alpha: 0.8),
+              Colors.white54.withValues(alpha: 0.1),
+              color,
+              color
+            ],
+            center: Alignment.topRight,
+            startAngle: 0,
+            endAngle: 6,
+          ),
+
+          //  RadialGradient(
+          //   colors: [
+          //     color,
+          //     color.withValues(alpha: 0.9),
+          //     color.withValues(alpha: 0.8),
+          //     Colors.white.withValues(alpha: 0.3),
+          //   ],
+          //   center: Alignment.center,
+          //   radius: 0.8,
+          // ),
+          boxShadow: [
+            // Bottom-right shadow for the raised effect
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              spreadRadius: 1,
+              blurRadius: 6,
+              offset: const Offset(4, 4), // Creates a raised 3D shadow
+            ),
+            // Top-left highlight for a light source effect
+            BoxShadow(
+              color: Colors.white.withOpacity(0.8),
+              spreadRadius: 1,
+              blurRadius: 6,
+              offset: const Offset(-4, -4), // Highlight on the top-left
+            ),
+          ],
+        ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

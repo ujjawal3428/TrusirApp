@@ -328,7 +328,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 255, 165, 165),
+                            const Color.fromARGB(255, 222, 151, 255),
                             'assets/money.png',
                             'Fee Payment',
                             tileWidth,
@@ -372,7 +372,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 253, 177, 203),
+                            const Color.fromARGB(255, 151, 177, 255),
                             'assets/qna.png',
                             'Student Doubt',
                             tileWidth,
@@ -400,7 +400,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color.fromARGB(255, 255, 248, 182),
+                            const Color.fromARGB(255, 177, 135, 220),
                             'assets/knowledge.png',
                             'Extra Knowledge',
                             tileWidth,
@@ -456,7 +456,7 @@ class _StudentfacilitiesState extends State<Studentfacilities> {
                         }, isWeb),
                         buildTile(
                             context,
-                            const Color(0xFFFFCDD2),
+                            const Color.fromARGB(255, 250, 217, 108),
                             'assets/video knowledge.png',
                             'Video Knowledge',
                             tileWidth,
