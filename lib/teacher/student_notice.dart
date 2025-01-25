@@ -222,7 +222,6 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                       ),
                                     ),
                                   ],
-                                  
                                 ),
                               );
                             }),
@@ -251,7 +250,7 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                         ),
                       ),
                     ),
-                     Positioned(
+                    Positioned(
                         left: 0,
                         right: 0,
                         bottom: 10,
