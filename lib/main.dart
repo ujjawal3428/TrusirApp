@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> {
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       home: const PaymentPopUpPage(
-          adjustedAmount: 100, isSuccess: true, transactionType: 'Card'),
+          adjustedAmount: 100, isSuccess: false, transactionType: 'Card'),
     );
   }
 }
