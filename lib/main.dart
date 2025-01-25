@@ -10,6 +10,8 @@ import 'package:trusir/common/notificationhelper.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   const AndroidInitializationSettings initializationSettingsAndroid =
@@ -31,7 +33,7 @@ void main() async {
           Colors.grey[200], // Set the navigation bar color to grey
       systemNavigationBarIconBrightness: Brightness.dark,
       statusBarColor: Colors.transparent,
-      statusBarBrightness: Brightness.dark));
+      statusBarBrightness: Brightness.light));
   runApp(const MyApp());
 }
 
@@ -42,31 +44,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<Widget> getInitialPage() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? role = prefs.getString('role');
-    final bool isNewUser = prefs.getBool('new_user') ?? true;
-
-    if (role == null) {
-      return const TrusirLoginPage();
-    } else if (role == 'student' && isNewUser) {
-      return const TrusirLoginPage();
-    } else if (role == 'teacher' && isNewUser) {
-      return const TrusirLoginPage();
-    } else if (role == 'student' && !isNewUser) {
-      return const MainScreen();
-    } else if (role == 'teacher' && !isNewUser) {
-      return const TeacherMainScreen();
-    } else {
-      return const TrusirLoginPage();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
@@ -108,7 +91,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> navigateToInitialPage() async {
-    await Future.delayed(const Duration(seconds: 5)); // Wait for 2 seconds
+    await Future.delayed(const Duration(seconds: 2)); // Wait for 2 seconds
     final initialPage = await getInitialPage();
     if (mounted) {
       Navigator.of(context).pushReplacement(
@@ -168,7 +151,7 @@ class _SplashScreenState extends State<SplashScreen>
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: Image.asset(
-                      'assets/trusir_logo.png', // Replace with your logo asset path
+                      'assets/trusir.png', // Replace with your logo asset path
                       width: 200,
                       height: 200,
                     ),
@@ -178,11 +161,11 @@ class _SplashScreenState extends State<SplashScreen>
             ),
           ),
           const Positioned(
-              left: 150,
+              left: 120,
               right: 0,
               bottom: 110,
               child: Text(
-                'Trusir',
+                'trusir.com',
                 style: TextStyle(
                     fontSize: 25,
                     color: Colors.white,

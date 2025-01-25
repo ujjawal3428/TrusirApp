@@ -1,15 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/image_uploading.dart';
 import 'package:trusir/common/parents_doubts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -49,6 +44,40 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
     await launchUrl(launchUri);
   }
 
+  Future<void> handleUploadFromCamera() async {
+    final String result = await ImageUploadUtils.uploadImagesFromCamera();
+
+    if (result != 'null') {
+      setState(() {
+        isimageUploading = false;
+        formData.photo = result; // Save the download URL in the local variable
+      });
+      Fluttertoast.showToast(msg: 'Image uploaded successfully!');
+    } else {
+      Fluttertoast.showToast(msg: 'Image upload failed!');
+      setState(() {
+        isimageUploading = false;
+      });
+    }
+  }
+
+  Future<void> handleUploadFromGallery() async {
+    final String result = await ImageUploadUtils.uploadImagesFromGallery();
+
+    if (result != 'null') {
+      setState(() {
+        isimageUploading = false;
+        formData.photo = result; // Save the download URL in the local variable
+      });
+      Fluttertoast.showToast(msg: 'Image uploaded successfully!');
+    } else {
+      Fluttertoast.showToast(msg: 'Image upload failed!');
+      setState(() {
+        isimageUploading = false;
+      });
+    }
+  }
+
   Future<void> _launchWhatsApp(String phoneNumber, String message) async {
     final Uri whatsappUri = Uri.parse(
         "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
@@ -64,124 +93,6 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
       }
     } catch (e) {
       print("Error launching WhatsApp: $e");
-    }
-  }
-
-  Future<void> _requestPermissions() async {
-    if (await Permission.storage.isGranted &&
-        await Permission.camera.isGranted) {
-      return;
-    }
-
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
-
-      // Skip permissions for Android versions below API 30
-      if (androidInfo.version.sdkInt < 30) {
-        return;
-      }
-
-      if (await Permission.photos.isGranted ||
-          await Permission.videos.isGranted ||
-          await Permission.camera.isGranted) {
-        return;
-      }
-
-      Map<Permission, PermissionStatus> statuses = await [
-        Permission.photos,
-        Permission.videos,
-        Permission.camera
-      ].request();
-
-      if (statuses.values.any((status) => !status.isGranted)) {
-        openAppSettings();
-      }
-    }
-  }
-
-  Future<String> uploadImage() async {
-    await _requestPermissions();
-    setState(() {
-      isimageUploading = true;
-    });
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.camera);
-
-    if (image == null) {
-      Fluttertoast.showToast(msg: 'No image selected.');
-      setState(() {
-        isimageUploading = false;
-      });
-      return 'null';
-    }
-
-    // Compress the image
-    final compressedImage = await compressImage(File(image.path));
-
-    if (compressedImage == null) {
-      Fluttertoast.showToast(msg: 'Failed to compress image.');
-      setState(() {
-        isimageUploading = false;
-      });
-      return 'null';
-    }
-
-    final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri);
-
-    // Add the compressed image file to the request
-    request.files
-        .add(await http.MultipartFile.fromPath('photo', compressedImage.path));
-
-    // Send the request
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      // Parse the response to extract the download URL
-      final responseBody = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-
-      if (jsonResponse.containsKey('download_url')) {
-        setState(() {
-          formData.photo = jsonResponse['download_url'];
-          isimageUploading = false;
-        });
-        return jsonResponse['download_url'] as String;
-      } else {
-        Fluttertoast.showToast(msg: 'Download URL not found in the response.');
-        setState(() {
-          isimageUploading = false;
-        });
-        return 'null';
-      }
-    } else {
-      Fluttertoast.showToast(
-          msg: 'Failed to upload image: ${response.statusCode}');
-      setState(() {
-        isimageUploading = false;
-      });
-      return 'null';
-    }
-  }
-
-// Function to compress image
-  Future<XFile?> compressImage(File file) async {
-    final String targetPath =
-        '${file.parent.path}/compressed_${file.uri.pathSegments.last}';
-
-    try {
-      final compressedFile = await FlutterImageCompress.compressAndGetFile(
-        file.absolute.path,
-        targetPath,
-        quality: 85, // Adjust quality to achieve ~2MB size
-        minWidth: 1920, // Adjust resolution as needed
-        minHeight: 1080, // Adjust resolution as needed
-      );
-
-      return compressedFile;
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error compressing image: $e');
-      return null;
     }
   }
 
@@ -241,147 +152,6 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
       }
     } catch (e) {
       print('Error occurred: $e');
-    }
-  }
-
-  Widget _buildFilePreview(String fileUrl) {
-    final extension = fileUrl.split('.').last.toLowerCase();
-
-    if (['jpg', 'jpeg', 'png'].contains(extension)) {
-      // Display the image preview
-      return Image.network(
-        fileUrl,
-        width: 50,
-        height: 50,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          return const Icon(Icons.broken_image, color: Colors.grey, size: 50);
-        },
-      );
-    } else {
-      // Display an icon for non-image file types
-      return Icon(
-        _getIconForFile(fileUrl),
-        size: 50,
-        color: _getIconColorForFile(fileUrl),
-      );
-    }
-  }
-
-  IconData _getIconForFile(String url) {
-    extension = url.split('.').last;
-    if (extension == 'pdf') {
-      return Icons.picture_as_pdf;
-    } else if (extension == 'docx' || extension == 'doc') {
-      return Icons.description;
-    } else if (extension == 'jpeg' ||
-        extension == 'jpg' ||
-        extension == 'png') {
-      return Icons.image;
-    } else {
-      return Icons.insert_drive_file; // Default icon for unknown file types
-    }
-  }
-
-  Color _getIconColorForFile(String url) {
-    extension = url.split('.').last;
-    if (extension == 'pdf') {
-      return Colors.red;
-    } else if (extension == 'docx' || extension == 'doc') {
-      return Colors.blue;
-    } else if (extension == 'png' ||
-        extension == 'jpg' ||
-        extension == 'jpeg') {
-      return Colors.green;
-    } else {
-      return Colors.grey; // Default color for unknown file types
-    }
-  }
-
-  Future<String> uploadFile(String filePath, String fileType) async {
-    final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri); // Correct HTTP method
-
-    // Add the file to the request with the correct field name
-    request.files.add(await http.MultipartFile.fromPath(
-        'photo', filePath)); // Field name is 'photo'
-
-    // Send the request
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      // Parse the response to extract the download URL
-      final responseBody = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-
-      if (jsonResponse.containsKey('download_url')) {
-        return jsonResponse['download_url'] as String;
-      } else {
-        print('Download URL not found in the response.');
-        return 'null';
-      }
-    } else {
-      print('Failed to upload file: ${response.statusCode}');
-      return 'null';
-    }
-  }
-
-  Future<void> handleFileSelection() async {
-    setState(() {
-      isimageUploading = true;
-    });
-    try {
-      // Use FilePicker to select a file
-      final result = await FilePicker.platform.pickFiles();
-
-      if (result != null && result.files.single.path != null) {
-        final filePath = result.files.single.path!;
-        final fileName = result.files.single.name;
-        final fileSize = result.files.single.size; // File size in bytes
-
-        // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
-        if (fileSize > 2 * 1024 * 1024) {
-          Fluttertoast.showToast(
-              msg: 'File size exceeds 2MB. Please select a smaller file.');
-          setState(() {
-            isimageUploading = false;
-          });
-          return; // Exit the method
-        }
-
-        // Determine file type (use "document" for docx/pdf, "photo" for images)
-        final fileType = fileName.endsWith('.jpg') ||
-                fileName.endsWith('.jpeg') ||
-                fileName.endsWith('.png')
-            ? 'photo'
-            : 'document';
-
-        // Upload the file and get the path
-        final uploadedPath = await uploadFile(filePath, fileType);
-
-        if (uploadedPath != 'null') {
-          Fluttertoast.showToast(msg: 'File uploaded successfully');
-          setState(() {
-            formData.photo = uploadedPath;
-            isimageUploading = false;
-          });
-        } else {
-          Fluttertoast.showToast(msg: 'Failed to upload the file.');
-          setState(() {
-            isimageUploading = false;
-          });
-        }
-      } else {
-        Fluttertoast.showToast(msg: 'No file selected.');
-        setState(() {
-          isimageUploading = false;
-        });
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error during file selection: $e');
-      setState(() {
-        isimageUploading = false;
-      });
     }
   }
 
@@ -556,7 +326,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                         ],
                                       ),
                                       child: formData.photo != null
-                                          ? _buildFilePreview(formData.photo!)
+                                          ? Image.network(formData.photo!)
                                           : GestureDetector(
                                               onTap: () {
                                                 showDialog(
@@ -609,7 +379,11 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                                                 onPressed: () {
                                                                   Navigator.pop(
                                                                       context);
-                                                                  uploadImage();
+                                                                  setState(() {
+                                                                    isimageUploading =
+                                                                        true;
+                                                                  });
+                                                                  handleUploadFromCamera();
                                                                 },
                                                                 child:
                                                                     const Text(
@@ -644,11 +418,15 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                                                 onPressed: () {
                                                                   Navigator.pop(
                                                                       context);
-                                                                  handleFileSelection();
+                                                                  setState(() {
+                                                                    isimageUploading =
+                                                                        true;
+                                                                  });
+                                                                  handleUploadFromGallery();
                                                                 },
                                                                 child:
                                                                     const Text(
-                                                                  "Upload File",
+                                                                  "Upload Image",
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           18,
