@@ -23,6 +23,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
   String language = '';
   String phoneNumber = '';
   String profilePhoto = '';
+  String fatherName = '';
 
   @override
   void initState() {
@@ -63,6 +64,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
           address = data['address'] ?? 'N/A';
           graduation = data['qualification'] ?? 'N/A';
           experience = data['experience'] ?? 'N/A';
+          fatherName = data['father_name'] ?? 'N/A';
           subjects = data['subject'] ?? 'N/A';
           language = data['medium'] ?? 'N/A';
           phoneNumber = data['phone'] ?? 'N/A';
@@ -150,19 +152,11 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
               ),
             ),
             buildInfoRow(
-              'assets/male@2x.png',
-              'Age & Gender',
-              '$age, $gender',
-              imageBackgroundColor: Colors.blue.shade100,
-              textBackgroundColor: Colors.blue.shade50,
-            ),
-            const SizedBox(height: 10),
-            buildInfoRow(
-              'assets/location@2x.png',
-              'Address',
-              address,
-              imageBackgroundColor: Colors.green.shade100,
-              textBackgroundColor: Colors.green.shade50,
+              'assets/men.png',
+              'Father Name',
+              fatherName,
+              imageBackgroundColor: Colors.orange.shade100,
+              textBackgroundColor: Colors.orange.shade50,
             ),
             const SizedBox(height: 10),
             buildInfoRow(
@@ -182,27 +176,19 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
             ),
             const SizedBox(height: 10),
             buildInfoRow(
-              'assets/pensp@3x.png',
-              'Subjects',
-              subjects,
-              imageBackgroundColor: Colors.purple.shade100,
-              textBackgroundColor: Colors.purple.shade50,
-            ),
-            const SizedBox(height: 10),
-            buildInfoRow(
-              'assets/ab@2x.png',
-              'Language',
-              language,
-              imageBackgroundColor: Colors.orange.shade100,
-              textBackgroundColor: Colors.orange.shade50,
-            ),
-            const SizedBox(height: 10),
-            buildInfoRow(
               'assets/phone@2x.png',
               'Phone Number',
               '+91-$phoneNumber',
               imageBackgroundColor: Colors.teal.shade100,
               textBackgroundColor: Colors.teal.shade50,
+            ),
+            const SizedBox(height: 10),
+            buildInfoRow(
+              'assets/location@2x.png',
+              'Address',
+              address,
+              imageBackgroundColor: Colors.green.shade100,
+              textBackgroundColor: Colors.green.shade50,
             ),
             const SizedBox(height: 10),
           ],

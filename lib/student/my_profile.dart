@@ -19,6 +19,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
   String? userID;
   String? address;
   String? phone;
+  String? fatherName;
   bool isLoading = true;
 
   @override
@@ -36,6 +37,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
       school = prefs.getString('school') ?? 'N/A';
       studentClass = prefs.getString('class') ?? 'N/A';
       subject = prefs.getString('subject') ?? 'N/A';
+      fatherName = prefs.getString('father_name') ?? 'N/A';
       profile = prefs.getString('profile') ?? '';
       address = prefs.getString('address') ?? 'N/A';
       phone = prefs.getString('phone_number') ?? 'N/A';
@@ -50,9 +52,10 @@ class MyProfileScreenState extends State<MyProfileScreen> {
 
     const rowColors = [
       Color.fromARGB(255, 255, 199, 221),
+      Color.fromARGB(255, 216, 185, 255),
+      Color.fromARGB(255, 199, 255, 215),
       Color.fromARGB(255, 199, 236, 255),
       Color.fromARGB(255, 255, 185, 185),
-      Color.fromARGB(255, 191, 184, 255),
     ];
 
     return Scaffold(
@@ -175,19 +178,11 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                                   height: 50,
                                 ),
                                 buildInfoRow(
-                                  'assets/pastry@3x.png',
-                                  'Date of Birth',
-                                  dob!,
+                                  'assets/men.png',
+                                  'Father Name',
+                                  fatherName!,
                                   isLargeScreen,
                                   rowColors[0],
-                                ),
-                                const SizedBox(height: 10),
-                                buildInfoRow(
-                                  'assets/house@3x.png',
-                                  'School',
-                                  school!,
-                                  isLargeScreen,
-                                  rowColors[1],
                                 ),
                                 const SizedBox(height: 10),
                                 buildInfoRow(
@@ -195,7 +190,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                                   'Class',
                                   studentClass!,
                                   isLargeScreen,
-                                  rowColors[2],
+                                  rowColors[1],
                                 ),
                                 const SizedBox(height: 10),
                                 buildInfoRow(
@@ -203,8 +198,25 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                                   'Subjects',
                                   subject!,
                                   isLargeScreen,
+                                  rowColors[2],
+                                ),
+                                const SizedBox(height: 10),
+                                buildInfoRow(
+                                  'assets/house@3x.png',
+                                  'School',
+                                  school!,
+                                  isLargeScreen,
                                   rowColors[3],
                                 ),
+                                const SizedBox(height: 10),
+                                buildInfoRow(
+                                  'assets/phone@2x.png',
+                                  'Phone',
+                                  '+91-$phone',
+                                  isLargeScreen,
+                                  rowColors[4],
+                                ),
+                                const SizedBox(height: 10),
                               ],
                             ),
                           ),
@@ -269,35 +281,43 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                         // Info rows
                         const SizedBox(height: 18),
                         buildInfoRow(
-                          'assets/pastry@3x.png',
-                          'Date of Birth',
-                          dob!,
+                          'assets/men.png',
+                          'Father Name',
+                          fatherName!,
                           isLargeScreen,
                           rowColors[0],
                         ),
-                        const SizedBox(height: 15),
-                        buildInfoRow(
-                          'assets/house@3x.png',
-                          'School',
-                          school!,
-                          isLargeScreen,
-                          rowColors[1],
-                        ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 10),
                         buildInfoRow(
                           'assets/graduation@3x.png',
                           'Class',
                           studentClass!,
                           isLargeScreen,
-                          rowColors[2],
+                          rowColors[1],
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 10),
                         buildInfoRow(
                           'assets/pensp@3x.png',
                           'Subjects',
                           subject!,
                           isLargeScreen,
+                          rowColors[2],
+                        ),
+                        const SizedBox(height: 10),
+                        buildInfoRow(
+                          'assets/house@3x.png',
+                          'School',
+                          school!,
+                          isLargeScreen,
                           rowColors[3],
+                        ),
+                        const SizedBox(height: 10),
+                        buildInfoRow(
+                          'assets/phone@2x.png',
+                          'Phone',
+                          '+91-$phone',
+                          isLargeScreen,
+                          rowColors[4],
                         ),
                       ],
                     ),
@@ -305,50 +325,25 @@ class MyProfileScreenState extends State<MyProfileScreen> {
     );
   }
 
-Widget buildInfoRow(
-  String iconPath,
-  String title,
-  String value,
-  bool isLargeScreen,
-  Color backgroundColor,
-) {
-  return Padding(
-    padding: const EdgeInsets.only(left: 18.0, right: 22),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // Icon container
-        Container(
-          width: isLargeScreen ? 100 : 65,
-          height: isLargeScreen ? 100 : 65,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3), 
-                blurRadius: 4, 
-                offset: const Offset(3, 3), 
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Image.asset(
-              iconPath,
-              fit: BoxFit.contain,
-            ),
-          ),
-        ),
-        const SizedBox(width: 15),
-        // Text container
-        Flexible(
-          child: Container(
+  Widget buildInfoRow(
+    String iconPath,
+    String title,
+    String value,
+    bool isLargeScreen,
+    Color backgroundColor,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 18.0, right: 22),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Icon container
+          Container(
+            width: isLargeScreen ? 100 : 65,
             height: isLargeScreen ? 100 : 65,
-            width: isLargeScreen ? 400 : 306,
             decoration: BoxDecoration(
               color: backgroundColor,
-              borderRadius: BorderRadius.circular(22),
+              borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.3),
@@ -358,23 +353,48 @@ Widget buildInfoRow(
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, top: 10, bottom: 10, right: 20),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  value.isNotEmpty ? value : 'Loading...',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: isLargeScreen ? 22 : 16,
+              padding: const EdgeInsets.all(4.0),
+              child: Image.asset(
+                iconPath,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          const SizedBox(width: 15),
+          // Text container
+          Flexible(
+            child: Container(
+              height: isLargeScreen ? 100 : 65,
+              width: isLargeScreen ? 400 : 306,
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(22),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 4,
+                    offset: const Offset(3, 3),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 20, top: 10, bottom: 10, right: 20),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    value.isNotEmpty ? value : 'Loading...',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: isLargeScreen ? 22 : 16,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
 }
