@@ -260,150 +260,170 @@ class _StudentGKPageState extends State<StudentGKPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.grey[50],
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: Padding(
-          padding: const EdgeInsets.only(left: 10.0),
-          child: Row(
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Image.asset('assets/back_button.png', height: 50)),
-              const SizedBox(width: 20),
-              const Text(
-                'GK',
-                style: TextStyle(
-                  color: Color(0xFF48116A),
-                  fontSize: 25,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w700,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.grey[50],
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: Row(
+              children: [
+                GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Image.asset('assets/back_button.png', height: 50)),
+                const SizedBox(width: 20),
+                const Text(
+                  'GK',
+                  style: TextStyle(
+                    color: Color(0xFF48116A),
+                    fontSize: 25,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
+              ],
+            ),
+          ),
+          toolbarHeight: 70,
+        ),
+        backgroundColor: Colors.grey[50],
+        body: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: gkList.isEmpty
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.start,
+                children: [
+                  gkList.isEmpty && !isLoading && initialLoadComplete
+                      ? const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(20.0),
+                            child: Text(
+                              "No GK's available",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        )
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SingleChildScrollView(
+                              child: SizedBox(
+                                height: (gkList.length * 130.0).clamp(0,
+                                    MediaQuery.of(context).size.height * 0.65),
+                                child: ListView.builder(
+                                  padding: const EdgeInsets.all(10.0),
+                                  itemCount: gkList.length,
+                                  itemBuilder: (context, index) {
+                                    final gk = gkList[index];
+                                    final filename =
+                                        '${gk.course}_gk_${gk.createdAt}';
+                                    final isDownloaded =
+                                        downloadedFiles.containsKey(filename);
+
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.yellow.shade100,
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                        ),
+                                        child: ListTile(
+                                          leading: _buildFilePreview(gk.image),
+                                          title: Text(
+                                            gk.title,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Description: ${gk.course}'),
+                                              const SizedBox(height: 2),
+                                              Text(
+                                                  'Posted on: ${gk.createdAt}'),
+                                            ],
+                                          ),
+                                          trailing: SizedBox(
+                                            height: 20,
+                                            width: 80,
+                                            child: ElevatedButton.icon(
+                                              onPressed: () {
+                                                if (isDownloaded) {
+                                                  _openFile(filename);
+                                                } else {
+                                                  _downloadFile(
+                                                      gk.image, filename);
+                                                }
+                                              },
+                                              icon: Icon(
+                                                isDownloaded
+                                                    ? Icons.open_in_new
+                                                    : Icons.download,
+                                                size: 17,
+                                              ),
+                                              label: Text(
+                                                isDownloaded
+                                                    ? "Open"
+                                                    : "Download",
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                              style: ElevatedButton.styleFrom(
+                                                padding:
+                                                    const EdgeInsets.all(0),
+                                                foregroundColor: Colors.blue,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            if (isLoading)
+                              const CircularProgressIndicator()
+                            else if (!hasMoreData && gkList.isNotEmpty)
+                              const Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: Text(
+                                  'No more GKs',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              )
+                            else if (gkList.isNotEmpty)
+                              TextButton(
+                                onPressed: fetchGks,
+                                child: const Text('Load More'),
+                              ),
+                          ],
+                        ),
+                ],
               ),
+              Positioned(
+                right: 0,
+                left: 0,
+                bottom: 0,
+                child: _buildCreateButton(),
+              )
             ],
           ),
         ),
-        toolbarHeight: 70,
-      ),
-      backgroundColor: Colors.grey[50],
-      body: Column(
-        mainAxisAlignment:
-            gkList.isEmpty ? MainAxisAlignment.center : MainAxisAlignment.start,
-        children: [
-          gkList.isEmpty && !isLoading && initialLoadComplete
-              ? const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text(
-                      "No GK's available",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SingleChildScrollView(
-                      child: SizedBox(
-                        height: (gkList.length * 130.0).clamp(
-                            0, MediaQuery.of(context).size.height * 0.65),
-                        child: ListView.builder(
-                          padding: const EdgeInsets.all(10.0),
-                          itemCount: gkList.length,
-                          itemBuilder: (context, index) {
-                            final gk = gkList[index];
-                            final filename = '${gk.course}_gk_${gk.createdAt}';
-                            final isDownloaded =
-                                downloadedFiles.containsKey(filename);
-
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.yellow.shade100,
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: ListTile(
-                                  leading: _buildFilePreview(gk.image),
-                                  title: Text(
-                                    gk.title,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text('Description: ${gk.course}'),
-                                      const SizedBox(height: 2),
-                                      Text('Posted on: ${gk.createdAt}'),
-                                    ],
-                                  ),
-                                  trailing: SizedBox(
-                                    height: 20,
-                                    width: 80,
-                                    child: ElevatedButton.icon(
-                                      onPressed: () {
-                                        if (isDownloaded) {
-                                          _openFile(filename);
-                                        } else {
-                                          _downloadFile(gk.image, filename);
-                                        }
-                                      },
-                                      icon: Icon(
-                                        isDownloaded
-                                            ? Icons.open_in_new
-                                            : Icons.download,
-                                        size: 17,
-                                      ),
-                                      label: Text(
-                                        isDownloaded ? "Open" : "Download",
-                                        style: const TextStyle(fontSize: 10),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.all(0),
-                                        foregroundColor: Colors.blue,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    if (isLoading)
-                      const CircularProgressIndicator()
-                    else if (!hasMoreData && gkList.isNotEmpty)
-                      const Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Text(
-                          'No more GKs',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      )
-                    else if (gkList.isNotEmpty)
-                      TextButton(
-                        onPressed: fetchGks,
-                        child: const Text('Load More'),
-                      ),
-                  ],
-                ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: _buildCreateButton()),
-        ],
       ),
     );
   }
@@ -420,12 +440,16 @@ class _StudentGKPageState extends State<StudentGKPage> {
                       )));
         },
         child: Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 40),
-          child: Image.asset(
-            'assets/postbutton.png',
+          padding: const EdgeInsets.only(left: 20.0, right: 20),
+          child: Container(
+            color: Colors.white,
             width: double.infinity,
-            height: 80,
-            fit: BoxFit.contain,
+            padding: const EdgeInsets.all(10),
+            child: Image.asset(
+              'assets/postbutton.png',
+              height: 70.0,
+              fit: BoxFit.contain,
+            ),
           ),
         ),
       ),

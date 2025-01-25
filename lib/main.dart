@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/login_page.dart';
 import 'package:trusir/student/main_screen.dart';
-import 'package:trusir/student/payment__status_popup.dart';
 import 'package:trusir/teacher/teacher_main_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:trusir/common/notificationhelper.dart';
@@ -48,11 +47,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: navigatorKey,
-      debugShowCheckedModeBanner: false,
-      home: const PaymentPopUpPage(
-          adjustedAmount: 100, isSuccess: false, transactionType: 'Card'),
-    );
+        navigatorKey: navigatorKey,
+        debugShowCheckedModeBanner: false,
+        home: const SplashScreen());
   }
 }
 

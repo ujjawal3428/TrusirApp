@@ -2,7 +2,10 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -29,12 +32,117 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
   bool isLoading = false;
   bool hasMoreData = true;
   bool initialLoadComplete = false;
+  int? selectedDoubtId;
+  String imageUrl = '';
+  bool isimageUploading = false;
+  bool isSolutionUploading = false;
 
   @override
   void initState() {
     super.initState();
     fetchDoubts();
     _loadDownloadedFiles();
+  }
+
+  Future<String> uploadImageSelective(XFile imageFile) async {
+    final uri = Uri.parse('$baseUrl/api/upload-profile');
+    final request = http.MultipartRequest('POST', uri);
+
+    // Add the image file to the request
+    request.files
+        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
+
+    // Send the request
+    final response = await request.send();
+
+    if (response.statusCode == 201) {
+      // Parse the response to extract the download URL
+      final responseBody = await response.stream.bytesToString();
+      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      if (jsonResponse.containsKey('download_url')) {
+        return jsonResponse['download_url'] as String;
+      } else {
+        print('Download URL not found in the response.');
+        return 'null';
+      }
+    } else {
+      print('Failed to upload image: ${response.statusCode}');
+      return 'null';
+    }
+  }
+
+  Future<void> handleImageSelection(ImageSource source) async {
+    setState(() {
+      isimageUploading = true;
+    });
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? pickedFile = await picker.pickImage(source: source);
+
+      if (pickedFile == null) {
+        Fluttertoast.showToast(msg: 'No image selected.');
+        setState(() {
+          isimageUploading = false;
+        });
+        return;
+      }
+
+      // Compress the image
+      final compressedImage = await compressImage(File(pickedFile.path));
+
+      if (compressedImage == null) {
+        Fluttertoast.showToast(msg: 'Failed to compress image.');
+        setState(() {
+          isimageUploading = false;
+        });
+        return;
+      }
+
+      // Upload the image and get the path
+      final newuploadedPath =
+          await uploadImageSelective(XFile(compressedImage.path));
+
+      if (newuploadedPath != 'null') {
+        setState(() {
+          imageUrl = newuploadedPath;
+          isimageUploading = false;
+        });
+        Fluttertoast.showToast(
+            msg: 'Image uploaded successfully: $newuploadedPath');
+      } else {
+        Fluttertoast.showToast(msg: 'Failed to upload the image.');
+        setState(() {
+          isimageUploading = false;
+        });
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error during image selection: $e');
+      setState(() {
+        isimageUploading = false;
+      });
+    }
+  }
+
+// Function to compress image
+  Future<XFile?> compressImage(File file) async {
+    final String targetPath =
+        '${file.parent.path}/compressed_${file.uri.pathSegments.last}';
+
+    try {
+      final compressedFile = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path,
+        targetPath,
+        quality: 85, // Adjust quality to achieve ~2MB size
+        minWidth: 1920, // Adjust resolution as needed
+        minHeight: 1080, // Adjust resolution as needed
+      );
+
+      return compressedFile;
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error compressing image: $e');
+      return null;
+    }
   }
 
   Future<void> _loadDownloadedFiles() async {
@@ -88,6 +196,57 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
   Future<String> _getAppSpecificDownloadPath(String filename) async {
     final directory = await getApplicationDocumentsDirectory();
     return '${directory.path}/$filename';
+  }
+
+  Future<void> uploadSolution() async {
+    // Replace with your API endpoint
+    String apiUrl = '$baseUrl/api/give-doubt-solution/$selectedDoubtId';
+
+    // The data to be sent in the POST request
+    final Map<String, String> data = {
+      'image': imageUrl,
+      'status': 'Solved',
+    };
+    if (imageUrl == '') {
+      Fluttertoast.showToast(msg: 'Upload an Image first');
+    }
+
+    try {
+      // Make the POST request
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type to JSON
+        },
+        body: jsonEncode(data), // Encode the data as JSON
+      );
+
+      // Check the response status
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Fluttertoast.showToast(
+            msg: 'Solution uploaded successfully: ${response.body}');
+        setState(() {
+          isSolutionUploading = false;
+        });
+        Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    StudentDoubtsPage(userID: widget.userID)));
+      } else {
+        print('Failed to upload data. Status code: ${response.statusCode}');
+        setState(() {
+          isSolutionUploading = false;
+        });
+        Fluttertoast.showToast(msg: 'Response body: ${response.body}');
+      }
+    } catch (error) {
+      Fluttertoast.showToast(msg: 'An error occurred: $error');
+      setState(() {
+        isSolutionUploading = false;
+      });
+    }
   }
 
   Future<void> _downloadFile(String url, String filename) async {
@@ -146,70 +305,12 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
     setState(() {
       extension = url.split('.').last;
     });
-    if (extension == 'pdf') {
-      return '.pdf';
-    } else if (extension == 'docx') {
-      return '.docx';
-    } else if (extension == 'jpg' || extension == 'jpeg') {
+    if (extension == 'jpg' || extension == 'jpeg') {
       return '.jpg';
     } else if (extension == 'png') {
       return '.png';
     }
     return ''; // Default, in case we can't determine the extension
-  }
-
-  Widget _buildFilePreview(String fileUrl) {
-    final extension = fileUrl.split('.').last.toLowerCase();
-
-    if (['jpg', 'jpeg', 'png'].contains(extension)) {
-      // Display the image preview
-      return Image.network(
-        fileUrl,
-        width: 50,
-        height: 50,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          return const Icon(Icons.broken_image, color: Colors.grey, size: 50);
-        },
-      );
-    } else {
-      // Display an icon for non-image file types
-      return Icon(
-        _getIconForFile(fileUrl),
-        size: 50,
-        color: _getIconColorForFile(fileUrl),
-      );
-    }
-  }
-
-  IconData _getIconForFile(String url) {
-    extension = url.split('.').last;
-    if (extension == 'pdf') {
-      return Icons.picture_as_pdf;
-    } else if (extension == 'docx' || extension == 'doc') {
-      return Icons.description;
-    } else if (extension == 'jpeg' ||
-        extension == 'jpg' ||
-        extension == 'png') {
-      return Icons.image;
-    } else {
-      return Icons.insert_drive_file; // Default icon for unknown file types
-    }
-  }
-
-  Color _getIconColorForFile(String url) {
-    extension = url.split('.').last;
-    if (extension == 'pdf') {
-      return Colors.red;
-    } else if (extension == 'docx' || extension == 'doc') {
-      return Colors.blue;
-    } else if (extension == 'png' ||
-        extension == 'jpg' ||
-        extension == 'jpeg') {
-      return Colors.green;
-    } else {
-      return Colors.grey; // Default color for unknown file types
-    }
   }
 
   Future<void> _openFile(String filename) async {
@@ -333,7 +434,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: ListTile(
-                              leading: _buildFilePreview(doubt.image),
+                              leading: Image.network(doubt.image),
                               title: Text(
                                 doubt.title,
                                 style: const TextStyle(
@@ -385,12 +486,405 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                                     height: 20,
                                     width: 80,
                                     child: ElevatedButton.icon(
-                                      onPressed: () {
-                                        // Handle upload action
-                                      },
+                                      onPressed:
+                                          doubt.status == 'Solved' &&
+                                                  doubt.solution != 'N/A'
+                                              ? () {
+                                                  setState(() {
+                                                    selectedDoubtId = doubt.id;
+                                                  });
+                                                  showDialog(
+                                                    context: context,
+                                                    barrierColor: Colors.black
+                                                        .withOpacity(0.3),
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return Dialog(
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        insetPadding:
+                                                            const EdgeInsets
+                                                                .all(16),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                        child: StatefulBuilder(
+                                                          builder: (context,
+                                                              setDialogState) {
+                                                            return Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(
+                                                                      16.0),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                              ),
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  Image.network(
+                                                                    doubt
+                                                                        .solution,
+                                                                    height: 200,
+                                                                    width: 200,
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          10),
+                                                                  isSolutionUploading
+                                                                      ? const Center(
+                                                                          child:
+                                                                              CircularProgressIndicator())
+                                                                      : Container(
+                                                                          width:
+                                                                              200,
+                                                                          height:
+                                                                              50,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                Colors.purpleAccent.shade100,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(22),
+                                                                          ),
+                                                                          child:
+                                                                              TextButton(
+                                                                            onPressed:
+                                                                                () {
+                                                                              Navigator.pop(context);
+                                                                              showDialog(
+                                                                                context: context,
+                                                                                barrierColor: Colors.black.withOpacity(0.3),
+                                                                                builder: (BuildContext context) {
+                                                                                  return Dialog(
+                                                                                    backgroundColor: Colors.transparent,
+                                                                                    insetPadding: const EdgeInsets.all(16),
+                                                                                    shape: RoundedRectangleBorder(
+                                                                                      borderRadius: BorderRadius.circular(20),
+                                                                                    ),
+                                                                                    child: StatefulBuilder(
+                                                                                      builder: (context, setDialogState) {
+                                                                                        return Container(
+                                                                                          padding: const EdgeInsets.all(16.0),
+                                                                                          decoration: BoxDecoration(
+                                                                                            color: Colors.white,
+                                                                                            borderRadius: BorderRadius.circular(20),
+                                                                                          ),
+                                                                                          child: Column(
+                                                                                            mainAxisSize: MainAxisSize.min,
+                                                                                            children: [
+                                                                                              isimageUploading
+                                                                                                  ? const Center(
+                                                                                                      child: CircularProgressIndicator(),
+                                                                                                    )
+                                                                                                  : imageUrl.isEmpty
+                                                                                                      ? Column(
+                                                                                                          mainAxisSize: MainAxisSize.min,
+                                                                                                          children: [
+                                                                                                            Container(
+                                                                                                              width: 200,
+                                                                                                              height: 50,
+                                                                                                              decoration: BoxDecoration(
+                                                                                                                color: Colors.lightBlue.shade100,
+                                                                                                                borderRadius: BorderRadius.circular(22),
+                                                                                                              ),
+                                                                                                              child: TextButton(
+                                                                                                                onPressed: () async {
+                                                                                                                  setDialogState(() {
+                                                                                                                    isimageUploading = true; // Show progress indicator
+                                                                                                                  });
+                                                                                                                  await handleImageSelection(ImageSource.camera);
+                                                                                                                  setDialogState(() {
+                                                                                                                    isimageUploading = false; // Hide progress indicator
+                                                                                                                  });
+                                                                                                                },
+                                                                                                                child: const Text(
+                                                                                                                  "Camera",
+                                                                                                                  style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                            const SizedBox(height: 16),
+                                                                                                            Container(
+                                                                                                              width: 200,
+                                                                                                              height: 50,
+                                                                                                              decoration: BoxDecoration(
+                                                                                                                color: Colors.orange.shade100,
+                                                                                                                borderRadius: BorderRadius.circular(22),
+                                                                                                              ),
+                                                                                                              child: TextButton(
+                                                                                                                onPressed: () async {
+                                                                                                                  setDialogState(() {
+                                                                                                                    isimageUploading = true; // Show progress indicator
+                                                                                                                  });
+                                                                                                                  await handleImageSelection(ImageSource.gallery);
+                                                                                                                  setDialogState(() {
+                                                                                                                    isimageUploading = false; // Hide progress indicator
+                                                                                                                  });
+                                                                                                                },
+                                                                                                                child: const Text(
+                                                                                                                  "Upload Image",
+                                                                                                                  style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ),
+                                                                                                          ],
+                                                                                                        )
+                                                                                                      : Image.network(
+                                                                                                          imageUrl,
+                                                                                                          height: 150,
+                                                                                                          width: 150,
+                                                                                                        ),
+                                                                                              const SizedBox(height: 10),
+                                                                                              isSolutionUploading
+                                                                                                  ? const Center(child: CircularProgressIndicator())
+                                                                                                  : Container(
+                                                                                                      width: 200,
+                                                                                                      height: 50,
+                                                                                                      decoration: BoxDecoration(
+                                                                                                        color: Colors.purpleAccent.shade100,
+                                                                                                        borderRadius: BorderRadius.circular(22),
+                                                                                                      ),
+                                                                                                      child: TextButton(
+                                                                                                        onPressed: () {
+                                                                                                          setDialogState(() {
+                                                                                                            isSolutionUploading = true;
+                                                                                                          });
+                                                                                                          uploadSolution();
+                                                                                                          Navigator.pop(context);
+                                                                                                        },
+                                                                                                        child: const Text(
+                                                                                                          "Upload Solution",
+                                                                                                          style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ),
+                                                                                              const SizedBox(height: 20),
+                                                                                              IconButton(
+                                                                                                  onPressed: () {
+                                                                                                    Navigator.pop(context);
+                                                                                                  },
+                                                                                                  icon: const Icon(Icons.cancel))
+                                                                                            ],
+                                                                                          ),
+                                                                                        );
+                                                                                      },
+                                                                                    ),
+                                                                                  );
+                                                                                },
+                                                                              );
+                                                                            },
+                                                                            child:
+                                                                                const Text(
+                                                                              "Change Solution",
+                                                                              style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          20),
+                                                                  IconButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      icon: const Icon(
+                                                                          Icons
+                                                                              .cancel))
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                }
+                                              : () {
+                                                  setState(() {
+                                                    selectedDoubtId = doubt.id;
+                                                  });
+                                                  showDialog(
+                                                    context: context,
+                                                    barrierColor: Colors.black
+                                                        .withOpacity(0.3),
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return Dialog(
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        insetPadding:
+                                                            const EdgeInsets
+                                                                .all(16),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                        child: StatefulBuilder(
+                                                          builder: (context,
+                                                              setDialogState) {
+                                                            return Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(
+                                                                      16.0),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20),
+                                                              ),
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                children: [
+                                                                  isimageUploading
+                                                                      ? const Center(
+                                                                          child:
+                                                                              CircularProgressIndicator(),
+                                                                        )
+                                                                      : imageUrl
+                                                                              .isEmpty
+                                                                          ? Column(
+                                                                              mainAxisSize: MainAxisSize.min,
+                                                                              children: [
+                                                                                Container(
+                                                                                  width: 200,
+                                                                                  height: 50,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Colors.lightBlue.shade100,
+                                                                                    borderRadius: BorderRadius.circular(22),
+                                                                                  ),
+                                                                                  child: TextButton(
+                                                                                    onPressed: () async {
+                                                                                      setDialogState(() {
+                                                                                        isimageUploading = true; // Show progress indicator
+                                                                                      });
+                                                                                      await handleImageSelection(ImageSource.camera);
+                                                                                      setDialogState(() {
+                                                                                        isimageUploading = false; // Hide progress indicator
+                                                                                      });
+                                                                                    },
+                                                                                    child: const Text(
+                                                                                      "Camera",
+                                                                                      style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                const SizedBox(height: 16),
+                                                                                Container(
+                                                                                  width: 200,
+                                                                                  height: 50,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Colors.orange.shade100,
+                                                                                    borderRadius: BorderRadius.circular(22),
+                                                                                  ),
+                                                                                  child: TextButton(
+                                                                                    onPressed: () async {
+                                                                                      setDialogState(() {
+                                                                                        isimageUploading = true; // Show progress indicator
+                                                                                      });
+                                                                                      await handleImageSelection(ImageSource.gallery);
+                                                                                      setDialogState(() {
+                                                                                        isimageUploading = false; // Hide progress indicator
+                                                                                      });
+                                                                                    },
+                                                                                    child: const Text(
+                                                                                      "Upload Image",
+                                                                                      style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            )
+                                                                          : Image
+                                                                              .network(
+                                                                              imageUrl,
+                                                                              height: 150,
+                                                                              width: 150,
+                                                                            ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          10),
+                                                                  isSolutionUploading
+                                                                      ? const Center(
+                                                                          child:
+                                                                              CircularProgressIndicator())
+                                                                      : Container(
+                                                                          width:
+                                                                              200,
+                                                                          height:
+                                                                              50,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                Colors.purpleAccent.shade100,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(22),
+                                                                          ),
+                                                                          child:
+                                                                              TextButton(
+                                                                            onPressed:
+                                                                                () {
+                                                                              setDialogState(() {
+                                                                                isSolutionUploading = true;
+                                                                              });
+                                                                              uploadSolution();
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                            child:
+                                                                                const Text(
+                                                                              "Upload Solution",
+                                                                              style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          20),
+                                                                  IconButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      icon: const Icon(
+                                                                          Icons
+                                                                              .cancel))
+                                                                ],
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
                                       icon: const Icon(Icons.upload, size: 17),
-                                      label: const Text("Upload",
-                                          style: TextStyle(fontSize: 10)),
+                                      label: Text(
+                                          doubt.status == 'Solved'
+                                              ? "Uploaded"
+                                              : "Upload",
+                                          style: const TextStyle(fontSize: 10)),
                                       style: ElevatedButton.styleFrom(
                                         padding: const EdgeInsets.all(0),
                                         foregroundColor: Colors.blue,
@@ -435,6 +929,7 @@ class Doubt {
   final String image;
   final String createdAt;
   final String status;
+  final String solution;
   final String teacheruserID;
 
   Doubt(
@@ -444,6 +939,7 @@ class Doubt {
       required this.image,
       required this.createdAt,
       required this.status,
+      required this.solution,
       required this.teacheruserID});
 
   factory Doubt.fromJson(Map<String, dynamic> json) {
@@ -455,6 +951,7 @@ class Doubt {
       teacheruserID: json['teacher_userID'] ?? 'N/A',
       createdAt:
           DateTime.parse(json['created_at']).toIso8601String().split('T')[0],
+      solution: json['solution'] ?? 'N/A',
       status: json['status'] ?? 'N/A',
     );
   }
