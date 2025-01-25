@@ -80,11 +80,11 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
   }
 
   final List<Color> cardColors = [
-    Colors.blue.shade100,
-    Colors.yellow.shade100,
-    Colors.pink.shade100,
-    Colors.green.shade100,
-    Colors.purple.shade100,
+    Colors.blue.shade300,
+    Colors.yellow.shade300,
+    Colors.pink.shade300,
+    Colors.green.shade300,
+    Colors.purple.shade300,
   ];
 
   @override
@@ -171,14 +171,13 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                   children: [
                                     Container(
                                       width: 386,
-                                      height: 150,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         color: cardColor,
                                       ),
                                       child: Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 55, top: 20),
+                                            left: 55, top: 10, bottom: 10),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -223,6 +222,7 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                       ),
                                     ),
                                   ],
+                                  
                                 ),
                               );
                             }),
@@ -247,16 +247,15 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                     padding: EdgeInsets.symmetric(vertical: 20),
                                     child: Text('No more Notices'),
                                   ),
-                            const SizedBox(height: 50),
                           ],
                         ),
                       ),
                     ),
-                    Positioned(
+                     Positioned(
                         left: 0,
                         right: 0,
-                        bottom: 0,
-                        child: _buildAddNoticeButton(context))
+                        bottom: 10,
+                        child: _buildAddNoticeButton(context)),
                   ],
                 ),
     );
