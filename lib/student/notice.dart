@@ -102,15 +102,15 @@ class _NoticeScreenState extends State<NoticeScreen> {
                     Navigator.pop(context);
                   },
                   child: Image.asset('assets/back_button.png', 
-                    height: constraints.maxWidth > 600 ? 50 : 30,
+                    height: constraints.maxWidth > 600 ? 50 : 50,
                   ),
                 ),
-                SizedBox(width: constraints.maxWidth > 600 ? 20 : 10),
+                SizedBox(width: constraints.maxWidth > 600 ? 20 : 20),
                 Text(
                   'Notice',
                   style: TextStyle(
                     color: const Color(0xFF48116A),
-                    fontSize: constraints.maxWidth > 600 ? 25 : 18,
+                    fontSize: constraints.maxWidth > 600 ? 25 : 25,
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w700,
                   ),

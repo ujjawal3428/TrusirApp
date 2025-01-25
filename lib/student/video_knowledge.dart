@@ -228,19 +228,12 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
           return GestureDetector(
             onTap: () => _onCategorySelected(index),
             child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8.0),
+              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 5.0),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: isSelected ? Colors.black : Colors.grey[200],
-                gradient: LinearGradient(
-                  colors: isSelected
-                      ? [
-                          const Color(0xFFC22054),
-                          const Color(0xFF48116A),
-                        ]
-                      : [Colors.grey[200]!, Colors.grey[200]!],
-                ),
-                borderRadius: BorderRadius.circular(20),
+                // Removed gradient since we only need a single color
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Text(
                 categories[index],
@@ -350,6 +343,7 @@ class WideScreenLayout extends StatelessWidget {
     );
   }
 }
+
 class VideoCard extends StatelessWidget {
   final Uri videoUrl;
   final String title;
@@ -382,7 +376,8 @@ class VideoCard extends StatelessWidget {
         );
       },
       child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+        color: Colors.grey[200],
+        margin: const EdgeInsets.symmetric( vertical: 8.0),
         elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
