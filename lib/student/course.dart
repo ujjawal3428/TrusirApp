@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/phonepe_payment.dart';
 import 'package:trusir/common/toggle_button.dart';
 import 'package:trusir/student/main_screen.dart';
 import 'package:trusir/student/new_coursecard.dart';
@@ -55,10 +54,11 @@ class CourseCard extends StatefulWidget {
 
 class _CourseCardState extends State<CourseCard> {
   bool isWeb = false;
+  final PaymentService paymentService = PaymentService();
   @override
   void initState() {
     super.initState();
-    initPhonePeSdk();
+    paymentService.initPhonePeSdk();
     fetchProfileData();
   }
 
@@ -202,10 +202,15 @@ class _CourseCardState extends State<CourseCard> {
                     onPressed: () {
                       merchantTransactionID =
                           generateUniqueTransactionId(userID!);
-                      body =
-                          getChecksum(int.parse('${widget.course.newAmount}00'))
-                              .toString();
-                      startTransaction();
+                      body = getChecksum(
+                        int.parse('${widget.course.newAmount}00'),
+                      ).toString();
+                      paymentService.startTransaction(
+                          body,
+                          checksum,
+                          checkStatus,
+                          showLoadingDialog,
+                          paymentstatusnavigation);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurple,
@@ -285,47 +290,6 @@ class _CourseCardState extends State<CourseCard> {
     print("txn_${userHash}_$randomNum");
     // Combine components to ensure <= 38 characters
     return "txn_${userHash}_$randomNum";
-  }
-
-  void initPhonePeSdk() {
-    PhonePePaymentSdk.init(environmentValue, appId, merchantId, true)
-        .then((isInitialized) {
-      print("PhonePe SDK Initialized: $isInitialized");
-    }).catchError((error) {
-      print("Error initializing PhonePe SDK: $error");
-    });
-  }
-
-  void startTransaction() {
-    showLoadingDialog();
-    PhonePePaymentSdk.startTransaction(body, callback, checksum, packageName)
-        .then((response) {
-      if (response != null) {
-        String status = response['status'].toString();
-        if (status == 'SUCCESS') {
-          print("Payment Successful");
-          checkStatus();
-        } else {
-          print("Payment Failed: ${response['error']}");
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PaymentPopUpPage(
-                    adjustedAmount: double.parse(widget.course.newAmount),
-                    isSuccess: paymentstatus,
-                    transactionID: merchantTransactionID,
-                    transactionType: transactionType)),
-          );
-          Fluttertoast.showToast(msg: "Payment Failed");
-        }
-      } else {
-        print("Transaction Incomplete");
-        Fluttertoast.showToast(msg: 'Transaction Incomplete');
-      }
-    }).catchError((error) {
-      print("Error during transaction: $error");
-    });
   }
 
   getChecksum(int am) {
@@ -422,6 +386,19 @@ class _CourseCardState extends State<CourseCard> {
         paymentstatus = false;
       });
     }
+  }
+
+  void paymentstatusnavigation() {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => PaymentPopUpPage(
+              adjustedAmount: double.parse(widget.course.newAmount),
+              isSuccess: paymentstatus,
+              transactionID: merchantTransactionID,
+              transactionType: transactionType)),
+    );
   }
 
   void showLoadingDialog() {

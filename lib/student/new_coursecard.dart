@@ -4,9 +4,9 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/phonepe_payment.dart';
 import 'package:trusir/student/course.dart';
 import 'package:trusir/student/payment__status_popup.dart';
 import 'package:trusir/student/teacher_profile_page.dart';
@@ -22,11 +22,12 @@ class NewCourseCard extends StatefulWidget {
 
 class _NewCourseCardState extends State<NewCourseCard> {
   bool isWeb = false;
+  final PaymentService paymentService = PaymentService();
   @override
   void initState() {
     super.initState();
     if (widget.course.type == 'demo') {
-      initPhonePeSdk();
+      paymentService.initPhonePeSdk();
     }
     fetchProfileData();
   }
@@ -214,9 +215,14 @@ class _NewCourseCardState extends State<NewCourseCard> {
                                 merchantTransactionID =
                                     generateUniqueTransactionId(userID!);
                                 body = getChecksum(
-                                        int.parse('${widget.course.price}00'))
-                                    .toString();
-                                startTransaction();
+                                  int.parse('${widget.course.price}00'),
+                                ).toString();
+                                paymentService.startTransaction(
+                                    body,
+                                    checksum,
+                                    checkStatus,
+                                    showLoadingDialog,
+                                    paymentstatusnavigation);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.deepPurple,
@@ -281,9 +287,14 @@ class _NewCourseCardState extends State<NewCourseCard> {
                                 merchantTransactionID =
                                     generateUniqueTransactionId(userID!);
                                 body = getChecksum(
-                                        int.parse('${widget.course.price}00'))
-                                    .toString();
-                                startTransaction();
+                                  int.parse('${widget.course.price}00'),
+                                ).toString();
+                                paymentService.startTransaction(
+                                    body,
+                                    checksum,
+                                    checkStatus,
+                                    showLoadingDialog,
+                                    paymentstatusnavigation);
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.deepPurple,
@@ -366,45 +377,17 @@ class _NewCourseCardState extends State<NewCourseCard> {
     return "txn_${userHash}_$randomNum";
   }
 
-  void initPhonePeSdk() {
-    PhonePePaymentSdk.init(environmentValue, appId, merchantId, true)
-        .then((isInitialized) {
-      print("PhonePe SDK Initialized: $isInitialized");
-    }).catchError((error) {
-      print("Error initializing PhonePe SDK: $error");
-    });
-  }
-
-  void startTransaction() {
-    showLoadingDialog();
-    PhonePePaymentSdk.startTransaction(body, callback, checksum, packageName)
-        .then((response) {
-      if (response != null) {
-        String status = response['status'].toString();
-        if (status == 'SUCCESS') {
-          print("Payment Successful");
-          checkStatus();
-        } else {
-          print("Payment Failed: ${response['error']}");
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => PaymentPopUpPage(
-                    adjustedAmount: double.parse(widget.course.price),
-                    isSuccess: paymentstatus,
-                    transactionID: merchantTransactionID,
-                    transactionType: transactionType)),
-          );
-          Fluttertoast.showToast(msg: "Payment Failed");
-        }
-      } else {
-        print("Transaction Incomplete");
-        Fluttertoast.showToast(msg: 'Transaction Incomplete');
-      }
-    }).catchError((error) {
-      print("Error during transaction: $error");
-    });
+  void paymentstatusnavigation() {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => PaymentPopUpPage(
+              adjustedAmount: double.parse(widget.course.price),
+              isSuccess: paymentstatus,
+              transactionID: merchantTransactionID,
+              transactionType: transactionType)),
+    );
   }
 
   getChecksum(int am) {
