@@ -187,7 +187,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                   child: CircularProgressIndicator(),
                 )
               : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: isWideScreen
                     ? Row(
                         children: [
@@ -230,7 +230,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
               
                                   return Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 20.0, right: 20, bottom: 14),
+                                         bottom: 15),
                                     child: Container(
                                       width: MediaQuery.of(context)
                                               .size
@@ -341,7 +341,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                 if (hasMore)
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 20),
+                                        vertical: 10),
                                     child: isLoadingMore
                                         ? const CircularProgressIndicator()
                                         : TextButton(
@@ -374,18 +374,20 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                     isWideScreen),
                                 const Padding(
                                   padding:
-                                      EdgeInsets.only(top: 20.0, left: 23),
-                                  child: Text(
-                                    'Previous month',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
+                                      EdgeInsets.only(top: 15.0,),
+                                  child: Center(
+                                    child: Text(
+                                      'Previous month',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                      textAlign: TextAlign.center,
                                     ),
-                                    textAlign: TextAlign.center,
                                   ),
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: 15),
                                 ...feepayment.asMap().entries.map((entry) {
                                   int index = entry.key;
                                   Fees payment = entry.value;
@@ -396,18 +398,20 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
               
                                   return Padding(
                                     padding: const EdgeInsets.only(
-                                        left: 8, right: 8, bottom: 14),
+                                      left: 5,
+                                      right: 5,
+                                        bottom: 15),
                                     child: Container(
                                       width: 386,
-                                      height: 120,
+                                      height: 100,
                                       decoration: BoxDecoration(
                                         color:
                                             cardColor, // Apply dynamic color
                                         borderRadius:
-                                            BorderRadius.circular(12),
+                                            BorderRadius.circular(8),
                                       ),
                                       child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
+                                        padding: const EdgeInsets.only(left: 10.0, right: 10),
                                         child: Row(
                                           children: [
                                             Expanded(
@@ -425,8 +429,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                                       style:
                                                           const TextStyle(
                                                         fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                        fontWeight:FontWeight.w500,
                                                         color: Colors.black,
                                                       ),
                                                     ),
@@ -446,8 +449,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                                           const TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                       fontWeight:FontWeight.w500,
                                                       ),
                                                     ),
                                                   ],
@@ -468,8 +470,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                                       style:
                                                           const TextStyle(
                                                         fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                        fontWeight:FontWeight.w500,
                                                       ),
                                                     ),
                                                     Text(
@@ -487,8 +488,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                                       style:
                                                           const TextStyle(
                                                         fontSize: 14,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                        fontWeight:FontWeight.w500,
                                                       ),
                                                     ),
                                                   ],
@@ -504,7 +504,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                 if (hasMore)
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 20),
+                                        vertical: 10),
                                     child: isLoadingMore
                                         ? const CircularProgressIndicator()
                                         : TextButton(
@@ -539,17 +539,21 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
   Widget _buildCurrentMonthCard(double width, bool isLargeScreen) {
     return Container(
       width: width,
-      height: isLargeScreen ? 150 : null,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      height: isLargeScreen ? 150 : 110,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFF48116A), Color(0xFFC22054)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.25),
-            blurRadius: 10,
+            color: const Color.fromARGB(255, 160, 40, 176).withOpacity(0.4),
+            blurRadius: 6,
+            spreadRadius: 3,
+            offset: const Offset(2, 2)
           ),
         ],
       ),

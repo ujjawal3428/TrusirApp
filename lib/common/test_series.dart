@@ -222,13 +222,11 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
           children: [
             Addtestseries(userID: widget.userID!),
             if (testSeriesList.isEmpty && !isLoading && initialLoadComplete)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Text(
-                    'No tests available',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+              const Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text(
+                  'No tests available',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
             if (testSeriesList.isNotEmpty)
@@ -237,13 +235,13 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                   int index = testSeriesList.indexOf(test);
                   return Padding(
                     padding:
-                        const EdgeInsets.only(right: 16, left: 16, top: 10),
+                        const EdgeInsets.only(right: 16, left: 16,),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 1,
 
                       decoration: BoxDecoration(
                         color: containerColors[index % containerColors.length],
-                        borderRadius: BorderRadius.circular(22),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: _buildTestCard(
                           test, index), // Encapsulated card logic
@@ -251,7 +249,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                   );
                 }).toList(),
               ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             if (isLoading)
               const CircularProgressIndicator()
             else if (!hasMoreData && testSeriesList.isNotEmpty)
@@ -281,7 +279,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     bool isAnswerDownloaded = downloadedFiles.containsKey(answerFilename);
 
     return Padding(
-      padding: const EdgeInsets.all(15.0),
+      padding: const EdgeInsets.only(top: 10.0, left: 15, right: 15, bottom: 10),
       child: Column(
         children: [
           Row(
@@ -298,15 +296,17 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                     Text(test['subject'],
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w400)),
-                    const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(test['date'],
                             style: const TextStyle(
+                              color: Colors.black54,
                                 fontSize: 14, fontWeight: FontWeight.w400)),
                         Text(test['time'],
-                            style: const TextStyle(fontSize: 14)),
+                            style: const TextStyle(
+                               color: Colors.black54,
+                              fontSize: 14)),
                       ],
                     ),
                   ],

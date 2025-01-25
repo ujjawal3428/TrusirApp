@@ -430,61 +430,68 @@ class _AddtestseriesState extends State<Addtestseries> {
                 height: 10,
               ),
               Container(
+                height: 50,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(22),
+                  borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
+                      color: Colors.black.withValues(alpha: 0.4),
                       offset: const Offset(2, 2),
                       blurRadius: 4,
                     ),
                   ],
                 ),
-                child: TextFormField(
-                  controller: _testNameController,
-                  decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      labelText: 'Test Name',
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(22),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(22),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(22),
-                        borderSide: const BorderSide(color: Colors.grey),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 17),
-                      isDense: true),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter the test name';
-                    }
-                    return null;
-                  },
+                child: Center(
+                  child: TextFormField(
+                    controller: _testNameController,
+                    decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        labelText: 'Test Name',
+                        labelStyle: TextStyle(color: Colors.grey.shade500),
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(color: Colors.grey),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 13),
+                        isDense: true),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter the test name';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               // Subject Dropdown
               Container(
+                height: 50,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(22),
+                  borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
+                      color: Colors.black.withValues(alpha: 0.4),
                       offset: const Offset(2, 2),
                       blurRadius: 4,
                     ),
                   ],
                 ),
                 child: DropdownButtonFormField<String>(
+                  iconSize: 25,
+                  icon: const Icon(Icons.keyboard_arrow_down),
                   value: selectedSubject,
                   items: _courses.map((String subject) {
                     return DropdownMenuItem<String>(
@@ -494,21 +501,22 @@ class _AddtestseriesState extends State<Addtestseries> {
                   }).toList(),
                   decoration: InputDecoration(
                     labelText: 'Subject',
+                     labelStyle: TextStyle(color: Colors.grey.shade500),
                     floatingLabelBehavior: FloatingLabelBehavior.auto,
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(22),
+                      borderRadius: BorderRadius.circular(15),
                       borderSide: const BorderSide(color: Colors.grey),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(22),
+                      borderRadius: BorderRadius.circular(15),
                       borderSide: const BorderSide(color: Colors.grey),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(22),
+                      borderRadius: BorderRadius.circular(15),
                       borderSide: const BorderSide(color: Colors.grey),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 17),
+                        horizontal: 16, vertical: 13),
                     isDense: true,
                   ),
                   onChanged: (String? value) {
@@ -687,7 +695,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                           ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
+                    padding: const EdgeInsets.only(right: 10.0, bottom: 7),
                     child: isanswerUploading
                         ? const CircularProgressIndicator()
                         : Container(
