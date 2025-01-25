@@ -470,7 +470,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                   },
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               // Subject Dropdown
               Container(
                 decoration: BoxDecoration(
@@ -526,278 +526,318 @@ class _AddtestseriesState extends State<Addtestseries> {
               ),
               const SizedBox(height: 20),
 
-             Row(
-  mainAxisAlignment: MainAxisAlignment.spaceAround,
-  children: [
-    Padding(
-      padding: const EdgeInsets.only(left: 10.0),
-      child: isquestionUploading
-          ? const CircularProgressIndicator()
-          : Container(
-              width: 80,
-              height: 70,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7.2), // Adjusted for smaller size
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(50), // Adjusted opacity
-                    offset: const Offset(1, 1), // Scaled offset
-                    blurRadius: 2, // Scaled blur radius
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0,bottom: 7),
+                    child: isquestionUploading
+                        ? const CircularProgressIndicator()
+                        : Container(
+                            width: 100,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                  7.2), // Adjusted for smaller size
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black
+                                      .withAlpha(50), // Adjusted opacity
+                                  offset: const Offset(1, 1), // Scaled offset
+                                  blurRadius: 2, // Scaled blur radius
+                                ),
+                              ],
+                            ),
+                            child: question.isNotEmpty
+                                ? _buildFilePreview(question)
+                                : GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        barrierColor:
+                                            Colors.black.withAlpha(77),
+                                        builder: (BuildContext context) {
+                                          return Dialog(
+                                            backgroundColor: Colors.transparent,
+                                            insetPadding:
+                                                const EdgeInsets.all(8),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      10), // Scaled radius
+                                            ),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    width: 200,
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                          .lightBlue.shade100,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              11),
+                                                    ),
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        setState(() {
+                                                          isQuestion = true;
+                                                        });
+                                                        uploadImage();
+                                                      },
+                                                      child: const Text(
+                                                        "Camera",
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                12, // Adjusted font size
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 8),
+                                                  Container(
+                                                    width: 200,
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                          .orange.shade100,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              11),
+                                                    ),
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        setState(() {
+                                                          isQuestion = true;
+                                                        });
+                                                        handleFileSelection(
+                                                            context);
+                                                      },
+                                                      child: const Text(
+                                                        "Upload File",
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                12, // Adjusted font size
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 5), 
+                                          child: Icon(
+                                            Icons
+                                                .upload_file_rounded, 
+                                            size: 23, 
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                        SizedBox(height: 2),
+                                        Center(
+                                          child: Text(
+                                            'Upload Questions',
+                                            style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 9, // Scaled font size
+                                            ),
+                                          ),
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            'Click here',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                            color: Colors.grey,
+                                              fontSize: 9,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: isanswerUploading
+                        ? const CircularProgressIndicator()
+                        : Container(
+                            width: 100,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(7.2),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withAlpha(50),
+                                  offset: const Offset(1, 1),
+                                  blurRadius: 2,
+                                ),
+                              ],
+                            ),
+                            child: answer.isNotEmpty
+                                ? _buildFilePreview(answer)
+                                : GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        barrierColor:
+                                            Colors.black.withAlpha(77),
+                                        builder: (BuildContext context) {
+                                          return Dialog(
+                                            backgroundColor: Colors.transparent,
+                                            insetPadding:
+                                                const EdgeInsets.all(8),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    width: 200,
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                          .lightBlue.shade100,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              11),
+                                                    ),
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        setState(() {
+                                                          isAnswer = true;
+                                                        });
+                                                        uploadImage();
+                                                      },
+                                                      child: const Text(
+                                                        "Camera",
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 8),
+                                                  Container(
+                                                    width: 200,
+                                                    height: 40,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                          .orange.shade100,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              11),
+                                                    ),
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        setState(() {
+                                                          isAnswer = true;
+                                                        });
+                                                        handleFileSelection(
+                                                            context);
+                                                      },
+                                                      child: const Text(
+                                                        "Upload File",
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'Poppins'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding:
+                                               EdgeInsets.only(top: 5),
+                                          child: Icon(
+                                            Icons
+                                                .upload_file_rounded, 
+                                                color: Colors.indigo,
+                                            size: 23, 
+                                          ),
+                                        ),
+                                         SizedBox(height: 5),
+                                         Center(
+                                          child: Text(
+                                            'Upload Answers',
+                                            style: TextStyle(
+                                              fontFamily: 'Poppins',
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 9, 
+                                            ),),
+                                        ),
+                                         Center(
+                                          child: Text(
+                                            'Click here',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 9,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                          ),
                   ),
                 ],
               ),
-              child: question.isNotEmpty
-                  ? _buildFilePreview(question)
-                  : GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          barrierColor: Colors.black.withAlpha(77),
-                          builder: (BuildContext context) {
-                            return Dialog(
-                              backgroundColor: Colors.transparent,
-                              insetPadding: const EdgeInsets.all(8),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10), // Scaled radius
-                              ),
-                              child: Container(
-                                padding: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      width: 200,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: Colors.lightBlue.shade100,
-                                        borderRadius: BorderRadius.circular(11),
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          setState(() {
-                                            isQuestion = true;
-                                          });
-                                          uploadImage();
-                                        },
-                                        child: const Text(
-                                          "Camera",
-                                          style: TextStyle(
-                                              fontSize: 12, // Adjusted font size
-                                              color: Colors.black,
-                                              fontFamily: 'Poppins'),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Container(
-                                      width: 200,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: Colors.orange.shade100,
-                                        borderRadius: BorderRadius.circular(11),
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          setState(() {
-                                            isQuestion = true;
-                                          });
-                                          handleFileSelection(context);
-                                        },
-                                        child: const Text(
-                                          "Upload File",
-                                          style: TextStyle(
-                                              fontSize: 12, // Adjusted font size
-                                              color: Colors.black,
-                                              fontFamily: 'Poppins'),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5), // Adjusted padding
-                            child: Image.asset(
-                              'assets/camera@3x.png',
-                              width: 23, // Scaled width
-                              height: 18.5, // Scaled height
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          const Center(
-                            child: Text(
-                              'Upload Questions',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 7, // Scaled font size
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          const Center(
-                            child: Text(
-                              'Click here',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 5, // Scaled font size
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-            ),
-    ),
-    Padding(
-      padding: const EdgeInsets.only(right: 10.0),
-      child: isanswerUploading
-          ? const CircularProgressIndicator()
-          : Container(
-              width: 80,
-              height: 70,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7.2),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(50),
-                    offset: const Offset(1, 1),
-                    blurRadius: 2,
-                  ),
-                ],
-              ),
-              child: answer.isNotEmpty
-                  ? _buildFilePreview(answer)
-                  : GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          barrierColor: Colors.black.withAlpha(77),
-                          builder: (BuildContext context) {
-                            return Dialog(
-                              backgroundColor: Colors.transparent,
-                              insetPadding: const EdgeInsets.all(8),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Container(
-                                padding: const EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Container(
-                                      width: 200,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: Colors.lightBlue.shade100,
-                                        borderRadius: BorderRadius.circular(11),
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          setState(() {
-                                            isAnswer = true;
-                                          });
-                                          uploadImage();
-                                        },
-                                        child: const Text(
-                                          "Camera",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black,
-                                              fontFamily: 'Poppins'),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Container(
-                                      width: 200,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        color: Colors.orange.shade100,
-                                        borderRadius: BorderRadius.circular(11),
-                                      ),
-                                      child: TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                          setState(() {
-                                            isAnswer = true;
-                                          });
-                                          handleFileSelection(context);
-                                        },
-                                        child: const Text(
-                                          "Upload File",
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.black,
-                                              fontFamily: 'Poppins'),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Image.asset(
-                              'assets/camera@3x.png',
-                              width: 23,
-                              height: 18.5,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          const Center(
-                            child: Text(
-                              'Upload Answers',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 7,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          const Center(
-                            child: Text(
-                              'Click here',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 5,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-            ),
-    ),
-  ],
-),
-
 
               // Submit Button
               Padding(

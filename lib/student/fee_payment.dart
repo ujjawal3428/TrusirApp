@@ -399,7 +399,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
                                         left: 8, right: 8, bottom: 14),
                                     child: Container(
                                       width: 386,
-                                      height: 140,
+                                      height: 120,
                                       decoration: BoxDecoration(
                                         color:
                                             cardColor, // Apply dynamic color
@@ -557,7 +557,8 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
         children: [
           const Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'Current Month',
