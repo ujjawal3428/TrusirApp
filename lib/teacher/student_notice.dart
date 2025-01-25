@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:trusir/common/api.dart';
@@ -80,11 +81,11 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
   }
 
   final List<Color> cardColors = [
-    Colors.blue.shade300,
-    Colors.yellow.shade300,
-    Colors.pink.shade300,
-    Colors.green.shade300,
-    Colors.purple.shade300,
+    Colors.red.shade200,
+    Colors.blue.shade200,
+    Colors.orange.shade200,
+    Colors.green.shade200,
+    Colors.purple.shade200,
   ];
 
   @override
@@ -148,9 +149,9 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                       : SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.only(
-                              left: 15,
-                              right: 15,
-                              bottom: 15,
+                              left: 7,
+                              right: 7,
+                              bottom: 10,
                               top: 0,
                             ),
                             child: Column(
@@ -165,9 +166,9 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
 
                                   return Padding(
                                     padding: const EdgeInsets.only(
-                                      left: 10,
-                                      top: 20,
-                                      right: 10,
+                                      left: 7,
+                                      top: 10,
+                                      right: 7,
                                     ),
                                     child: Stack(
                                       alignment: Alignment.center,
@@ -181,7 +182,7 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                           ),
                                           child: Padding(
                                             padding: const EdgeInsets.only(
-                                                left: 55, top: 10, bottom: 10),
+                                                left: 55, top: 13, bottom: 10),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
@@ -190,6 +191,7 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                                   notice.noticetitle,
                                                   style: const TextStyle(
                                                     fontSize: 16,
+                                                    fontFamily: 'Poppins',
                                                     fontWeight: FontWeight.w600,
                                                     color: Colors.black,
                                                   ),
@@ -199,16 +201,18 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                                   'Posted on : ${notice.date}',
                                                   style: const TextStyle(
                                                     fontSize: 13,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.grey,
+                                                    fontFamily: 'Poppins',
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color.fromARGB(255, 133, 133, 133),
                                                   ),
                                                 ),
                                                 const SizedBox(height: 5),
                                                 Text(
                                                   notice.notice,
                                                   style: const TextStyle(
-                                                    fontSize: 13,
+                                                    fontFamily: 'Poppins',
                                                     fontWeight: FontWeight.w500,
+                                                    fontSize: 13,
                                                     color: Colors.black,
                                                   ),
                                                 ),
@@ -217,12 +221,12 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                           ),
                                         ),
                                         Positioned(
-                                          top: 10,
+                                          top: 15,
                                           left: 10,
                                           child: Image.asset(
                                             'assets/bell.png',
-                                            width: 36,
-                                            height: 36,
+                                            width: 30,
+                                            height: 30,
                                           ),
                                         ),
                                       ],
@@ -260,7 +264,7 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
               Positioned(
                   left: 0,
                   right: 0,
-                  bottom: 30,
+                  bottom: -10,
                   child: _buildAddNoticeButton(context)),
             ],
           ),
@@ -282,11 +286,16 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
             ),
           );
         },
-        child: Image.asset(
-          'assets/add_notice.png',
+        child: Container(
+          color: Colors.white,
           width: double.infinity,
-          height: 70,
-          fit: BoxFit.contain,
+          padding: const EdgeInsets.all(10),
+          child: Image.asset(
+            'assets/add_notice.png',
+             width : kIsWeb ? 500.0 : 300.0,
+             height: kIsWeb ? 100.0 : 70.0,
+            fit: BoxFit.contain,
+          ),
         ),
       ),
     );

@@ -493,6 +493,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         style: const TextStyle(
+                                                          fontFamily: 'Poppins',
                                                           fontSize: 12,
                                                           fontWeight:
                                                               FontWeight.w500,
@@ -826,6 +827,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                                   style: const TextStyle(
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.w500,
+                                                    fontFamily: 'Poppins',
                                                   ),
                                                 ),
                                               ),

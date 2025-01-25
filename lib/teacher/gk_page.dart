@@ -398,7 +398,11 @@ class _StudentGKPageState extends State<StudentGKPage> {
                       ),
                   ],
                 ),
-          _buildCreateButton(),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: _buildCreateButton()),
         ],
       ),
     );
