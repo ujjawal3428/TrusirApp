@@ -8,6 +8,7 @@ import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/student/course.dart';
+import 'package:trusir/student/payment__status_popup.dart';
 import 'package:trusir/student/teacher_profile_page.dart';
 
 class NewCourseCard extends StatefulWidget {
@@ -24,7 +25,9 @@ class _NewCourseCardState extends State<NewCourseCard> {
   @override
   void initState() {
     super.initState();
-    initPhonePeSdk();
+    if (widget.course.type == 'demo') {
+      initPhonePeSdk();
+    }
     fetchProfileData();
   }
 
@@ -34,7 +37,10 @@ class _NewCourseCardState extends State<NewCourseCard> {
     // double discount = int.parse(widget.course.price) /
     //     int.parse(widget.course.oldprice) *
     //     100;
-    double discount = int.parse(widget.course.price) / int.parse('1000') * 100;
+    double discount =
+        100 - int.parse(widget.course.price) / int.parse('3000') * 100;
+
+    String formattedDiscount = discount.toStringAsFixed(2);
     return Container(
       margin: EdgeInsets.symmetric(
           horizontal: isWeb ? 30 : 16, vertical: isWeb ? 15 : 8),
@@ -152,7 +158,7 @@ class _NewCourseCardState extends State<NewCourseCard> {
                   width: 7,
                 ),
                 Text(
-                  '$discount% OFF', // Placeholder for original price
+                  '$formattedDiscount% OFF', // Placeholder for original price
                   style: const TextStyle(
                     fontSize: 14,
                     fontFamily: 'Poppins',
@@ -335,8 +341,10 @@ class _NewCourseCardState extends State<NewCourseCard> {
   String? userID;
 
   String? phone;
+  String transactionType = '';
 
   String merchantTransactionID = '';
+  bool paymentstatus = false;
 
   Future<void> fetchProfileData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -368,6 +376,7 @@ class _NewCourseCardState extends State<NewCourseCard> {
   }
 
   void startTransaction() {
+    showLoadingDialog();
     PhonePePaymentSdk.startTransaction(body, callback, checksum, packageName)
         .then((response) {
       if (response != null) {
@@ -377,6 +386,16 @@ class _NewCourseCardState extends State<NewCourseCard> {
           checkStatus();
         } else {
           print("Payment Failed: ${response['error']}");
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PaymentPopUpPage(
+                    adjustedAmount: double.parse(widget.course.price),
+                    isSuccess: paymentstatus,
+                    transactionID: merchantTransactionID,
+                    transactionType: transactionType)),
+          );
           Fluttertoast.showToast(msg: "Payment Failed");
         }
       } else {
@@ -420,40 +439,94 @@ class _NewCourseCardState extends State<NewCourseCard> {
     Map<String, String> headers = {
       "Content-Type": "application/json",
       "X-VERIFY": xVerify,
-      "X-MERCHANT-ID": merchantId
+      "X-MERCHANT-ID": merchantId,
     };
 
-    await http.get(Uri.parse(url), headers: headers).then((value) {
-      Map<String, dynamic> response = jsonDecode(value.body);
+    try {
+      // Wait for 30 seconds before making the request
+      await Future.delayed(const Duration(seconds: 5));
 
-      try {
-        if (response["success"] &&
-            response["code"] == "PAYMENT_SUCCESS" &&
-            response["data"]["state"] == "COMPLETED") {
-          Fluttertoast.showToast(msg: response["code"]);
-          int adjustedAmount = (response["data"]['amount'] / 100).toInt();
-          String transactiontype =
-              response["data"]["paymentInstrument"]["type"] == 'CARD'
-                  ? response["data"]["paymentInstrument"]["cardType"]
-                  : response["data"]["paymentInstrument"]["type"];
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = jsonDecode(response.body);
+        Navigator.pop(context);
+        if (responseData["success"] &&
+            responseData["code"] == "PAYMENT_SUCCESS" &&
+            responseData["data"]["state"] == "COMPLETED") {
+          // Payment Success
+          int adjustedAmount = (responseData["data"]['amount'] / 100).toInt();
+
+          // Show Success Dialog
+          setState(() {
+            transactionType =
+                responseData["data"]["paymentInstrument"]["type"] == 'CARD'
+                    ? responseData["data"]["paymentInstrument"]["cardType"]
+                    : responseData["data"]["paymentInstrument"]["type"];
+            paymentstatus = true;
+          });
+          if (paymentstatus) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PaymentPopUpPage(
+                      adjustedAmount: double.parse(widget.course.price),
+                      isSuccess: paymentstatus,
+                      transactionID: merchantTransactionID,
+                      transactionType: transactionType)),
+            );
+          }
           postTransaction(
-              transactiontype,
-              adjustedAmount,
-              widget.course.courseName,
-              response["data"]["merchantTransactionId"],
-              widget.course.courseID);
-          print(response);
+            transactionType,
+            adjustedAmount,
+            widget.course.courseName,
+            '${responseData["data"]["merchantTransactionId"]} , Bank Transaction Id: ${responseData["data"]["transactionId"]} ',
+            widget.course.id,
+          );
         } else {
-          Fluttertoast.showToast(msg: response["code"]);
+          setState(() {
+            paymentstatus = false;
+          });
+          // Payment Failed
         }
-      } catch (e) {
-        Fluttertoast.showToast(msg: "error");
+      } else {
+        setState(() {
+          paymentstatus = false;
+        });
+        throw Exception("Failed to fetch payment status");
       }
-    });
+    } catch (e) {
+      // Show Error Dialog
+      setState(() {
+        paymentstatus = false;
+      });
+    }
+  }
+
+  void showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissal by tapping outside
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false, // Disable back navigation
+          child: const AlertDialog(
+            content: Row(
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text(
+                    "Processing payment, \nplease wait...\nPlease don't press back"),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> postTransaction(String transactionName, int amount,
-      String transactionType, String transactionID, String courseID) async {
+      String transactionType, String transactionID, int courseID) async {
     final prefs = await SharedPreferences.getInstance();
     final userID = prefs.getString('userID');
     // Define the API URL

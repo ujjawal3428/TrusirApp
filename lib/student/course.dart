@@ -10,6 +10,7 @@ import 'package:trusir/common/api.dart';
 import 'package:trusir/common/toggle_button.dart';
 import 'package:trusir/student/main_screen.dart';
 import 'package:trusir/student/new_coursecard.dart';
+import 'package:trusir/student/payment__status_popup.dart';
 
 class Course {
   final int id;
@@ -64,9 +65,12 @@ class _CourseCardState extends State<CourseCard> {
   @override
   Widget build(BuildContext context) {
     isWeb = MediaQuery.of(context).size.width > 600;
-    double discount = int.parse(widget.course.newAmount) /
-        int.parse(widget.course.amount) *
-        100;
+    double discount = 100 -
+        int.parse(widget.course.newAmount) /
+            int.parse(widget.course.amount) *
+            100;
+
+    String formattedDiscount = discount.toStringAsFixed(2);
     return Container(
       margin: EdgeInsets.symmetric(
           horizontal: isWeb ? 30 : 16, vertical: isWeb ? 15 : 8),
@@ -175,7 +179,7 @@ class _CourseCardState extends State<CourseCard> {
                   width: 7,
                 ),
                 Text(
-                  '$discount% OFF', // Placeholder for original price
+                  '$formattedDiscount% OFF', // Placeholder for original price
                   style: const TextStyle(
                     fontSize: 14,
                     fontFamily: 'Poppins',
@@ -256,6 +260,8 @@ class _CourseCardState extends State<CourseCard> {
   String checksum = "";
   // Obtain this from your backend
   String? userID;
+  bool paymentstatus = false;
+  String transactionType = '';
 
   String? phone;
 
@@ -291,6 +297,7 @@ class _CourseCardState extends State<CourseCard> {
   }
 
   void startTransaction() {
+    showLoadingDialog();
     PhonePePaymentSdk.startTransaction(body, callback, checksum, packageName)
         .then((response) {
       if (response != null) {
@@ -300,6 +307,16 @@ class _CourseCardState extends State<CourseCard> {
           checkStatus();
         } else {
           print("Payment Failed: ${response['error']}");
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PaymentPopUpPage(
+                    adjustedAmount: double.parse(widget.course.newAmount),
+                    isSuccess: paymentstatus,
+                    transactionID: merchantTransactionID,
+                    transactionType: transactionType)),
+          );
           Fluttertoast.showToast(msg: "Payment Failed");
         }
       } else {
@@ -328,186 +345,144 @@ class _CourseCardState extends State<CourseCard> {
     return base64body;
   }
 
-  
- void checkStatus() async {
-  String url =
-      "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/$merchantId/$merchantTransactionID";
+  void checkStatus() async {
+    String url =
+        "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/$merchantId/$merchantTransactionID";
 
-  String concat = "/pg/v1/status/$merchantId/$merchantTransactionID$saltKey";
+    String concat = "/pg/v1/status/$merchantId/$merchantTransactionID$saltKey";
 
-  var bytes = utf8.encode(concat);
+    var bytes = utf8.encode(concat);
 
-  var digest = sha256.convert(bytes).toString();
+    var digest = sha256.convert(bytes).toString();
 
-  String xVerify = "$digest###$saltIndex";
+    String xVerify = "$digest###$saltIndex";
 
-  Map<String, String> headers = {
-    "Content-Type": "application/json",
-    "X-VERIFY": xVerify,
-    "X-MERCHANT-ID": merchantId,
-  };
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "X-VERIFY": xVerify,
+      "X-MERCHANT-ID": merchantId,
+    };
 
-  try {
-    // Wait for 30 seconds before making the request
-    await Future.delayed(const Duration(seconds: 30));
+    try {
+      // Wait for 30 seconds before making the request
+      await Future.delayed(const Duration(seconds: 5));
 
-    final response = await http.get(Uri.parse(url), headers: headers);
+      final response = await http.get(Uri.parse(url), headers: headers);
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> responseData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = jsonDecode(response.body);
+        Navigator.pop(context);
+        if (responseData["success"] &&
+            responseData["code"] == "PAYMENT_SUCCESS" &&
+            responseData["data"]["state"] == "COMPLETED") {
+          // Payment Success
+          int adjustedAmount = (responseData["data"]['amount'] / 100).toInt();
 
-      if (responseData["success"] &&
-          responseData["code"] == "PAYMENT_SUCCESS" &&
-          responseData["data"]["state"] == "COMPLETED") {
-        // Payment Success
-        int adjustedAmount = (responseData["data"]['amount'] / 100).toInt();
-        String transactionType =
-            responseData["data"]["paymentInstrument"]["type"] == 'CARD'
-                ? responseData["data"]["paymentInstrument"]["cardType"]
-                : responseData["data"]["paymentInstrument"]["type"];
-
-        // Show Success Dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Payment Successful"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                    'assets/images/success.png', // Replace with your success image path
-                    height: 100,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Your payment of ₹$adjustedAmount was successful via $transactionType.",
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
+          // Show Success Dialog
+          setState(() {
+            transactionType =
+                responseData["data"]["paymentInstrument"]["type"] == 'CARD'
+                    ? responseData["data"]["paymentInstrument"]["cardType"]
+                    : responseData["data"]["paymentInstrument"]["type"];
+            paymentstatus = true;
+          });
+          if (paymentstatus) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PaymentPopUpPage(
+                      adjustedAmount: double.parse(widget.course.newAmount),
+                      isSuccess: paymentstatus,
+                      transactionID: merchantTransactionID,
+                      transactionType: transactionType)),
             );
-          },
-        );
-
-        postTransaction(
-          transactionType,
-          adjustedAmount,
-          widget.course.name,
-          responseData["data"]["merchantTransactionId"],
-          widget.course.id,
-        );
+          }
+          postTransaction(
+            transactionType,
+            adjustedAmount,
+            widget.course.name,
+            '${responseData["data"]["merchantTransactionId"]} , Bank Transaction Id: ${responseData["data"]["transactionId"]} ',
+            widget.course.id,
+          );
+        } else {
+          setState(() {
+            paymentstatus = false;
+          });
+          // Payment Failed
+        }
       } else {
-        // Payment Failed
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Payment Failed"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                    'assets/images/failure.png', // Replace with your failure image path
-                    height: 100,
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Payment failed with code: ${responseData["code"]}. Please try again.",
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
+        setState(() {
+          paymentstatus = false;
+        });
+        throw Exception("Failed to fetch payment status");
       }
-    } else {
-      throw Exception("Failed to fetch payment status");
+    } catch (e) {
+      // Show Error Dialog
+      setState(() {
+        paymentstatus = false;
+      });
     }
-  } catch (e) {
-    // Show Error Dialog
+  }
+
+  void showLoadingDialog() {
     showDialog(
       context: context,
+      barrierDismissible: false, // Prevent dismissal by tapping outside
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Error"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset(
-                'assets/images/error.png', // Replace with your error image path
-                height: 100,
-              ),
-              const SizedBox(height: 10),
-              Text("An error occurred: $e"),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text("OK"),
+        return WillPopScope(
+          onWillPop: () async => false, // Disable back navigation
+          child: const AlertDialog(
+            content: Row(
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text(
+                    "Processing payment, \nplease wait...\nPlease don't press back"),
+              ],
             ),
-          ],
+          ),
         );
       },
     );
   }
-}
-}
 
-Future<void> postTransaction(String transactionName, int amount,
-    String transactionType, String transactionID, int courseID) async {
-  final prefs = await SharedPreferences.getInstance();
-  final userID = prefs.getString('userID');
-  // Define the API URL
-  String apiUrl =
-      "$baseUrl/api/buy-course/$userID/$courseID"; // Replace with your API URL
+  Future<void> postTransaction(String transactionName, int amount,
+      String transactionType, String transactionID, int courseID) async {
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getString('userID');
+    // Define the API URL
+    String apiUrl =
+        "$baseUrl/api/buy-course/$userID/$courseID"; // Replace with your API URL
 
-  // Create a Transaction instance
-  final Transaction transaction = Transaction(
-    transactionName: transactionName,
-    amount: amount,
-    transactionType: transactionType,
-    transactionID: transactionID,
-  );
-
-  try {
-    // Make the POST request
-    final http.Response response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        "Content-Type": "application/json", // Set headers if needed
-        // Optional if authorization is required
-      },
-      body: jsonEncode(transaction.toJson()),
+    // Create a Transaction instance
+    final Transaction transaction = Transaction(
+      transactionName: transactionName,
+      amount: amount,
+      transactionType: transactionType,
+      transactionID: transactionID,
     );
 
-    // Check the response status
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      print("Transaction posted successfully: ${response.body}");
-    } else {
-      print(
-          "Failed to post transaction: ${response.statusCode} ${response.body}");
+    try {
+      // Make the POST request
+      final http.Response response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          "Content-Type": "application/json", // Set headers if needed
+          // Optional if authorization is required
+        },
+        body: jsonEncode(transaction.toJson()),
+      );
+
+      // Check the response status
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print("Transaction posted successfully: ${response.body}");
+      } else {
+        print(
+            "Failed to post transaction: ${response.statusCode} ${response.body}");
+      }
+    } catch (e) {
+      print("An error occurred: $e");
     }
-  } catch (e) {
-    print("An error occurred: $e");
   }
 }
 

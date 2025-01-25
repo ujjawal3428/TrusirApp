@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class PaymentPopUpPage extends StatelessWidget {
   final bool isSuccess;
   final double adjustedAmount;
+  final String transactionID;
   final String transactionType;
 
   const PaymentPopUpPage({
     super.key,
     required this.adjustedAmount,
     required this.isSuccess,
+    required this.transactionID,
     required this.transactionType,
   });
 
@@ -22,8 +24,14 @@ class PaymentPopUpPage extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: isSuccess
-                    ? [const Color(0xFF4CAF50), const Color(0xFF81C784)] // Success gradient
-                    : [const Color(0xFFD32F2F), const Color(0xFFEF5350)],// Success gradient
+                    ? [
+                        const Color(0xFF4CAF50),
+                        const Color(0xFF81C784)
+                      ] // Success gradient
+                    : [
+                        const Color(0xFFD32F2F),
+                        const Color(0xFFEF5350)
+                      ], // Success gradient
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -34,7 +42,8 @@ class PaymentPopUpPage extends StatelessWidget {
             top: 40,
             left: 16,
             child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 28),
+              icon: const Icon(Icons.arrow_back_ios,
+                  color: Colors.white, size: 28),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -70,7 +79,7 @@ class PaymentPopUpPage extends StatelessWidget {
                     isSuccess ? "Payment Successful!" : "Payment Failed!",
                     style: TextStyle(
                       fontSize: 20,
-                       fontFamily: "Poppins",
+                      fontFamily: "Poppins",
                       fontWeight: FontWeight.bold,
                       color: isSuccess
                           ? Colors.green.shade700
@@ -84,33 +93,36 @@ class PaymentPopUpPage extends StatelessWidget {
                         ? "Your payment of ₹$adjustedAmount was successful via $transactionType."
                         : "Something went wrong. Please try again.",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "Poppins"),
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Poppins"),
                   ),
-                  const SizedBox(height: 50,),
-                 RichText(
-  text: TextSpan(
-    text: 'Transaction ID : ', // Black text
-    style: const TextStyle(
-      fontFamily: 'Poppins',
-      fontSize: 14,
-      fontWeight: FontWeight.w500,
-      color: Colors.black, // Black color for the label
-    ),
-    children: [
-      TextSpan(
-        text: ' HGH675568886', // Grey text
-        style: TextStyle(
-          fontFamily: 'Poppins',
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: Colors.grey.shade700, 
-        ),
-      ),
-    ],
-  ),
-)
+                  const SizedBox(
+                    height: 50,
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      text: 'Transaction ID : ', // Black text
+                      style: const TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black, // Black color for the label
+                      ),
+                      children: [
+                        TextSpan(
+                          text: transactionID, // Grey text
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
