@@ -5,7 +5,8 @@ import 'package:trusir/student/setting.dart';
 import 'package:trusir/student/student_facilities.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final int index;
+  const MainScreen({super.key, required this.index});
 
   @override
   MainScreenState createState() => MainScreenState();
@@ -14,11 +15,18 @@ class MainScreen extends StatefulWidget {
 class MainScreenState extends State<MainScreen> {
   int currentIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      currentIndex = widget.index;
+    });
+  }
+
   // List of pages for each bottom navigation item
   final List<Widget> pages = [
     const Studentfacilities(), // Home page (Student Facilities)
     const CoursePage(), // Placeholder for Courses
-
     SettingsScreen(),
   ];
 
@@ -31,27 +39,29 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[50],
-      body: Stack(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(
-                bottom: currentIndex == 2
-                    ? 0
-                    : 80), // Adjust for bottom nav bar height
-            child: pages[currentIndex],
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: CustomBottomNavigationBar(
-              currentIndex: currentIndex,
-              onTap: onTabTapped,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.grey[50],
+        body: Stack(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: currentIndex == 2
+                      ? 0
+                      : 80), // Adjust for bottom nav bar height
+              child: pages[currentIndex],
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: CustomBottomNavigationBar(
+                currentIndex: currentIndex,
+                onTap: onTabTapped,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

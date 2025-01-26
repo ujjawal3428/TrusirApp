@@ -61,7 +61,6 @@ class EditSplashScreenState extends State<EditSplashScreen> {
           await prefs.setString('adhaar_front', responseData['adhaar_front']);
           await prefs.setString('adhaar_back', responseData['adhaar_back']);
           await prefs.setString('profile', responseData['profile']);
-          await prefs.setString('time_slot', responseData['time_slot']);
         } else if (responseData['role'] == 'teacher') {
           await prefs.setString('id', responseData['id'].toString());
           await prefs.setString('name', responseData['name']);
@@ -86,14 +85,13 @@ class EditSplashScreenState extends State<EditSplashScreen> {
           await prefs.setString('adhaar_front', responseData['adhaar_front']);
           await prefs.setString('adhaar_back', responseData['adhaar_back']);
           await prefs.setString('profile', responseData['profile']);
-          await prefs.setString('time_slot', responseData['time_slot']);
         }
 
         // Navigate to the next screen
         if (responseData['role'] == 'student') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const MainScreen()),
+            MaterialPageRoute(builder: (context) => const MainScreen(index: 0)),
           );
         } else if (responseData['role'] == 'teacher') {
           Navigator.pushReplacement(

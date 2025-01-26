@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:trusir/student/main_screen.dart';
 
-class PaymentPopUpPage extends StatelessWidget {
+class PaymentPopUpPage extends StatefulWidget {
   final bool isSuccess;
   final double adjustedAmount;
   final String transactionID;
   final String transactionType;
+  // Add the next page parameter
 
   const PaymentPopUpPage({
     super.key,
@@ -12,7 +15,46 @@ class PaymentPopUpPage extends StatelessWidget {
     required this.isSuccess,
     required this.transactionID,
     required this.transactionType,
+    // Initialize the next page
   });
+
+  @override
+  State<PaymentPopUpPage> createState() => _PaymentPopUpPageState();
+}
+
+class _PaymentPopUpPageState extends State<PaymentPopUpPage> {
+  late int _secondsRemaining;
+  late final Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _secondsRemaining = 3;
+
+    // Start the timer
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsRemaining > 0) {
+        setState(() {
+          _secondsRemaining--;
+        });
+      } else {
+        _timer.cancel();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => const MainScreen(
+                    index: 1,
+                  )),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +65,7 @@ class PaymentPopUpPage extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: isSuccess
+                colors: widget.isSuccess
                     ? [
                         const Color(0xFF4CAF50),
                         const Color(0xFF81C784)
@@ -31,7 +73,7 @@ class PaymentPopUpPage extends StatelessWidget {
                     : [
                         const Color(0xFFD32F2F),
                         const Color(0xFFEF5350)
-                      ], // Success gradient
+                      ], // Failure gradient
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -70,18 +112,22 @@ class PaymentPopUpPage extends StatelessWidget {
                 children: [
                   // Success or failure image
                   Image.asset(
-                    isSuccess ? 'assets/success.png' : 'assets/failure.png',
+                    widget.isSuccess
+                        ? 'assets/success.png'
+                        : 'assets/failure.png',
                     height: 100,
                   ),
                   const SizedBox(height: 16),
                   // Status message
                   Text(
-                    isSuccess ? "Payment Successful!" : "Payment Failed!",
+                    widget.isSuccess
+                        ? "Payment Successful!"
+                        : "Payment Failed!",
                     style: TextStyle(
                       fontSize: 20,
                       fontFamily: "Poppins",
                       fontWeight: FontWeight.bold,
-                      color: isSuccess
+                      color: widget.isSuccess
                           ? Colors.green.shade700
                           : Colors.red.shade700,
                     ),
@@ -89,8 +135,8 @@ class PaymentPopUpPage extends StatelessWidget {
                   const SizedBox(height: 8),
                   // Additional info
                   Text(
-                    isSuccess
-                        ? "Your payment of ₹$adjustedAmount was successful via $transactionType."
+                    widget.isSuccess
+                        ? "Your payment of ₹${widget.adjustedAmount} was successful via ${widget.transactionType}."
                         : "Something went wrong. Please try again.",
                     textAlign: TextAlign.center,
                     style: const TextStyle(
@@ -112,7 +158,7 @@ class PaymentPopUpPage extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                          text: transactionID, // Grey text
+                          text: widget.transactionID, // Grey text
                           style: TextStyle(
                             fontFamily: 'Poppins',
                             fontSize: 14,
@@ -122,7 +168,33 @@ class PaymentPopUpPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )
+                  ),
+                  const SizedBox(height: 16),
+                  // Timer display
+                  Text(
+                    "Redirecting in $_secondsRemaining seconds...",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: "Poppins",
+                      color: Colors.black54,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: widget.isSuccess
+                            ? Colors.green.shade700
+                            : Colors.red.shade700,
+                      ),
+                      child: Text(
+                        widget.isSuccess ? 'Go Back' : 'Retry',
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 15),
+                      ))
                 ],
               ),
             ),

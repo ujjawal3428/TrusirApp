@@ -22,7 +22,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     isWeb = MediaQuery.of(context).size.width > 600;
-    
+
     // Define the settings items
     final List<Map<String, dynamic>> settingsItems = [
       {
@@ -78,7 +78,7 @@ class SettingsScreen extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const MainScreen(),
+                      builder: (context) => const MainScreen(index: 0),
                     ),
                   );
                 },
@@ -128,8 +128,8 @@ class SettingsScreen extends StatelessWidget {
                   child: _settingscard(
                     context,
                     90, // Increased container size
-                    50,  // Increased image size
-                    60,  // Increased height
+                    50, // Increased image size
+                    60, // Increased height
                     450,
                     settingsItems[i]['image'],
                     settingsItems[i]['color'],
@@ -155,8 +155,8 @@ class SettingsScreen extends StatelessWidget {
                   child: _settingscard(
                     context,
                     90,
-                    50,  
-                    60,  
+                    50,
+                    60,
                     450,
                     settingsItems[i]['image'],
                     settingsItems[i]['color'],
@@ -222,7 +222,8 @@ class SettingsScreen extends StatelessWidget {
           height: containerSize,
           decoration: BoxDecoration(
             color: color,
-            borderRadius: BorderRadius.circular(15), // Slightly increased border radius
+            borderRadius:
+                BorderRadius.circular(15), // Slightly increased border radius
           ),
           child: Center(
             child: SizedBox(
@@ -265,7 +266,8 @@ class SettingsScreen extends StatelessWidget {
                         title,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: isWeb ? 18 : 16, // Increased font size for web
+                          fontSize:
+                              isWeb ? 18 : 16, // Increased font size for web
                         ),
                       ),
                       const Padding(

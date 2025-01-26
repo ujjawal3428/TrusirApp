@@ -17,6 +17,7 @@ class Course {
   final String name;
   final String courseClass;
   final String subject;
+  final String pincode;
   final String newAmount;
   final String image;
 
@@ -25,6 +26,7 @@ class Course {
     required this.amount,
     required this.name,
     required this.subject,
+    required this.pincode,
     required this.courseClass,
     required this.newAmount,
     required this.image,
@@ -37,6 +39,7 @@ class Course {
       name: json['name'],
       subject: json['subject'],
       courseClass: json['class'],
+      pincode: json['pincode'],
       newAmount: json['new_amount'],
       image: json['image'],
     );
@@ -351,7 +354,7 @@ class _CourseCardState extends State<CourseCard> {
             paymentstatus = true;
           });
           if (paymentstatus) {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => PaymentPopUpPage(
@@ -390,7 +393,7 @@ class _CourseCardState extends State<CourseCard> {
 
   void paymentstatusnavigation() {
     Navigator.pop(context);
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
           builder: (context) => PaymentPopUpPage(
@@ -584,13 +587,24 @@ class _CoursePageState extends State<CoursePage> {
   bool isWeb = false;
 
   void _filterCourses(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? userPincode = prefs.getString('pincode');
+    final String? userClass = prefs.getString('class');
     setState(() {
       isLoading = true;
     });
     try {
-      await fetchAllCourses();
       await fetchCourses();
+      await fetchAllCourses();
+
       setState(() {
+        final filteredAllCourses = _courses.where((course) {
+          final noMatchingDetail = !_courseDetails.any((detail) =>
+              int.parse(detail.courseID) == course.id); // No match for courseID
+          return noMatchingDetail &&
+              course.pincode == userPincode && // Match pincode
+              course.courseClass == userClass; // Match class
+        }).toList();
         _selectedIndex = index;
         if (index == 0) {
           filteredCourses = _courseDetails
@@ -601,7 +615,7 @@ class _CoursePageState extends State<CoursePage> {
           filteredCourses =
               _courseDetails.where((course) => course.type == 'demo').toList();
         } else if (index == 2) {
-          filteredCourses = _courses;
+          filteredCourses = filteredAllCourses;
         }
         _pageController.animateToPage(
           index,
@@ -654,7 +668,7 @@ class _CoursePageState extends State<CoursePage> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const MainScreen(),
+                      builder: (context) => const MainScreen(index: 0),
                     ),
                   );
                 },

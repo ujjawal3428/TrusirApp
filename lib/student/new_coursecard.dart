@@ -379,7 +379,7 @@ class _NewCourseCardState extends State<NewCourseCard> {
 
   void paymentstatusnavigation() {
     Navigator.pop(context);
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
           builder: (context) => PaymentPopUpPage(
@@ -449,7 +449,7 @@ class _NewCourseCardState extends State<NewCourseCard> {
             paymentstatus = true;
           });
           if (paymentstatus) {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => PaymentPopUpPage(
