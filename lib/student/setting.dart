@@ -38,7 +38,7 @@ class SettingsScreen extends StatelessWidget {
         'route': const YourDoubtPage(),
       },
       {
-        'image': 'assets/men.png',
+        'image': 'assets/men@4x.png',
         'color': Colors.blue.shade200,
         'title': 'Parents Doubts',
         'route': const ParentsDoubtsPage(),
@@ -104,7 +104,7 @@ class SettingsScreen extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: isWeb ? 40 : 10,
-            vertical: isWeb ? 20 : 30,
+            vertical: isWeb ? 20 : 20,
           ),
           child: isWeb
               ? _buildWebLayout(context, settingsItems)
@@ -184,8 +184,8 @@ class SettingsScreen extends StatelessWidget {
           _settingscard(
             context,
             50,
-            30,
-            55,
+            36,
+            53,
             306,
             item['image'],
             item['color'],
@@ -197,7 +197,7 @@ class SettingsScreen extends StatelessWidget {
             ),
             item['title'],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
         ],
       ],
     );
@@ -223,7 +223,14 @@ class SettingsScreen extends StatelessWidget {
           decoration: BoxDecoration(
             color: color,
             borderRadius:
-                BorderRadius.circular(15), // Slightly increased border radius
+                BorderRadius.circular(15), 
+                 boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(2, 2),
+                  blurRadius: 6,
+                ),
+              ],// Slightly increased border radius
           ),
           child: Center(
             child: SizedBox(

@@ -125,7 +125,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
               isLargeScreen,
               rowColors[0],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 13),
             buildInfoRow(
               'assets/house@3x.png',
               'School',
@@ -133,10 +133,10 @@ class StudentProfilePageState extends State<StudentProfilePage> {
               isLargeScreen,
               rowColors[1],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 13),
             buildInfoRow('assets/location@2x.png', 'Address', widget.address!,
                 isLargeScreen, rowColors[4]),
-            const SizedBox(height: 10),
+            const SizedBox(height: 13),
             buildInfoRow(
               'assets/graduation@3x.png',
               'Class',
@@ -144,7 +144,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
               isLargeScreen,
               rowColors[2],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 13),
             buildInfoRow(
               'assets/pensp@3x.png',
               'Subjects',
@@ -164,17 +164,24 @@ class StudentProfilePageState extends State<StudentProfilePage> {
     Color backgroundColor,
   ) {
     return Padding(
-      padding: const EdgeInsets.only(left: 18.0, right: 18),
+      padding: const EdgeInsets.only(left: 17.0, right: 17),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Icon container
           Container(
-            width: isLargeScreen ? 100 : 65,
-            height: isLargeScreen ? 100 : 65,
+            width: isLargeScreen ? 100 : 60,
+            height: isLargeScreen ? 100 : 60,
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(10),
+               boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(3, 3),
+                  blurRadius: 6,
+                ),
+              ],
             ),
             child: Padding(
               padding: const EdgeInsets.all(4.0),
@@ -188,11 +195,18 @@ class StudentProfilePageState extends State<StudentProfilePage> {
           // Text container
           Flexible(
             child: Container(
-              height: isLargeScreen ? 100 : 65,
+              height: isLargeScreen ? 100 : 60,
               width: isLargeScreen ? 400 : 306,
               decoration: BoxDecoration(
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(12),
+                 boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(3, 3),
+                  blurRadius: 6,
+                ),
+              ],
               ),
               child: Padding(
                 padding: const EdgeInsets.only(

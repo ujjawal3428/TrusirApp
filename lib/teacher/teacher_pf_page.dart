@@ -283,7 +283,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                   ),
                   buildInfoRow(
                     isWeb,
-                    'assets/men.png',
+                    'assets/men@4x.png',
                     'Father Name',
                     fatherName,
                     imageBackgroundColor: Colors.orange.shade100,
@@ -349,7 +349,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
           // Icon Container
           Container(
             width: isWeb ? 80 : 55,
-            height: isWeb ? 80 : 63,
+            height: isWeb ? 80 : 60,
             decoration: BoxDecoration(
               color: imageBackgroundColor,
               borderRadius: BorderRadius.circular(10),
@@ -373,7 +373,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
           // Text Container
           Flexible(
             child: Container(
-              height: isWeb ? 80 : 63,
+              height: isWeb ? 80 : 60,
               width: isWeb ? 400 : 306,
               decoration: BoxDecoration(
                 color: textBackgroundColor,

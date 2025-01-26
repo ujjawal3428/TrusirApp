@@ -220,7 +220,7 @@ class StudentProfileScreen extends StatelessWidget {
               ),
               Column(
                 children: [
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 25),
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, right: 10),
                     child: Row(
@@ -232,11 +232,18 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.blue.shade200,
                             borderRadius: BorderRadius.circular(10),
+                             boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(3, 3),
+                  blurRadius: 6,
+                ),
+              ],
                           ),
                           child: Center(
                             child: SizedBox(
-                              width: 30,
-                              height: 30,
+                              width: 35,
+                              height: 35,
                               child: Image.asset(
                                 'assets/calendarsp@3x.png',
                                 fit: BoxFit.cover,
@@ -244,7 +251,7 @@ class StudentProfileScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 13),
                         Flexible(
                           child: GestureDetector(
                             onTap: () {
@@ -258,7 +265,7 @@ class StudentProfileScreen extends StatelessWidget {
                               );
                             },
                             child: Container(
-                              height: 55,
+                              height: 50,
                               width: 306,
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade200,
@@ -303,7 +310,7 @@ class StudentProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 13),
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, right: 10),
                     child: Row(
@@ -315,11 +322,18 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.pink.shade100,
                             borderRadius: BorderRadius.circular(10),
+                             boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(3, 3),
+                  blurRadius: 6,
+                ),
+              ],
                           ),
                           child: Center(
                             child: SizedBox(
-                              width: 30,
-                              height: 30,
+                              width: 42,
+                              height: 42,
                               child: Image.asset(
                                 'assets/pensp@3x.png',
                                 fit: BoxFit.cover,
@@ -327,7 +341,7 @@ class StudentProfileScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 13),
                         Flexible(
                           child: GestureDetector(
                             onTap: () {
@@ -340,7 +354,7 @@ class StudentProfileScreen extends StatelessWidget {
                               );
                             },
                             child: Container(
-                              height: 55,
+                              height: 50,
                               width: 306,
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade200,
@@ -385,7 +399,7 @@ class StudentProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 13),
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, right: 10),
                     child: Row(
@@ -397,19 +411,26 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.blue.shade200,
                             borderRadius: BorderRadius.circular(10),
+                             boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(3, 3),
+                  blurRadius: 6,
+                ),
+              ],
                           ),
                           child: Center(
                             child: SizedBox(
-                              width: 30,
-                              height: 30,
+                              width: 42,
+                              height: 42,
                               child: Image.asset(
                                 'assets/medalsp@3x.png',
-                                fit: BoxFit.cover,
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 13),
                         Flexible(
                           child: GestureDetector(
                             onTap: () {
@@ -422,7 +443,7 @@ class StudentProfileScreen extends StatelessWidget {
                               );
                             },
                             child: Container(
-                              height: 55,
+                              height: 50,
                               width: 306,
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade200,
@@ -467,7 +488,7 @@ class StudentProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 13),
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, right: 10),
                     child: Row(
@@ -479,11 +500,18 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.purple.shade100,
                             borderRadius: BorderRadius.circular(10),
+                             boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(3, 3),
+                  blurRadius: 6,
+                ),
+              ],
                           ),
                           child: Center(
                             child: SizedBox(
-                              width: 30,
-                              height: 30,
+                              width: 40,
+                              height: 40,
                               child: Image.asset(
                                 'assets/qnasp@3x.png',
                                 fit: BoxFit.cover,
@@ -491,7 +519,7 @@ class StudentProfileScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 13),
                         Flexible(
                           child: GestureDetector(
                             onTap: () {
@@ -505,7 +533,7 @@ class StudentProfileScreen extends StatelessWidget {
                               );
                             },
                             child: Container(
-                              height: 55,
+                              height: 50,
                               width: 306,
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade200,
@@ -550,7 +578,7 @@ class StudentProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 13),
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, right: 10),
                     child: Row(
@@ -562,19 +590,26 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.pink.shade100,
                             borderRadius: BorderRadius.circular(10),
+                             boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(3, 3),
+                  blurRadius: 6,
+                ),
+              ],
                           ),
                           child: Center(
                             child: SizedBox(
-                              width: 30,
-                              height: 30,
+                              width: 33,
+                              height: 33,
                               child: Image.asset(
-                                'assets/men.png',
+                                'assets/men@4x.png',
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 13),
                         Flexible(
                           child: GestureDetector(
                             onTap: () {
@@ -588,7 +623,7 @@ class StudentProfileScreen extends StatelessWidget {
                               );
                             },
                             child: Container(
-                              height: 55,
+                              height: 50,
                               width: 306,
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade200,
@@ -633,7 +668,7 @@ class StudentProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 13),
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, right: 10),
                     child: Row(
@@ -645,6 +680,13 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.indigo.shade200,
                             borderRadius: BorderRadius.circular(10),
+                             boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(3, 3),
+                  blurRadius: 6,
+                ),
+              ],
                           ),
                           child: Center(
                             child: SizedBox(
@@ -657,7 +699,7 @@ class StudentProfileScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 13),
                         Flexible(
                           child: GestureDetector(
                             onTap: () {
@@ -670,7 +712,7 @@ class StudentProfileScreen extends StatelessWidget {
                               );
                             },
                             child: Container(
-                              height: 55,
+                              height: 50,
                               width: 306,
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade200,
@@ -715,7 +757,7 @@ class StudentProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 13),
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0, right: 10),
                     child: Row(
@@ -727,6 +769,13 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.indigo.shade200,
                             borderRadius: BorderRadius.circular(10),
+                             boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(3, 3),
+                  blurRadius: 6,
+                ),
+              ],
                           ),
                           child: Center(
                             child: SizedBox(
@@ -739,7 +788,7 @@ class StudentProfileScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 13),
                         Flexible(
                           child: GestureDetector(
                             onTap: () {
@@ -752,7 +801,7 @@ class StudentProfileScreen extends StatelessWidget {
                               );
                             },
                             child: Container(
-                              height: 55,
+                              height: 50,
                               width: 306,
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade200,

@@ -289,13 +289,13 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                         // Info rows
                         const SizedBox(height: 18),
                         buildInfoRow(
-                          'assets/men.png',
+                          'assets/men@4x.png',
                           'Father Name',
                           fatherName!,
                           isLargeScreen,
                           rowColors[0],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 13),
                         buildInfoRow(
                           'assets/graduation@3x.png',
                           'Class',
@@ -303,7 +303,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           isLargeScreen,
                           rowColors[1],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 13),
                         buildInfoRow(
                           'assets/pensp@3x.png',
                           'Subjects',
@@ -311,7 +311,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           isLargeScreen,
                           rowColors[2],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 13),
                         buildInfoRow(
                           'assets/house@3x.png',
                           'School',
@@ -319,7 +319,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           isLargeScreen,
                           rowColors[3],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 13),
                         buildInfoRow(
                           'assets/phone@2x.png',
                           'Phone',
@@ -327,7 +327,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           isLargeScreen,
                           rowColors[4],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 13),
                         buildInfoRow(
                           'assets/location@2x.png',
                           'Phone',
@@ -335,7 +335,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           isLargeScreen,
                           rowColors[0],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 13),
                       ],
                     ),
             ),
@@ -356,11 +356,11 @@ class MyProfileScreenState extends State<MyProfileScreen> {
         children: [
           // Icon container
           Container(
-            width: isLargeScreen ? 100 : 65,
-            height: isLargeScreen ? 100 : 65,
+            width: isLargeScreen ? 100 : 60,
+            height: isLargeScreen ? 100 : 60,
             decoration: BoxDecoration(
               color: backgroundColor,
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.3),
@@ -370,7 +370,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(4.0),
+              padding: const EdgeInsets.all(6.0),
               child: Image.asset(
                 iconPath,
                 fit: BoxFit.contain,
@@ -381,11 +381,11 @@ class MyProfileScreenState extends State<MyProfileScreen> {
           // Text container
           Flexible(
             child: Container(
-              height: isLargeScreen ? 100 : 65,
+              height: isLargeScreen ? 100 : 60,
               width: isLargeScreen ? 400 : 306,
               decoration: BoxDecoration(
                 color: backgroundColor,
-                borderRadius: BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.3),
@@ -403,6 +403,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                     value.isNotEmpty ? value : 'Loading...',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
+                      fontFamily: "Poppins",
                       fontSize: isLargeScreen ? 22 : 16,
                     ),
                   ),

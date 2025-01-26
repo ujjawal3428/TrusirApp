@@ -49,13 +49,13 @@ class Teacherssettings extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 30),
+            const SizedBox(height: 25),
             _settingscard(
                 isWeb,
                 context,
                 isWeb ? 80 : 50,
-                isWeb ? 40 : 30,
-                isWeb ? 70 : 55,
+                isWeb ? 40 : 35,
+                isWeb ? 70 : 50,
                 isWeb ? 450 : 306,
                 'assets/editprofile.png',
                 Colors.blue.shade200,
@@ -66,13 +66,13 @@ class Teacherssettings extends StatelessWidget {
                       ),
                     ),
                 'Edit Profile'),
-            SizedBox(height: isWeb ? 10 : 20),
+            SizedBox(height: isWeb ? 10 : 15),
             _settingscard(
                 isWeb,
                 context,
                 isWeb ? 80 : 50,
-                isWeb ? 40 : 30,
-                isWeb ? 70 : 55,
+                isWeb ? 40 : 35,
+                isWeb ? 70 : 50,
                 isWeb ? 450 : 306,
                 'assets/aboutus.png',
                 Colors.purple.shade100,
@@ -83,13 +83,13 @@ class Teacherssettings extends StatelessWidget {
                       ),
                     ),
                 'About Us'),
-            SizedBox(height: isWeb ? 10 : 20),
+            SizedBox(height: isWeb ? 10 : 15),
             _settingscard(
                 isWeb,
                 context,
                 isWeb ? 80 : 50,
-                isWeb ? 40 : 30,
-                isWeb ? 70 : 55,
+                isWeb ? 40 : 40,
+                isWeb ? 70 : 50,
                 isWeb ? 450 : 306,
                 'assets/contactus.png',
                 Colors.purple.shade200,
@@ -100,13 +100,13 @@ class Teacherssettings extends StatelessWidget {
                       ),
                     ),
                 'Contact Us'),
-            SizedBox(height: isWeb ? 10 : 20),
+            SizedBox(height: isWeb ? 10 : 15),
             _settingscard(
                 isWeb,
                 context,
                 isWeb ? 80 : 50,
-                isWeb ? 40 : 30,
-                isWeb ? 70 : 55,
+                isWeb ? 40 : 35,
+                isWeb ? 70 : 50,
                 isWeb ? 450 : 306,
                 'assets/tnc.png',
                 Colors.indigo.shade200,
@@ -136,7 +136,7 @@ class Teacherssettings extends StatelessWidget {
       VoidCallback onTap,
       String title) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10.0, right: 10),
+      padding: const EdgeInsets.only(left: 15.0, right: 15),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -146,6 +146,13 @@ class Teacherssettings extends StatelessWidget {
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(10),
+               boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  offset: const Offset(3, 3),
+                  blurRadius: 6,
+                ),
+              ],
             ),
             child: Center(
               child: SizedBox(
@@ -153,7 +160,7 @@ class Teacherssettings extends StatelessWidget {
                 height: imageSize,
                 child: Image.asset(
                   image,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 ),
               ),
             ),
@@ -188,6 +195,7 @@ class Teacherssettings extends StatelessWidget {
                           title,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
+                            fontFamily: "Poppins",
                             fontSize: 16,
                           ),
                         ),
