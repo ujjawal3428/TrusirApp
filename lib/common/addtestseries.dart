@@ -27,24 +27,6 @@ class _AddtestseriesState extends State<Addtestseries> {
   List<String> _courses = [];
   String extension = '';
 
-  Future<void> fetchAllCourses() async {
-    final url = Uri.parse('$baseUrl/all-course');
-    final response = await http.get(url);
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = json.decode(response.body);
-      if (mounted) {
-        setState(() {
-          _courses = data.map<String>((course) {
-            return course['name'] as String;
-          }).toList();
-        });
-      }
-    } else {
-      throw Exception('Failed to fetch courses');
-    }
-  }
-
   Future<void> handleUploadFromCamera() async {
     final String result = await ImageUploadUtils.uploadImagesFromCamera();
 
@@ -169,6 +151,36 @@ class _AddtestseriesState extends State<Addtestseries> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
+    }
+  }
+
+  Future<void> fetchAllCourses() async {
+    final url = Uri.parse('$baseUrl/get-courses/${widget.userID}');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+
+      if (mounted) {
+        setState(() {
+          // Use a Set to ensure unique values
+          final Set<String> uniqueCourses = {};
+
+          for (var course in data) {
+            // Extract the subject and class
+            final subject = course['courseName'] as String;
+            // Adjust based on API response
+
+            // Add unique combinations to the sets
+            uniqueCourses.add(subject);
+          }
+
+          // Convert sets back to lists
+          _courses = uniqueCourses.toList();
+        });
+      }
+    } else {
+      throw Exception('Failed to fetch courses');
     }
   }
 

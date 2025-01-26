@@ -982,14 +982,6 @@ class _AttendancePageState extends State<AttendancePage> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
                 color: isSelected ? Colors.black : Colors.grey[200],
-                gradient: LinearGradient(
-                  colors: isSelected
-                      ? [
-                          const Color(0xFFC22054),
-                          const Color(0xFF48116A),
-                        ]
-                      : [Colors.grey[200]!, Colors.grey[200]!],
-                ),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(

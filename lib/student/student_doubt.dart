@@ -82,9 +82,20 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
         return Course.fromJson(courseJson as Map<String, dynamic>);
       }).toList();
 
+      // Use a Set to filter out duplicates
+      final Set<String> uniqueCourseNames = {};
+      final List<Course> uniqueCourses = [];
+
+      for (var course in courses) {
+        if (uniqueCourseNames.add(course.courseName)) {
+          // Only add the course if its name is not already in the set
+          uniqueCourses.add(course);
+        }
+      }
+
       if (mounted) {
         setState(() {
-          _courses = courses; // Update _courses with the list of Course objects
+          _courses = uniqueCourses; // Update _courses with the filtered list
         });
       }
     } else {
