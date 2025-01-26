@@ -418,7 +418,7 @@ class _StudentGKPageState extends State<StudentGKPage> {
               Positioned(
                 right: 0,
                 left: 0,
-                bottom: 0,
+                bottom: -20,
                 child: _buildCreateButton(),
               )
             ],
@@ -440,15 +440,15 @@ class _StudentGKPageState extends State<StudentGKPage> {
                       )));
         },
         child: Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20),
+          padding: const EdgeInsets.only(left: 20.0, right: 20,),
           child: Container(
             color: Colors.white,
             width: double.infinity,
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Image.asset(
               'assets/postbutton.png',
-              height: 70.0,
-              fit: BoxFit.contain,
+              height: 80.0,
+              fit: BoxFit.cover,
             ),
           ),
         ),

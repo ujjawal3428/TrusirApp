@@ -81,17 +81,17 @@ class StudentProfileScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [
-                            Color(0xFFC22054),
                             Color(0xFF48116A),
+                            Color(0xFFC22054),
                           ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
                         ),
                         borderRadius: BorderRadius.circular(22),
                         boxShadow: [
                           BoxShadow(
                             color:
-                                const Color(0xFFC22054).withValues(alpha: 0.2),
+                                const Color(0xFFC22054).withValues(alpha: 0.3),
                             spreadRadius: 3,
                             blurRadius: 15,
                             offset: const Offset(0, 10),

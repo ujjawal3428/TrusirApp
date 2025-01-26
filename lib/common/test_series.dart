@@ -235,7 +235,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                   int index = testSeriesList.indexOf(test);
                   return Padding(
                     padding:
-                        const EdgeInsets.only(right: 16, left: 16,),
+                        const EdgeInsets.only(right: 16, left: 16, bottom: 10,),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 1,
 

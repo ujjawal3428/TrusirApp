@@ -343,13 +343,15 @@ class _StudentProgressPageState extends State<StudentProgressPage> {
       ),
       child: Container(
         width: 386,
-        height: 160,
+        height: 120,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [
-              Color(0xFFC22054),
               Color(0xFF48116A),
+              Color(0xFFC22054),
             ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
           borderRadius: BorderRadius.circular(22),
           boxShadow: [
@@ -383,6 +385,7 @@ class _StudentProgressPageState extends State<StudentProgressPage> {
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
+                          fontFamily: "Poppins",
                           color: Colors.white,
                         ),
                       ),
@@ -390,6 +393,7 @@ class _StudentProgressPageState extends State<StudentProgressPage> {
                         '24 Jan 2025 - Today',
                         style: TextStyle(
                           fontSize: 14,
+                           fontFamily: "Poppins",
                           fontWeight: FontWeight.w400,
                           color: Colors.white,
                         ),
@@ -405,7 +409,7 @@ class _StudentProgressPageState extends State<StudentProgressPage> {
                   child: Image.asset(
                     'assets/listaim@3x.png',
                     width: 100,
-                    height: 105,
+                    height: 95,
                   ),
                 ),
               ),

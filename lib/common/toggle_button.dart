@@ -49,11 +49,11 @@ class FilterSwitchState extends State<FilterSwitch> {
     bool isWeb = MediaQuery.of(context).size.width > 600;
     return Center(
       child: Container(
-        width: isWeb ? 450 : 350,
         height: 50,
+        width: isWeb ? 450 : 350,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.transparent, width: 2),
-          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.transparent, width: 1),
+          borderRadius: BorderRadius.circular(10),
         ),
         child: Stack(
           children: [
@@ -74,14 +74,10 @@ class FilterSwitchState extends State<FilterSwitch> {
               top: 4,
               child: Container(
                 width: (isWeb ? 450 / 3 : 350 / 3) - 8,
-                height: 38,
+                height: 40,
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 119, 0, 255),
-                  gradient: const LinearGradient(colors: [
-                    Color(0xFFC22054),
-                    Color(0xFF48116A),
-                  ]),
-                  borderRadius: BorderRadius.circular(30),
+                  color: Colors.black87,
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
             ),
@@ -94,12 +90,13 @@ class FilterSwitchState extends State<FilterSwitch> {
                       child: Text(
                         widget.option1,
                         style: TextStyle(
+                          fontFamily: "Poppins",
                           color:
                               _selectedIndex == 0 ? Colors.white : Colors.black,
                           fontWeight: _selectedIndex == 0
                               ? FontWeight.bold
-                              : FontWeight.normal,
-                          fontSize: isWeb ? 18 : 14,
+                              : FontWeight.w500,
+                          fontSize: isWeb ? 17 : 13,
                         ),
                       ),
                     ),
@@ -112,12 +109,13 @@ class FilterSwitchState extends State<FilterSwitch> {
                       child: Text(
                         widget.option2,
                         style: TextStyle(
+                          fontFamily: "Poppins",
                           color:
                               _selectedIndex == 1 ? Colors.white : Colors.black,
                           fontWeight: _selectedIndex == 1
                               ? FontWeight.bold
-                              : FontWeight.normal,
-                          fontSize: isWeb ? 18 : 14,
+                              : FontWeight.w500,
+                          fontSize: isWeb ? 17 : 13,
                         ),
                       ),
                     ),
@@ -130,12 +128,13 @@ class FilterSwitchState extends State<FilterSwitch> {
                       child: Text(
                         widget.option3,
                         style: TextStyle(
+                          fontFamily: "Poppins",
                           color:
                               _selectedIndex == 2 ? Colors.white : Colors.black,
                           fontWeight: _selectedIndex == 2
                               ? FontWeight.bold
-                              : FontWeight.normal,
-                          fontSize: isWeb ? 18 : 14,
+                              : FontWeight.w500,
+                          fontSize: isWeb ? 17 : 13,
                         ),
                       ),
                     ),
