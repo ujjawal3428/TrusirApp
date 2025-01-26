@@ -96,7 +96,10 @@ class PopUpSplashScreenState extends State<PopUpSplashScreen> {
         // Navigate to the next screen
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const MainScreen()),
+          MaterialPageRoute(
+              builder: (context) => const MainScreen(
+                    index: 0,
+                  )),
         );
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
