@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -62,6 +63,11 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
     });
 
     try {
+      // Fetch the stored class from SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final storedClass = prefs.getString('class') ??
+          ''; // Default to an empty string if not found
+
       final apiCategory = category == "All" ? "all" : category;
       final apiUrl =
           "$baseUrl/video/$apiCategory?page=$currentPage&data_per_page=10";
@@ -86,14 +92,20 @@ class _VideoKnowledgeState extends State<VideoKnowledge> {
                   ? "https://admin.trusir.com/uploads/profile/profile_1735053128.png"
                   : item["profile"],
               "category": item["category"],
+              "class": item["class"]
             };
           }).toList();
 
+          // Filter videos based on the class from SharedPreferences
+          final filteredVideos = newVideos
+              .where((video) => video['class'] == storedClass)
+              .toList();
+
           setState(() {
             if (isLoadMore) {
-              _videos.addAll(newVideos);
+              _videos.addAll(filteredVideos);
             } else {
-              _videos = newVideos;
+              _videos = filteredVideos;
             }
             _filteredVideos = _videos;
             currentPage++;
@@ -377,7 +389,7 @@ class VideoCard extends StatelessWidget {
       },
       child: Card(
         color: Colors.grey[200],
-        margin: const EdgeInsets.symmetric( vertical: 8.0),
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
         elevation: 4,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
