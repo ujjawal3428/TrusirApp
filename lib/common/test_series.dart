@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
-import 'package:open_file/open_file.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/addtestseries.dart';
 import 'package:trusir/common/api.dart';
-import 'package:trusir/common/notificationhelper.dart';
+import 'package:trusir/common/file_downloader.dart';
 
 class TestSeriesScreen extends StatefulWidget {
   final String? userID;
@@ -28,63 +21,14 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   bool isLoading = false;
   bool initialLoadComplete = false;
   int page = 1;
-
-  // Map to store downloaded file paths for questions and answers
-  Map<String, String> downloadedFiles = {};
+  String answerFileName = '';
+  String questionFileName = '';
 
   @override
   void initState() {
     super.initState();
     fetchTestSeries();
-    _loadDownloadedFiles();
-  }
-
-  Future<void> _loadDownloadedFiles() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedFiles = prefs.getString('downloadedTests') ?? '{}';
-    setState(() {
-      downloadedFiles = Map<String, String>.from(jsonDecode(savedFiles));
-    });
-  }
-
-  Future<void> _saveDownloadedFiles() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('downloadedTests', jsonEncode(downloadedFiles));
-  }
-
-  Future<void> _requestNotificationPermission() async {
-    if (await Permission.notification.isDenied) {
-      await Permission.notification.request();
-    }
-  }
-
-  Future<void> _requestPermissions() async {
-    if (await Permission.storage.isGranted) {
-      return;
-    }
-
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
-
-      // Skip permissions for Android versions below API 30
-      if (androidInfo.version.sdkInt < 30) {
-        return;
-      }
-
-      if (await Permission.photos.isGranted ||
-          await Permission.videos.isGranted) {
-        return;
-      }
-
-      Map<Permission, PermissionStatus> statuses = await [
-        Permission.photos,
-        Permission.videos,
-      ].request();
-
-      if (statuses.values.any((status) => !status.isGranted)) {
-        openAppSettings();
-      }
-    }
+    FileDownloader.loadDownloadedFiles();
   }
 
   Future<void> fetchTestSeries() async {
@@ -117,61 +61,6 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
         initialLoadComplete = true; // Mark the initial load as complete
       });
     }
-  }
-
-  Future<String> _getAppSpecificDownloadPath(String filename) async {
-    final directory = await getApplicationDocumentsDirectory();
-    return '${directory.path}/$filename';
-  }
-
-  Future<void> _downloadFile(String url, String filename) async {
-    try {
-      // Infer file extension from the URL or content type
-      String fileExtension = _getFileExtensionFromUrl(url);
-      String finalFilename = '$filename$fileExtension';
-
-      final filePath = await _getAppSpecificDownloadPath(finalFilename);
-      await _requestPermissions();
-      await _requestNotificationPermission();
-      final dio = Dio();
-      await dio.download(url, filePath);
-
-      setState(() {
-        downloadedFiles[finalFilename] = filePath;
-        downloadedFiles[filename] = filePath;
-      });
-      await _saveDownloadedFiles();
-      showDownloadNotification(finalFilename, filePath);
-    } catch (e) {
-      setState(() {});
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Download failed: $e'),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }
-  }
-
-// Function to infer file extension from the URL
-  String _getFileExtensionFromUrl(String url) {
-    final extension = url.split('.').last;
-    if (extension == 'pdf') {
-      return '.pdf';
-    } else if (extension == 'docx') {
-      return '.docx';
-    } else if (extension == 'jpg' || extension == 'jpeg') {
-      return '.jpg';
-    } else if (extension == 'png') {
-      return '.png';
-    }
-    return ''; // Default, in case we can't determine the extension
-  }
-
-  Future<void> _openFile(String filename) async {
-    final filePath = downloadedFiles[filename];
-    OpenFile.open(filePath);
   }
 
   @override
@@ -234,8 +123,12 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                 children: testSeriesList.map<Widget>((test) {
                   int index = testSeriesList.indexOf(test);
                   return Padding(
-                    padding:
-                        const EdgeInsets.only(right: 16, left: 16, bottom: 10,),
+                    padding: const EdgeInsets.only(
+                      right: 16,
+                      left: 16,
+                      top: 8,
+                      bottom: 8,
+                    ),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 1,
 
@@ -272,14 +165,9 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   }
 
   Widget _buildTestCard(dynamic test, int index) {
-    // Encapsulate your test card logic here for cleaner code
-    String questionFilename = 'question_${test['test_name']}';
-    String answerFilename = 'answer_${test['test_name']}';
-    bool isQuestionDownloaded = downloadedFiles.containsKey(questionFilename);
-    bool isAnswerDownloaded = downloadedFiles.containsKey(answerFilename);
-
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0, left: 15, right: 15, bottom: 10),
+      padding:
+          const EdgeInsets.only(top: 10.0, left: 15, right: 15, bottom: 10),
       child: Column(
         children: [
           Row(
@@ -301,12 +189,12 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                       children: [
                         Text(test['date'],
                             style: const TextStyle(
-                              color: Colors.black54,
-                                fontSize: 14, fontWeight: FontWeight.w400)),
+                                color: Colors.black54,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400)),
                         Text(test['time'],
                             style: const TextStyle(
-                               color: Colors.black54,
-                              fontSize: 14)),
+                                color: Colors.black54, fontSize: 14)),
                       ],
                     ),
                   ],
@@ -319,18 +207,18 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildDownloadButton(
+                  testName: test['test_name'],
                   label: 'Question',
-                  isDownloaded: isQuestionDownloaded,
-                  onDownload: () =>
-                      _downloadFile(test['question'], questionFilename),
-                  inDownload: () => _openFile(questionFilename)),
+                  isQuestion: true,
+                  fileName: 'question_${test['test_name']}',
+                  downloadFile: test['question']),
               const SizedBox(width: 27),
               _buildDownloadButton(
+                  testName: test['test_name'],
                   label: 'Answer',
-                  isDownloaded: isAnswerDownloaded,
-                  onDownload: () =>
-                      _downloadFile(test['answer'], answerFilename),
-                  inDownload: () => _openFile(answerFilename)),
+                  isQuestion: false,
+                  fileName: 'answer_${test['test_name']}',
+                  downloadFile: test['answer']),
             ],
           ),
         ],
@@ -340,12 +228,95 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
 
   Widget _buildDownloadButton({
     required String label,
-    required bool isDownloaded,
-    required VoidCallback inDownload,
-    required VoidCallback onDownload,
+    required bool isQuestion,
+    required String testName,
+    required String fileName,
+    required String downloadFile,
   }) {
     return InkWell(
-      onTap: isDownloaded ? inDownload : onDownload,
+      onTap: () => showDialog(
+        context: context,
+        barrierColor: Colors.black.withOpacity(0.3),
+        builder: (BuildContext context) {
+          List<String> images = downloadFile.split(',');
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Images",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: images.length,
+                    itemBuilder: (context, index) {
+                      final image = images[index];
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            if (isQuestion) {
+                              questionFileName = '${fileName}_$index';
+                            } else {
+                              answerFileName = '${fileName}_$index';
+                            }
+                          });
+                          FileDownloader.downloadedFiles
+                                  .containsKey('${fileName}_$index')
+                              ? FileDownloader.openFile('${fileName}_$index')
+                              : FileDownloader.downloadFile(
+                                  context, image, '${fileName}_$index');
+                        },
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Image.network(
+                                image,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(
+                              '${testName}_$index',
+                              style: const TextStyle(
+                                fontSize: 8,
+                                color: Colors.blue,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
       child: Container(
         width: 135,
         height: 32,
@@ -364,7 +335,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
               ),
               const SizedBox(width: 8),
               Icon(
-                isDownloaded ? Icons.open_in_new : Icons.file_download_rounded,
+                Icons.open_in_new,
                 color: Colors.indigo.shade900,
                 size: 16,
               ),

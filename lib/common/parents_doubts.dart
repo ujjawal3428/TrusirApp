@@ -1,15 +1,9 @@
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
-import 'package:trusir/common/notificationhelper.dart';
+import 'package:trusir/common/file_downloader.dart';
 
 class ParentsDoubtsPage extends StatefulWidget {
   const ParentsDoubtsPage({super.key});
@@ -34,187 +28,7 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
     super.initState();
     fetchDoubts();
 
-    _loadDownloadedFiles();
-  }
-
-  Future<void> _loadDownloadedFiles() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedFiles = prefs.getString('downloadedParentsDoubts') ?? '{}';
-    setState(() {
-      downloadedFiles = Map<String, String>.from(jsonDecode(savedFiles));
-    });
-  }
-
-  Future<void> _saveDownloadedFiles() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('downloadedParentsDoubts', jsonEncode(downloadedFiles));
-  }
-
-  Future<void> _requestNotificationPermission() async {
-    if (await Permission.notification.isDenied) {
-      await Permission.notification.request();
-    }
-  }
-
-  Future<void> _requestPermissions() async {
-    if (await Permission.storage.isGranted) {
-      return;
-    }
-
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
-
-      // Skip permissions for Android versions below API 30
-      if (androidInfo.version.sdkInt < 30) {
-        return;
-      }
-
-      if (await Permission.photos.isGranted ||
-          await Permission.videos.isGranted) {
-        return;
-      }
-
-      Map<Permission, PermissionStatus> statuses = await [
-        Permission.photos,
-        Permission.videos,
-      ].request();
-
-      if (statuses.values.any((status) => !status.isGranted)) {
-        openAppSettings();
-      }
-    }
-  }
-
-  Future<String> _getAppSpecificDownloadPath(String filename) async {
-    final directory = await getApplicationDocumentsDirectory();
-    return '${directory.path}/$filename';
-  }
-
-  Future<void> _downloadFile(String url, String filename) async {
-    setState(() {
-      isDownloading = true;
-      downloadProgress = '0%';
-    });
-
-    try {
-      // Infer file extension from the URL or content type
-      String fileExtension = _getFileExtensionFromUrl(url);
-      String finalFilename = '$filename$fileExtension';
-
-      final filePath = await _getAppSpecificDownloadPath(finalFilename);
-      await _requestPermissions();
-      await _requestNotificationPermission();
-
-      final dio = Dio();
-      await dio.download(
-        url,
-        filePath,
-        onReceiveProgress: (received, total) {
-          if (total != -1) {
-            setState(() {
-              downloadProgress =
-                  '${(received / total * 100).toStringAsFixed(0)}%';
-            });
-          }
-        },
-      );
-
-      setState(() {
-        downloadedFiles[finalFilename] = filePath;
-        downloadedFiles[filename] = filePath;
-        isDownloading = false;
-        downloadProgress = '';
-      });
-      await _saveDownloadedFiles();
-      showDownloadNotification(finalFilename, filePath);
-    } catch (e) {
-      setState(() {
-        isDownloading = false;
-        downloadProgress = '';
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Download failed: $e'),
-          duration: const Duration(seconds: 3),
-        ),
-      );
-    }
-  }
-
-// Function to infer file extension from the URL
-  String _getFileExtensionFromUrl(String url) {
-    extension = url.split('.').last;
-
-    if (extension == 'pdf') {
-      return '.pdf';
-    } else if (extension == 'docx') {
-      return '.docx';
-    } else if (extension == 'jpg' || extension == 'jpeg') {
-      return '.jpg';
-    } else if (extension == 'png') {
-      return '.png';
-    }
-    return ''; // Default, in case we can't determine the extension
-  }
-
-  Widget _buildFilePreview(String fileUrl) {
-    final extension = fileUrl.split('.').last.toLowerCase();
-
-    if (['jpg', 'jpeg', 'png'].contains(extension)) {
-      // Display the image preview
-      return Image.network(
-        fileUrl,
-        width: 50,
-        height: 50,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          return const Icon(Icons.broken_image, color: Colors.grey, size: 50);
-        },
-      );
-    } else {
-      // Display an icon for non-image file types
-      return Icon(
-        _getIconForFile(fileUrl),
-        size: 50,
-        color: _getIconColorForFile(fileUrl),
-      );
-    }
-  }
-
-  IconData _getIconForFile(String url) {
-    extension = url.split('.').last;
-    if (extension == 'pdf') {
-      return Icons.picture_as_pdf;
-    } else if (extension == 'docx' || extension == 'doc') {
-      return Icons.description;
-    } else if (extension == 'jpeg' ||
-        extension == 'jpg' ||
-        extension == 'png') {
-      return Icons.image;
-    } else {
-      return Icons.insert_drive_file; // Default icon for unknown file types
-    }
-  }
-
-  Color _getIconColorForFile(String url) {
-    extension = url.split('.').last;
-    if (extension == 'pdf') {
-      return Colors.red;
-    } else if (extension == 'docx' || extension == 'doc') {
-      return Colors.blue;
-    } else if (extension == 'png' ||
-        extension == 'jpg' ||
-        extension == 'jpeg') {
-      return Colors.green;
-    } else {
-      return Colors.grey; // Default color for unknown file types
-    }
-  }
-
-  Future<void> _openFile(String filename) async {
-    final filePath = downloadedFiles[filename];
-    OpenFile.open(filePath);
+    FileDownloader.loadDownloadedFiles();
   }
 
   Future<void> fetchDoubts() async {
@@ -310,8 +124,6 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
                       final doubt = doubtsList[index];
                       final filename =
                           '${doubt.course}_parent_doubt_${doubt.createdAt}';
-                      final isDownloaded =
-                          downloadedFiles.containsKey(filename);
 
                       // Determine file extension for this item
 
@@ -323,7 +135,10 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: ListTile(
-                            leading: _buildFilePreview(doubt.image),
+                            leading: Image.network(
+                              doubt.image.split(',').first,
+                              fit: BoxFit.cover,
+                            ),
                             title: Text(
                               doubt.title,
                               style: const TextStyle(
@@ -346,21 +161,103 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
                               width: 80,
                               child: ElevatedButton.icon(
                                 onPressed: () {
-                                  if (isDownloaded) {
-                                    _openFile(filename);
-                                  } else {
-                                    _downloadFile(doubt.image, filename);
-                                  }
+                                  showDialog(
+                                    context: context,
+                                    barrierColor: Colors.black.withOpacity(0.3),
+                                    builder: (BuildContext context) {
+                                      List<String> images =
+                                          doubt.image.split(',');
+                                      return Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        insetPadding: const EdgeInsets.all(16),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(16.0),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Text(
+                                                "Images",
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 10),
+                                              GridView.builder(
+                                                shrinkWrap: true,
+                                                physics:
+                                                    const NeverScrollableScrollPhysics(),
+                                                gridDelegate:
+                                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 3,
+                                                  crossAxisSpacing: 10,
+                                                  mainAxisSpacing: 10,
+                                                ),
+                                                itemCount: images.length,
+                                                itemBuilder: (context, index) {
+                                                  final image = images[index];
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      FileDownloader
+                                                              .downloadedFiles
+                                                              .containsKey(
+                                                                  '${filename}_$index')
+                                                          ? FileDownloader.openFile(
+                                                              '${filename}_$index')
+                                                          : FileDownloader
+                                                              .downloadFile(
+                                                                  context,
+                                                                  image,
+                                                                  '${filename}_$index');
+                                                    },
+                                                    child: Column(
+                                                      children: [
+                                                        Expanded(
+                                                          child: Image.network(
+                                                            image,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                            height: 5),
+                                                        Text(
+                                                          '${doubt.title}_$index',
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 8,
+                                                            color: Colors.blue,
+                                                          ),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
                                 },
-                                icon: Icon(
-                                  isDownloaded
-                                      ? Icons.open_in_new
-                                      : Icons.download,
+                                icon: const Icon(
+                                  Icons.open_in_new,
                                   size: 17,
                                 ),
-                                label: Text(
-                                  isDownloaded ? "Open" : "Download",
-                                  style: const TextStyle(fontSize: 10),
+                                label: const Text(
+                                  "Open",
+                                  style: TextStyle(fontSize: 10),
                                 ),
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.all(0),

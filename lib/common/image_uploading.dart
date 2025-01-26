@@ -111,6 +111,7 @@ class ImageUploadUtils {
       final XFile? image = await picker.pickImage(source: ImageSource.camera);
       if (image == null) {
         Fluttertoast.showToast(msg: 'Image selection canceled.');
+        continueCapturing = false;
         continue;
       }
 
