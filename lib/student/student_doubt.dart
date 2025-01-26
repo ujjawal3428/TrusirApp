@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/image_uploading.dart';
+import 'package:trusir/student/teacher_profile.dart';
 import 'package:trusir/student/your_doubt.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -48,6 +49,7 @@ class StudentDoubtScreen extends StatefulWidget {
 class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   bool _isDropdownOpen = false;
   List<Course> _courses = [];
+
   String _selectedCourse = '-- Select Course --';
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _courseController = TextEditingController();
@@ -55,6 +57,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   final StudentDoubts formData = StudentDoubts();
   String extension = '';
   bool isimageUploading = false;
+  List<Teacher> teachers = [];
 
   Future<void> openDialer(String phoneNumber) async {
     final Uri launchUri = Uri(
@@ -68,6 +71,22 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   void initState() {
     super.initState();
     fetchAllCourses();
+    fetchTeachers();
+  }
+
+  Future<void> fetchTeachers() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userID = prefs.getString('userID');
+    final response = await http.get(Uri.parse('$baseUrl/teacher/$userID'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      setState(() {
+        teachers = data.map((json) => Teacher.fromJson(json)).toList();
+      });
+    } else {
+      throw Exception('Failed to load teachers');
+    }
   }
 
   Future<void> fetchAllCourses() async {
@@ -803,7 +822,95 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      openDialer('9797472922');
+                                      showDialog(
+                                        context: context,
+                                        barrierColor:
+                                            Colors.black.withOpacity(0.3),
+                                        builder: (BuildContext context) {
+                                          return Dialog(
+                                            backgroundColor: Colors.transparent,
+                                            insetPadding:
+                                                const EdgeInsets.all(16),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  const Text(
+                                                    "Assigned Teachers",
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  GridView.builder(
+                                                    shrinkWrap: true,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    gridDelegate:
+                                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                                      crossAxisCount: 3,
+                                                      crossAxisSpacing: 10,
+                                                      mainAxisSpacing: 10,
+                                                    ),
+                                                    itemCount: teachers.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return GestureDetector(
+                                                        onTap: () {
+                                                          openDialer(
+                                                              teachers[index]
+                                                                  .phone);
+                                                        },
+                                                        child: Column(
+                                                          children: [
+                                                            Expanded(
+                                                              child:
+                                                                  Image.network(
+                                                                teachers[index]
+                                                                    .profile,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 5),
+                                                            Text(
+                                                              teachers[index]
+                                                                  .name,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 8,
+                                                                color:
+                                                                    Colors.blue,
+                                                              ),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(
