@@ -59,9 +59,9 @@ class StudentProfilePageState extends State<StudentProfilePage> {
                     },
                     child: Image.asset('assets/back_button.png', height: 50)),
                 const SizedBox(width: 20),
-                const Text(
-                  'My Profile',
-                  style: TextStyle(
+                Text(
+                  "${widget.name}'s Profile",
+                  style: const TextStyle(
                     color: Color(0xFF48116A),
                     fontSize: 25,
                     fontFamily: 'Poppins',
@@ -175,7 +175,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(10),
-               boxShadow: [
+              boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.3),
                   offset: const Offset(3, 3),
@@ -200,13 +200,13 @@ class StudentProfilePageState extends State<StudentProfilePage> {
               decoration: BoxDecoration(
                 color: backgroundColor,
                 borderRadius: BorderRadius.circular(12),
-                 boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  offset: const Offset(3, 3),
-                  blurRadius: 6,
-                ),
-              ],
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    offset: const Offset(3, 3),
+                    blurRadius: 6,
+                  ),
+                ],
               ),
               child: Padding(
                 padding: const EdgeInsets.only(
