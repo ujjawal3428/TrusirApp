@@ -720,8 +720,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               Center(
                 child: Image.asset(
                   'assets/studentregisteration@4x.png',
-                  width: isWeb ? 400 : 256,
-                  height: isWeb ? null : 200,
+                  width: isWeb ? 400 : 320,
+                  height: isWeb ? null : 250,
                 ),
               ),
               isWeb
@@ -768,7 +768,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         ),
                       ],
                     ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               // Dynamically Generated Forms
               ListView.builder(
                 shrinkWrap: true,
@@ -782,7 +782,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
               Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     child: Row(
                       children: [
                         Checkbox(
@@ -819,7 +819,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: isWeb ? 50 : 20),
+                  SizedBox(height: isWeb ? 20 : 0),
                   // Registration Fee
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -891,7 +891,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 20),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -1455,19 +1455,19 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 20),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   _buildTextField('Student Name', onChanged: (value) {
                     studentForms[index].studentName = value;
                   }),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   _buildTextField("Father's Name", onChanged: (value) {
                     studentForms[index].fathersName = value;
                   }),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   _buildTextField("Mother's Name", onChanged: (value) {
                     studentForms[index].mothersName = value;
                   }),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   Row(
                     children: [
                       Expanded(
@@ -1498,11 +1498,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   _buildTextField('School Name', onChanged: (value) {
                     studentForms[index].schoolName = value;
                   }),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   _buildDropdownField(
                     'Medium',
                     selectedValue: studentForms[index].medium,
@@ -1513,7 +1513,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     },
                     items: additionals['mediums'],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   _buildDropdownField(
                     'Class',
                     selectedValue: studentForms[index].studentClass,
@@ -1524,7 +1524,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     },
                     items: _classes,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   _buildDropdownField(
                     'Board',
                     selectedValue: studentForms[index].board,
@@ -1535,7 +1535,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     },
                     items: additionals['board'],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   _buildMultiSelectDropdownField('Subject',
                       selectedValues: selectedSubjectsPerForm[index],
                       onChanged: (List<String> values) {
@@ -1546,7 +1546,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   },
                       items: _courses,
                       selectedText: studentForms[index].subject ?? 'Select'),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
 
                   _buildDropdownField(
                     'State',
@@ -1566,7 +1566,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     },
                     items: states,
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {
                       if (studentForms[index].state == null) {
@@ -1596,11 +1596,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       items: studentForms[index].cities,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   _buildTextField('Mohalla/Area', onChanged: (value) {
                     studentForms[index].area = value;
                   }),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {
                       if (studentForms[index].state == null) {
@@ -1630,7 +1630,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       items: studentForms[index].pins,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   // Full address
                   _buildAddressField('Full Address', onChanged: (value) {
                     studentForms[index].address = value;
@@ -1642,7 +1642,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Padding(
-                        padding: EdgeInsets.only(right: 60),
+                        padding: EdgeInsets.only(right: 55),
                         child: Text(
                           'Profile Photo',
                           style: TextStyle(
@@ -1954,7 +1954,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 
   Widget _buildTextField(
     String hintText, {
-    double height = 58,
+    double height = 48,
     required ValueChanged<String> onChanged,
   }) {
     bool isWeb = MediaQuery.of(context).size.width > 500;
@@ -1981,30 +1981,22 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         },
         textCapitalization: TextCapitalization.words,
         onChanged: onChanged,
+        textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
           labelText: hintText,
           floatingLabelBehavior: FloatingLabelBehavior.auto,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(18),
             borderSide: const BorderSide(color: Colors.grey),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(18),
             borderSide: const BorderSide(color: Colors.grey),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(18),
             borderSide: const BorderSide(color: Colors.grey),
           ),
-          contentPadding: EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: isWeb
-                  ? height == 126
-                      ? 50
-                      : 21
-                  : height == 126
-                      ? 50
-                      : 23),
           isDense: true,
         ),
       ),
@@ -2066,7 +2058,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   ) {
     bool isWeb = MediaQuery.of(context).size.width > 500;
     return Container(
-      height: 58,
+      height: 48,
       width: isWeb ? 500 : 700,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -2085,7 +2077,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
         },
         controller: _phoneController,
         enabled: userSkipped,
-        textAlignVertical: TextAlignVertical.top,
+        textAlignVertical: TextAlignVertical.center,
         keyboardType: TextInputType.phone,
         maxLength: 10,
         buildCounter: (_,
@@ -2111,8 +2103,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             borderRadius: BorderRadius.circular(22),
             borderSide: const BorderSide(color: Colors.grey),
           ),
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 23),
           isDense: true,
         ),
       ),
@@ -2127,7 +2117,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }) {
     bool isWeb = MediaQuery.of(context).size.width > 600;
     return Container(
-      height: 58,
+      height: 48,
       width: isWeb ? 500 : double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -2161,15 +2151,14 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             borderRadius: BorderRadius.circular(22),
             borderSide: const BorderSide(color: Colors.grey),
           ),
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 17),
+          
           isDense: true,
         ),
         items: items
             .map(
               (item) => DropdownMenuItem(
                 value: item,
-                child: Text(item),
+                child: Text(item,style: const TextStyle(fontWeight: FontWeight.w400),),
               ),
             )
             .toList(),
@@ -2189,7 +2178,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     return StatefulBuilder(
       builder: (context, setState) {
         return Container(
-          height: 58,
+          height: 48,
           width: isWeb ? 700 : double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -2218,10 +2207,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 borderRadius: BorderRadius.circular(22),
                 borderSide: const BorderSide(color: Colors.grey),
               ),
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: isWeb ? 21 : 17,
-              ),
+             
               isDense: true,
             ),
             items: items
@@ -2231,7 +2217,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     child: StatefulBuilder(
                       builder: (context, setStateInner) {
                         return CheckboxListTile(
-                          title: Text(item),
+                          title: Text(item, style: const TextStyle(fontWeight: FontWeight.w400),),
                           value: selectedValues.contains(item),
                           onChanged: (bool? isChecked) {
                             if (isChecked == true) {
@@ -2264,7 +2250,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             hint: selectedText.isNotEmpty
                 ? Text(
                     selectedText,
-                    style: const TextStyle(color: Colors.black),
+                   style: const TextStyle(fontWeight: FontWeight.w400),
                   )
                 : null,
           ),
@@ -2280,7 +2266,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     String? value,
   }) {
     return Container(
-      height: 58,
+      height: 48,
       width: 184,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
@@ -2319,7 +2305,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 58,
+        height: 48,
         width: width,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -2334,7 +2320,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: isLoading
                   ? const CircularProgressIndicator()
                   : displayPath == null
@@ -2346,7 +2332,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         ),
             ),
             const Padding(
-              padding: EdgeInsets.only(right: 15),
+              padding: EdgeInsets.only(right: 14),
               child: Icon(Icons.upload_file),
             ),
           ],
