@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class WalletPage extends StatelessWidget {
-  const WalletPage({Key? key}) : super(key: key);
+  const WalletPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +114,10 @@ class WalletPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildQuickAction(Icons.school, "Buy Course", Colors.blue),
-                      _buildQuickAction(Icons.card_giftcard, "Redeem", Colors.orange),
+                      _buildQuickAction(
+                          Icons.school, "Buy Course", Colors.blue),
+                      _buildQuickAction(
+                          Icons.card_giftcard, "Redeem", Colors.orange),
                       _buildQuickAction(Icons.share, "Share", Colors.green),
                     ],
                   ),
@@ -237,7 +239,9 @@ class WalletPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: amount > 0 ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+              color: amount > 0
+                  ? Colors.green.withOpacity(0.1)
+                  : Colors.red.withOpacity(0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
