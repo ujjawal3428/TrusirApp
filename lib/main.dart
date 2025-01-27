@@ -47,9 +47,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        navigatorKey: navigatorKey,
-        debugShowCheckedModeBanner: false,
-        home: const SplashScreen());
+      navigatorKey: navigatorKey,
+      debugShowCheckedModeBanner: false,
+      home: const SplashScreen(),
+    );
   }
 }
 
@@ -111,7 +112,9 @@ class _SplashScreenState extends State<SplashScreen>
     } else if (role == 'teacher' && isNewUser) {
       return const TrusirLoginPage();
     } else if (role == 'student' && !isNewUser) {
-      return const MainScreen(index: 0);
+      return const MainScreen(
+        index: 0,
+      );
     } else if (role == 'teacher' && !isNewUser) {
       return const TeacherMainScreen();
     } else {
@@ -159,7 +162,7 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             ),
           ),
-          const Positioned(
+          Positioned(
               left: 120,
               right: 0,
               bottom: 110,
@@ -167,7 +170,8 @@ class _SplashScreenState extends State<SplashScreen>
                 'trusir.com',
                 style: TextStyle(
                     fontSize: 25,
-                    color: Colors.white,
+                    color: Colors.grey[100],
+                    fontFamily: 'Poppins',
                     fontWeight: FontWeight.w700),
               ))
         ],
