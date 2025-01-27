@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:trusir/teacher/gk_page.dart';
-import 'package:trusir/teacher/parents_doubts.dart';
 import 'package:trusir/teacher/student_attendance_page.dart';
 import 'package:trusir/teacher/student_doubts.dart';
 import 'package:trusir/teacher/student_notice.dart';
 import 'package:trusir/common/test_series.dart';
 import 'package:trusir/teacher/student_profile_page.dart';
 import 'package:trusir/teacher/students_progress.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class StudentProfileScreen extends StatelessWidget {
   final String name;
@@ -30,6 +30,14 @@ class StudentProfileScreen extends StatelessWidget {
       required this.address,
       required this.school,
       required this.studentClass});
+
+  Future<void> openDialer(String phoneNumber) async {
+    final Uri launchUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    await launchUrl(launchUri);
+  }
 
   Widget _buildContent(BuildContext context, BoxConstraints constraints) {
     return Scaffold(
@@ -177,39 +185,58 @@ class StudentProfileScreen extends StatelessWidget {
                                   ]),
                             ),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => StudentProfilePage(
-                                    name: name,
-                                    phone: phone,
-                                    profile: image,
-                                    subject: subject,
-                                    dob: dob,
-                                    address: address,
-                                    school: school,
-                                    studentClass: studentClass,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: Column(
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      openDialer(phone);
+                                    },
+                                    icon: const Icon(
+                                      Icons.phone,
+                                      color: Colors.white,
+                                      size: 25,
+                                    )),
+                                const Spacer(),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            StudentProfilePage(
+                                          name: name,
+                                          phone: phone,
+                                          profile: image,
+                                          subject: subject,
+                                          dob: dob,
+                                          address: address,
+                                          school: school,
+                                          studentClass: studentClass,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 5, bottom: 9, right: 5),
+                                    child: Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: Text(
+                                        'View Profile',
+                                        style: TextStyle(
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: 'Poppins',
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              );
-                            },
-                            child: const Padding(
-                              padding:
-                                  EdgeInsets.only(left: 5, bottom: 9, right: 5),
-                              child: Align(
-                                alignment: Alignment.bottomRight,
-                                child: Text(
-                                  'View Profile',
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'Poppins',
-                                  ),
-                                ),
-                              ),
+                              ],
                             ),
                           ),
                         ],
@@ -232,13 +259,13 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.blue.shade200,
                             borderRadius: BorderRadius.circular(10),
-                             boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  offset: const Offset(3, 3),
-                  blurRadius: 6,
-                ),
-              ],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                offset: const Offset(3, 3),
+                                blurRadius: 6,
+                              ),
+                            ],
                           ),
                           child: Center(
                             child: SizedBox(
@@ -322,13 +349,13 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.pink.shade100,
                             borderRadius: BorderRadius.circular(10),
-                             boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  offset: const Offset(3, 3),
-                  blurRadius: 6,
-                ),
-              ],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                offset: const Offset(3, 3),
+                                blurRadius: 6,
+                              ),
+                            ],
                           ),
                           child: Center(
                             child: SizedBox(
@@ -411,13 +438,13 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.blue.shade200,
                             borderRadius: BorderRadius.circular(10),
-                             boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  offset: const Offset(3, 3),
-                  blurRadius: 6,
-                ),
-              ],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                offset: const Offset(3, 3),
+                                blurRadius: 6,
+                              ),
+                            ],
                           ),
                           child: Center(
                             child: SizedBox(
@@ -500,13 +527,13 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.purple.shade100,
                             borderRadius: BorderRadius.circular(10),
-                             boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  offset: const Offset(3, 3),
-                  blurRadius: 6,
-                ),
-              ],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                offset: const Offset(3, 3),
+                                blurRadius: 6,
+                              ),
+                            ],
                           ),
                           child: Center(
                             child: SizedBox(
@@ -588,105 +615,15 @@ class StudentProfileScreen extends StatelessWidget {
                           width: 50,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: Colors.pink.shade100,
-                            borderRadius: BorderRadius.circular(10),
-                             boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  offset: const Offset(3, 3),
-                  blurRadius: 6,
-                ),
-              ],
-                          ),
-                          child: Center(
-                            child: SizedBox(
-                              width: 33,
-                              height: 33,
-                              child: Image.asset(
-                                'assets/men@4x.png',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 13),
-                        Flexible(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ParentsDoubtsPage(
-                                    userID: userID,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              height: 50,
-                              width: 306,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.5),
-                                    offset: const Offset(2, 2),
-                                    blurRadius: 4,
-                                  ),
-                                ],
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.only(
-                                    left: 20, top: 10, bottom: 10, right: 5),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Parents Doubts',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Poppins',
-                                          fontSize: 16,
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        color: Color(0xFF48116A),
-                                        size: 20,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 13),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
                             color: Colors.indigo.shade200,
                             borderRadius: BorderRadius.circular(10),
-                             boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  offset: const Offset(3, 3),
-                  blurRadius: 6,
-                ),
-              ],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                offset: const Offset(3, 3),
+                                blurRadius: 6,
+                              ),
+                            ],
                           ),
                           child: Center(
                             child: SizedBox(
@@ -769,13 +706,13 @@ class StudentProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: Colors.indigo.shade200,
                             borderRadius: BorderRadius.circular(10),
-                             boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  offset: const Offset(3, 3),
-                  blurRadius: 6,
-                ),
-              ],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                offset: const Offset(3, 3),
+                                blurRadius: 6,
+                              ),
+                            ],
                           ),
                           child: Center(
                             child: SizedBox(

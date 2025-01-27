@@ -394,7 +394,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                                                               const SizedBox(
                                                                   height: 5),
                                                               Text(
-                                                                images[index],
+                                                                '${_testNameController.text}_question_$index',
                                                                 style:
                                                                     const TextStyle(
                                                                   fontSize: 8,
@@ -711,7 +711,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                                                               const SizedBox(
                                                                   height: 5),
                                                               Text(
-                                                                images[index],
+                                                                '${_testNameController.text}_answer_$index',
                                                                 style:
                                                                     const TextStyle(
                                                                   fontSize: 8,
