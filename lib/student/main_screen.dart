@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:trusir/student/bottom_navigation_bar.dart';
 import 'package:trusir/student/course.dart';
 import 'package:trusir/student/setting.dart';
@@ -39,6 +40,13 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.grey[50], // Transparent for the homepage
+        statusBarIconBrightness:
+            Brightness.dark, // White icons for a dark background
+      ),
+    );
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey[50],

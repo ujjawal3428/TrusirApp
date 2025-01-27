@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:trusir/common/api.dart';
-import 'package:trusir/student/student_doubt.dart';
 
 class DrawPadPainter extends CustomPainter {
   final List<DrawPoint> points;
@@ -133,13 +133,9 @@ class DrawPadState extends State<DrawPad> {
       final fileSize = await imageFile.length(); // File size in bytes
       if (fileSize > 2 * 1024 * 1024) {
         // 2 MB limit
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content:
-                Text('File size exceeds 2MB. Please select a smaller image.'),
-            duration: Duration(seconds: 2),
-          ),
-        );
+
+        Fluttertoast.showToast(
+            msg: 'File size exceeds 2MB. Please select a smaller image.');
         return 'null'; // Return early
       }
       final uri = Uri.parse('$baseUrl/api/upload-profile');
@@ -157,15 +153,11 @@ class DrawPadState extends State<DrawPad> {
 
         return jsonResponse['download_url'] ?? 'null';
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Upload failed: ${response.statusCode}')),
-        );
+        Fluttertoast.showToast(msg: 'Upload Failed ${response.statusCode}');
         return 'null';
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error uploading image: $e')),
-      );
+      Fluttertoast.showToast(msg: 'Error uploading image: $e');
       return 'null';
     }
   }
@@ -180,9 +172,7 @@ class DrawPadState extends State<DrawPad> {
       final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
 
       if (byteData == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to convert image')),
-        );
+        Fluttertoast.showToast(msg: 'Failed to convert image');
         return;
       }
 
@@ -194,36 +184,20 @@ class DrawPadState extends State<DrawPad> {
       final fileSize = imageBytes.length; // Byte size of the image
       if (fileSize > 2 * 1024 * 1024) {
         // 2 MB limit
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('File size exceeds 2MB'),
-            duration: Duration(seconds: 2),
-          ),
-        );
+        Fluttertoast.showToast(msg: 'File size exceeds 2MB');
         return; // Exit if file is too large
       }
 
       final downloadUrl = await _uploadImage(file);
 
       if (downloadUrl != 'null') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Uploaded successfully!')),
-        );
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const StudentDoubtScreen(),
-          ),
-        );
+        Fluttertoast.showToast(msg: 'Uploaded Successfully');
+        Navigator.pop(context, downloadUrl); // Return the link
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to upload drawing')),
-        );
+        Fluttertoast.showToast(msg: 'Failed to upload drawing');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      Fluttertoast.showToast(msg: 'Error: $e');
     }
   }
 

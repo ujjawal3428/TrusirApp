@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/drawpad.dart';
 import 'package:trusir/common/file_downloader.dart';
 
 class StudentDoubtsPage extends StatefulWidget {
@@ -608,6 +609,35 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                                                                                                                 ),
                                                                                                               ),
                                                                                                             ),
+                                                                                                            const SizedBox(height: 16),
+                                                                                                            Container(
+                                                                                                              width: 200,
+                                                                                                              height: 50,
+                                                                                                              decoration: BoxDecoration(
+                                                                                                                color: Colors.lightGreen.shade100,
+                                                                                                                borderRadius: BorderRadius.circular(22),
+                                                                                                              ),
+                                                                                                              child: TextButton(
+                                                                                                                onPressed: () async {
+                                                                                                                  setDialogState(() {
+                                                                                                                    isimageUploading = true; // Show progress indicator
+                                                                                                                  });
+                                                                                                                  imageUrl = await Navigator.push(
+                                                                                                                    context,
+                                                                                                                    MaterialPageRoute(
+                                                                                                                      builder: (context) => const DrawPad(),
+                                                                                                                    ),
+                                                                                                                  );
+                                                                                                                  setDialogState(() {
+                                                                                                                    isimageUploading = false; // Hide progress indicator
+                                                                                                                  });
+                                                                                                                },
+                                                                                                                child: const Text(
+                                                                                                                  "Draw",
+                                                                                                                  style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
+                                                                                                                ),
+                                                                                                              ),
+                                                                                                            ),
                                                                                                           ],
                                                                                                         )
                                                                                                       : Image.network(
@@ -779,6 +809,34 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                                                                                     },
                                                                                     child: const Text(
                                                                                       "Upload Image",
+                                                                                      style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                Container(
+                                                                                  width: 200,
+                                                                                  height: 50,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Colors.lightGreen.shade100,
+                                                                                    borderRadius: BorderRadius.circular(22),
+                                                                                  ),
+                                                                                  child: TextButton(
+                                                                                    onPressed: () async {
+                                                                                      setDialogState(() {
+                                                                                        isimageUploading = true; // Show progress indicator
+                                                                                      });
+                                                                                      imageUrl = await Navigator.push(
+                                                                                        context,
+                                                                                        MaterialPageRoute(
+                                                                                          builder: (context) => const DrawPad(),
+                                                                                        ),
+                                                                                      );
+                                                                                      setDialogState(() {
+                                                                                        isimageUploading = false; // Hide progress indicator
+                                                                                      });
+                                                                                    },
+                                                                                    child: const Text(
+                                                                                      "Draw",
                                                                                       style: TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Poppins'),
                                                                                     ),
                                                                                   ),
