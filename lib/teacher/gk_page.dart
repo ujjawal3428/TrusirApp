@@ -52,6 +52,7 @@ class GKDetailPage extends StatelessWidget {
               Text(
                 'Title: ${gk.title}',
                 style: const TextStyle(
+                  fontFamily: "Poppins",
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -60,15 +61,20 @@ class GKDetailPage extends StatelessWidget {
               Text(
                 'Course: ${gk.course}',
                 style: const TextStyle(
+                   fontFamily: "Poppins",
                   fontSize: 16,
                 ),
               ),
               const SizedBox(height: 10),
-              Text(
-                'Posted on: ${gk.createdAt}',
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 40.0),
+                child: Text(
+                  'Posted on: ${gk.createdAt}',
+                  style: const TextStyle(
+                     fontFamily: "Poppins",
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
             ],
@@ -219,10 +225,11 @@ class _StudentGKPageState extends State<StudentGKPage> {
                                             );
                                           },
                                           child: Card(
+                                          
                                             elevation: 4,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(16),
+                                                  BorderRadius.circular(12),
                                             ),
                                             child: Row(
                                               children: [
@@ -261,6 +268,8 @@ class _StudentGKPageState extends State<StudentGKPage> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
+                                                         const SizedBox(
+                                                            height: 10),
                                                         Text(
                                                           gk.title,
                                                           style:
@@ -271,11 +280,12 @@ class _StudentGKPageState extends State<StudentGKPage> {
                                                             fontFamily:
                                                                 "Poppins",
                                                           ),
+                                                          maxLines: 2,
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                         ),
                                                         const SizedBox(
-                                                            height: 5),
+                                                            height: 2),
                                                         Text(
                                                           'Description: ${gk.course}',
                                                           style:
@@ -284,6 +294,7 @@ class _StudentGKPageState extends State<StudentGKPage> {
                                                             fontFamily:
                                                                 "Poppins",
                                                           ),
+                                                          maxLines:2,
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                         ),
@@ -299,6 +310,8 @@ class _StudentGKPageState extends State<StudentGKPage> {
                                                                 .grey.shade600,
                                                           ),
                                                         ),
+                                                         const SizedBox(
+                                                            height: 10),
                                                       ],
                                                     ),
                                                   ),
