@@ -184,15 +184,15 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+          padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxWidth: screenWidth * 0.8,
-                    maxHeight: screenHeight * 0.3,
+                    maxWidth: screenWidth * 0.9,
+                    maxHeight: screenHeight * 0.4,
                   ),
                   child: Image.asset(
                     'assets/Teacher_Enquiry2.png',
@@ -200,12 +200,12 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
 
               _buildTextFieldWithBackground(
                   hintText: 'Teacher Name',
                   controllers: widget._namecontroller),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
 
               // Gender Selection
               Row(
@@ -240,20 +240,20 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
                   ),
                 ],
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
 
               _buildTextFieldWithBackground(
                   hintText: 'Qualification',
                   controllers: widget._qualificationcontroller),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
 
               _buildTextFieldWithBackground(
                   hintText: 'City / Town', controllers: widget._citycontroller),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
 
               _buildPinFieldWithBackground(
                   hintText: 'Pincode', controllers: widget._pincodecontroller),
-              SizedBox(height: screenHeight * 0.04),
+              SizedBox(height: screenHeight * 0.03),
 
               // Enquire Button
               Center(
@@ -261,7 +261,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
                   onTap: _onEnquire,
                   child: SizedBox(
                       width: kIsWeb ? 300.0 : 300.0,
-                    height: kIsWeb ? 80.0 : 60.0,
+                    height: kIsWeb ? 80.0 : 70.0,
                     child: Image.asset(
                       'assets/enquire.png',
                       fit: BoxFit.contain,
@@ -316,7 +316,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 25),
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
           isDense: true,
         ),
       ),
@@ -376,7 +376,7 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
           isDense: true,
         ),
       ),
