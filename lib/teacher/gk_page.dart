@@ -50,7 +50,7 @@ class GKDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'Title: ${gk.title}',
+                gk.title,
                 style: const TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 20,
@@ -59,7 +59,7 @@ class GKDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Course: ${gk.course}',
+                gk.course,
                 style: const TextStyle(
                    fontFamily: "Poppins",
                   fontSize: 16,
@@ -179,150 +179,134 @@ class _StudentGKPageState extends State<StudentGKPage> {
         ),
         backgroundColor: Colors.grey[50],
         body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: [
-              Column(
-                mainAxisAlignment: gkList.isEmpty
-                    ? MainAxisAlignment.center
-                    : MainAxisAlignment.start,
-                children: [
-                  gkList.isEmpty && !isLoading && initialLoadComplete
-                      ? const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Text(
-                              "No GK's available",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        )
-                      : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SingleChildScrollView(
-                              child: SizedBox(
-                                height: (gkList.length * 130.0).clamp(0,
-                                    MediaQuery.of(context).size.height * 0.65),
-                                child: ListView.builder(
-                                  padding: const EdgeInsets.all(10.0),
-                                  itemCount: gkList.length,
-                                  itemBuilder: (context, index) {
-                                    final gk = gkList[index];
+  height: MediaQuery.of(context).size.height,
+  child: Stack(
+    children: [
+      Column(
+        mainAxisAlignment: gkList.isEmpty
+            ? MainAxisAlignment.center
+            : MainAxisAlignment.start,
+        children: [
+          gkList.isEmpty && !isLoading && initialLoadComplete
+              ? const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text(
+                      "No GK's available",
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SingleChildScrollView(
+                      child: SizedBox(
+                        height: (gkList.length * 130.0).clamp(0,
+                            MediaQuery.of(context).size.height * 0.65),
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(10.0),
+                          itemCount: gkList.length,
+                          itemBuilder: (context, index) {
+                            final gk = gkList[index];
 
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    GKDetailPage(gk: gk),
-                                              ),
-                                            );
-                                          },
-                                          child: Card(
-                                          
-                                            elevation: 4,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          GKDetailPage(gk: gk),
+                                    ),
+                                  );
+                                },
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  height: 130, // Set a fixed height for the card
+                                  child: Card(
+                                    elevation: 4,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(10),
+                                            child: Image.network(
+                                              gk.image,
+                                              width: 75,
+                                              height: 75,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error,
+                                                  stackTrace) {
+                                                return const Icon(
+                                                  Icons.broken_image,
+                                                  color: Colors.grey,
+                                                  size: 50,
+                                                );
+                                              },
                                             ),
-                                            child: Row(
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      10.0),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    child: Image.network(
-                                                      gk.image,
-                                                      width: 75,
-                                                      height: 75,
-                                                      fit: BoxFit.cover,
-                                                      errorBuilder: (context,
-                                                          error, stackTrace) {
-                                                        return const Icon(
-                                                            Icons.broken_image,
-                                                            color: Colors.grey,
-                                                            size: 50);
-                                                      },
-                                                    ),
+                                                const SizedBox(height: 10),
+                                                Text(
+                                                  gk.title,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 14,
+                                                    fontFamily: "Poppins",
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  'Description: ${gk.course}',
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontFamily: "Poppins",
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Text(
+                                                  'Posted on: ${gk.createdAt}',
+                                                  style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 12,
+                                                    color: Colors.grey.shade600,
                                                   ),
                                                 ),
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 10.0),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                         const SizedBox(
-                                                            height: 10),
-                                                        Text(
-                                                          gk.title,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 16,
-                                                            fontFamily:
-                                                                "Poppins",
-                                                          ),
-                                                          maxLines: 2,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 2),
-                                                        Text(
-                                                          'Description: ${gk.course}',
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                "Poppins",
-                                                          ),
-                                                          maxLines:2,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 5),
-                                                        Text(
-                                                          'Posted on: ${gk.createdAt}',
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                "Poppins",
-                                                            fontSize: 12,
-                                                            color: Colors
-                                                                .grey.shade600,
-                                                          ),
-                                                        ),
-                                                         const SizedBox(
-                                                            height: 10),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
+                                                const SizedBox(height: 10),
                                               ],
                                             ),
-                                          )),
-                                    );
-                                  },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
+                            );
+                          },
+                        ),
+                      ),
                             ),
                             if (isLoading)
                               const CircularProgressIndicator()
