@@ -9,7 +9,7 @@ class WalletPage extends StatelessWidget {
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.grey[50],
         title: const Text(
           "My Wallet",
           style: TextStyle(
