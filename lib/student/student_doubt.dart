@@ -548,7 +548,7 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
                                                                               ),
                                                                               const SizedBox(height: 5),
                                                                               Text(
-                                                                                images[index],
+                                                                                '${_titleController.text}_$index',
                                                                                 style: const TextStyle(
                                                                                   fontSize: 8,
                                                                                   color: Colors.blue,

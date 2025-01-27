@@ -423,8 +423,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                                                             height:
                                                                                 5),
                                                                         Text(
-                                                                          images[
-                                                                              index],
+                                                                          '${titleController.text}_index',
                                                                           style:
                                                                               const TextStyle(
                                                                             fontSize:
