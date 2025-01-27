@@ -498,37 +498,36 @@ class _AddtestseriesState extends State<Addtestseries> {
                                       showDialog(
                                         context: context,
                                         barrierColor:
-                                            Colors.black.withAlpha(77),
+                                            Colors.black.withValues(alpha: 0.3),
                                         builder: (BuildContext context) {
                                           return Dialog(
                                             backgroundColor: Colors.transparent,
                                             insetPadding:
-                                                const EdgeInsets.all(8),
+                                                const EdgeInsets.all(16),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      10), // Scaled radius
+                                                  BorderRadius.circular(20),
                                             ),
                                             child: Container(
                                               padding:
-                                                  const EdgeInsets.all(8.0),
+                                                  const EdgeInsets.all(16.0),
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius:
-                                                    BorderRadius.circular(10),
+                                                    BorderRadius.circular(20),
                                               ),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Container(
                                                     width: 200,
-                                                    height: 40,
+                                                    height: 50,
                                                     decoration: BoxDecoration(
                                                       color: Colors
                                                           .lightBlue.shade100,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              11),
+                                                              22),
                                                     ),
                                                     child: TextButton(
                                                       onPressed: () {
@@ -543,8 +542,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                                                       child: const Text(
                                                         "Camera",
                                                         style: TextStyle(
-                                                            fontSize:
-                                                                12, // Adjusted font size
+                                                            fontSize: 18,
                                                             color: Colors.black,
                                                             fontFamily:
                                                                 'Poppins'),
@@ -554,13 +552,13 @@ class _AddtestseriesState extends State<Addtestseries> {
                                                   const SizedBox(height: 8),
                                                   Container(
                                                     width: 200,
-                                                    height: 40,
+                                                    height: 50,
                                                     decoration: BoxDecoration(
                                                       color: Colors
                                                           .orange.shade100,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              11),
+                                                              22),
                                                     ),
                                                     child: TextButton(
                                                       onPressed: () {
@@ -575,8 +573,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                                                       child: const Text(
                                                         "Upload File",
                                                         style: TextStyle(
-                                                            fontSize:
-                                                                12, // Adjusted font size
+                                                            fontSize: 18,
                                                             color: Colors.black,
                                                             fontFamily:
                                                                 'Poppins'),
@@ -818,36 +815,36 @@ class _AddtestseriesState extends State<Addtestseries> {
                                       showDialog(
                                         context: context,
                                         barrierColor:
-                                            Colors.black.withAlpha(77),
+                                            Colors.black.withValues(alpha: 0.3),
                                         builder: (BuildContext context) {
                                           return Dialog(
                                             backgroundColor: Colors.transparent,
                                             insetPadding:
-                                                const EdgeInsets.all(8),
+                                                const EdgeInsets.all(16),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(10),
+                                                  BorderRadius.circular(20),
                                             ),
                                             child: Container(
                                               padding:
-                                                  const EdgeInsets.all(8.0),
+                                                  const EdgeInsets.all(16.0),
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius:
-                                                    BorderRadius.circular(10),
+                                                    BorderRadius.circular(20),
                                               ),
                                               child: Column(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Container(
                                                     width: 200,
-                                                    height: 40,
+                                                    height: 50,
                                                     decoration: BoxDecoration(
                                                       color: Colors
                                                           .lightBlue.shade100,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              11),
+                                                              22),
                                                     ),
                                                     child: TextButton(
                                                       onPressed: () {
@@ -862,7 +859,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                                                       child: const Text(
                                                         "Camera",
                                                         style: TextStyle(
-                                                            fontSize: 12,
+                                                            fontSize: 18,
                                                             color: Colors.black,
                                                             fontFamily:
                                                                 'Poppins'),
@@ -872,13 +869,13 @@ class _AddtestseriesState extends State<Addtestseries> {
                                                   const SizedBox(height: 8),
                                                   Container(
                                                     width: 200,
-                                                    height: 40,
+                                                    height: 50,
                                                     decoration: BoxDecoration(
                                                       color: Colors
                                                           .orange.shade100,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              11),
+                                                              22),
                                                     ),
                                                     child: TextButton(
                                                       onPressed: () {
@@ -893,7 +890,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                                                       child: const Text(
                                                         "Upload File",
                                                         style: TextStyle(
-                                                            fontSize: 12,
+                                                            fontSize: 18,
                                                             color: Colors.black,
                                                             fontFamily:
                                                                 'Poppins'),
