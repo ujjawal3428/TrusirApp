@@ -271,6 +271,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                   0.65, // Responsive width
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(22),
+                                color: Colors.white,
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withValues(alpha: 0.2),
@@ -280,35 +281,39 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                 ],
                               ),
                               child: TextField(
+                                textCapitalization: TextCapitalization.words,
                                 controller: descriptionController,
-                                textAlignVertical: TextAlignVertical.top,
+                                maxLines:
+                                    null, // Allows the text to wrap and grow vertically
+                                textAlignVertical: TextAlignVertical
+                                    .top, // Ensures text starts from the top
+                                expands:
+                                    true, // Makes the TextField expand to fit its parent container
                                 decoration: InputDecoration(
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 120, horizontal: 20),
-                                  hintText: 'Description',
-                                  fillColor: Colors.white,
-                                  filled: true,
+                                  labelText: 'Description',
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.auto,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(22),
-                                    borderSide: const BorderSide(
-                                      width: 1,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(22),
-                                    borderSide: const BorderSide(
-                                      width: 1,
-                                      color: Colors.grey,
-                                    ),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(22),
-                                    borderSide: const BorderSide(
-                                      width: 1,
-                                      color: Colors.blue,
-                                    ),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
                                   ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(22),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical:
+                                        12, // Adjust vertical padding for better alignment
+                                  ),
+                                  isDense: true,
                                 ),
                               ),
                             ),
@@ -824,7 +829,7 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    openDialer('9797472922');
+                                    openDialer('9801458766');
                                   },
                                   child: Padding(
                                     padding: EdgeInsets.all(

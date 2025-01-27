@@ -160,6 +160,7 @@ class _AddNoticePageState extends State<AddNoticePage> {
               width: double.infinity, // Responsive width
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(22),
+                color: Colors.white,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.2),
@@ -168,43 +169,35 @@ class _AddNoticePageState extends State<AddNoticePage> {
                   ),
                 ],
               ),
-              child: TextFormField(
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Required';
-                  }
-                  return null;
-                },
+              child: TextField(
+                textCapitalization: TextCapitalization.words,
                 controller: _descriptionController,
-                textAlignVertical: TextAlignVertical.top,
+                maxLines: null, // Allows the text to wrap and grow vertically
+                textAlignVertical:
+                    TextAlignVertical.top, // Ensures text starts from the top
+                expands:
+                    true, // Makes the TextField expand to fit its parent container
                 decoration: InputDecoration(
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 120, horizontal: 20),
                   labelText: 'Description',
-                  floatingLabelStyle: const TextStyle(color: Colors.blue),
-                  fillColor: Colors.white,
-                  filled: true,
+                  floatingLabelBehavior: FloatingLabelBehavior.auto,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(22),
-                    borderSide: const BorderSide(
-                      width: 1,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(22),
-                    borderSide: const BorderSide(
-                      width: 1,
-                      color: Colors.grey,
-                    ),
+                    borderSide: const BorderSide(color: Colors.grey),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(22),
-                    borderSide: const BorderSide(
-                      width: 1,
-                      color: Colors.blue,
-                    ),
+                    borderSide: const BorderSide(color: Colors.grey),
                   ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(22),
+                    borderSide: const BorderSide(color: Colors.grey),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical:
+                        12, // Adjust vertical padding for better alignment
+                  ),
+                  isDense: true,
                 ),
               ),
             ),
