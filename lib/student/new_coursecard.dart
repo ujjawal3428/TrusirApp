@@ -11,6 +11,7 @@ import 'package:trusir/student/course.dart';
 import 'package:trusir/student/payment__status_popup.dart';
 import 'package:trusir/student/payment_method.dart';
 import 'package:trusir/student/teacher_profile_page.dart';
+import 'package:trusir/student/wallet.dart';
 
 class NewCourseCard extends StatefulWidget {
   final CourseDetail course;
@@ -213,23 +214,34 @@ class _NewCourseCardState extends State<NewCourseCard> {
                             height: isWeb ? 40 : null,
                             child: ElevatedButton(
                               onPressed: () {
-                                PaymentMethod.showPaymentDialog(
-                                  context: context,
-                                  onPhonePayment: () {
-                                    Navigator.pop(context);
-                                    merchantTransactionID =
-                                        generateUniqueTransactionId(userID!);
-                                    body = getChecksum(
-                                      int.parse('${widget.course.price}00'),
-                                    ).toString();
-                                    paymentService.startTransaction(
-                                        body,
-                                        checksum,
-                                        checkStatus,
-                                        showLoadingDialog,
-                                        paymentstatusnavigation);
-                                  },
-                                );
+                                showDialog(
+                                    context: context,
+                                    barrierColor: Colors.black.withOpacity(0.3),
+                                    builder: (BuildContext context) {
+                                      return PaymentMethod.buildDialog(
+                                          onPhonePayment: () {
+                                        Navigator.pop(context);
+                                        merchantTransactionID =
+                                            generateUniqueTransactionId(
+                                                userID!);
+                                        body = getChecksum(
+                                          int.parse('${widget.course.price}00'),
+                                        ).toString();
+                                        paymentService.startTransaction(
+                                            body,
+                                            checksum,
+                                            checkStatus,
+                                            showLoadingDialog,
+                                            paymentstatusnavigation);
+                                      }, onWalletPayment: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const WalletPage()));
+                                      });
+                                    });
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.deepPurple,
@@ -291,23 +303,34 @@ class _NewCourseCardState extends State<NewCourseCard> {
                             height: isWeb ? 40 : null,
                             child: ElevatedButton(
                               onPressed: () {
-                                PaymentMethod.showPaymentDialog(
-                                  context: context,
-                                  onPhonePayment: () {
-                                    Navigator.pop(context);
-                                    merchantTransactionID =
-                                        generateUniqueTransactionId(userID!);
-                                    body = getChecksum(
-                                      int.parse('${widget.course.price}00'),
-                                    ).toString();
-                                    paymentService.startTransaction(
-                                        body,
-                                        checksum,
-                                        checkStatus,
-                                        showLoadingDialog,
-                                        paymentstatusnavigation);
-                                  },
-                                );
+                                showDialog(
+                                    context: context,
+                                    barrierColor: Colors.black.withOpacity(0.3),
+                                    builder: (BuildContext context) {
+                                      return PaymentMethod.buildDialog(
+                                          onPhonePayment: () {
+                                        Navigator.pop(context);
+                                        merchantTransactionID =
+                                            generateUniqueTransactionId(
+                                                userID!);
+                                        body = getChecksum(
+                                          int.parse('${widget.course.price}00'),
+                                        ).toString();
+                                        paymentService.startTransaction(
+                                            body,
+                                            checksum,
+                                            checkStatus,
+                                            showLoadingDialog,
+                                            paymentstatusnavigation);
+                                      }, onWalletPayment: () {
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const WalletPage()));
+                                      });
+                                    });
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.deepPurple,

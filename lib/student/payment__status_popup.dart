@@ -182,9 +182,18 @@ class _PaymentPopUpPageState extends State<PaymentPopUpPage> {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: widget.isSuccess
+                          ? () {
+                              Navigator.pop(context);
+                            }
+                          : () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const MainScreen(
+                                            index: 1,
+                                          )));
+                            },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: widget.isSuccess
                             ? Colors.green.shade700
