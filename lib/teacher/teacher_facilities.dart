@@ -307,74 +307,82 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                          Padding(
-  padding: const EdgeInsets.all(5.0),
-  child: GridView.count(
-    shrinkWrap: true,
-    physics: const NeverScrollableScrollPhysics(),
-    crossAxisCount: 4,
-    crossAxisSpacing: 30,
-    mainAxisSpacing: 30,
-    childAspectRatio: tileWidth / tileHeight * 1.5,
-    children: [
-      buildTile(context, const Color(0xFFB3E5FC),
-          'assets/myprofile.png', 'My Profile', () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Teacherpfpage(),
-          ),
-        );
-      }),
-      buildTile(context, const Color(0x80FFF59D),
-          'assets/noticesp@3x.png', 'Notice', () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const TeacherNoticeScreen(),
-          ),
-        );
-      }),
-      buildTile(context, const Color(0xFFB3E5FC),
-          'assets/setting.png', 'Setting', () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Teacherssettings(),
-          ),
-        );
-      }),
-
-      buildTile(context, const Color(0x80FFF59D),
-          'assets/list@3x.png', 'Attendance', () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => const TeacherAttendance(),
-        //   ),
-        // );
-      }),
-      buildTile(context, const Color(0xFFB3E5FC),
-          'assets/knowledge.png', 'General Knowledge', () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => const TeacherKnowledge(),
-        //   ),
-        // );
-      }),
-      buildTile(context, const Color(0x80FFF59D),
-          'assets/pensp@3x.png', 'Student Notice', () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => const TeacherNotice(),
-        //   ),
-        // );
-      }),
-    ],
-  ),
-),
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: GridView.count(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                crossAxisCount: 4,
+                                crossAxisSpacing: 30,
+                                mainAxisSpacing: 30,
+                                childAspectRatio: tileWidth / tileHeight * 1.5,
+                                children: [
+                                  buildTile(context, const Color(0xFFB3E5FC),
+                                      'assets/myprofile.png', 'My Profile', () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Teacherpfpage(),
+                                      ),
+                                    );
+                                  }),
+                                  buildTile(context, const Color(0x80FFF59D),
+                                      'assets/noticesp@3x.png', 'Notice', () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const TeacherNoticeScreen(),
+                                      ),
+                                    );
+                                  }),
+                                  buildTile(context, const Color(0xFFB3E5FC),
+                                      'assets/setting.png', 'Setting', () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Teacherssettings(),
+                                      ),
+                                    );
+                                  }),
+                                  buildTile(context, const Color(0x80FFF59D),
+                                      'assets/list@3x.png', 'Attendance', () {
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => const TeacherAttendance(),
+                                    //   ),
+                                    // );
+                                  }),
+                                  buildTile(
+                                      context,
+                                      const Color(0xFFB3E5FC),
+                                      'assets/knowledge.png',
+                                      'General Knowledge', () {
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => const TeacherKnowledge(),
+                                    //   ),
+                                    // );
+                                  }),
+                                  buildTile(
+                                      context,
+                                      const Color(0x80FFF59D),
+                                      'assets/pensp@3x.png',
+                                      'Student Notice', () {
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => const TeacherNotice(),
+                                    //   ),
+                                    // );
+                                  }),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -710,6 +718,39 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                           const TeacherNoticeScreen(),
                                     ),
                                   );
+                                }),
+                                buildTile(context, const Color(0x80FFF59D),
+                                    'assets/list@3x.png', 'Attendance', () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => const TeacherAttendance(),
+                                  //   ),
+                                  // );
+                                }),
+                                buildTile(
+                                    context,
+                                    const Color(0xFFB3E5FC),
+                                    'assets/knowledge.png',
+                                    'General Knowledge', () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => const TeacherKnowledge(),
+                                  //   ),
+                                  // );
+                                }),
+                                buildTile(
+                                    context,
+                                    const Color(0x80FFF59D),
+                                    'assets/pensp@3x.png',
+                                    'Student Notice', () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => const TeacherNotice(),
+                                  //   ),
+                                  // );
                                 }),
                                 buildTile(context, const Color(0xFFB3E5FC),
                                     'assets/setting.png', 'Setting', () {
