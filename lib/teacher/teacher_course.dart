@@ -3,12 +3,56 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
-import 'package:trusir/student/course.dart';
 import 'package:trusir/teacher/teacher_facilities.dart';
 import 'package:trusir/teacher/teacher_main_screen.dart';
 
+class MyCourseModel {
+  final int id;
+  final String courseID;
+  final String courseName;
+  final String teacherName;
+  final String teacherID;
+  final String studentID;
+  final String image;
+  final String studentName;
+  final String timeSlot;
+  final String type;
+  final String price;
+
+  MyCourseModel({
+    required this.id,
+    required this.courseID,
+    required this.courseName,
+    required this.teacherName,
+    required this.teacherID,
+    required this.studentID,
+    required this.image,
+    required this.studentName,
+    required this.timeSlot,
+    required this.type,
+    required this.price,
+  });
+
+  // Factory method for creating an instance from JSON
+  factory MyCourseModel.fromJson(Map<String, dynamic> json) {
+    return MyCourseModel(
+      id: json['id'],
+      courseID: json['courseID'],
+      courseName: json['courseName'],
+      teacherName: json['teacherName'],
+      teacherID: json['teacherID'],
+      studentID: json['StudentID'],
+      image: json['image'],
+      studentName: json['StudentName'],
+      timeSlot: json['timeSlot'],
+      type: json['type'],
+      price: json['price'],
+    );
+  }
+}
+
 class TeacherCourseCard extends StatelessWidget {
-  final CourseDetail course;
+  final MyCourseModel course;
 
   const TeacherCourseCard({super.key, required this.course});
 
@@ -63,11 +107,13 @@ class TeacherCourseCard extends StatelessWidget {
                     bottom: 10,
                     left: 10,
                     child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
-                          colors: [Colors.deepPurple, Colors.pinkAccent,
+                          colors: [
+                            Colors.deepPurple,
+                            Colors.pinkAccent,
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -154,7 +200,7 @@ class TeacherCoursePage extends StatefulWidget {
 
 class _TeacherCoursePageState extends State<TeacherCoursePage> {
   final apiBase = '$baseUrl/my-student';
-  List<CourseDetail> courses = [];
+  List<MyCourseModel> courses = [];
   List<StudentProfile> studentprofile = [];
   Future<void> fetchStudentProfiles({int page = 1}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -175,13 +221,13 @@ class _TeacherCoursePageState extends State<TeacherCoursePage> {
     }
   }
 
-  Future<List<CourseDetail>> fetchCourses(String userID) async {
+  Future<List<MyCourseModel>> fetchCourses(String userID) async {
     final url = Uri.parse('$baseUrl/get-courses/$userID');
     final response = await http.get(url);
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
       final responseData =
-          data.map((json) => CourseDetail.fromJson(json)).toList();
+          data.map((json) => MyCourseModel.fromJson(json)).toList();
       courses = responseData;
       return courses;
     } else {
@@ -243,11 +289,12 @@ class _TeacherCoursePageState extends State<TeacherCoursePage> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8, top: 0, bottom: 6),
+            padding:
+                const EdgeInsets.only(left: 8.0, right: 8, top: 0, bottom: 6),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-              color: Colors.grey[50],
+                color: Colors.grey[50],
               ),
               padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
               child: SingleChildScrollView(
@@ -257,7 +304,6 @@ class _TeacherCoursePageState extends State<TeacherCoursePage> {
                     studentprofile.length,
                     (index) => Container(
                       margin: const EdgeInsets.symmetric(horizontal: 4),
-                      
                       child: TextButton(
                         style: TextButton.styleFrom(
                           backgroundColor: Colors.grey[200],
