@@ -120,7 +120,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
       userID = prefs.getString('userID')!;
       name = prefs.getString('name')!;
       profile = prefs.getString('profile')!;
-      address = prefs.getString('address')!;
+      address = prefs.getString('city')!;
       phone = prefs.getString('phone_number')!;
     });
   }

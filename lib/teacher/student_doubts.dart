@@ -148,57 +148,6 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
     }
   }
 
-  Future<void> uploadSolution() async {
-    // Replace with your API endpoint
-    String apiUrl = '$baseUrl/api/give-doubt-solution/$selectedDoubtId';
-
-    // The data to be sent in the POST request
-    final Map<String, String> data = {
-      'image': imageUrl,
-      'status': 'Solved',
-    };
-    if (imageUrl == '') {
-      Fluttertoast.showToast(msg: 'Upload an Image first');
-    }
-
-    try {
-      // Make the POST request
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Content-Type': 'application/json', // Set the content type to JSON
-        },
-        body: jsonEncode(data), // Encode the data as JSON
-      );
-
-      // Check the response status
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        Fluttertoast.showToast(
-            msg: 'Solution uploaded successfully: ${response.body}');
-        setState(() {
-          isSolutionUploading = false;
-        });
-        Navigator.pop(context);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    StudentDoubtsPage(userID: widget.userID)));
-      } else {
-        print('Failed to upload data. Status code: ${response.statusCode}');
-        setState(() {
-          isSolutionUploading = false;
-        });
-        Fluttertoast.showToast(msg: 'Response body: ${response.body}');
-      }
-    } catch (error) {
-      Fluttertoast.showToast(msg: 'An error occurred: $error');
-      setState(() {
-        isSolutionUploading = false;
-      });
-    }
-  }
-
   Future<void> fetchDoubts() async {
     if (!hasMoreData || isLoading) return; // Prevent unnecessary calls
 
@@ -244,6 +193,52 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
       setState(() {
         isLoading = false; // Stop loading indicator
         initialLoadComplete = true; // Mark the initial load as complete
+      });
+    }
+  }
+
+  Future<void> uploadSolution() async {
+    // Replace with your API endpoint
+    String apiUrl = '$baseUrl/api/give-doubt-solution/$selectedDoubtId';
+
+    // The data to be sent in the POST request
+    final Map<String, String> data = {
+      'image': imageUrl,
+      'status': 'Solved',
+    };
+    if (imageUrl == '') {
+      Fluttertoast.showToast(msg: 'Upload an Image first');
+    }
+
+    try {
+      // Make the POST request
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json', // Set the content type to JSON
+        },
+        body: jsonEncode(data), // Encode the data as JSON
+      );
+
+      // Check the response status
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Fluttertoast.showToast(
+            msg: 'Solution uploaded successfully: ${response.body}');
+        setState(() {
+          isSolutionUploading = false;
+        });
+        Navigator.pop(context);
+      } else {
+        print('Failed to upload data. Status code: ${response.statusCode}');
+        setState(() {
+          isSolutionUploading = false;
+        });
+        Fluttertoast.showToast(msg: 'Response body: ${response.body}');
+      }
+    } catch (error) {
+      Fluttertoast.showToast(msg: 'An error occurred: $error');
+      setState(() {
+        isSolutionUploading = false;
       });
     }
   }
@@ -298,178 +293,27 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                     height: (doubtsList.length * 130.0)
                         .clamp(0, MediaQuery.of(context).size.height * 0.65),
                     child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      padding: const EdgeInsets.all(10.0),
                       itemCount: doubtsList.length,
                       itemBuilder: (context, index) {
-                        final doubt = doubtsList[index];
-                        final filename =
-                            '${doubt.course}_student_doubt_${doubt.createdAt}';
+                        final gk = doubtsList[index];
 
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: ListTile(
-                              leading: Image.network(
-                                doubt.image.split(',').first,
-                                fit: BoxFit.cover,
-                              ),
-                              title: Text(
-                                doubt.title,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Course: ${doubt.course}'),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    'Status: ${doubt.status}',
-                                  ),
-                                  Text(
-                                      'Posted on: ${formatDate(doubt.createdAt)}'),
-                                ],
-                              ),
-                              trailing: Column(
-                                children: [
-                                  SizedBox(
-                                    height: 20,
-                                    width: 80,
-                                    child: ElevatedButton.icon(
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          barrierColor:
-                                              Colors.black.withOpacity(0.3),
-                                          builder: (BuildContext context) {
-                                            List<String> images =
-                                                doubt.image.split(',');
-                                            return Dialog(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              insetPadding:
-                                                  const EdgeInsets.all(16),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.all(16.0),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    const Text(
-                                                      "Images",
-                                                      style: TextStyle(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 10),
-                                                    GridView.builder(
-                                                      shrinkWrap: true,
-                                                      physics:
-                                                          const NeverScrollableScrollPhysics(),
-                                                      gridDelegate:
-                                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: 3,
-                                                        crossAxisSpacing: 10,
-                                                        mainAxisSpacing: 10,
-                                                      ),
-                                                      itemCount: images.length,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        final image =
-                                                            images[index];
-                                                        return GestureDetector(
-                                                          onTap: () {
-                                                            FileDownloader
-                                                                    .downloadedFiles
-                                                                    .containsKey(
-                                                                        '${filename}_$index')
-                                                                ? FileDownloader
-                                                                    .openFile(
-                                                                        '${filename}_$index')
-                                                                : FileDownloader
-                                                                    .downloadFile(
-                                                                        context,
-                                                                        image,
-                                                                        '${filename}_$index');
-                                                          },
-                                                          child: Column(
-                                                            children: [
-                                                              Expanded(
-                                                                child: Image
-                                                                    .network(
-                                                                  image,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                  height: 5),
-                                                              Text(
-                                                                '${doubt.title}_$index',
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 8,
-                                                                  color: Colors
-                                                                      .blue,
-                                                                ),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.open_in_new,
-                                        size: 17,
-                                      ),
-                                      label: const Text(
-                                        "Open",
-                                        style: TextStyle(fontSize: 10),
-                                      ),
-                                      style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.all(0),
-                                        foregroundColor: Colors.blue,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  SizedBox(
-                                    height: 20,
-                                    width: 80,
-                                    child: ElevatedButton.icon(
-                                      onPressed:
-                                          doubt.status == 'Solved' &&
-                                                  doubt.solution != 'N/A'
+                          child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        StudentDoubtsDetailPage(
+                                      gk: gk,
+                                      onUpload:
+                                          gk.status == 'Solved' &&
+                                                  gk.solution != 'N/A'
                                               ? () {
                                                   setState(() {
-                                                    selectedDoubtId = doubt.id;
+                                                    selectedDoubtId = gk.id;
                                                   });
                                                   showDialog(
                                                     context: context,
@@ -512,8 +356,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                                                                         .min,
                                                                 children: [
                                                                   Image.network(
-                                                                    doubt
-                                                                        .solution,
+                                                                    gk.solution,
                                                                     height: 200,
                                                                     width: 200,
                                                                   ),
@@ -722,7 +565,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                                                 }
                                               : () {
                                                   setState(() {
-                                                    selectedDoubtId = doubt.id;
+                                                    selectedDoubtId = gk.id;
                                                   });
                                                   showDialog(
                                                     context: context,
@@ -914,22 +757,94 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                                                     },
                                                   );
                                                 },
-                                      icon: const Icon(Icons.upload, size: 17),
-                                      label: Text(
-                                          doubt.status == 'Solved'
-                                              ? "Uploaded"
-                                              : "Upload",
-                                          style: const TextStyle(fontSize: 10)),
-                                      style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.all(0),
-                                        foregroundColor: Colors.blue,
-                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
+                                );
+                              },
+                              child: Card(
+                                elevation: 4,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.network(
+                                          gk.image.split(',').first,
+                                          width: 75,
+                                          height: 75,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                            return const Icon(
+                                                Icons.broken_image,
+                                                color: Colors.grey,
+                                                size: 50);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10.0),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: 10),
+                                            Text(
+                                              gk.title,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                                fontFamily: "Poppins",
+                                              ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              'Description: ${gk.course}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontFamily: "Poppins",
+                                              ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              'Status: ${gk.status}',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontFamily: "Poppins",
+                                              ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              'Posted on: ${formatDate(gk.createdAt)}',
+                                              style: TextStyle(
+                                                fontFamily: "Poppins",
+                                                fontSize: 12,
+                                                color: Colors.grey.shade600,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )),
                         );
                       },
                     ),
@@ -987,6 +902,120 @@ class Doubt {
       createdAt: json['created_at'],
       solution: json['solution'] ?? 'N/A',
       status: json['status'] ?? 'N/A',
+    );
+  }
+}
+
+class StudentDoubtsDetailPage extends StatelessWidget {
+  final Doubt gk;
+  final VoidCallback onUpload;
+
+  const StudentDoubtsDetailPage(
+      {super.key, required this.gk, required this.onUpload});
+
+  @override
+  Widget build(BuildContext context) {
+    String formatDate(String dateString) {
+      DateTime dateTime = DateTime.parse(dateString);
+      String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+      return formattedDate;
+    }
+
+    List<String> imageUrls = gk.image.split(',').map((e) => e.trim()).toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        leading: IconButton(
+          icon: Image.asset('assets/back_button.png', height: 50),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          gk.title,
+          style: const TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 25,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Center(
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(8),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Adjust columns as needed
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                  ),
+                  itemCount: imageUrls.length,
+                  itemBuilder: (context, index) {
+                    return Image.network(
+                      imageUrls[index],
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.broken_image),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Title: ${gk.title}',
+                style: const TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Course: ${gk.course}',
+                style: const TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 40.0),
+                child: Text(
+                  'Posted on: ${formatDate(gk.createdAt)}',
+                  style: const TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              gk.status == 'Solved'
+                  ? const Text('Uploaded Solution')
+                  : const Text('Upload Solution'),
+              gk.status == 'Solved'
+                  ? Image.network(gk.solution)
+                  : ElevatedButton.icon(
+                      onPressed: onUpload,
+                      icon: const Icon(Icons.upload, size: 17),
+                      label:
+                          const Text("Upload", style: TextStyle(fontSize: 10)),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(0),
+                        foregroundColor: Colors.blue,
+                      ),
+                    ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

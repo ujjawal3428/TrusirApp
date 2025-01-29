@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
-import 'package:trusir/common/file_downloader.dart';
 import 'package:trusir/student/student_doubt.dart';
 
 class YourDoubtPage extends StatefulWidget {
@@ -29,7 +28,6 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
   void initState() {
     super.initState();
     fetchDoubts();
-    FileDownloader.loadDownloadedFiles();
   }
 
   String formatDate(String dateString) {
@@ -153,168 +151,100 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                             padding: const EdgeInsets.all(10.0),
                             itemCount: doubtsList.length,
                             itemBuilder: (context, index) {
-                              final doubt = doubtsList[index];
-                              final filename =
-                                  '${doubt.course}_your_doubt_${doubt.createdAt}';
+                              final gk = doubtsList[index];
+
                               return Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.yellow.shade100,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: ListTile(
-                                    leading: Image.network(
-                                      doubt.image.split(',').first,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    title: Text(
-                                      doubt.title,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              YourDoubtDetailPage(gk: gk),
+                                        ),
+                                      );
+                                    },
+                                    child: Card(
+                                      elevation: 4,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
-                                    ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text('Course: ${doubt.course}'),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          'Status: ${doubt.status}',
-                                        ),
-                                        Text(
-                                            'Posted on: ${formatDate(doubt.createdAt)}'),
-                                      ],
-                                    ),
-                                    trailing: SizedBox(
-                                      height: 20,
-                                      width: 80,
-                                      child: ElevatedButton.icon(
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            barrierColor:
-                                                Colors.black.withOpacity(0.3),
-                                            builder: (BuildContext context) {
-                                              List<String> images =
-                                                  doubt.image.split(',');
-                                              return Dialog(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                insetPadding:
-                                                    const EdgeInsets.all(16),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                                child: Container(
-                                                  padding: const EdgeInsets.all(
-                                                      16.0),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
+                                      child: Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Image.network(
+                                                gk.image.split(',').first,
+                                                width: 75,
+                                                height: 75,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return const Icon(
+                                                      Icons.broken_image,
+                                                      color: Colors.grey,
+                                                      size: 50);
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10.0),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const SizedBox(height: 10),
+                                                  Text(
+                                                    gk.title,
+                                                    style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16,
+                                                      fontFamily: "Poppins",
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      const Text(
-                                                        "Images",
-                                                        style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                          height: 10),
-                                                      GridView.builder(
-                                                        shrinkWrap: true,
-                                                        physics:
-                                                            const NeverScrollableScrollPhysics(),
-                                                        gridDelegate:
-                                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                                          crossAxisCount: 3,
-                                                          crossAxisSpacing: 10,
-                                                          mainAxisSpacing: 10,
-                                                        ),
-                                                        itemCount:
-                                                            images.length,
-                                                        itemBuilder:
-                                                            (context, index) {
-                                                          final image =
-                                                              images[index];
-                                                          return GestureDetector(
-                                                            onTap: () {
-                                                              FileDownloader
-                                                                      .downloadedFiles
-                                                                      .containsKey(
-                                                                          '${filename}_$index')
-                                                                  ? FileDownloader
-                                                                      .openFile(
-                                                                          '${filename}_$index')
-                                                                  : FileDownloader
-                                                                      .downloadFile(
-                                                                          context,
-                                                                          image,
-                                                                          '${filename}_$index');
-                                                            },
-                                                            child: Column(
-                                                              children: [
-                                                                Expanded(
-                                                                  child: Image
-                                                                      .network(
-                                                                    image,
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  ),
-                                                                ),
-                                                                const SizedBox(
-                                                                    height: 5),
-                                                                Text(
-                                                                  '${doubt.title}_$index',
-                                                                  style:
-                                                                      const TextStyle(
-                                                                    fontSize: 8,
-                                                                    color: Colors
-                                                                        .blue,
-                                                                  ),
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    ],
+                                                  const SizedBox(height: 2),
+                                                  Text(
+                                                    'Description: ${gk.course}',
+                                                    style: const TextStyle(
+                                                      fontSize: 14,
+                                                      fontFamily: "Poppins",
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
-                                        icon: const Icon(
-                                          Icons.open_in_new,
-                                          size: 17,
-                                        ),
-                                        label: const Text(
-                                          "Open",
-                                          style: TextStyle(fontSize: 10),
-                                        ),
-                                        style: ElevatedButton.styleFrom(
-                                          padding: const EdgeInsets.all(0),
-                                          foregroundColor: Colors.blue,
-                                        ),
+                                                  const SizedBox(height: 5),
+                                                  Text(
+                                                    'Posted on: ${gk.createdAt}',
+                                                    style: TextStyle(
+                                                      fontFamily: "Poppins",
+                                                      fontSize: 12,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                  ),
-                                ),
+                                    )),
                               );
                             },
                           ),
@@ -397,6 +327,102 @@ class Doubt {
       image: json['image'],
       createdAt: json['created_at'],
       status: json['status'] ?? 'N/A',
+    );
+  }
+}
+
+class YourDoubtDetailPage extends StatelessWidget {
+  final Doubt gk;
+
+  const YourDoubtDetailPage({super.key, required this.gk});
+
+  @override
+  Widget build(BuildContext context) {
+    String formatDate(String dateString) {
+      DateTime dateTime = DateTime.parse(dateString);
+      String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+      return formattedDate;
+    }
+
+    List<String> imageUrls = gk.image.split(',').map((e) => e.trim()).toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey[50],
+        elevation: 0,
+        leading: IconButton(
+          icon: Image.asset('assets/back_button.png', height: 50),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          gk.title,
+          style: const TextStyle(
+            color: Color(0xFF48116A),
+            fontSize: 25,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(8),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Adjust columns as needed
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                  ),
+                  itemCount: imageUrls.length,
+                  itemBuilder: (context, index) {
+                    return Image.network(
+                      imageUrls[index],
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.broken_image),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Title: ${gk.title}',
+                style: const TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Course: ${gk.course}',
+                style: const TextStyle(
+                  fontFamily: "Poppins",
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 40.0),
+                child: Text(
+                  'Posted on: ${formatDate(gk.createdAt)}',
+                  style: const TextStyle(
+                    fontFamily: "Poppins",
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
