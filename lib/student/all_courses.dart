@@ -219,7 +219,6 @@ class _CourseCardState extends State<CourseCard> {
                                 amount: widget.course.newAmount,
                                 name: widget.course.name,
                                 onPhonePayment: () {
-                                  Navigator.pop(context);
                                   merchantTransactionID =
                                       generateUniqueTransactionId(userID!);
                                   body = getChecksum(

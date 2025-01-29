@@ -39,13 +39,15 @@ class _PaymentPopUpPageState extends State<PaymentPopUpPage> {
         });
       } else {
         _timer.cancel();
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const MainScreen(
-                    index: 1,
-                  )),
-        );
+        widget.isSuccess
+            ? Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const MainScreen(
+                          index: 1,
+                        )),
+              )
+            : Navigator.pop(context);
       }
     });
   }
@@ -183,7 +185,15 @@ class _PaymentPopUpPageState extends State<PaymentPopUpPage> {
                   const SizedBox(height: 16),
                   ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        widget.isSuccess
+                            ? Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MainScreen(
+                                          index: 1,
+                                        )),
+                              )
+                            : Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: widget.isSuccess
