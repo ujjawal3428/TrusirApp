@@ -42,7 +42,7 @@ class StudentProfile {
         subject: json['subject'],
         userID: json['userID'],
         studentClass: json['class'],
-        dob: json['DOB'],
+        dob: json['father_name'],
         school: json['school'],
         address: json['address']);
   }
@@ -352,36 +352,39 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                   }),
                                   buildTile(context, const Color(0x80FFF59D),
                                       'assets/list@3x.png', 'Attendance', () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => const TeacherAttendance(),
-                                    //   ),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const Teacherattendance(userID: ''),
+                                      ),
+                                    );
                                   }),
                                   buildTile(
                                       context,
                                       const Color(0xFFB3E5FC),
                                       'assets/knowledge.png',
                                       'General Knowledge', () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => const AddGkTeacher(),
-                                    //   ),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const AddGkTeacher(),
+                                      ),
+                                    );
                                   }),
                                   buildTile(
                                       context,
                                       const Color(0x80FFF59D),
                                       'assets/pensp@3x.png',
                                       'Student Notice', () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => const TeacherNotice(),
-                                    //   ),
-                                    // );
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const AddNoticeTeacher(),
+                                      ),
+                                    );
                                   }),
                                 ],
                               ),
@@ -457,7 +460,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                                           studentProfile.userID,
                                                       address: studentProfile
                                                           .address,
-                                                      dob: studentProfile.dob,
+                                                      fatherName:
+                                                          studentProfile.dob,
                                                       school:
                                                           studentProfile.school,
                                                       studentClass:
@@ -727,7 +731,10 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const Teacherattendance(userID: '',),
+                                      builder: (context) =>
+                                          const Teacherattendance(
+                                        userID: '',
+                                      ),
                                     ),
                                   );
                                 }),
@@ -830,7 +837,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                                 image: studentProfile.image,
                                                 userID: studentProfile.userID,
                                                 address: studentProfile.address,
-                                                dob: studentProfile.dob,
+                                                fatherName: studentProfile.dob,
                                                 school: studentProfile.school,
                                                 studentClass:
                                                     studentProfile.studentClass,

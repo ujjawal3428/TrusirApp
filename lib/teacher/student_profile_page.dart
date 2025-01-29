@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class StudentProfilePage extends StatefulWidget {
   final String? name;
-  final String? dob;
+  final String? fatherName;
   final String? school;
   final String? studentClass;
   final String? subject;
@@ -12,7 +12,7 @@ class StudentProfilePage extends StatefulWidget {
   const StudentProfilePage(
       {super.key,
       required this.name,
-      required this.dob,
+      required this.fatherName,
       required this.school,
       required this.studentClass,
       required this.subject,
@@ -119,23 +119,12 @@ class StudentProfilePageState extends State<StudentProfilePage> {
             // Info rows
             const SizedBox(height: 18),
             buildInfoRow(
-              'assets/pastry@3x.png',
-              'Date of Birth',
-              widget.dob!,
+              'assets/men@4x.png',
+              'Father Name',
+              widget.fatherName!,
               isLargeScreen,
               rowColors[0],
             ),
-            const SizedBox(height: 13),
-            buildInfoRow(
-              'assets/house@3x.png',
-              'School',
-              widget.school!,
-              isLargeScreen,
-              rowColors[1],
-            ),
-            const SizedBox(height: 13),
-            buildInfoRow('assets/location@2x.png', 'Address', widget.address!,
-                isLargeScreen, rowColors[4]),
             const SizedBox(height: 13),
             buildInfoRow(
               'assets/graduation@3x.png',
@@ -152,6 +141,26 @@ class StudentProfilePageState extends State<StudentProfilePage> {
               isLargeScreen,
               rowColors[3],
             ),
+            const SizedBox(height: 13),
+            buildInfoRow(
+              'assets/house@3x.png',
+              'School',
+              widget.school!,
+              isLargeScreen,
+              rowColors[1],
+            ),
+            const SizedBox(height: 13),
+            buildInfoRow(
+              'assets/phone@2x.png',
+              'Phone',
+              '+91-${widget.phone}',
+              isLargeScreen,
+              rowColors[1],
+            ),
+            const SizedBox(height: 13),
+            buildInfoRow('assets/location@2x.png', 'Address', widget.address!,
+                isLargeScreen, rowColors[4]),
+            const SizedBox(height: 13),
           ]),
         ));
   }

@@ -330,7 +330,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                         const SizedBox(height: 13),
                         buildInfoRow(
                           'assets/location@2x.png',
-                          'Phone',
+                          'Address',
                           address!,
                           isLargeScreen,
                           rowColors[0],
