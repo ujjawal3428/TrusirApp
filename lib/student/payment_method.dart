@@ -55,27 +55,29 @@ class PaymentMethod {
             ),
             const SizedBox(height: 16),
             Container(
-              padding: const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(
+                  left: 16, right: 16, top: 10, bottom: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
               ),
               child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                
                 children: [
                   Center(
                     child: Text(
-                          "Course Name Here",
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 35, 57, 176),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Poppins',
-                          ),
-                        ),
+                      "Course Name Here",
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 35, 57, 176),
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
                   ),
-                  SizedBox(height: 7,),
+                  SizedBox(
+                    height: 7,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
