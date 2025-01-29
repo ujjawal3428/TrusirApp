@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/teacher/gk_teacher.dart';
 import 'package:trusir/teacher/student_profile.dart';
 import 'package:trusir/teacher/teacher_notice.dart';
 import 'package:trusir/teacher/teacher_pf_page.dart';
@@ -364,7 +365,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     // Navigator.push(
                                     //   context,
                                     //   MaterialPageRoute(
-                                    //     builder: (context) => const TeacherKnowledge(),
+                                    //     builder: (context) => const AddGkTeacher(),
                                     //   ),
                                     // );
                                   }),
@@ -733,12 +734,12 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     const Color(0xFFB3E5FC),
                                     'assets/knowledge.png',
                                     'General Knowledge', () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => const TeacherKnowledge(),
-                                  //   ),
-                                  // );
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const AddGkTeacher(),
+                                      ),
+                                    );
                                 }),
                                 buildTile(
                                     context,
