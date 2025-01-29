@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:trusir/common/addtestseries.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/file_downloader.dart';
@@ -29,6 +30,18 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     super.initState();
     fetchTestSeries();
     FileDownloader.loadDownloadedFiles();
+  }
+
+  String formatDate(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+    return formattedDate;
+  }
+
+  String formatTime(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedTime = DateFormat('hh:mm a').format(dateTime);
+    return formattedTime; // Example: 11:40 PM
   }
 
   Future<void> fetchTestSeries() async {
@@ -187,12 +200,12 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(test['date'],
+                        Text(formatDate(test['created_at']),
                             style: const TextStyle(
                                 color: Colors.black54,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400)),
-                        Text(test['time'],
+                        Text(formatTime(test['created_at']),
                             style: const TextStyle(
                                 color: Colors.black54, fontSize: 14)),
                       ],

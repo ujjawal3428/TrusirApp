@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
@@ -12,6 +13,12 @@ class GKDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formatDate(String dateString) {
+      DateTime dateTime = DateTime.parse(dateString);
+      String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+      return formattedDate;
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey[50],
@@ -68,7 +75,7 @@ class GKDetailPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 40.0),
                 child: Text(
-                  'Posted on: ${gk.createdAt}',
+                  'Posted on: ${formatDate(gk.createdAt)}',
                   style: const TextStyle(
                     fontFamily: "Poppins",
                     fontSize: 14,
@@ -371,8 +378,7 @@ class GK {
       title: json['title'],
       course: json['description'],
       image: json['image'],
-      createdAt:
-          DateTime.parse(json['created_at']).toIso8601String().split('T')[0],
+      createdAt: json['created_at'],
     );
   }
 }

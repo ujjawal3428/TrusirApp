@@ -4,6 +4,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
@@ -38,6 +39,12 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
     super.initState();
     fetchDoubts();
     FileDownloader.loadDownloadedFiles();
+  }
+
+  String formatDate(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+    return formattedDate;
   }
 
   Future<String> uploadImageSelective(XFile imageFile) async {
@@ -324,7 +331,8 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                                   Text(
                                     'Status: ${doubt.status}',
                                   ),
-                                  Text('Posted on: ${doubt.createdAt}'),
+                                  Text(
+                                      'Posted on: ${formatDate(doubt.createdAt)}'),
                                 ],
                               ),
                               trailing: Column(
@@ -976,8 +984,7 @@ class Doubt {
       course: json['course'],
       image: json['image'],
       teacheruserID: json['teacher_userID'] ?? 'N/A',
-      createdAt:
-          DateTime.parse(json['created_at']).toIso8601String().split('T')[0],
+      createdAt: json['created_at'],
       solution: json['solution'] ?? 'N/A',
       status: json['status'] ?? 'N/A',
     );

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -245,6 +246,18 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
     }
   }
 
+  String formatDate(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+    return formattedDate;
+  }
+
+  String formatTime(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedTime = DateFormat('hh:mm a').format(dateTime);
+    return formattedTime; // Example: 11:40 PM
+  }
+
   Future<void> _openFile(String filename) async {
     final filePath = downloadedFiles[filename];
     OpenFile.open(filePath);
@@ -310,8 +323,8 @@ class _ProgressReportPageState extends State<ProgressReportPage> {
                   : _loadedReports.map((report) {
                       return _buildPreviousMonthCard(
                         subject: report['subject'],
-                        date: report['date'],
-                        time: report['time'],
+                        date: formatDate(report['created_at']),
+                        time: formatTime(report['created_at']),
                         marks: report['marks'],
                         reportUrl: report['report'],
                         cardColors: 'color',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
@@ -29,6 +30,18 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
     fetchDoubts();
 
     FileDownloader.loadDownloadedFiles();
+  }
+
+  String formatDate(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+    return formattedDate;
+  }
+
+  String formatTime(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedTime = DateFormat('hh:mm a').format(dateTime);
+    return formattedTime; // Example: 11:40 PM
   }
 
   Future<void> fetchDoubts() async {
@@ -153,7 +166,8 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
                                 Text(
                                   'Status: ${doubt.status}',
                                 ),
-                                Text('Posted on: ${doubt.createdAt}'),
+                                Text(
+                                    'Posted on: ${formatDate(doubt.createdAt)}'),
                               ],
                             ),
                             trailing: SizedBox(
@@ -316,8 +330,7 @@ class Doubt {
       title: json['title'],
       course: json['description'],
       image: json['image'],
-      createdAt:
-          DateTime.parse(json['created_at']).toIso8601String().split('T')[0],
+      createdAt: json['created_at'],
       status: json['status'] ?? 'N/A',
     );
   }

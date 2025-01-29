@@ -395,7 +395,7 @@ class _DemoCourseCardState extends State<DemoCourseCard> {
             paymentstatus = true;
           });
           if (paymentstatus) {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => PaymentPopUpPage(
