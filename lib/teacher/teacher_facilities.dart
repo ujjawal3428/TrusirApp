@@ -8,6 +8,7 @@ import 'package:trusir/teacher/gk_teacher.dart';
 import 'package:trusir/teacher/student_profile.dart';
 import 'package:trusir/teacher/teacher_notice.dart';
 import 'package:trusir/teacher/teacher_pf_page.dart';
+import 'package:trusir/teacher/teacherattendance.dart';
 import 'package:trusir/teacher/teacherssettings.dart';
 import 'package:trusir/common/wanna_logout.dart';
 
@@ -723,12 +724,12 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 }),
                                 buildTile(context, const Color(0x80FFF59D),
                                     'assets/list@3x.png', 'Attendance', () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => const TeacherAttendance(),
-                                  //   ),
-                                  // );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Teacherattendance(userID: '',),
+                                    ),
+                                  );
                                 }),
                                 buildTile(
                                     context,
