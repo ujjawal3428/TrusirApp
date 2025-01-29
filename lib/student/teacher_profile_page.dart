@@ -58,7 +58,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
         final data = json.decode(response.body);
         setState(() {
           name = data['name'] ?? 'N/A';
-          dob = data['DOB'];
+          dob = data['DOB'] ?? '2001-01-01';
           age = calculateAge(dob).toString();
           gender = data['gender'] ?? 'N/A';
           address = data['address'] ?? 'N/A';

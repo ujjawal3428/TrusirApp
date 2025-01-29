@@ -2,178 +2,215 @@ import 'package:flutter/material.dart';
 
 class PaymentMethod {
   static Widget buildDialog({
-    required Null Function() onPhonePayment,
-    required Null Function() onWalletPayment,
+    required String amount,
+    required String name,
+    required VoidCallback onPhonePayment,
+    required VoidCallback onWalletPayment,
   }) {
+    bool isPhonePayment = false;
+    bool isWalletPayment = false;
+
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.all(16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF1E1E2C),
-              Color(0xFF3E497A),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              blurRadius: 12,
-              spreadRadius: 2,
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Payment",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
-                  onPressed: () {},
+      child: StatefulBuilder(
+        builder: (context, setState) {
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF1E1E2C),
+                  Color(0xFF3E497A),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  blurRadius: 12,
+                  spreadRadius: 2,
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.only(
-                  left: 16, right: 16, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Text(
-                      "Course Name Here",
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Payment",
                       style: TextStyle(
-                        color: Color.fromARGB(255, 35, 57, 176),
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                         fontFamily: 'Poppins',
                       ),
                     ),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.only(
+                      left: 16, right: 16, top: 10, bottom: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                  SizedBox(
-                    height: 7,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Payment Type",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'Poppins',
+                      Center(
+                        child: Text(
+                          name,
+                          style: const TextStyle(
+                            color: Color.fromARGB(255, 35, 57, 176),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Poppins',
+                          ),
                         ),
                       ),
-                      Text(
-                        "Course Purchase",
-                        style: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 13,
-                          fontFamily: 'Poppins',
-                        ),
+                      const SizedBox(
+                        height: 7,
+                      ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Payment Type",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          Text(
+                            "Course Purchase",
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 13,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Total Amount",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                          Text(
+                            amount,
+                            style: const TextStyle(
+                              color: Colors.green,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Poppins',
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Total Amount",
+                ),
+                const SizedBox(height: 20),
+                _buildPaymentOption(
+                  title: "Pay with wallet",
+                  subtitle: null,
+                  isSelected: isWalletPayment,
+                  onChanged: (value) {
+                    setState(() {
+                      isWalletPayment = value!;
+                      if (value) {
+                        isPhonePayment = false;
+                        isWalletPayment = true;
+                      }
+                    });
+                  },
+                  amount: "₹ 59.67",
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.purple.shade400,
+                      Colors.pink.shade300,
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                _buildPaymentOption(
+                  title: "Pay via Phone",
+                  subtitle: "UPI, Cards, NetBanking",
+                  isSelected: isPhonePayment,
+                  onChanged: (value) {
+                    setState(() {
+                      isPhonePayment = value!;
+                      if (value) {
+                        isWalletPayment = false;
+                        isPhonePayment = true;
+                      }
+                    });
+                  },
+                  amount: null,
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.indigo.shade400,
+                      Colors.blue.shade300,
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildAddPromoSection(),
+                const SizedBox(height: 40),
+                GestureDetector(
+                  onTap: isPhonePayment
+                      ? onPhonePayment
+                      : isWalletPayment
+                          ? onWalletPayment
+                          : null,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    width: double.infinity,
+                    height: 50,
+                    child: const Center(
+                      child: Text(
+                        "Pay",
                         style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'Poppins',
-                        ),
-                      ),
-                      Text(
-                        "₹ 12.00",
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 24,
+                          fontSize: 20,
+                          color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Poppins',
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            _buildPaymentOption(
-              title: "Pay with wallet",
-              subtitle: null,
-              amount: "₹ 59.67",
-              gradient: LinearGradient(
-                colors: [
-                  Colors.purple.shade400,
-                  Colors.pink.shade300,
-                ],
-              ),
-            ),
-            const SizedBox(height: 12),
-            _buildPaymentOption(
-              title: "Pay via Phone",
-              subtitle: "UPI, Cards, NetBanking",
-              amount: null,
-              gradient: LinearGradient(
-                colors: [
-                  Colors.indigo.shade400,
-                  Colors.blue.shade300,
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            _buildAddPromoSection(),
-            const SizedBox(height: 20),
-            const SizedBox(height: 20),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              width: double.infinity,
-              height: 50,
-              child: const Center(
-                child: Text(
-                  "Pay",
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Poppins',
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -183,6 +220,8 @@ class PaymentMethod {
     String? subtitle,
     String? amount,
     required Gradient gradient,
+    required bool isSelected,
+    required ValueChanged<bool?> onChanged,
   }) {
     return Container(
       padding: const EdgeInsets.only(left: 12, right: 15, top: 16, bottom: 16),
@@ -204,8 +243,8 @@ class PaymentMethod {
       child: Row(
         children: [
           Checkbox(
-            value: false,
-            onChanged: (value) {},
+            value: isSelected,
+            onChanged: onChanged,
             fillColor: MaterialStateProperty.all(Colors.white),
             checkColor: Colors.green,
           ),
