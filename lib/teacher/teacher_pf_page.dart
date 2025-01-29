@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -384,7 +386,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
           // Text Container
           Flexible(
             child: Container(
-              height: isWeb ? 80 : containerHeight,
+              height: isWeb ? 80 : max(60, containerHeight ?? 110),
               width: isWeb ? 400 : 306,
               decoration: BoxDecoration(
                 color: textBackgroundColor,

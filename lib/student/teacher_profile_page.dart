@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -240,7 +242,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
           const SizedBox(width: 10),
           Flexible(
             child: Container(
-              height: containerHeight,
+              height: max(60, containerHeight ?? 110),
               width: 306,
               decoration: BoxDecoration(
                 color: textBackgroundColor,
