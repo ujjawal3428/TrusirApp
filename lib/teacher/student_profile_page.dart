@@ -122,6 +122,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
               'assets/men@4x.png',
               'Father Name',
               widget.fatherName!,
+              60,
               isLargeScreen,
               rowColors[0],
             ),
@@ -130,6 +131,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
               'assets/graduation@3x.png',
               'Class',
               widget.studentClass!,
+              60,
               isLargeScreen,
               rowColors[2],
             ),
@@ -138,6 +140,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
               'assets/pensp@3x.png',
               'Subjects',
               widget.subject!,
+              60,
               isLargeScreen,
               rowColors[3],
             ),
@@ -146,6 +149,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
               'assets/house@3x.png',
               'School',
               widget.school!,
+              60,
               isLargeScreen,
               rowColors[1],
             ),
@@ -154,12 +158,13 @@ class StudentProfilePageState extends State<StudentProfilePage> {
               'assets/phone@2x.png',
               'Phone',
               '+91-${widget.phone}',
+              60,
               isLargeScreen,
               rowColors[1],
             ),
             const SizedBox(height: 13),
             buildInfoRow('assets/location@2x.png', 'Address', widget.address!,
-                isLargeScreen, rowColors[4]),
+                null, isLargeScreen, rowColors[4]),
             const SizedBox(height: 13),
           ]),
         ));
@@ -169,6 +174,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
     String iconPath,
     String title,
     String value,
+    double? containerHeight,
     bool isLargeScreen,
     Color backgroundColor,
   ) {
@@ -204,7 +210,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
           // Text container
           Flexible(
             child: Container(
-              height: isLargeScreen ? 100 : 60,
+              height: isLargeScreen ? 100 : containerHeight,
               width: isLargeScreen ? 400 : 306,
               decoration: BoxDecoration(
                 color: backgroundColor,

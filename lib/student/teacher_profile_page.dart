@@ -154,6 +154,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
             buildInfoRow(
               'assets/men.png',
               'Father Name',
+              63,
               fatherName,
               imageBackgroundColor: Colors.orange.shade100,
               textBackgroundColor: Colors.orange.shade50,
@@ -162,6 +163,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
             buildInfoRow(
               'assets/degree@2x.png',
               'Graduation',
+              63,
               graduation,
               imageBackgroundColor: Colors.yellow.shade100,
               textBackgroundColor: Colors.yellow.shade50,
@@ -170,6 +172,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
             buildInfoRow(
               'assets/medal@2x.png',
               'Experience',
+              63,
               experience,
               imageBackgroundColor: Colors.red.shade100,
               textBackgroundColor: Colors.red.shade50,
@@ -178,6 +181,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
             buildInfoRow(
               'assets/phone@2x.png',
               'Phone Number',
+              63,
               '+91-$phoneNumber',
               imageBackgroundColor: Colors.teal.shade100,
               textBackgroundColor: Colors.teal.shade50,
@@ -186,6 +190,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
             buildInfoRow(
               'assets/location@2x.png',
               'Address',
+              null,
               address,
               imageBackgroundColor: Colors.green.shade100,
               textBackgroundColor: Colors.green.shade50,
@@ -200,6 +205,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
   Widget buildInfoRow(
     String iconPath,
     String title,
+    double? containerHeight,
     String value, {
     Color imageBackgroundColor = Colors.pink,
     Color textBackgroundColor = Colors.white,
@@ -234,7 +240,7 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
           const SizedBox(width: 10),
           Flexible(
             child: Container(
-              height: 63,
+              height: containerHeight,
               width: 306,
               decoration: BoxDecoration(
                 color: textBackgroundColor,
