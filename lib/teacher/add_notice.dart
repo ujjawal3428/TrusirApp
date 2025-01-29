@@ -99,11 +99,10 @@ class _AddNoticePageState extends State<AddNoticePage> {
         toolbarHeight: 70,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 50),
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -225,3 +224,6 @@ class _AddNoticePageState extends State<AddNoticePage> {
     );
   }
 }
+
+
+

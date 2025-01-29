@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/teacher/NoticeTeacher.dart';
 import 'package:trusir/teacher/gk_teacher.dart';
 import 'package:trusir/teacher/student_profile.dart';
 import 'package:trusir/teacher/teacher_notice.dart';
@@ -743,15 +744,15 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                 }),
                                 buildTile(
                                     context,
-                                    const Color(0x80FFF59D),
+                                    const Color.fromARGB(128, 240, 157, 255),
                                     'assets/pensp@3x.png',
                                     'Student Notice', () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => const TeacherNotice(),
-                                  //   ),
-                                  // );
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const AddNoticeTeacher(),
+                                    ),
+                                  );
                                 }),
                                 buildTile(context, const Color(0xFFB3E5FC),
                                     'assets/setting.png', 'Setting', () {
