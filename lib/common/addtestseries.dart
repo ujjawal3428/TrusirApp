@@ -215,6 +215,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                 child: Center(
                   child: TextFormField(
                     controller: _testNameController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
                         fillColor: Colors.white,
                         labelText: 'Test Name',
@@ -263,6 +264,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                   iconSize: 25,
                   icon: const Icon(Icons.keyboard_arrow_down),
                   value: selectedSubject,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   items: _courses.map((String subject) {
                     return DropdownMenuItem<String>(
                       value: subject,
