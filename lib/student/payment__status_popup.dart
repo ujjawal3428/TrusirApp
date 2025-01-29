@@ -40,12 +40,13 @@ class _PaymentPopUpPageState extends State<PaymentPopUpPage> {
       } else {
         _timer.cancel();
         widget.isSuccess
-            ? Navigator.pushReplacement(
+            ? Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const MainScreen(
                           index: 1,
                         )),
+                (Route<dynamic> route) => false,
               )
             : Navigator.pop(context);
       }
@@ -186,12 +187,13 @@ class _PaymentPopUpPageState extends State<PaymentPopUpPage> {
                   ElevatedButton(
                       onPressed: () {
                         widget.isSuccess
-                            ? Navigator.pushReplacement(
+                            ? Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const MainScreen(
                                           index: 1,
                                         )),
+                                (Route<dynamic> route) => false,
                               )
                             : Navigator.pop(context);
                       },
