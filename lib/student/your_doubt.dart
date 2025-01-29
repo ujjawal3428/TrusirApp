@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
@@ -29,6 +30,12 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
     super.initState();
     fetchDoubts();
     FileDownloader.loadDownloadedFiles();
+  }
+
+  String formatDate(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+    return formattedDate;
   }
 
   Future<void> fetchDoubts() async {
@@ -107,204 +114,237 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
           ? Center(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'No doubts available',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildCreateButton(),
-                  ],
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: Stack(
+                    children: [
+                      const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'No doubts available',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: _buildCreateButton()),
+                    ],
+                  ),
                 ),
               ),
             )
-          : Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SingleChildScrollView(
-                  child: SizedBox(
-                    height: (doubtsList.length * 130.0)
-                        .clamp(0, MediaQuery.of(context).size.height * 0.65),
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(10.0),
-                      itemCount: doubtsList.length,
-                      itemBuilder: (context, index) {
-                        final doubt = doubtsList[index];
-                        final filename =
-                            '${doubt.course}_your_doubt_${doubt.createdAt}';
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.yellow.shade100,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: ListTile(
-                              leading: Image.network(
-                                doubt.image.split(',').first,
-                                fit: BoxFit.cover,
-                              ),
-                              title: Text(
-                                doubt.title,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Course: ${doubt.course}'),
-                                  const SizedBox(height: 2),
-                                  Text(
-                                    'Status: ${doubt.status}',
+          : SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SingleChildScrollView(
+                        child: SizedBox(
+                          height: (doubtsList.length * 130.0).clamp(
+                              0, MediaQuery.of(context).size.height * 0.65),
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(10.0),
+                            itemCount: doubtsList.length,
+                            itemBuilder: (context, index) {
+                              final doubt = doubtsList[index];
+                              final filename =
+                                  '${doubt.course}_your_doubt_${doubt.createdAt}';
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow.shade100,
+                                    borderRadius: BorderRadius.circular(16),
                                   ),
-                                  Text('Posted on: ${doubt.createdAt}'),
-                                ],
-                              ),
-                              trailing: SizedBox(
-                                height: 20,
-                                width: 80,
-                                child: ElevatedButton.icon(
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      barrierColor:
-                                          Colors.black.withOpacity(0.3),
-                                      builder: (BuildContext context) {
-                                        List<String> images =
-                                            doubt.image.split(',');
-                                        return Dialog(
-                                          backgroundColor: Colors.transparent,
-                                          insetPadding:
-                                              const EdgeInsets.all(16),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Container(
-                                            padding: const EdgeInsets.all(16.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                            ),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                const Text(
-                                                  "Images",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
+                                  child: ListTile(
+                                    leading: Image.network(
+                                      doubt.image.split(',').first,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    title: Text(
+                                      doubt.title,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Course: ${doubt.course}'),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          'Status: ${doubt.status}',
+                                        ),
+                                        Text(
+                                            'Posted on: ${formatDate(doubt.createdAt)}'),
+                                      ],
+                                    ),
+                                    trailing: SizedBox(
+                                      height: 20,
+                                      width: 80,
+                                      child: ElevatedButton.icon(
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            barrierColor:
+                                                Colors.black.withOpacity(0.3),
+                                            builder: (BuildContext context) {
+                                              List<String> images =
+                                                  doubt.image.split(',');
+                                              return Dialog(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                insetPadding:
+                                                    const EdgeInsets.all(16),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
                                                 ),
-                                                const SizedBox(height: 10),
-                                                GridView.builder(
-                                                  shrinkWrap: true,
-                                                  physics:
-                                                      const NeverScrollableScrollPhysics(),
-                                                  gridDelegate:
-                                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisCount: 3,
-                                                    crossAxisSpacing: 10,
-                                                    mainAxisSpacing: 10,
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
                                                   ),
-                                                  itemCount: images.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final image = images[index];
-                                                    return GestureDetector(
-                                                      onTap: () {
-                                                        FileDownloader
-                                                                .downloadedFiles
-                                                                .containsKey(
-                                                                    '${filename}_$index')
-                                                            ? FileDownloader
-                                                                .openFile(
-                                                                    '${filename}_$index')
-                                                            : FileDownloader
-                                                                .downloadFile(
-                                                                    context,
-                                                                    image,
-                                                                    '${filename}_$index');
-                                                      },
-                                                      child: Column(
-                                                        children: [
-                                                          Expanded(
-                                                            child:
-                                                                Image.network(
-                                                              image,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                              height: 5),
-                                                          Text(
-                                                            '${doubt.title}_$index',
-                                                            style:
-                                                                const TextStyle(
-                                                              fontSize: 8,
-                                                              color:
-                                                                  Colors.blue,
-                                                            ),
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ],
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      const Text(
+                                                        "Images",
+                                                        style: TextStyle(
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
-                                                    );
-                                                  },
+                                                      const SizedBox(
+                                                          height: 10),
+                                                      GridView.builder(
+                                                        shrinkWrap: true,
+                                                        physics:
+                                                            const NeverScrollableScrollPhysics(),
+                                                        gridDelegate:
+                                                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                                          crossAxisCount: 3,
+                                                          crossAxisSpacing: 10,
+                                                          mainAxisSpacing: 10,
+                                                        ),
+                                                        itemCount:
+                                                            images.length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          final image =
+                                                              images[index];
+                                                          return GestureDetector(
+                                                            onTap: () {
+                                                              FileDownloader
+                                                                      .downloadedFiles
+                                                                      .containsKey(
+                                                                          '${filename}_$index')
+                                                                  ? FileDownloader
+                                                                      .openFile(
+                                                                          '${filename}_$index')
+                                                                  : FileDownloader
+                                                                      .downloadFile(
+                                                                          context,
+                                                                          image,
+                                                                          '${filename}_$index');
+                                                            },
+                                                            child: Column(
+                                                              children: [
+                                                                Expanded(
+                                                                  child: Image
+                                                                      .network(
+                                                                    image,
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                    height: 5),
+                                                                Text(
+                                                                  '${doubt.title}_$index',
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize: 8,
+                                                                    color: Colors
+                                                                        .blue,
+                                                                  ),
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                  icon: const Icon(
-                                    Icons.open_in_new,
-                                    size: 17,
-                                  ),
-                                  label: const Text(
-                                    "Open",
-                                    style: TextStyle(fontSize: 10),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.all(0),
-                                    foregroundColor: Colors.blue,
+                                              );
+                                            },
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.open_in_new,
+                                          size: 17,
+                                        ),
+                                        label: const Text(
+                                          "Open",
+                                          style: TextStyle(fontSize: 10),
+                                        ),
+                                        style: ElevatedButton.styleFrom(
+                                          padding: const EdgeInsets.all(0),
+                                          foregroundColor: Colors.blue,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      ),
+                      if (isLoading)
+                        const CircularProgressIndicator()
+                      else if (!hasMoreData && doubtsList.isNotEmpty)
+                        const Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Text(
+                            'No more Doubts',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      else if (doubtsList.isNotEmpty)
+                        TextButton(
+                          onPressed: fetchDoubts,
+                          child: const Text('Load More'),
+                        ),
+                    ],
                   ),
-                ),
-                if (isLoading)
-                  const CircularProgressIndicator()
-                else if (!hasMoreData && doubtsList.isNotEmpty)
-                  const Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text(
-                      'No more Doubts',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  )
-                else if (doubtsList.isNotEmpty)
-                  TextButton(
-                    onPressed: fetchDoubts,
-                    child: const Text('Load More'),
-                  ),
-                _buildCreateButton(),
-              ],
+                  Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      child: _buildCreateButton()),
+                ],
+              ),
             ),
     );
   }
@@ -355,8 +395,7 @@ class Doubt {
       title: json['title'],
       course: json['course'],
       image: json['image'],
-      createdAt:
-          DateTime.parse(json['created_at']).toIso8601String().split('T')[0],
+      createdAt: json['created_at'],
       status: json['status'] ?? 'N/A',
     );
   }

@@ -408,7 +408,11 @@ class _TeacherattendanceState extends State<Teacherattendance> {
         body: SingleChildScrollView(
             child: Column(children: [
           // Calendar Section
-          StudentList(students: const [], selectedStudent: '', onStudentSelected: (String ) {  },),
+          StudentList(
+            students: const [],
+            selectedStudent: '',
+            onStudentSelected: (student) {},
+          ),
           Padding(
             padding:
                 const EdgeInsets.only(top: 10, left: 15, bottom: 15, right: 20),
@@ -676,7 +680,8 @@ class StudentList extends StatelessWidget {
   final String? selectedStudent;
   final Function(String) onStudentSelected;
 
-  const StudentList({super.key, 
+  const StudentList({
+    super.key,
     required this.students,
     required this.selectedStudent,
     required this.onStudentSelected,
@@ -700,12 +705,15 @@ class StudentList extends StatelessWidget {
                     onTap: () => onStudentSelected(students[index]),
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 10),
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 15),
                       decoration: BoxDecoration(
                         color: Colors.black,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: selectedStudent == students[index] ? Colors.blue : Colors.transparent,
+                          color: selectedStudent == students[index]
+                              ? Colors.blue
+                              : Colors.transparent,
                           width: 2,
                         ),
                       ),
@@ -726,7 +734,9 @@ class StudentList extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Text(
-              selectedStudent != null ? "Selected: $selectedStudent" : "No student selected",
+              selectedStudent != null
+                  ? "Selected: $selectedStudent"
+                  : "No student selected",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
           ],
@@ -735,4 +745,3 @@ class StudentList extends StatelessWidget {
     );
   }
 }
-

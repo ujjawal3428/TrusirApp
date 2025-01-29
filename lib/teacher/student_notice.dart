@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/teacher/add_notice.dart';
 
@@ -40,6 +41,18 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
   int currentPage = 1;
   bool hasMore = true;
   final apiBase = '$baseUrl/api/my-notice';
+
+  String formatDate(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+    return formattedDate;
+  }
+
+  String formatTime(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedTime = DateFormat('hh:mm a').format(dateTime);
+    return formattedTime; // Example: 11:40 PM
+  }
 
   Future<void> fetchNotices({int page = 1}) async {
     final url = '$apiBase/${widget.userID}?page=$page&data_per_page=10';
@@ -198,12 +211,13 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                                 ),
                                                 const SizedBox(height: 5),
                                                 Text(
-                                                  'Posted on : ${notice.date}',
+                                                  'Posted on : ${formatDate(notice.date)} ${formatTime(notice.date)}',
                                                   style: const TextStyle(
                                                     fontSize: 13,
                                                     fontFamily: 'Poppins',
                                                     fontWeight: FontWeight.w500,
-                                                    color: Color.fromARGB(255, 133, 133, 133),
+                                                    color: Color.fromARGB(
+                                                        255, 133, 133, 133),
                                                   ),
                                                 ),
                                                 const SizedBox(height: 5),
@@ -292,8 +306,8 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
           padding: const EdgeInsets.all(10),
           child: Image.asset(
             'assets/add_notice.png',
-             width : kIsWeb ? 500.0 : 300.0,
-             height: kIsWeb ? 100.0 : 70.0,
+            width: kIsWeb ? 500.0 : 300.0,
+            height: kIsWeb ? 100.0 : 70.0,
             fit: BoxFit.contain,
           ),
         ),
