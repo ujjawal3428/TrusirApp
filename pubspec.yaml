@@ -38,7 +38,6 @@ dependencies:
   fluttertoast:
   flutter_image_compress:
   multi_select_flutter:
-  lottie:
 dev_dependencies:
   flutter_test:
     sdk: flutter
