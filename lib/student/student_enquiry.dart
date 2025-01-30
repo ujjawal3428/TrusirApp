@@ -7,7 +7,6 @@ import 'package:trusir/common/api.dart';
 import 'package:trusir/student/student_homepage.dart';
 import 'package:trusir/student/student_registration.dart';
 import 'package:trusir/common/service_unavailable_page.dart';
-import 'package:lottie/lottie.dart';
 
 class StudentEnquiry {
   String? name;
@@ -106,6 +105,7 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
 
     try {
       final response = await http.post(url, headers: headers, body: body);
+
       if (!serviceable) {
         if (response.statusCode == 200) {
           Navigator.pushAndRemoveUntil(
@@ -119,9 +119,10 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
           Fluttertoast.showToast(
               msg: 'Failed to submit form: ${response.body}');
         }
-      } else {
-       if (response.statusCode == 200) {
+      } else if (serviceable) {
+        if (response.statusCode == 200) {
           _showThankYouPopup(context);
+          Fluttertoast.showToast(msg: 'Form Submitted Successfully');
         } else {
           Fluttertoast.showToast(
               msg: 'Failed to submit form: ${response.body}');
@@ -132,88 +133,86 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
     }
   }
 
-
-
-void _showThankYouPopup(BuildContext context) {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Lottie.asset(
-                'assets/animations/success.json', 
-                width: 120,
-                height: 120,
-                fit: BoxFit.cover,
-              ),
-              const SizedBox(height: 16),
-              const Text(
-                'Thank You!',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple,
+  void _showThankYouPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.asset(
+                  'assets/check.png',
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.cover,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Your enquiry has been submitted successfully.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.black54),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const StudentHomepage(
-                        enablephone: true,
-                      ),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.deepPurple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                const SizedBox(height: 16),
+                const Text(
+                  'Thank You!',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepPurple,
                   ),
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  textAlign: TextAlign.center,
                 ),
-                child: const Text(
-                  'OK',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                const SizedBox(height: 8),
+                const Text(
+                  'Your enquiry has been submitted successfully.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, color: Colors.black54),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const StudentHomepage(
+                          enablephone: true,
+                        ),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurple,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 12),
+                  ),
+                  child: const Text(
+                    'OK',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pop(context);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const StudentHomepage(
+            enablephone: true,
           ),
         ),
       );
-    },
-  );
-
-  Future.delayed(const Duration(seconds: 3), () {
-    Navigator.pop(context);
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const StudentHomepage(
-          enablephone: true,
-        ),
-      ),
-    );
-  });
-}
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -282,7 +281,7 @@ void _showThankYouPopup(BuildContext context) {
               const SizedBox(height: 10),
               _buildTextFieldWithBackground(
                   hintText: 'Student Name', controllers: _namecontroller),
-                   const SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               // Gender Selection
               Row(
@@ -322,7 +321,7 @@ void _showThankYouPopup(BuildContext context) {
                   hintText: 'Class',
                   controllers: _classcontroller,
                   isClass: true),
-             
+
               const SizedBox(height: 10),
               _buildTextFieldWithBackground(
                   hintText: 'City / Town', controllers: _citycontroller),
@@ -342,7 +341,6 @@ void _showThankYouPopup(BuildContext context) {
                     child: Image.asset(
                       'assets/enquire.png',
                       fit: BoxFit.contain,
-                    
                     ),
                   ),
                 ),
@@ -442,53 +440,53 @@ void _showThankYouPopup(BuildContext context) {
   }
 
   Widget _buildTextFieldWithBackground({
-  required String hintText,
-  required TextEditingController controllers,
-  bool isClass = false,
-}) {
-  return Container(
-    width: double.infinity,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(22),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.shade200,
-          blurRadius: 4,
-          spreadRadius: 2,
-        ),
-      ],
-    ),
-    child: TextFormField(
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Required Field';
-        }
-        return null;
-      },
-      textCapitalization: TextCapitalization.words,
-      keyboardType: isClass ? TextInputType.number : TextInputType.text,
-      controller: controllers,
-      decoration: InputDecoration(
-        labelText: hintText,
-        floatingLabelBehavior: FloatingLabelBehavior.auto,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(22),
-          borderSide: const BorderSide(color: Colors.grey),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(22),
-          borderSide: const BorderSide(color: Colors.grey),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(22),
-          borderSide: const BorderSide(color: Colors.grey),
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-        isDense: true,
+    required String hintText,
+    required TextEditingController controllers,
+    bool isClass = false,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade200,
+            blurRadius: 4,
+            spreadRadius: 2,
+          ),
+        ],
       ),
-    ),
-  );
-}
+      child: TextFormField(
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Required Field';
+          }
+          return null;
+        },
+        textCapitalization: TextCapitalization.words,
+        keyboardType: isClass ? TextInputType.number : TextInputType.text,
+        controller: controllers,
+        decoration: InputDecoration(
+          labelText: hintText,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(22),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+          isDense: true,
+        ),
+      ),
+    );
+  }
 }
