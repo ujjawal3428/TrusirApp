@@ -7,6 +7,7 @@ import 'package:trusir/common/api.dart';
 import 'package:trusir/student/student_homepage.dart';
 import 'package:trusir/student/student_registration.dart';
 import 'package:trusir/common/service_unavailable_page.dart';
+import 'package:lottie/lottie.dart';
 
 class StudentEnquiry {
   String? name;
@@ -119,15 +120,8 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
               msg: 'Failed to submit form: ${response.body}');
         }
       } else {
-        if (response.statusCode == 200) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const StudentHomepage(
-                      enablephone: true,
-                    )),
-          );
-          Fluttertoast.showToast(msg: 'Form Submitted Successfully');
+       if (response.statusCode == 200) {
+          _showThankYouPopup(context);
         } else {
           Fluttertoast.showToast(
               msg: 'Failed to submit form: ${response.body}');
@@ -137,6 +131,89 @@ class _StudentEnquiryPageState extends State<StudentEnquiryPage> {
       print('Error occurred: $e');
     }
   }
+
+
+
+void _showThankYouPopup(BuildContext context) {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset(
+                'assets/animations/success.json', 
+                width: 120,
+                height: 120,
+                fit: BoxFit.cover,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Thank You!',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepPurple,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Your enquiry has been submitted successfully.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.black54),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const StudentHomepage(
+                        enablephone: true,
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                ),
+                child: const Text(
+                  'OK',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+
+  Future.delayed(const Duration(seconds: 3), () {
+    Navigator.pop(context);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const StudentHomepage(
+          enablephone: true,
+        ),
+      ),
+    );
+  });
+}
 
   @override
   Widget build(BuildContext context) {
