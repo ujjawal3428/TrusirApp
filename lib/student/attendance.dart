@@ -851,75 +851,34 @@ class _AttendancePageState extends State<AttendancePage> {
                                                     AlertDialog(
                                                   title: Text(
                                                       "Update Attendance for $day"),
-                                                  content: StatefulBuilder(
-                                                    builder:
-                                                        (context, setState) {
-                                                      return Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          RadioListTile<String>(
-                                                            title: const Text(
-                                                                'Present'),
-                                                            value: 'present',
-                                                            groupValue: status,
-                                                            onChanged:
-                                                                (newStatus) {
-                                                              if (newStatus !=
-                                                                  null) {
-                                                                _submitAttendance(
-                                                                        id: id,
-                                                                        status:
-                                                                            newStatus)
-                                                                    .then((_) {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                          RadioListTile<String>(
-                                                            title: const Text(
-                                                                'Absent'),
-                                                            value: 'absent',
-                                                            groupValue: status,
-                                                            onChanged:
-                                                                (newStatus) {
-                                                              if (newStatus !=
-                                                                  null) {
-                                                                _submitAttendance(
-                                                                        id: id,
-                                                                        status:
-                                                                            newStatus)
-                                                                    .then((_) {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                          RadioListTile<String>(
-                                                            title: const Text(
-                                                                'No class'),
-                                                            value: 'No class',
-                                                            groupValue: status,
-                                                            onChanged:
-                                                                (newStatus) {
-                                                              if (newStatus !=
-                                                                  null) {
-                                                                _submitAttendance(
-                                                                        id: id,
-                                                                        status:
-                                                                            newStatus)
-                                                                    .then((_) {
-                                                                  Navigator.pop(
-                                                                      context);
-                                                                });
-                                                              }
-                                                            },
-                                                          ),
-                                                        ],
-                                                      );
+                                                  content:
+                                                      DropdownButton<String>(
+                                                    value: status,
+                                                    items: const [
+                                                      DropdownMenuItem(
+                                                          value: 'present',
+                                                          child:
+                                                              Text('Present')),
+                                                      DropdownMenuItem(
+                                                          value: 'absent',
+                                                          child:
+                                                              Text('Absent')),
+                                                      DropdownMenuItem(
+                                                          value: 'No class',
+                                                          child:
+                                                              Text('No class')),
+                                                    ],
+                                                    onChanged: (newStatus) {
+                                                      if (newStatus != null) {
+                                                        _submitAttendance(
+                                                                id: id,
+                                                                status:
+                                                                    newStatus)
+                                                            .then((_) {
+                                                          Navigator.pop(
+                                                              context); // Close the dialog after updating
+                                                        });
+                                                      }
                                                     },
                                                   ),
                                                 ),
