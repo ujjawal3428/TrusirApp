@@ -1,14 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/image_uploading.dart';
 
 class GK {
   String? title;
@@ -39,205 +35,41 @@ class _AddGKState extends State<AddGK> {
   String extension = '';
   bool isimageUploading = false;
 
-  Future<void> _requestPermissions() async {
-    if (await Permission.storage.isGranted &&
-        await Permission.camera.isGranted) {
-      return;
-    }
+  Future<void> handleUploadFromCamera() async {
+    final String result = await ImageUploadUtils.uploadSingleImageFromCamera();
 
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
-
-      // Skip permissions for Android versions below API 30
-      if (androidInfo.version.sdkInt < 30) {
-        return;
-      }
-
-      if (await Permission.photos.isGranted ||
-          await Permission.videos.isGranted ||
-          await Permission.camera.isGranted) {
-        return;
-      }
-
-      Map<Permission, PermissionStatus> statuses = await [
-        Permission.photos,
-        Permission.videos,
-        Permission.camera
-      ].request();
-
-      if (statuses.values.any((status) => !status.isGranted)) {
-        openAppSettings();
-      }
-    }
-  }
-
-  Future<String> uploadImageSelective(XFile imageFile) async {
-    final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri);
-
-    // Add the image file to the request
-    request.files
-        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
-
-    // Send the request
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      // Parse the response to extract the download URL
-      final responseBody = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-
-      if (jsonResponse.containsKey('download_url')) {
-        return jsonResponse['download_url'] as String;
-      } else {
-        print('Download URL not found in the response.');
-        return 'null';
-      }
-    } else {
-      print('Failed to upload image: ${response.statusCode}');
-      return 'null';
-    }
-  }
-
-  Future<void> handleImageSelection() async {
-    setState(() {
-      isimageUploading = true;
-    });
-    try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile =
-          await picker.pickImage(source: ImageSource.gallery);
-
-      if (pickedFile != null) {
-        final fileSize =
-            await pickedFile.length(); // Get the file size in bytes
-
-        // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
-        if (fileSize > 2 * 1024 * 1024) {
-          Fluttertoast.showToast(
-              msg: 'File size exceeds 2MB. Please select a smaller image.');
-          return;
-        }
-      }
-
-      if (pickedFile != null) {
-        // Upload the image and get the path
-        final newuploadedPath = await uploadImageSelective(pickedFile);
-        if (newuploadedPath != 'null') {
-          setState(() {
-            // Example: Update the first student's photo path
-
-            formData.photo = newuploadedPath;
-            isimageUploading = false;
-          });
-
-          Fluttertoast.showToast(
-              msg: 'Image uploaded successfully: $newuploadedPath');
-        } else {
-          Fluttertoast.showToast(msg: 'Failed to upload the image.');
-          setState(() {
-            isimageUploading = false;
-          });
-        }
-      } else {
-        Fluttertoast.showToast(msg: 'No image selected.');
+    if (result != 'null') {
+      setState(() {
         setState(() {
+          formData.photo = result;
           isimageUploading = false;
         });
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error during image selection: $e');
+      });
+      Fluttertoast.showToast(msg: 'Image uploaded successfully!');
+    } else {
+      Fluttertoast.showToast(msg: 'Image upload failed!');
       setState(() {
         isimageUploading = false;
       });
     }
   }
 
-  Future<String> uploadImage() async {
-    setState(() {
-      isimageUploading = true;
-    });
-    await _requestPermissions();
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+  Future<void> handleUploadFromGallery() async {
+    final String result = await ImageUploadUtils.uploadSingleImageFromGallery();
 
-    if (image == null) {
-      Fluttertoast.showToast(msg: 'No image selected.');
+    if (result != 'null') {
       setState(() {
-        isimageUploading = false;
-      });
-      return 'null';
-    }
-
-    // Compress the image
-    final compressedImage = await compressImage(File(image.path));
-
-    if (compressedImage == null) {
-      Fluttertoast.showToast(msg: 'Failed to compress image.');
-      setState(() {
-        isimageUploading = false;
-      });
-      return 'null';
-    }
-
-    final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri);
-
-    // Add the compressed image file to the request
-    request.files
-        .add(await http.MultipartFile.fromPath('photo', compressedImage.path));
-
-    // Send the request
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      // Parse the response to extract the download URL
-      final responseBody = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-
-      if (jsonResponse.containsKey('download_url')) {
         setState(() {
-          formData.photo = jsonResponse['download_url'];
-          setState(() {
-            isimageUploading = false;
-          });
-        });
-        return jsonResponse['download_url'] as String;
-      } else {
-        Fluttertoast.showToast(msg: 'Download URL not found in the response.');
-        setState(() {
+          formData.photo = result;
           isimageUploading = false;
         });
-        return 'null';
-      }
+      });
+      Fluttertoast.showToast(msg: 'Image uploaded successfully!');
     } else {
-      Fluttertoast.showToast(
-          msg: 'Failed to upload image: ${response.statusCode}');
+      Fluttertoast.showToast(msg: 'Image upload failed!');
       setState(() {
         isimageUploading = false;
       });
-      return 'null';
-    }
-  }
-
-// Function to compress image
-  Future<XFile?> compressImage(File file) async {
-    final String targetPath =
-        '${file.parent.path}/compressed_${file.uri.pathSegments.last}';
-
-    try {
-      final compressedFile = await FlutterImageCompress.compressAndGetFile(
-        file.absolute.path,
-        targetPath,
-        quality: 85, // Adjust quality to achieve ~2MB size
-        minWidth: 1920, // Adjust resolution as needed
-        minHeight: 1080, // Adjust resolution as needed
-      );
-
-      return compressedFile;
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error compressing image: $e');
-      return null;
     }
   }
 
@@ -462,7 +294,7 @@ class _AddGKState extends State<AddGK> {
                                       child: TextButton(
                                         onPressed: () {
                                           Navigator.pop(context);
-                                          uploadImage();
+                                          handleUploadFromCamera();
                                         },
                                         child: const Text(
                                           "Camera",
@@ -485,7 +317,7 @@ class _AddGKState extends State<AddGK> {
                                       child: TextButton(
                                         onPressed: () {
                                           Navigator.pop(context);
-                                          handleImageSelection();
+                                          handleUploadFromGallery();
                                         },
                                         child: const Text(
                                           "Upload File",

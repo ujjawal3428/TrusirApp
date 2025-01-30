@@ -28,7 +28,8 @@ class _AddtestseriesState extends State<Addtestseries> {
   String extension = '';
 
   Future<void> handleUploadFromCamera() async {
-    final String result = await ImageUploadUtils.uploadImagesFromCamera();
+    final String result =
+        await ImageUploadUtils.uploadMultipleImagesFromCamera();
 
     if (result != 'null') {
       setState(() {
@@ -64,7 +65,8 @@ class _AddtestseriesState extends State<Addtestseries> {
   }
 
   Future<void> handleUploadFromGallery() async {
-    final String result = await ImageUploadUtils.uploadImagesFromGallery();
+    final String result =
+        await ImageUploadUtils.uploadMultipleImagesFromGallery();
 
     if (result != 'null') {
       setState(() {

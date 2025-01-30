@@ -62,7 +62,47 @@ class ImageUploadUtils {
     }
   }
 
-  static Future<String> uploadImagesFromGallery() async {
+  static Future<String> uploadSingleImageFromGallery() async {
+    await requestPermissions();
+
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image == null) {
+      Fluttertoast.showToast(msg: 'No image selected.');
+      return 'null';
+    }
+
+    final compressedImage = await compressImage(File(image.path));
+    if (compressedImage == null) {
+      Fluttertoast.showToast(msg: 'Failed to compress image.');
+      return 'null';
+    }
+
+    return await _uploadImage(compressedImage);
+  }
+
+  static Future<String> uploadSingleImageFromCamera() async {
+    await requestPermissions();
+
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+    if (image == null) {
+      Fluttertoast.showToast(msg: 'No image captured.');
+      return 'null';
+    }
+
+    final compressedImage = await compressImage(File(image.path));
+    if (compressedImage == null) {
+      Fluttertoast.showToast(msg: 'Failed to compress image.');
+      return 'null';
+    }
+
+    return await _uploadImage(compressedImage);
+  }
+
+  static Future<String> uploadMultipleImagesFromGallery() async {
     await requestPermissions();
 
     final ImagePicker picker = ImagePicker();
@@ -99,7 +139,7 @@ class ImageUploadUtils {
   }
 
   // Function to upload multiple images from the camera
-  static Future<String> uploadImagesFromCamera() async {
+  static Future<String> uploadMultipleImagesFromCamera() async {
     await requestPermissions();
     final ImagePicker picker = ImagePicker();
 

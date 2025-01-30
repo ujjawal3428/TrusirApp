@@ -50,10 +50,6 @@ class FileDownloader {
   static String _getFileExtensionFromUrl(String url) {
     final extension = url.split('.').last.toLowerCase();
     switch (extension) {
-      case 'pdf':
-        return '.pdf';
-      case 'docx':
-        return '.docx';
       case 'jpg':
       case 'jpeg':
         return '.jpg';
