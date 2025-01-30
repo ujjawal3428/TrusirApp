@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:intl/intl.dart';
 
 class Notice {
   final String noticetitle;
@@ -38,6 +39,18 @@ class _NoticeScreenState extends State<NoticeScreen> {
   int currentPage = 1;
   bool hasMore = true;
   final apiBase = '$baseUrl/api/my-notice';
+
+  String formatDate(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(dateTime);
+    return formattedDate;
+  }
+
+  String formatTime(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+    String formattedTime = DateFormat('hh:mm a').format(dateTime);
+    return formattedTime; // Example: 11:40 PM
+  }
 
   Future<void> fetchNotices({int page = 1}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -101,7 +114,8 @@ class _NoticeScreenState extends State<NoticeScreen> {
                   onTap: () {
                     Navigator.pop(context);
                   },
-                  child: Image.asset('assets/back_button.png', 
+                  child: Image.asset(
+                    'assets/back_button.png',
                     height: constraints.maxWidth > 600 ? 50 : 50,
                   ),
                 ),
@@ -142,11 +156,11 @@ class _NoticeScreenState extends State<NoticeScreen> {
                       child: Center(
                         child: ConstrainedBox(
                           constraints: BoxConstraints(
-                            maxWidth: constraints.maxWidth > 1200 
-                              ? 1200 
-                              : constraints.maxWidth > 600 
-                                ? 800 
-                                : constraints.maxWidth,
+                            maxWidth: constraints.maxWidth > 1200
+                                ? 1200
+                                : constraints.maxWidth > 600
+                                    ? 800
+                                    : constraints.maxWidth,
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -159,8 +173,8 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                   int index = entry.key;
                                   Notice notice = entry.value;
 
-                                  Color cardColor = 
-                                    cardColors[index % cardColors.length];
+                                  Color cardColor =
+                                      cardColors[index % cardColors.length];
 
                                   return Padding(
                                     padding: const EdgeInsets.only(
@@ -168,19 +182,21 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                     ),
                                     child: ConstrainedBox(
                                       constraints: BoxConstraints(
-                                        maxWidth: constraints.maxWidth > 600 
-                                          ? 600 
-                                          : constraints.maxWidth - 40,
+                                        maxWidth: constraints.maxWidth > 600
+                                            ? 600
+                                            : constraints.maxWidth - 40,
                                       ),
                                       child: Card(
                                         color: cardColor,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(20),
                                           child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Padding(
                                                 padding: const EdgeInsets.only(
@@ -195,23 +211,33 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                               ),
                                               Expanded(
                                                 child: Column(
-                                                  crossAxisAlignment: 
-                                                    CrossAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
                                                       notice.noticetitle,
                                                       style: TextStyle(
-                                                        fontSize: constraints.maxWidth > 600 ? 18 : 16,
-                                                        fontWeight: FontWeight.w700,
+                                                        fontSize: constraints
+                                                                    .maxWidth >
+                                                                600
+                                                            ? 18
+                                                            : 16,
+                                                        fontWeight:
+                                                            FontWeight.w700,
                                                         color: Colors.black,
                                                       ),
                                                     ),
                                                     const SizedBox(height: 5),
                                                     Text(
-                                                      'Posted on : ${notice.date}',
+                                                      'Posted on : ${formatDate(notice.date)} ${formatTime(notice.date)} ',
                                                       style: TextStyle(
-                                                        fontSize: constraints.maxWidth > 600 ? 13 : 11,
-                                                        fontWeight: FontWeight.w400,
+                                                        fontSize: constraints
+                                                                    .maxWidth >
+                                                                600
+                                                            ? 13
+                                                            : 11,
+                                                        fontWeight:
+                                                            FontWeight.w400,
                                                         color: Colors.grey,
                                                       ),
                                                     ),
@@ -219,8 +245,13 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                                     Text(
                                                       notice.notice,
                                                       style: TextStyle(
-                                                        fontSize: constraints.maxWidth > 600 ? 13 : 11,
-                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: constraints
+                                                                    .maxWidth >
+                                                                600
+                                                            ? 13
+                                                            : 11,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                         color: Colors.black,
                                                       ),
                                                     ),
@@ -235,25 +266,29 @@ class _NoticeScreenState extends State<NoticeScreen> {
                                   );
                                 }),
                                 hasMore
-                                  ? Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 20),
-                                      child: isLoadingMore
-                                        ? const CircularProgressIndicator()
-                                        : TextButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                isLoadingMore = true;
-                                                currentPage++;
-                                              });
-                                              fetchNotices(page: currentPage);
-                                            },
-                                            child: const Text('Load More...'),
-                                          ),
-                                    )
-                                  : const Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 20),
-                                      child: Text('No more Notices'),
-                                    ),
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 20),
+                                        child: isLoadingMore
+                                            ? const CircularProgressIndicator()
+                                            : TextButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    isLoadingMore = true;
+                                                    currentPage++;
+                                                  });
+                                                  fetchNotices(
+                                                      page: currentPage);
+                                                },
+                                                child:
+                                                    const Text('Load More...'),
+                                              ),
+                                      )
+                                    : const Padding(
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 20),
+                                        child: Text('No more Notices'),
+                                      ),
                               ],
                             ),
                           ),
