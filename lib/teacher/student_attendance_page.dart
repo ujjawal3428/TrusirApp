@@ -129,6 +129,41 @@ class _StudentAttendancePageState extends State<StudentAttendancePage> {
     initializeData();
   }
 
+  Future<void> _submitAttendance({
+    required String id,
+    required String status,
+  }) async {
+    final payload = {
+      "status": status,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(
+            '$baseUrl/api/update-attendance/$id'), // Append the ID as a parameter to the URL
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(payload),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          // Update the status locally
+          _fetchAttendanceData(selectedslotID!);
+          _updateSummary(); // Update the summary
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Attendance updated successfully!")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to update attendance!")),
+        );
+      }
+    } catch (error) {
+      print("Error: $error");
+    }
+  }
+
   Future<void> initializeData() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -519,36 +554,80 @@ class _StudentAttendancePageState extends State<StudentAttendancePage> {
                               _attendanceData[day];
                           String status =
                               attendanceInfo?['status'] ?? "no_data";
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: status == "no_data"
-                                  ? Colors.transparent
-                                  : Colors.yellow,
-                            ),
+                          String? id = attendanceInfo?['id'];
+                          return GestureDetector(
+                            onTap: () {
+                              if (id != null) {
+                                // Show a dialog to update the status
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Update Attendance for $day"),
+                                    content: DropdownButton<String>(
+                                      value: status,
+                                      items: const [
+                                        DropdownMenuItem(
+                                            value: 'present',
+                                            child: Text('Present')),
+                                        DropdownMenuItem(
+                                            value: 'absent',
+                                            child: Text('Absent')),
+                                        DropdownMenuItem(
+                                            value: 'No class',
+                                            child: Text('No class')),
+                                      ],
+                                      onChanged: (newStatus) {
+                                        if (newStatus != null) {
+                                          _submitAttendance(
+                                                  id: id, status: newStatus)
+                                              .then((_) {
+                                            Navigator.pop(
+                                                context); // Close the dialog after updating
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text("No ID found for this date!")),
+                                );
+                              }
+                            },
                             child: Container(
-                              margin: const EdgeInsets.all(2),
                               decoration: BoxDecoration(
-                                color: status == "present"
-                                    ? Colors.green
-                                    : status == "absent"
-                                        ? Colors.red
-                                        : Colors.grey[400],
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: isToday
-                                      ? const Color(0xFF48116A)
-                                      : Colors.white,
-                                  width: isToday ? 3 : 0,
-                                ),
+                                color: status == "no_data"
+                                    ? Colors.transparent
+                                    : Colors.yellow,
                               ),
-                              child: Center(
-                                child: Text(
-                                  '$day',
-                                  style: TextStyle(
-                                    color: status == "no_data"
-                                        ? Colors.black
+                              child: Container(
+                                margin: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: status == "present"
+                                      ? Colors.green
+                                      : status == "absent"
+                                          ? Colors.red
+                                          : Colors.grey[400],
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: isToday
+                                        ? const Color(0xFF48116A)
                                         : Colors.white,
+                                    width: isToday ? 3 : 0,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '$day',
+                                    style: TextStyle(
+                                      color: status == "no_data"
+                                          ? Colors.black
+                                          : Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),

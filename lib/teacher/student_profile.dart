@@ -14,7 +14,7 @@ class StudentProfileScreen extends StatelessWidget {
   final String subject;
   final String image;
   final String userID;
-  final String dob;
+  final String fatherName;
   final String address;
   final String studentClass;
   final String school;
@@ -26,7 +26,7 @@ class StudentProfileScreen extends StatelessWidget {
       required this.subject,
       required this.image,
       required this.userID,
-      required this.dob,
+      required this.fatherName,
       required this.address,
       required this.school,
       required this.studentClass});
@@ -210,7 +210,7 @@ class StudentProfileScreen extends StatelessWidget {
                                           phone: phone,
                                           profile: image,
                                           subject: subject,
-                                          dob: dob,
+                                          fatherName: fatherName,
                                           address: address,
                                           school: school,
                                           studentClass: studentClass,

@@ -1,6 +1,6 @@
 name: trusir
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0+1
 
@@ -18,27 +18,28 @@ dependencies:
   permission_handler: ^11.3.1
   package_info_plus: ^8.1.1
   flutter_svg: ^2.0.14
-  url_launcher: 
-  device_info_plus: 
+  url_launcher:
+  device_info_plus:
   shared_preferences: ^2.3.3
   image_picker: ^1.1.2
   intl:
-  table_calendar: 
+  table_calendar:
   flutter_local_notifications:
-  open_file:  
+  open_file:
   signature: ^5.5.0
   path:
   file_picker:
-  video_player: 
-  chewie: 
-  google_fonts: 
-  youtube_player_flutter: 
-  phonepe_payment_sdk: 
-  crypto: 
+  video_player:
+  chewie:
+  google_fonts:
+  youtube_player_flutter:
+  phonepe_payment_sdk:
+  crypto:
   fluttertoast:
-  flutter_image_compress: 
+  flutter_image_compress:
   flutter_inner_shadow: ^0.0.1
   fl_chart: ^0.70.2
+  multi_select_flutter:
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -47,7 +48,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  
+
   assets:
     - assets/
 

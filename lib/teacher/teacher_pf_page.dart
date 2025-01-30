@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -197,6 +199,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                           isWeb,
                           'assets/men.png',
                           'Father Name',
+                          60,
                           fatherName,
                           imageBackgroundColor: Colors.orange.shade100,
                           textBackgroundColor: Colors.orange.shade50,
@@ -206,6 +209,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                           isWeb,
                           'assets/degree@2x.png',
                           'Graduation',
+                          60,
                           graduation,
                           imageBackgroundColor: Colors.yellow.shade100,
                           textBackgroundColor: Colors.yellow.shade50,
@@ -215,6 +219,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                           isWeb,
                           'assets/medal@2x.png',
                           'Experience',
+                          60,
                           experience,
                           imageBackgroundColor: Colors.red.shade100,
                           textBackgroundColor: Colors.red.shade50,
@@ -224,6 +229,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                           isWeb,
                           'assets/phone@2x.png',
                           'Phone Number',
+                          60,
                           '+91-$phoneNumber',
                           imageBackgroundColor: Colors.teal.shade100,
                           textBackgroundColor: Colors.teal.shade50,
@@ -233,6 +239,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                           isWeb,
                           'assets/location@2x.png',
                           'Address',
+                          null,
                           address,
                           imageBackgroundColor: Colors.green.shade100,
                           textBackgroundColor: Colors.green.shade50,
@@ -285,6 +292,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                     isWeb,
                     'assets/men@4x.png',
                     'Father Name',
+                    60,
                     fatherName,
                     imageBackgroundColor: Colors.orange.shade100,
                     textBackgroundColor: Colors.orange.shade50,
@@ -294,6 +302,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                     isWeb,
                     'assets/degree@2x.png',
                     'Graduation',
+                    60,
                     graduation,
                     imageBackgroundColor: Colors.yellow.shade100,
                     textBackgroundColor: Colors.yellow.shade50,
@@ -303,6 +312,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                     isWeb,
                     'assets/medal@2x.png',
                     'Experience',
+                    60,
                     experience,
                     imageBackgroundColor: Colors.red.shade100,
                     textBackgroundColor: Colors.red.shade50,
@@ -312,6 +322,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                     isWeb,
                     'assets/phone@2x.png',
                     'Phone Number',
+                    60,
                     '+91-$phoneNumber',
                     imageBackgroundColor: Colors.teal.shade100,
                     textBackgroundColor: Colors.teal.shade50,
@@ -321,11 +332,12 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                     isWeb,
                     'assets/location@2x.png',
                     'Address',
+                    null,
                     address,
                     imageBackgroundColor: Colors.green.shade100,
                     textBackgroundColor: Colors.green.shade50,
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 20),
                 ],
               ),
       ),
@@ -336,6 +348,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
     bool isWeb,
     String iconPath,
     String title,
+    double? containerHeight,
     String value, {
     Color imageBackgroundColor = Colors.pink,
     Color textBackgroundColor = Colors.white,
@@ -373,7 +386,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
           // Text Container
           Flexible(
             child: Container(
-              height: isWeb ? 80 : 60,
+              height: isWeb ? 80 : max(60, containerHeight ?? 110),
               width: isWeb ? 400 : 306,
               decoration: BoxDecoration(
                 color: textBackgroundColor,

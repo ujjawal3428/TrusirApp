@@ -1,15 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/image_uploading.dart';
 import 'package:trusir/common/login_page.dart';
 import 'package:trusir/common/otp_screen.dart';
 import 'package:trusir/common/registration_splash_screen.dart';
@@ -178,163 +174,79 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
     print(additionals);
   }
 
-  Future<String> uploadImage(String path) async {
-    setState(() {
-      if (path == 'photo') {
-        isprofileuploading = true;
-      } else if (path == 'adhaarFront') {
-        isadhaarfuploading = true;
-      } else if (path == 'adhaarBack') {
-        isadhaarbuploading = true;
-      } else if (path == 'sign') {
-        issignuploading = true;
-      }
-    });
-    await _requestPermissions();
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+  Future<void> handleUploadFromCamera(String? path) async {
+    final String result = await ImageUploadUtils.uploadSingleImageFromCamera();
 
-    if (image == null) {
-      Fluttertoast.showToast(msg: 'No image selected.');
+    if (result != 'null') {
       setState(() {
-        if (path == 'photo') {
-          isprofileuploading = false;
-        } else if (path == 'adhaarFront') {
-          isadhaarfuploading = false;
-        } else if (path == 'adhaarBack') {
-          isadhaarbuploading = false;
-        } else if (path == 'sign') {
-          issignuploading = false;
-        }
-      });
-      return 'null';
-    }
-
-    // Compress the image
-    final compressedImage = await compressImage(File(image.path));
-
-    if (compressedImage == null) {
-      Fluttertoast.showToast(msg: 'Failed to compress image.');
-      setState(() {
-        if (path == 'photo') {
-          isprofileuploading = false;
-        } else if (path == 'adhaarFront') {
-          isadhaarfuploading = false;
-        } else if (path == 'adhaarBack') {
-          isadhaarbuploading = false;
-        } else if (path == 'sign') {
-          issignuploading = false;
-        }
-      });
-      return 'null';
-    }
-
-    final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri);
-
-    // Add the compressed image file to the request
-    request.files
-        .add(await http.MultipartFile.fromPath('photo', compressedImage.path));
-
-    // Send the request
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      // Parse the response to extract the download URL
-      final responseBody = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-
-      if (jsonResponse.containsKey('download_url')) {
         setState(() {
           if (path == 'photo') {
-            formData.photoPath = jsonResponse['download_url'];
+            formData.photoPath = result;
             isprofileuploading = false;
           } else if (path == 'adhaarFront') {
-            formData.aadharFrontPath = jsonResponse['download_url'];
+            formData.aadharFrontPath = result;
             isadhaarfuploading = false;
           } else if (path == 'adhaarBack') {
-            formData.aadharBackPath = jsonResponse['download_url'];
+            formData.aadharBackPath = result;
             isadhaarbuploading = false;
           } else if (path == 'sign') {
-            formData.signaturePath = jsonResponse['download_url'];
+            formData.signaturePath = result;
             issignuploading = false;
           }
         });
-
-        return jsonResponse['download_url'] as String;
-      } else {
-        Fluttertoast.showToast(msg: 'Download URL not found in the response.');
-        setState(() {
-          isprofileuploading = false;
-          isadhaarbuploading = false;
-          isadhaarfuploading = false;
-          issignuploading = false;
-        });
-        return 'null';
-      }
-    } else {
-      Fluttertoast.showToast(
-          msg: 'Failed to upload image: ${response.statusCode}');
-      setState(() {
-        isprofileuploading = false;
-        isadhaarbuploading = false;
-        isadhaarfuploading = false;
-        issignuploading = false;
       });
-      return 'null';
+      Fluttertoast.showToast(msg: 'Image uploaded successfully!');
+    } else {
+      Fluttertoast.showToast(msg: 'Image upload failed!');
+      setState(() {
+        if (path == 'photo') {
+          isprofileuploading = false;
+        } else if (path == 'adhaarFront') {
+          isadhaarfuploading = false;
+        } else if (path == 'adhaarBack') {
+          isadhaarbuploading = false;
+        } else if (path == 'sign') {
+          issignuploading = false;
+        }
+      });
     }
   }
 
-// Function to compress image
-  Future<XFile?> compressImage(File file) async {
-    final String targetPath =
-        '${file.parent.path}/compressed_${file.uri.pathSegments.last}';
+  Future<void> handleUploadFromGallery(String? path) async {
+    final String result = await ImageUploadUtils.uploadSingleImageFromGallery();
 
-    try {
-      final compressedFile = await FlutterImageCompress.compressAndGetFile(
-        file.absolute.path,
-        targetPath,
-        quality: 85, // Adjust quality to achieve ~2MB size
-        minWidth: 1920, // Adjust resolution as needed
-        minHeight: 1080, // Adjust resolution as needed
-      );
-
-      return compressedFile;
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error compressing image: $e');
-      return null;
-    }
-  }
-
-  Future<void> _requestPermissions() async {
-    if (await Permission.storage.isGranted &&
-        await Permission.camera.isGranted) {
-      return;
-    }
-
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
-
-      // Skip permissions for Android versions below API 30
-      if (androidInfo.version.sdkInt < 30) {
-        return;
-      }
-
-      if (await Permission.photos.isGranted ||
-          await Permission.videos.isGranted ||
-          await Permission.camera.isGranted) {
-        return;
-      }
-
-      Map<Permission, PermissionStatus> statuses = await [
-        Permission.photos,
-        Permission.videos,
-        Permission.camera
-      ].request();
-
-      if (statuses.values.any((status) => !status.isGranted)) {
-        openAppSettings();
-      }
+    if (result != 'null') {
+      setState(() {
+        setState(() {
+          if (path == 'photo') {
+            formData.photoPath = result;
+            isprofileuploading = false;
+          } else if (path == 'adhaarFront') {
+            formData.aadharFrontPath = result;
+            isadhaarfuploading = false;
+          } else if (path == 'adhaarBack') {
+            formData.aadharBackPath = result;
+            isadhaarbuploading = false;
+          } else if (path == 'sign') {
+            formData.signaturePath = result;
+            issignuploading = false;
+          }
+        });
+      });
+      Fluttertoast.showToast(msg: 'Image uploaded successfully!');
+    } else {
+      Fluttertoast.showToast(msg: 'Image upload failed!');
+      setState(() {
+        if (path == 'photo') {
+          isprofileuploading = false;
+        } else if (path == 'adhaarFront') {
+          isadhaarfuploading = false;
+        } else if (path == 'adhaarBack') {
+          isadhaarbuploading = false;
+        } else if (path == 'sign') {
+          issignuploading = false;
+        }
+      });
     }
   }
 
@@ -369,115 +281,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
       }
     } else {
       throw Exception('Failed to fetch courses');
-    }
-  }
-
-  Future<String> uploadImageSelective(XFile imageFile) async {
-    final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri);
-
-    // Add the image file to the request
-    request.files
-        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
-
-    // Send the request
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      // Parse the response to extract the download URL
-      final responseBody = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-
-      if (jsonResponse.containsKey('download_url')) {
-        return jsonResponse['download_url'] as String;
-      } else {
-        Fluttertoast.showToast(msg: 'Download URL not found in the response.');
-        return 'null';
-      }
-    } else {
-      Fluttertoast.showToast(
-          msg: 'Failed to upload image: ${response.statusCode}');
-      return 'null';
-    }
-  }
-
-  Future<void> handleImageSelection(String? path) async {
-    setState(() {
-      if (path == 'photo') {
-        isprofileuploading = true;
-      } else if (path == 'aadharFront') {
-        isadhaarfuploading = true;
-      } else if (path == 'aadharBack') {
-        isadhaarbuploading = true;
-      } else if (path == 'sign') {
-        issignuploading = true;
-      }
-    });
-    try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile =
-          await picker.pickImage(source: ImageSource.gallery);
-
-      if (pickedFile != null) {
-        final fileSize =
-            await pickedFile.length(); // Get the file size in bytes
-
-        // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
-        if (fileSize > 2 * 1024 * 1024) {
-          Fluttertoast.showToast(
-              msg: 'File size exceeds 2MB. Please select a smaller image.');
-          return;
-        }
-      }
-
-      if (pickedFile != null) {
-        // Upload the image and get the path
-        final uploadedPath = await uploadImageSelective(pickedFile);
-        if (uploadedPath != 'null') {
-          setState(() {
-            // Example: Update the first student's photo path
-            if (path == 'profilephoto') {
-              formData.photoPath = uploadedPath;
-              isprofileuploading = false;
-            } else if (path == 'aadharBack') {
-              formData.aadharBackPath = uploadedPath;
-              isadhaarbuploading = false;
-            } else if (path == 'aadharFront') {
-              formData.aadharFrontPath = uploadedPath;
-              isadhaarfuploading = false;
-            } else if (path == 'signature') {
-              formData.signaturePath = uploadedPath;
-              issignuploading = false;
-            }
-          });
-          Fluttertoast.showToast(
-              msg: 'Image uploaded successfully: $uploadedPath');
-        } else {
-          Fluttertoast.showToast(msg: 'Failed to upload the image.');
-          setState(() {
-            isprofileuploading = false;
-            isadhaarbuploading = false;
-            isadhaarfuploading = false;
-            issignuploading = false;
-          });
-        }
-      } else {
-        Fluttertoast.showToast(msg: 'No image selected.');
-        setState(() {
-          isprofileuploading = false;
-          isadhaarbuploading = false;
-          isadhaarfuploading = false;
-          issignuploading = false;
-        });
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error during image selection: $e');
-      setState(() {
-        isprofileuploading = false;
-        isadhaarbuploading = false;
-        isadhaarfuploading = false;
-        issignuploading = false;
-      });
     }
   }
 
@@ -1108,7 +911,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                           onPressed: () {
                                                             Navigator.pop(
                                                                 context);
-                                                            uploadImage(
+                                                            handleUploadFromCamera(
                                                                 'photo');
                                                           },
                                                           child: const Text(
@@ -1140,8 +943,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                           onPressed: () {
                                                             Navigator.pop(
                                                                 context);
-                                                            handleImageSelection(
-                                                                'profilephoto');
+                                                            handleUploadFromGallery(
+                                                                'photo');
                                                           },
                                                           child: const Text(
                                                             "Upload File",
@@ -1223,7 +1026,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                           onPressed: () {
                                                             Navigator.pop(
                                                                 context);
-                                                            uploadImage(
+                                                            handleUploadFromCamera(
                                                                 'adhaarFront');
                                                           },
                                                           child: const Text(
@@ -1255,8 +1058,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                           onPressed: () {
                                                             Navigator.pop(
                                                                 context);
-                                                            handleImageSelection(
-                                                                'aadharFront');
+                                                            handleUploadFromGallery(
+                                                                'adhaarFront');
                                                           },
                                                           child: const Text(
                                                             "Upload File",
@@ -1340,7 +1143,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                           onPressed: () {
                                                             Navigator.pop(
                                                                 context);
-                                                            uploadImage(
+                                                            handleUploadFromCamera(
                                                                 'adhaarBack');
                                                           },
                                                           child: const Text(
@@ -1372,8 +1175,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                           onPressed: () {
                                                             Navigator.pop(
                                                                 context);
-                                                            handleImageSelection(
-                                                                'aadharBack');
+                                                            handleUploadFromGallery(
+                                                                'adhaarBack');
                                                           },
                                                           child: const Text(
                                                             "Upload File",
@@ -1456,7 +1259,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                           onPressed: () {
                                                             Navigator.pop(
                                                                 context);
-                                                            uploadImage('sign');
+                                                            handleUploadFromCamera(
+                                                                'sign');
                                                           },
                                                           child: const Text(
                                                             "Camera",
@@ -1487,8 +1291,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                           onPressed: () {
                                                             Navigator.pop(
                                                                 context);
-                                                            handleImageSelection(
-                                                                'signature');
+                                                            handleUploadFromGallery(
+                                                                'sign');
                                                           },
                                                           child: const Text(
                                                             "Upload File",
@@ -1864,7 +1668,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      uploadImage('photo');
+                                                      handleUploadFromCamera(
+                                                          'photo');
                                                     },
                                                     child: const Text(
                                                       "Camera",
@@ -1891,8 +1696,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      handleImageSelection(
-                                                          'profilephoto');
+                                                      handleUploadFromGallery(
+                                                          'photo');
                                                     },
                                                     child: const Text(
                                                       "Upload File",
@@ -1966,7 +1771,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      uploadImage(
+                                                      handleUploadFromCamera(
                                                           'adhaarFront');
                                                     },
                                                     child: const Text(
@@ -1994,8 +1799,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      handleImageSelection(
-                                                          'aadharFront');
+                                                      handleUploadFromGallery(
+                                                          'adhaarFront');
                                                     },
                                                     child: const Text(
                                                       "Upload File",
@@ -2068,7 +1873,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      uploadImage('adhaarBack');
+                                                      handleUploadFromCamera(
+                                                          'adhaarBack');
                                                     },
                                                     child: const Text(
                                                       "Camera",
@@ -2095,8 +1901,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      handleImageSelection(
-                                                          'aadharBack');
+                                                      handleUploadFromGallery(
+                                                          'adhaarBack');
                                                     },
                                                     child: const Text(
                                                       "Upload File",
@@ -2170,7 +1976,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      uploadImage('sign');
+                                                      handleUploadFromCamera(
+                                                          'sign');
                                                     },
                                                     child: const Text(
                                                       "Camera",
@@ -2197,8 +2004,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      handleImageSelection(
-                                                          'signature');
+                                                      handleUploadFromGallery(
+                                                          'sign');
                                                     },
                                                     child: const Text(
                                                       "Upload File",
@@ -2358,7 +2165,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
       child: TextField(
         textCapitalization: TextCapitalization.words,
         onChanged: onChanged,
-        
+
         maxLines: null, // Allows the text to wrap and grow vertically
         textAlignVertical:
             TextAlignVertical.top, // Ensures text starts from the top
@@ -2426,7 +2233,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
             borderRadius: BorderRadius.circular(22),
             borderSide: const BorderSide(color: Colors.grey),
           ),
-          
           isDense: true,
         ),
       ),
@@ -2476,7 +2282,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
             borderRadius: BorderRadius.circular(22),
             borderSide: const BorderSide(color: Colors.grey),
           ),
-          
           isDense: true,
         ),
       ),
@@ -2524,7 +2329,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 borderRadius: BorderRadius.circular(22),
                 borderSide: const BorderSide(color: Colors.grey),
               ),
-             
               isDense: true,
             ),
             items: items
@@ -2534,7 +2338,10 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                     child: StatefulBuilder(
                       builder: (context, setStateInner) {
                         return CheckboxListTile(
-                          title: Text(item, style: const TextStyle(fontWeight: FontWeight.w400),),
+                          title: Text(
+                            item,
+                            style: const TextStyle(fontWeight: FontWeight.w400),
+                          ),
                           value: selectedValues.contains(item),
                           onChanged: (bool? isChecked) {
                             if (isChecked == true) {
@@ -2567,7 +2374,8 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
             hint: selectedText.isNotEmpty
                 ? Text(
                     selectedText,
-                    style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+                    style: const TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.w400),
                   )
                 : null,
           ),
@@ -2617,7 +2425,10 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
         items: items
             .map((item) => DropdownMenuItem(
                   value: item,
-                  child: Text(item,style: const TextStyle(fontWeight: FontWeight.w400),),
+                  child: Text(
+                    item,
+                    style: const TextStyle(fontWeight: FontWeight.w400),
+                  ),
                 ))
             .toList(),
       ),

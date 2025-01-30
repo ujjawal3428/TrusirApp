@@ -222,12 +222,21 @@ class _TeacherCoursePageState extends State<TeacherCoursePage> {
   }
 
   Future<List<MyCourseModel>> fetchCourses(String userID) async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? teacherID = prefs.getString('userID');
+
     final url = Uri.parse('$baseUrl/get-courses/$userID');
     final response = await http.get(url);
+
     if (response.statusCode == 200) {
       final List<dynamic> data = json.decode(response.body);
-      final responseData =
-          data.map((json) => MyCourseModel.fromJson(json)).toList();
+
+      // Map and filter the courses based on the teacherID
+      final List<MyCourseModel> responseData = data
+          .map((json) => MyCourseModel.fromJson(json))
+          .where((course) => course.teacherID == teacherID)
+          .toList();
+
       courses = responseData;
       return courses;
     } else {

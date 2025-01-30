@@ -185,7 +185,8 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   }
 
   Future<void> handleUploadFromCamera() async {
-    final String result = await ImageUploadUtils.uploadImagesFromCamera();
+    final String result =
+        await ImageUploadUtils.uploadMultipleImagesFromCamera();
 
     if (result != 'null') {
       setState(() {
@@ -206,7 +207,8 @@ class _StudentDoubtScreenState extends State<StudentDoubtScreen> {
   }
 
   Future<void> handleUploadFromGallery() async {
-    final String result = await ImageUploadUtils.uploadImagesFromGallery();
+    final String result =
+        await ImageUploadUtils.uploadMultipleImagesFromGallery();
 
     if (result != 'null') {
       setState(() {

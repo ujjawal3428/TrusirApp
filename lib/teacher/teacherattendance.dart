@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:trusir/common/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/teacher/teacher_facilities.dart';
 
 class StudentAttendanceRecord {
   final int id;
@@ -63,8 +64,8 @@ class Course {
 }
 
 class Teacherattendance extends StatefulWidget {
-  final String userID;
-  const Teacherattendance({super.key, required this.userID});
+  final List<StudentProfile> studentprofile;
+  const Teacherattendance({super.key, required this.studentprofile});
 
   @override
   State<Teacherattendance> createState() => _TeacherattendanceState();
@@ -72,8 +73,7 @@ class Teacherattendance extends StatefulWidget {
 
 class _TeacherattendanceState extends State<Teacherattendance> {
   DateTime _selectedDate = DateTime.now();
-  int selectedCourseIndex = 0;
-  int selectedSlotIndex = 0;
+  int selectedStudentIndex = 0;
   Map<int, Map<String, String>> _attendanceData = {};
   // Day: Status
   Map<String, int> _summaryData = {}; // Summary details
@@ -82,8 +82,59 @@ class _TeacherattendanceState extends State<Teacherattendance> {
   String? teacheruserID;
   List<Map<String, String>> slots = [];
 
+  String? selectedStudent;
+  String? selectedUserID;
+  List<String> names = [];
+  List<StudentProfile> students = [];
+  Map<String, String> nameUserMap = {};
+
+  Future<void> _submitAttendance({
+    required String id,
+    required String status,
+  }) async {
+    final payload = {
+      "status": status,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(
+            '$baseUrl/api/update-attendance/$id'), // Append the ID as a parameter to the URL
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(payload),
+      );
+
+      if (response.statusCode == 200) {
+        setState(() {
+          // Update the status locally
+          _fetchAttendanceData(selectedslotID!);
+          _updateSummary(); // Update the summary
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Attendance updated successfully!")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Failed to update attendance!")),
+        );
+      }
+    } catch (error) {
+      print("Error: $error");
+    }
+  }
+
+  void extractStudentData(List<StudentProfile> students, List<String> names,
+      Map<String, String> nameUserIDMap) {
+    for (var student in students) {
+      names.add(student.name);
+      nameUserIDMap[student.name] = student.userID;
+    }
+    selectedUserID = nameUserMap[names[0]];
+    initializeData();
+  }
+
   Future<List<Course>> fetchCourses() async {
-    final url = Uri.parse('$baseUrl/view-slots/${widget.userID}');
+    final url = Uri.parse('$baseUrl/view-slots/$selectedUserID');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -126,7 +177,10 @@ class _TeacherattendanceState extends State<Teacherattendance> {
   @override
   void initState() {
     super.initState();
-    initializeData();
+    setState(() {
+      students = widget.studentprofile;
+      extractStudentData(students, names, nameUserMap);
+    });
   }
 
   Future<void> initializeData() async {
@@ -155,6 +209,7 @@ class _TeacherattendanceState extends State<Teacherattendance> {
 
     for (final course in courses) {
       if (course.teacherID == teacheruserID) {
+        print('${course.teacherID} $teacheruserID');
         return slots.firstWhere(
             (slot) => slot['slotID'] == course.id.toString())['slotID'];
       }
@@ -168,7 +223,7 @@ class _TeacherattendanceState extends State<Teacherattendance> {
     required String slotID,
   }) async {
     final url = Uri.parse(
-        'https://admin.trusir.com/view-attendance/${widget.userID}/$year/$month/$slotID');
+        'https://admin.trusir.com/view-attendance/$selectedUserID/$year/$month/$slotID');
 
     try {
       final response = await http.get(url);
@@ -407,12 +462,8 @@ class _TeacherattendanceState extends State<Teacherattendance> {
         ),
         body: SingleChildScrollView(
             child: Column(children: [
+          _buildStudentList(),
           // Calendar Section
-          StudentList(
-            students: const [],
-            selectedStudent: '',
-            onStudentSelected: (student) {},
-          ),
           Padding(
             padding:
                 const EdgeInsets.only(top: 10, left: 15, bottom: 15, right: 20),
@@ -524,36 +575,80 @@ class _TeacherattendanceState extends State<Teacherattendance> {
                               _attendanceData[day];
                           String status =
                               attendanceInfo?['status'] ?? "no_data";
-                          return Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: status == "no_data"
-                                  ? Colors.transparent
-                                  : Colors.yellow,
-                            ),
+                          String? id = attendanceInfo?['id'];
+                          return GestureDetector(
+                            onTap: () {
+                              if (id != null) {
+                                // Show a dialog to update the status
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Update Attendance for $day"),
+                                    content: DropdownButton<String>(
+                                      value: status,
+                                      items: const [
+                                        DropdownMenuItem(
+                                            value: 'present',
+                                            child: Text('Present')),
+                                        DropdownMenuItem(
+                                            value: 'absent',
+                                            child: Text('Absent')),
+                                        DropdownMenuItem(
+                                            value: 'No class',
+                                            child: Text('No class')),
+                                      ],
+                                      onChanged: (newStatus) {
+                                        if (newStatus != null) {
+                                          _submitAttendance(
+                                                  id: id, status: newStatus)
+                                              .then((_) {
+                                            Navigator.pop(
+                                                context); // Close the dialog after updating
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content:
+                                          Text("No ID found for this date!")),
+                                );
+                              }
+                            },
                             child: Container(
-                              margin: const EdgeInsets.all(2),
                               decoration: BoxDecoration(
-                                color: status == "present"
-                                    ? Colors.green
-                                    : status == "absent"
-                                        ? Colors.red
-                                        : Colors.grey[400],
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: isToday
-                                      ? const Color(0xFF48116A)
-                                      : Colors.white,
-                                  width: isToday ? 3 : 0,
-                                ),
+                                color: status == "no_data"
+                                    ? Colors.transparent
+                                    : Colors.yellow,
                               ),
-                              child: Center(
-                                child: Text(
-                                  '$day',
-                                  style: TextStyle(
-                                    color: status == "no_data"
-                                        ? Colors.black
+                              child: Container(
+                                margin: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: status == "present"
+                                      ? Colors.green
+                                      : status == "absent"
+                                          ? Colors.red
+                                          : Colors.grey[400],
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: isToday
+                                        ? const Color(0xFF48116A)
                                         : Colors.white,
+                                    width: isToday ? 3 : 0,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '$day',
+                                    style: TextStyle(
+                                      color: status == "no_data"
+                                          ? Colors.black
+                                          : Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -586,6 +681,43 @@ class _TeacherattendanceState extends State<Teacherattendance> {
             height: 50,
           ),
         ])));
+  }
+
+  Widget _buildStudentList() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(names.length, (index) {
+          bool isSelected = selectedStudentIndex == index;
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                selectedStudentIndex = index;
+                selectedUserID = nameUserMap[names[index]]; // Set userID
+              });
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.black : Colors.grey[200],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                names[index], // Display student name
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          );
+        }),
+      ),
+    );
   }
 
   Widget _buildSummaryCard(
@@ -670,77 +802,6 @@ class YearMonthPicker extends StatelessWidget {
             }),
           );
         },
-      ),
-    );
-  }
-}
-
-class StudentList extends StatelessWidget {
-  final List<String> students;
-  final String? selectedStudent;
-  final Function(String) onStudentSelected;
-
-  const StudentList({
-    super.key,
-    required this.students,
-    required this.selectedStudent,
-    required this.onStudentSelected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 80,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: students.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () => onStudentSelected(students[index]),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 15),
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: selectedStudent == students[index]
-                              ? Colors.blue
-                              : Colors.transparent,
-                          width: 2,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          students[index],
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              selectedStudent != null
-                  ? "Selected: $selectedStudent"
-                  : "No student selected",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
       ),
     );
   }

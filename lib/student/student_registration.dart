@@ -1,12 +1,8 @@
-import 'dart:io';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/image_uploading.dart';
 import 'package:trusir/common/login_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -136,135 +132,57 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
 
   List<List<String>> selectedSubjectsPerForm = [];
 
-  Future<String> uploadImage(int index, String path) async {
-    setState(() {
-      // Example: Update the first student's photo path
-      if (path == 'photo') {
-        isimageUploading = true;
-      } else if (path == 'aadharBack') {
-        isadhaarBUploading = true;
-      } else if (path == 'aadharFront') {
-        isadhaarFUploading = true;
-      }
-    });
-    await _requestPermissions();
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+  Future<void> handleUploadFromCamera(String? path, int index) async {
+    final String result = await ImageUploadUtils.uploadSingleImageFromCamera();
 
-    if (image == null) {
-      Fluttertoast.showToast(msg: 'No image selected.');
-      return 'null';
-    }
-
-    // Compress the image
-    final compressedImage = await compressImage(File(image.path));
-
-    if (compressedImage == null) {
-      Fluttertoast.showToast(msg: 'Failed to compress image.');
-      return 'null';
-    }
-
-    final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri);
-
-    // Add the compressed image file to the request
-    request.files
-        .add(await http.MultipartFile.fromPath('photo', compressedImage.path));
-
-    // Send the request
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      // Parse the response to extract the download URL
-      final responseBody = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-
-      if (jsonResponse.containsKey('download_url')) {
-        setState(() {
-          if (path == 'photo') {
-            studentForms[index].photoPath = jsonResponse['download_url'];
-            isimageUploading = false;
-          } else if (path == 'adhaarFront') {
-            studentForms[index].aadharFrontPath = jsonResponse['download_url'];
-            isadhaarFUploading = false;
-          } else if (path == 'adhaarBack') {
-            studentForms[index].aadharBackPath = jsonResponse['download_url'];
-            isadhaarBUploading = false;
-          }
-        });
-
-        return jsonResponse['download_url'] as String;
-      } else {
-        Fluttertoast.showToast(msg: 'Download URL not found in the response.');
-        setState(() {
+    if (result != 'null') {
+      setState(() {
+        if (path == 'profilephoto') {
+          studentForms[index].photoPath = result;
           isimageUploading = false;
-          isadhaarFUploading = false;
+        } else if (path == 'aadharBackPath') {
+          studentForms[index].aadharBackPath = result;
           isadhaarBUploading = false;
-        });
-        return 'null';
-      }
+        } else if (path == 'aadharFrontPath') {
+          studentForms[index].aadharFrontPath = result;
+          isadhaarFUploading = false;
+        }
+      });
+      Fluttertoast.showToast(msg: 'Image uploaded successfully!');
     } else {
-      Fluttertoast.showToast(
-          msg: 'Failed to upload image: ${response.statusCode}');
+      Fluttertoast.showToast(msg: 'Image upload failed!');
       setState(() {
         isimageUploading = false;
-        isadhaarFUploading = false;
         isadhaarBUploading = false;
+        isadhaarFUploading = false;
       });
-      return 'null';
     }
   }
 
-// Function to compress image
-  Future<XFile?> compressImage(File file) async {
-    final String targetPath =
-        '${file.parent.path}/compressed_${file.uri.pathSegments.last}';
+  Future<void> handleUploadFromGallery(String? path, int index) async {
+    final String result = await ImageUploadUtils.uploadSingleImageFromGallery();
 
-    try {
-      final compressedFile = await FlutterImageCompress.compressAndGetFile(
-        file.absolute.path,
-        targetPath,
-        quality: 85, // Adjust quality to achieve ~2MB size
-        minWidth: 1920, // Adjust resolution as needed
-        minHeight: 1080, // Adjust resolution as needed
-      );
-
-      return compressedFile;
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error compressing image: $e');
-      return null;
-    }
-  }
-
-  Future<void> _requestPermissions() async {
-    if (await Permission.storage.isGranted &&
-        await Permission.camera.isGranted) {
-      return;
-    }
-
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await DeviceInfoPlugin().androidInfo;
-
-      // Skip permissions for Android versions below API 30
-      if (androidInfo.version.sdkInt < 30) {
-        return;
-      }
-
-      if (await Permission.photos.isGranted ||
-          await Permission.videos.isGranted ||
-          await Permission.camera.isGranted) {
-        return;
-      }
-
-      Map<Permission, PermissionStatus> statuses = await [
-        Permission.photos,
-        Permission.videos,
-        Permission.camera
-      ].request();
-
-      if (statuses.values.any((status) => !status.isGranted)) {
-        openAppSettings();
-      }
+    if (result != 'null') {
+      setState(() {
+        if (path == 'profilephoto') {
+          studentForms[index].photoPath = result;
+          isimageUploading = false;
+        } else if (path == 'aadharBackPath') {
+          studentForms[index].aadharBackPath = result;
+          isadhaarBUploading = false;
+        } else if (path == 'aadharFrontPath') {
+          studentForms[index].aadharFrontPath = result;
+          isadhaarFUploading = false;
+        }
+      });
+      Fluttertoast.showToast(msg: 'Image uploaded successfully!');
+    } else {
+      Fluttertoast.showToast(msg: 'Image upload failed!');
+      setState(() {
+        isimageUploading = false;
+        isadhaarBUploading = false;
+        isadhaarFUploading = false;
+      });
     }
   }
 
@@ -537,111 +455,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
       }
     } catch (e) {
       print('Error sending OTP: $e');
-    }
-  }
-
-  Future<String> uploadImageSelective(XFile imageFile) async {
-    final uri = Uri.parse('$baseUrl/api/upload-profile');
-    final request = http.MultipartRequest('POST', uri);
-
-    // Add the image file to the request
-    request.files
-        .add(await http.MultipartFile.fromPath('photo', imageFile.path));
-
-    // Send the request
-    final response = await request.send();
-
-    if (response.statusCode == 201) {
-      // Parse the response to extract the download URL
-      final responseBody = await response.stream.bytesToString();
-      final Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
-
-      if (jsonResponse.containsKey('download_url')) {
-        return jsonResponse['download_url'] as String;
-      } else {
-        print('Download URL not found in the response.');
-        return 'null';
-      }
-    } else {
-      print('Failed to upload image: ${response.statusCode}');
-      return 'null';
-    }
-  }
-
-  Future<void> handleImageSelection(String? path, int index) async {
-    setState(() {
-      // Example: Update the first student's photo path
-      if (path == 'profilephoto') {
-        isimageUploading = true;
-      } else if (path == 'aadharBackPath') {
-        isadhaarBUploading = true;
-      } else if (path == 'aadharFrontPath') {
-        isadhaarFUploading = true;
-      }
-    });
-    try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? pickedFile =
-          await picker.pickImage(source: ImageSource.gallery);
-      setState(() {
-        isimageUploading = true;
-      });
-
-      if (pickedFile != null) {
-        final fileSize =
-            await pickedFile.length(); // Get the file size in bytes
-
-        // Check if file size exceeds 2MB (2 * 1024 * 1024 bytes)
-        if (fileSize > 2 * 1024 * 1024) {
-          Fluttertoast.showToast(
-              msg: 'File size exceeds 2MB. Please select a smaller image.');
-          return;
-        }
-      }
-
-      if (pickedFile != null) {
-        // Upload the image and get the path
-        final newuploadedPath = await uploadImageSelective(pickedFile);
-        if (newuploadedPath != 'null') {
-          setState(() {
-            // Example: Update the first student's photo path
-            if (path == 'profilephoto') {
-              studentForms[index].photoPath = newuploadedPath;
-              isimageUploading = false;
-            } else if (path == 'aadharBackPath') {
-              studentForms[index].aadharBackPath = newuploadedPath;
-              isadhaarBUploading = false;
-            } else if (path == 'aadharFrontPath') {
-              studentForms[index].aadharFrontPath = newuploadedPath;
-              isadhaarFUploading = false;
-            }
-          });
-
-          Fluttertoast.showToast(
-              msg: 'Image uploaded successfully: $uploadedPath');
-        } else {
-          Fluttertoast.showToast(msg: 'Failed to upload the image.');
-          setState(() {
-            isimageUploading = false;
-            isadhaarFUploading = false;
-            isadhaarBUploading = false;
-          });
-        }
-      } else {
-        Fluttertoast.showToast(msg: 'No image selected.');
-        setState(() {
-          isimageUploading = false;
-          isadhaarFUploading = false;
-          isadhaarBUploading = false;
-        });
-      }
-    } catch (e) {
-      Fluttertoast.showToast(msg: 'Error during image selection: $e');
-      setState(() {
-        isimageUploading = false;
-        isadhaarFUploading = false;
-        isadhaarBUploading = false;
-      });
     }
   }
 
@@ -1168,8 +981,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      uploadImage(
-                                                          index, 'photo');
+                                                      handleUploadFromCamera(
+                                                          'profilephoto',
+                                                          index);
                                                     },
                                                     child: const Text(
                                                       "Camera",
@@ -1196,7 +1010,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      handleImageSelection(
+                                                      handleUploadFromGallery(
                                                           'profilephoto',
                                                           index);
                                                     },
@@ -1273,8 +1087,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      uploadImage(
-                                                          index, 'adhaarFront');
+                                                      handleUploadFromCamera(
+                                                          'aadharFrontPath',
+                                                          index);
                                                     },
                                                     child: const Text(
                                                       "Camera",
@@ -1301,7 +1116,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      handleImageSelection(
+                                                      handleUploadFromGallery(
                                                           'aadharFrontPath',
                                                           index);
                                                     },
@@ -1379,8 +1194,9 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      uploadImage(
-                                                          index, 'adhaarBack');
+                                                      handleUploadFromCamera(
+                                                          'aadharBackPath',
+                                                          index);
                                                     },
                                                     child: const Text(
                                                       "Camera",
@@ -1407,7 +1223,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                                   child: TextButton(
                                                     onPressed: () {
                                                       Navigator.pop(context);
-                                                      handleImageSelection(
+                                                      handleUploadFromGallery(
                                                           'aadharBackPath',
                                                           index);
                                                     },
@@ -1683,7 +1499,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                             child: TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
-                                                uploadImage(index, 'photo');
+                                                handleUploadFromCamera(
+                                                    'profilephoto', index);
                                               },
                                               child: const Text(
                                                 "Camera",
@@ -1707,7 +1524,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                             child: TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
-                                                handleImageSelection(
+                                                handleUploadFromGallery(
                                                     'profilephoto', index);
                                               },
                                               child: const Text(
@@ -1776,8 +1593,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                             child: TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
-                                                uploadImage(
-                                                    index, 'adhaarFront');
+                                                handleUploadFromCamera(
+                                                    'aadharFrontPath', index);
                                               },
                                               child: const Text(
                                                 "Camera",
@@ -1801,7 +1618,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                             child: TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
-                                                handleImageSelection(
+                                                handleUploadFromGallery(
                                                     'aadharFrontPath', index);
                                               },
                                               child: const Text(
@@ -1870,8 +1687,8 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                             child: TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
-                                                uploadImage(
-                                                    index, 'adhaarBack');
+                                                handleUploadFromCamera(
+                                                    'aadharBackPath', index);
                                               },
                                               child: const Text(
                                                 "Camera",
@@ -1895,7 +1712,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                             child: TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
-                                                handleImageSelection(
+                                                handleUploadFromGallery(
                                                     'aadharBackPath', index);
                                               },
                                               child: const Text(
@@ -2151,14 +1968,16 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             borderRadius: BorderRadius.circular(22),
             borderSide: const BorderSide(color: Colors.grey),
           ),
-          
           isDense: true,
         ),
         items: items
             .map(
               (item) => DropdownMenuItem(
                 value: item,
-                child: Text(item,style: const TextStyle(fontWeight: FontWeight.w400),),
+                child: Text(
+                  item,
+                  style: const TextStyle(fontWeight: FontWeight.w400),
+                ),
               ),
             )
             .toList(),
@@ -2207,7 +2026,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 borderRadius: BorderRadius.circular(22),
                 borderSide: const BorderSide(color: Colors.grey),
               ),
-             
               isDense: true,
             ),
             items: items
@@ -2217,7 +2035,10 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     child: StatefulBuilder(
                       builder: (context, setStateInner) {
                         return CheckboxListTile(
-                          title: Text(item, style: const TextStyle(fontWeight: FontWeight.w400),),
+                          title: Text(
+                            item,
+                            style: const TextStyle(fontWeight: FontWeight.w400),
+                          ),
                           value: selectedValues.contains(item),
                           onChanged: (bool? isChecked) {
                             if (isChecked == true) {
@@ -2250,7 +2071,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
             hint: selectedText.isNotEmpty
                 ? Text(
                     selectedText,
-                   style: const TextStyle(fontWeight: FontWeight.w400),
+                    style: const TextStyle(fontWeight: FontWeight.w400),
                   )
                 : null,
           ),

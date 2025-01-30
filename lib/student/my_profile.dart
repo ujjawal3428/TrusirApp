@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/student/editprofilescreen.dart';
@@ -182,6 +184,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                                   'Father Name',
                                   fatherName!,
                                   isLargeScreen,
+                                  60,
                                   rowColors[0],
                                 ),
                                 const SizedBox(height: 10),
@@ -190,6 +193,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                                   'Class',
                                   studentClass!,
                                   isLargeScreen,
+                                  60,
                                   rowColors[1],
                                 ),
                                 const SizedBox(height: 10),
@@ -198,6 +202,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                                   'Subjects',
                                   subject!,
                                   isLargeScreen,
+                                  60,
                                   rowColors[2],
                                 ),
                                 const SizedBox(height: 10),
@@ -206,6 +211,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                                   'School',
                                   school!,
                                   isLargeScreen,
+                                  60,
                                   rowColors[3],
                                 ),
                                 const SizedBox(height: 10),
@@ -214,14 +220,16 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                                   'Phone',
                                   '+91-$phone',
                                   isLargeScreen,
+                                  60,
                                   rowColors[4],
                                 ),
                                 const SizedBox(height: 10),
                                 buildInfoRow(
                                   'assets/location@2x.png',
-                                  'Phone',
+                                  'Address',
                                   address!,
                                   isLargeScreen,
+                                  null,
                                   rowColors[0],
                                 ),
                                 const SizedBox(height: 10),
@@ -293,6 +301,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           'Father Name',
                           fatherName!,
                           isLargeScreen,
+                          60,
                           rowColors[0],
                         ),
                         const SizedBox(height: 13),
@@ -301,6 +310,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           'Class',
                           studentClass!,
                           isLargeScreen,
+                          60,
                           rowColors[1],
                         ),
                         const SizedBox(height: 13),
@@ -309,6 +319,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           'Subjects',
                           subject!,
                           isLargeScreen,
+                          60,
                           rowColors[2],
                         ),
                         const SizedBox(height: 13),
@@ -317,6 +328,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           'School',
                           school!,
                           isLargeScreen,
+                          60,
                           rowColors[3],
                         ),
                         const SizedBox(height: 13),
@@ -325,17 +337,19 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           'Phone',
                           '+91-$phone',
                           isLargeScreen,
+                          60,
                           rowColors[4],
                         ),
                         const SizedBox(height: 13),
                         buildInfoRow(
                           'assets/location@2x.png',
-                          'Phone',
+                          'Address',
                           address!,
                           isLargeScreen,
+                          null,
                           rowColors[0],
                         ),
-                        const SizedBox(height: 13),
+                        const SizedBox(height: 20),
                       ],
                     ),
             ),
@@ -347,6 +361,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
     String title,
     String value,
     bool isLargeScreen,
+    double? containerHeight,
     Color backgroundColor,
   ) {
     return Padding(
@@ -381,7 +396,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
           // Text container
           Flexible(
             child: Container(
-              height: isLargeScreen ? 100 : 60,
+              height: isLargeScreen ? 100 : max(60, containerHeight ?? 110),
               width: isLargeScreen ? 400 : 306,
               decoration: BoxDecoration(
                 color: backgroundColor,

@@ -45,7 +45,8 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
   }
 
   Future<void> handleUploadFromCamera() async {
-    final String result = await ImageUploadUtils.uploadImagesFromCamera();
+    final String result =
+        await ImageUploadUtils.uploadMultipleImagesFromCamera();
 
     if (result != 'null') {
       setState(() {
@@ -66,7 +67,8 @@ class ParentsDoubtScreenState extends State<ParentsDoubtScreen> {
   }
 
   Future<void> handleUploadFromGallery() async {
-    final String result = await ImageUploadUtils.uploadImagesFromGallery();
+    final String result =
+        await ImageUploadUtils.uploadMultipleImagesFromGallery();
 
     if (result != 'null') {
       setState(() {
