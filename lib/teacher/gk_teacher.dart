@@ -7,6 +7,7 @@ import 'package:trusir/common/api.dart';
 import 'package:trusir/common/image_uploading.dart';
 import 'package:trusir/teacher/add_gk.dart';
 import 'package:trusir/teacher/teacher_facilities.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class AddGkTeacher extends StatefulWidget {
   final List<StudentProfile> studentprofile;
@@ -21,6 +22,7 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
   final TextEditingController descriptionController = TextEditingController();
   String? selectedStudent;
   String? selecteduserID;
+  List<String> selectedStudents = [];
   List<String> names = [];
   final GK formData = GK();
   List<StudentProfile> students = [];
@@ -75,60 +77,59 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
   }
 
   Future<void> submitForm() async {
-    // Fetch the entered data
-    formData.title = titleController.text;
-    formData.description = descriptionController.text;
-
-    // Validation: Check if any field is empty
-    if (formData.title == null || formData.title!.isEmpty) {
-      setState(() {
-        formData.title = "No Title";
-      });
-    }
-
-    if (formData.description == null || formData.description!.isEmpty) {
-      setState(() {
-        formData.description = "No Description";
-      });
-    }
+    formData.title =
+        titleController.text.isEmpty ? "No Title" : titleController.text;
+    formData.description = descriptionController.text.isEmpty
+        ? "No Description"
+        : descriptionController.text;
 
     if (formData.photo == null || formData.photo!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Upload the image'),
-          duration: Duration(seconds: 2),
-        ),
+            content: Text('Upload the image'), duration: Duration(seconds: 2)),
+      );
+      return;
+    }
+
+    if (selectedStudents.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Select at least one student'),
+            duration: Duration(seconds: 2)),
       );
       return;
     }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('userID');
-    final url = Uri.parse('$baseUrl/api/tecaher-gks/$userId/$selecteduserID');
-    final headers = {'Content-Type': 'application/json'};
-    final body = json.encode(formData.toJson());
 
-    try {
-      final response = await http.post(url, headers: headers, body: body);
+    for (String student in selectedStudents) {
+      String? studentUserID = nameUserMap[student];
+      if (studentUserID == null) continue;
 
-      if (response.statusCode == 200) {
-        // Successfully submitted
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('GK Posted Successfully!'),
-            duration: Duration(seconds: 1),
-          ),
-        );
-        Navigator.pop(context);
+      final url = Uri.parse('$baseUrl/api/tecaher-gks/$userId/$studentUserID');
+      final headers = {'Content-Type': 'application/json'};
+      final body = json.encode(formData.toJson());
 
-        print(body);
-      } else {
-        // Handle error
-        print('Failed to submit form: ${response.body}');
+      try {
+        final response = await http.post(url, headers: headers, body: body);
+
+        if (response.statusCode == 200) {
+          print("GK posted for $student");
+        } else {
+          print("Failed for $student: ${response.body}");
+        }
+      } catch (e) {
+        print("Error occurred for $student: $e");
       }
-    } catch (e) {
-      print('Error occurred: $e');
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+          content: Text('GK Posted Successfully for all selected students!')),
+    );
+
+    Navigator.pop(context);
   }
 
   @override
@@ -167,7 +168,7 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 30),
-            _buildDropdownField(),
+            _buildMultiSelectDropdown(),
             const SizedBox(height: 15),
             _buildTextField(titleController, 'Title'),
             const SizedBox(height: 15),
@@ -227,7 +228,7 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
     );
   }
 
-  Widget _buildDropdownField() {
+  Widget _buildMultiSelectDropdown() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
@@ -241,24 +242,20 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
           ),
         ],
       ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          isExpanded: true,
-          value: selectedStudent,
-          hint: const Text('Select Student'),
-          items: names.map((String student) {
-            return DropdownMenuItem<String>(
-              value: student,
-              child: Text(student),
-            );
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              selectedStudent = value;
-              selecteduserID = nameUserMap[value]; // Get userID from map
-            });
-          },
+      child: MultiSelectDialogField(
+        items: names.map((e) => MultiSelectItem(e, e)).toList(),
+        title: const Text("Select Students"),
+        selectedColor: Colors.purple,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
         ),
+        onConfirm: (values) {
+          setState(() {
+            selectedStudents = List<String>.from(values);
+          });
+        },
+        chipDisplay: MultiSelectChipDisplay(),
       ),
     );
   }

@@ -337,7 +337,7 @@ class MyProfileScreenState extends State<Teacherpfpage> {
                     imageBackgroundColor: Colors.green.shade100,
                     textBackgroundColor: Colors.green.shade50,
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 20),
                 ],
               ),
       ),

@@ -16,8 +16,9 @@ class AddNoticeTeacher extends StatefulWidget {
 class _AddNoticeTeacherState extends State<AddNoticeTeacher> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  String? selectedStudent;
-  String? selectedUserID;
+
+  List<String> selectedStudents = [];
+  List<String> selectedUserIDs = [];
   List<String> names = [];
   List<StudentProfile> students = [];
   Map<String, String> nameUserMap = {};
@@ -33,41 +34,35 @@ class _AddNoticeTeacherState extends State<AddNoticeTeacher> {
   Future<void> _onPost() async {
     final prefs = await SharedPreferences.getInstance();
     final teacherUserID = prefs.getString('userID');
-    final String currentDate =
-        DateTime.now().toIso8601String(); // ISO 8601 format
+    final String currentDate = DateTime.now().toIso8601String();
 
-    final payload = {
-      'title': _titleController.text,
-      'description': _descriptionController.text,
-      'posted_on': currentDate,
-      'to': selectedUserID,
-      'from': teacherUserID,
-    };
-
-    final url =
-        Uri.parse('$baseUrl/api/add-notice'); // Replace with your API URL
+    final url = Uri.parse('$baseUrl/api/add-notice');
 
     try {
-      final response = await http.post(
-        url,
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(payload),
-      );
+      for (var userID in selectedUserIDs) {
+        final payload = {
+          'title': _titleController.text,
+          'description': _descriptionController.text,
+          'posted_on': currentDate,
+          'to': userID,
+          'from': teacherUserID,
+        };
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // Success
-        print("Notice added successfully!");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Notice posted successfully!')),
+        final response = await http.post(
+          url,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(payload),
         );
-        Navigator.pop(context);
-      } else {
-        // Error
-        print("Failed to post notice: ${response.body}");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to post notice: ${response.body}')),
-        );
+
+        if (response.statusCode != 200 && response.statusCode != 201) {
+          print("Failed to post notice for $userID: ${response.body}");
+        }
       }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Notices posted successfully!')),
+      );
+      Navigator.pop(context);
     } catch (e) {
       print("Error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -79,7 +74,6 @@ class _AddNoticeTeacherState extends State<AddNoticeTeacher> {
   @override
   void initState() {
     super.initState();
-    print(widget.studentprofile[0]);
     setState(() {
       students = widget.studentprofile;
       extractStudentData(students, names, nameUserMap);
@@ -131,14 +125,14 @@ class _AddNoticeTeacherState extends State<AddNoticeTeacher> {
                 children: [
                   _buildTextField('Title', _titleController),
                   const SizedBox(height: 20),
-                  _buildDropdownField(),
+                  _buildMultiSelectDropdown(),
                   const SizedBox(height: 20),
                   _buildDescriptionField(),
                 ],
               ),
             ),
           ),
-          _buildPostButton(), // Button stays at the bottom
+          _buildPostButton(),
         ],
       ),
     );
@@ -151,22 +145,89 @@ class _AddNoticeTeacherState extends State<AddNoticeTeacher> {
     );
   }
 
-  Widget _buildDropdownField() {
-    return DropdownButtonFormField<String>(
-      decoration: _inputDecoration('Select Student'),
-      value: selectedStudent,
-      onChanged: (value) {
-        setState(() {
-          selectedStudent = value;
-          selectedUserID = nameUserMap[value]; // Get userID from map
-        });
-      },
-      items: names.map((student) {
-        return DropdownMenuItem(
-          value: student,
-          child: Text(student),
+  Widget _buildMultiSelectDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Select Students",
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 5),
+        Wrap(
+          children: selectedStudents.map((student) {
+            return Chip(
+              label: Text(student),
+              deleteIcon: const Icon(Icons.close),
+              onDeleted: () {
+                setState(() {
+                  selectedUserIDs.remove(nameUserMap[student]);
+                  selectedStudents.remove(student);
+                });
+              },
+            );
+          }).toList(),
+        ),
+        ElevatedButton(
+          onPressed: () => _showMultiSelectDialog(),
+          child: const Text("Choose Students"),
+        ),
+      ],
+    );
+  }
+
+  void _showMultiSelectDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        List<String> tempSelected = List.from(selectedStudents);
+
+        return AlertDialog(
+          title: const Text("Select Students"),
+          content: StatefulBuilder(
+            builder: (context, setState) {
+              return SingleChildScrollView(
+                child: Column(
+                  children: names.map((student) {
+                    return CheckboxListTile(
+                      title: Text(student),
+                      value: tempSelected.contains(student),
+                      onChanged: (bool? value) {
+                        setState(() {
+                          if (value == true) {
+                            tempSelected.add(student);
+                          } else {
+                            tempSelected.remove(student);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  selectedStudents = List.from(tempSelected);
+                  selectedUserIDs =
+                      selectedStudents.map((e) => nameUserMap[e]!).toList();
+                });
+                Navigator.pop(context);
+              },
+              child: const Text("OK"),
+            ),
+          ],
         );
-      }).toList(),
+      },
     );
   }
 
@@ -207,7 +268,7 @@ class _AddNoticeTeacherState extends State<AddNoticeTeacher> {
         onTap: () {
           if (_titleController.text.isEmpty ||
               _descriptionController.text.isEmpty ||
-              selectedStudent == null) {
+              selectedStudents.isEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Please fill in all fields')),
             );

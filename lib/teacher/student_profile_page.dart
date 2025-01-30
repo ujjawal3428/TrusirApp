@@ -167,7 +167,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
             const SizedBox(height: 13),
             buildInfoRow('assets/location@2x.png', 'Address', widget.address!,
                 null, isLargeScreen, rowColors[4]),
-            const SizedBox(height: 13),
+            const SizedBox(height: 20),
           ]),
         ));
   }

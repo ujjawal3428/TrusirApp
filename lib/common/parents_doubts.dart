@@ -321,7 +321,7 @@ class ParentsDoubtDetailPage extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   shrinkWrap: true,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Adjust columns as needed
+                    crossAxisCount: 1, // Adjust columns as needed
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                   ),

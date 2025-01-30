@@ -375,7 +375,7 @@ class YourDoubtDetailPage extends StatelessWidget {
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(8),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Adjust columns as needed
+                    crossAxisCount: 1, // Adjust columns as needed
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                   ),

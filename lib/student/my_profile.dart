@@ -349,7 +349,7 @@ class MyProfileScreenState extends State<MyProfileScreen> {
                           null,
                           rowColors[0],
                         ),
-                        const SizedBox(height: 13),
+                        const SizedBox(height: 20),
                       ],
                     ),
             ),
