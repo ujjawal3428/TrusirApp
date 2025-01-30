@@ -142,61 +142,82 @@ class ImageUploadUtils {
   static Future<String> uploadMultipleImagesFromCamera() async {
     await requestPermissions();
     final ImagePicker picker = ImagePicker();
+    List<XFile> capturedImages = [];
 
-    List<String> downloadUrls = [];
     bool continueCapturing = true;
 
     while (continueCapturing) {
-      // Capture an image using the camera
       final XFile? image = await picker.pickImage(source: ImageSource.camera);
-      if (image == null) {
-        Fluttertoast.showToast(msg: 'Image selection canceled.');
-        continueCapturing = false;
-        continue;
+      if (image != null) {
+        capturedImages.add(image);
       }
 
-      // Compress the image
+      continueCapturing = await _showImageDialog(capturedImages);
+    }
+
+    if (capturedImages.isEmpty) {
+      Fluttertoast.showToast(msg: 'No images selected.');
+      return 'null';
+    }
+
+    List<String> downloadUrls = [];
+    for (var image in capturedImages) {
       final compressedImage = await compressImage(File(image.path));
       if (compressedImage == null) {
-        Fluttertoast.showToast(msg: 'Failed to compress image.');
+        Fluttertoast.showToast(msg: 'Failed to compress an image. Skipping.');
         continue;
       }
 
-      // Upload the image and get the download URL
       final String downloadUrl = await _uploadImage(compressedImage);
       if (downloadUrl != 'null') {
         downloadUrls.add(downloadUrl);
-      } else {
-        Fluttertoast.showToast(msg: 'Failed to upload image.');
       }
-
-      // Ask the user if they want to continue capturing images
-      continueCapturing = await _askToContinue();
     }
 
-    // Combine all download URLs into a single string
-    String result = downloadUrls.join(',');
-    return result.isEmpty ? 'null' : result;
+    return downloadUrls.isEmpty ? 'null' : downloadUrls.join(',');
   }
 
-// Helper method to display a confirmation dialog
-  static Future<bool> _askToContinue() async {
-    return await showDialog<bool>(
+  static Future<bool> _showImageDialog(List<XFile> images) async {
+    return await showDialog(
           context: navigatorKey.currentContext!,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: const Text('Capture More Images?'),
-              content: const Text('Do you want to capture another image?'),
+              title: const Text('Captured Images'),
+              content: SizedBox(
+                width: double.maxFinite,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 200,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: images.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.file(
+                              File(images[index].path),
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
               actions: [
                 TextButton(
-                  onPressed: () =>
-                      Navigator.pop(context, false), // Stop capturing
-                  child: const Text('No'),
+                  onPressed: () => Navigator.pop(context, false), // Done
+                  child: const Text('Done'),
                 ),
                 TextButton(
-                  onPressed: () =>
-                      Navigator.pop(context, true), // Continue capturing
-                  child: const Text('Yes'),
+                  onPressed: () => Navigator.pop(context, true), // Add More
+                  child: const Text('Add More'),
                 ),
               ],
             );
