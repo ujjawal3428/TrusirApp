@@ -108,15 +108,15 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
         toolbarHeight: 70,
       ),
       backgroundColor: Colors.grey[50],
-      body: doubtsList.isEmpty && !isLoading && initialLoadComplete
-          ? Center(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: Stack(
-                    children: [
-                      const Column(
+      body: Stack(
+        children: [
+          doubtsList.isEmpty && !isLoading && initialLoadComplete
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
@@ -126,21 +126,12 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                           ),
                         ],
                       ),
-                      Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          child: _buildCreateButton()),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            )
-          : SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
-                children: [
-                  Column(
+                )
+              : SizedBox(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       SingleChildScrollView(
@@ -268,14 +259,10 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                         ),
                     ],
                   ),
-                  Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      child: _buildCreateButton()),
-                ],
-              ),
-            ),
+                ),
+          Positioned(left: 0, right: 0, bottom: 0, child: _buildCreateButton()),
+        ],
+      ),
     );
   }
 
@@ -289,7 +276,7 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                   builder: (context) => const StudentDoubtScreen()));
         },
         child: Padding(
-          padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 40),
+          padding: const EdgeInsets.only(left: 20.0, right: 20, bottom: 20),
           child: Image.asset(
             'assets/create_doubt.png',
             width: double.infinity,

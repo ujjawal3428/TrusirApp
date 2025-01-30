@@ -5,6 +5,8 @@ import 'package:trusir/common/api.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:trusir/student/wallet.dart';
+
 // import 'package:trusir/student/student_payment_page.dart';
 
 class Fees {
@@ -157,23 +159,33 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.08,
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.wallet_rounded,
-                size: 20,
-                color: Color.fromARGB(255, 28, 37, 136),
-              ),
-              Text(
-                '₹ $totalAmount',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const WalletPage(),
                 ),
-              ),
-            ],
+              );
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.wallet_rounded,
+                  size: 20,
+                  color: Color.fromARGB(255, 28, 37, 136),
+                ),
+                Text(
+                  '₹ $totalAmount',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
           ),
         ]),
         toolbarHeight: 70,
