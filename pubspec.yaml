@@ -10,26 +10,26 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-  intl_phone_number_input: ^0.7.4
-  http: ^1.2.2
-  dio: ^5.7.0
-  path_provider: ^2.1.5
-  permission_handler: ^11.3.1
-  package_info_plus: ^8.1.1
-  flutter_svg: ^2.0.14
+  cupertino_icons:
+  intl_phone_number_input:
+  http:
+  dio:
+  path_provider:
+  permission_handler:
+  package_info_plus:
+  flutter_svg:
   url_launcher:
   device_info_plus:
-  shared_preferences: ^2.3.3
-  image_picker: ^1.1.2
+  shared_preferences:
+  image_picker:
   intl:
   table_calendar:
   flutter_local_notifications:
   open_file:
-  signature: ^5.5.0
+  signature:
   path:
-  file_picker:
   video_player:
+  animated_splash_screen:
   chewie:
   google_fonts:
   youtube_player_flutter:
@@ -37,10 +37,8 @@ dependencies:
   crypto:
   fluttertoast:
   flutter_image_compress:
-  flutter_inner_shadow: ^0.0.1
-  fl_chart: ^0.70.2
   multi_select_flutter:
-  lottie: ^3.3.1
+  lottie:
 dev_dependencies:
   flutter_test:
     sdk: flutter
