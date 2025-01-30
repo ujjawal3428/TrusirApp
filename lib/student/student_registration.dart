@@ -1875,7 +1875,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   ) {
     bool isWeb = MediaQuery.of(context).size.width > 500;
     return Container(
-      height: 48,
       width: isWeb ? 500 : 700,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -1934,7 +1933,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
   }) {
     bool isWeb = MediaQuery.of(context).size.width > 600;
     return Container(
-      height: 48,
       width: isWeb ? 500 : double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -1997,7 +1995,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     return StatefulBuilder(
       builder: (context, setState) {
         return Container(
-          height: 48,
           width: isWeb ? 700 : double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -2087,7 +2084,6 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
     String? value,
   }) {
     return Container(
-      height: 48,
       width: 184,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(

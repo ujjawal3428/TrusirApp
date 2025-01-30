@@ -440,13 +440,13 @@ void _showThankYouPopup(BuildContext context) {
       ),
     );
   }
-Widget _buildTextFieldWithBackground({
+
+  Widget _buildTextFieldWithBackground({
   required String hintText,
   required TextEditingController controllers,
   bool isClass = false,
 }) {
   return Container(
-    height: 55, // Matching height from above examples
     width: double.infinity,
     decoration: BoxDecoration(
       color: Colors.white,
@@ -485,7 +485,7 @@ Widget _buildTextFieldWithBackground({
           borderSide: const BorderSide(color: Colors.grey),
         ),
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 15), // Matching padding
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
         isDense: true,
       ),
     ),

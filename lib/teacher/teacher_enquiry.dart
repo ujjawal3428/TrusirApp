@@ -328,7 +328,6 @@ class _TeacherEnquiryPageState extends State<TeacherEnquiryPage> {
     required TextEditingController controllers,
   }) {
     return Container(
-      height: 55,
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
