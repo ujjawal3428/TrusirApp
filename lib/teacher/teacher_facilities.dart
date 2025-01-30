@@ -62,6 +62,7 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
   String phone = '';
   String profile = '';
   String userID = '';
+  String area = '';
   bool isWeb = false;
 
   final apiBase = '$baseUrl/my-student';
@@ -355,8 +356,9 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            const Teacherattendance(userID: ''),
+                                        builder: (context) => Teacherattendance(
+                                          studentprofile: studentprofile,
+                                        ),
                                       ),
                                     );
                                   }),
@@ -368,8 +370,9 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            const AddGkTeacher(),
+                                        builder: (context) => AddGkTeacher(
+                                          studentprofile: studentprofile,
+                                        ),
                                       ),
                                     );
                                   }),
@@ -381,8 +384,9 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            const AddNoticeTeacher(),
+                                        builder: (context) => AddNoticeTeacher(
+                                          studentprofile: studentprofile,
+                                        ),
                                       ),
                                     );
                                   }),
@@ -731,9 +735,8 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const Teacherattendance(
-                                        userID: '',
+                                      builder: (context) => Teacherattendance(
+                                        studentprofile: studentprofile,
                                       ),
                                     ),
                                   );
@@ -746,8 +749,9 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const AddGkTeacher(),
+                                      builder: (context) => AddGkTeacher(
+                                        studentprofile: studentprofile,
+                                      ),
                                     ),
                                   );
                                 }),
@@ -759,8 +763,9 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const AddNoticeTeacher(),
+                                      builder: (context) => AddNoticeTeacher(
+                                        studentprofile: studentprofile,
+                                      ),
                                     ),
                                   );
                                 }),

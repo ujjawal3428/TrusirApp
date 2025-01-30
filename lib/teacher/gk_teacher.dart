@@ -1,8 +1,16 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/common/api.dart';
+import 'package:trusir/common/image_uploading.dart';
+import 'package:trusir/teacher/add_gk.dart';
+import 'package:trusir/teacher/teacher_facilities.dart';
 
 class AddGkTeacher extends StatefulWidget {
-  const AddGkTeacher({super.key});
+  final List<StudentProfile> studentprofile;
+  const AddGkTeacher({super.key, required this.studentprofile});
 
   @override
   State<AddGkTeacher> createState() => _AddGkTeacherState();
@@ -11,17 +19,115 @@ class AddGkTeacher extends StatefulWidget {
 class _AddGkTeacherState extends State<AddGkTeacher> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  XFile? selectedImage;
   String? selectedStudent;
-  final List<String> students = ['Student A', 'Student B', 'Student C'];
+  String? selecteduserID;
+  List<String> names = [];
+  final GK formData = GK();
+  List<StudentProfile> students = [];
+  Map<String, String> nameUserMap = {};
 
-  Future<void> pickImage(ImageSource source) async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: source);
-    if (image != null) {
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      students = widget.studentprofile;
+      extractStudentData(students, names, nameUserMap);
+    });
+  }
+
+  void extractStudentData(List<StudentProfile> students, List<String> names,
+      Map<String, String> nameUserIDMap) {
+    for (var student in students) {
+      names.add(student.name);
+      nameUserIDMap[student.name] = student.userID;
+    }
+  }
+
+  Future<void> handleUploadFromCamera() async {
+    final String result = await ImageUploadUtils.uploadSingleImageFromCamera();
+
+    if (result != 'null') {
       setState(() {
-        selectedImage = image;
+        setState(() {
+          formData.photo = result;
+        });
       });
+      Fluttertoast.showToast(msg: 'Image uploaded successfully!');
+    } else {
+      Fluttertoast.showToast(msg: 'Image upload failed!');
+      setState(() {});
+    }
+  }
+
+  Future<void> handleUploadFromGallery() async {
+    final String result = await ImageUploadUtils.uploadSingleImageFromGallery();
+
+    if (result != 'null') {
+      setState(() {
+        setState(() {
+          formData.photo = result;
+        });
+      });
+      Fluttertoast.showToast(msg: 'Image uploaded successfully!');
+    } else {
+      Fluttertoast.showToast(msg: 'Image upload failed!');
+    }
+  }
+
+  Future<void> submitForm() async {
+    // Fetch the entered data
+    formData.title = titleController.text;
+    formData.description = descriptionController.text;
+
+    // Validation: Check if any field is empty
+    if (formData.title == null || formData.title!.isEmpty) {
+      setState(() {
+        formData.title = "No Title";
+      });
+    }
+
+    if (formData.description == null || formData.description!.isEmpty) {
+      setState(() {
+        formData.description = "No Description";
+      });
+    }
+
+    if (formData.photo == null || formData.photo!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Upload the image'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userID');
+    final url = Uri.parse('$baseUrl/api/tecaher-gks/$userId/$selecteduserID');
+    final headers = {'Content-Type': 'application/json'};
+    final body = json.encode(formData.toJson());
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200) {
+        // Successfully submitted
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('GK Posted Successfully!'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+        Navigator.pop(context);
+
+        print(body);
+      } else {
+        // Handle error
+        print('Failed to submit form: ${response.body}');
+      }
+    } catch (e) {
+      print('Error occurred: $e');
     }
   }
 
@@ -54,7 +160,9 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
       ),
       backgroundColor: Colors.grey[50],
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20.0,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -83,16 +191,19 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
                     ],
                   ),
                   child: Center(
-                    child: selectedImage != null
-                        ? Image.asset(selectedImage!.path)
+                    child: formData.photo != null
+                        ? Image.network(formData.photo!)
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset('assets/camera@3x.png', width: 46, height: 37),
+                              Image.asset('assets/camera@3x.png',
+                                  width: 46, height: 37),
                               const SizedBox(height: 10),
-                              const Text('Upload Image', style: TextStyle(fontSize: 14)),
+                              const Text('Upload Image',
+                                  style: TextStyle(fontSize: 14)),
                               const SizedBox(height: 5),
-                              const Text('Click Here', style: TextStyle(fontSize: 10)),
+                              const Text('Click Here',
+                                  style: TextStyle(fontSize: 10)),
                             ],
                           ),
                   ),
@@ -104,7 +215,8 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
               child: Text(
                 'This post will only be visible to the\nstudents you teach',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Colors.red, fontFamily: 'Poppins'),
+                style: TextStyle(
+                    fontSize: 14, color: Colors.red, fontFamily: 'Poppins'),
               ),
             ),
             const SizedBox(height: 20),
@@ -134,15 +246,16 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
           isExpanded: true,
           value: selectedStudent,
           hint: const Text('Select Student'),
-          items: students.map((String student) {
+          items: names.map((String student) {
             return DropdownMenuItem<String>(
               value: student,
               child: Text(student),
             );
           }).toList(),
-          onChanged: (String? newValue) {
+          onChanged: (value) {
             setState(() {
-              selectedStudent = newValue;
+              selectedStudent = value;
+              selecteduserID = nameUserMap[value]; // Get userID from map
             });
           },
         ),
@@ -150,7 +263,8 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint, {int maxLines = 1}) {
+  Widget _buildTextField(TextEditingController controller, String hint,
+      {int maxLines = 1}) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(22),
@@ -172,7 +286,8 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(22),
-            borderSide: const BorderSide(width: 0.5, color: Color.fromARGB(255, 237, 234, 234)),
+            borderSide: const BorderSide(
+                width: 0.5, color: Color.fromARGB(255, 237, 234, 234)),
           ),
         ),
       ),
@@ -182,7 +297,9 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
   Widget _buildPostButton(BuildContext context) {
     return Center(
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          submitForm();
+        },
         child: Image.asset(
           'assets/postbutton.png',
           width: double.infinity,
@@ -199,7 +316,8 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
       builder: (BuildContext context) {
         return Dialog(
           backgroundColor: Colors.transparent,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Container(
             padding: const EdgeInsets.all(16.0),
             decoration: BoxDecoration(
@@ -211,12 +329,12 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
               children: [
                 _buildDialogButton('Camera', Colors.lightBlue.shade100, () {
                   Navigator.pop(context);
-                  pickImage(ImageSource.camera);
+                  handleUploadFromCamera();
                 }),
                 const SizedBox(height: 16),
                 _buildDialogButton('Upload File', Colors.orange.shade100, () {
                   Navigator.pop(context);
-                  pickImage(ImageSource.gallery);
+                  handleUploadFromGallery();
                 }),
               ],
             ),
@@ -227,16 +345,17 @@ class _AddGkTeacherState extends State<AddGkTeacher> {
   }
 }
 
-
 Widget _buildDialogButton(String text, Color color, VoidCallback onPressed) {
-    return Container(
-      width: 200,
-      height: 50,
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(22)),
-      child: TextButton(
-        onPressed: onPressed,
-        child: Text(text, style: const TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Poppins')),
-      ),
-    );
-  }
-
+  return Container(
+    width: 200,
+    height: 50,
+    decoration:
+        BoxDecoration(color: color, borderRadius: BorderRadius.circular(22)),
+    child: TextButton(
+      onPressed: onPressed,
+      child: Text(text,
+          style: const TextStyle(
+              fontSize: 18, color: Colors.black, fontFamily: 'Poppins')),
+    ),
+  );
+}
