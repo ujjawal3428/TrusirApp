@@ -189,16 +189,18 @@ class StudentProfileScreen extends StatelessWidget {
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             child: Column(
                               children: [
-                                IconButton(
-                                    onPressed: () {
-                                      openDialer(phone);
-                                    },
-                                    icon: const Icon(
-                                      Icons.phone,
-                                      color: Colors.white,
-                                      size: 25,
-                                    )),
-                                const Spacer(),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 13.0),
+                                  child: IconButton(
+                                      onPressed: () {
+                                        openDialer(phone);
+                                      },
+                                      icon: const Icon(
+                                        Icons.phone,
+                                        color: Colors.white,
+                                        size: 25,
+                                      )),
+                                ),
                                 TextButton(
                                   onPressed: () {
                                     Navigator.push(

@@ -1462,7 +1462,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                         ),
                         const SizedBox(height: 20),
                         _buildPhoneField('Phone Number'),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         _buildDropdownField(
                           'Qualification',
                           selectedValue: formData.qualification,
@@ -1473,7 +1473,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: additionals['qualification'],
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         _buildDropdownField(
                           'Experience',
                           selectedValue: formData.experience,
@@ -1484,7 +1484,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: additionals['experience'],
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         _buildMultiSelectDropdownField(
                           'Preferred Board',
                           selectedValues: selectedBoard,
@@ -1500,7 +1500,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                         _buildTextField('School Name', onChanged: (value) {
                           formData.school = value;
                         }),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         // Dropdowns
                         _buildMultiSelectDropdownField(
                           'Preferred Class',
@@ -1513,7 +1513,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: _classes,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         _buildMultiSelectDropdownField(
                           'Preferred Medium',
                           selectedValues: selectedMedium,
@@ -1525,7 +1525,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: additionals['mediums'],
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         _buildMultiSelectDropdownField(
                           'Subject',
                           selectedValues: selectedSubjects,
@@ -1537,7 +1537,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: _courses,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         _buildDropdownField(
                           'State',
                           selectedValue: selectedState,
@@ -1546,7 +1546,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: states,
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         GestureDetector(
                           onTap: () {
                             if (selectedState == null) {
@@ -1572,7 +1572,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                         _buildTextField('Mohalla/Area', onChanged: (value) {
                           formData.area = value;
                         }),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 15),
                         GestureDetector(
                           onTap: () {
                             if (selectedState == null) {

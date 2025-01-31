@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class StudentProfilePage extends StatefulWidget {
@@ -212,7 +210,7 @@ class StudentProfilePageState extends State<StudentProfilePage> {
           // Text container
           Flexible(
             child: Container(
-              height: isLargeScreen ? 100 : max(60, containerHeight ?? 110),
+              height: isLargeScreen ? 100 : 60,
               width: isLargeScreen ? 400 : 306,
               decoration: BoxDecoration(
                 color: backgroundColor,
