@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -344,28 +342,53 @@ class MyProfileScreenState extends State<Teacherpfpage> {
     );
   }
 
-  Widget buildInfoRow(
-    bool isWeb,
-    String iconPath,
-    String title,
-    double? containerHeight,
-    String value, {
-    Color imageBackgroundColor = Colors.pink,
-    Color textBackgroundColor = Colors.white,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 17.0, vertical: 5.0), // Increase vertical padding
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Icon Container
-          Container(
-            width: isWeb ? 80 : 55,
+ Widget buildInfoRow(
+  bool isWeb,
+  String iconPath,
+  String title,
+  double? containerHeight,
+  String value, {
+  Color imageBackgroundColor = Colors.pink,
+  Color textBackgroundColor = Colors.white,
+}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(
+        horizontal: 17.0, vertical: 5.0), // Increase vertical padding
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // Icon Container
+        Container(
+          width: isWeb ? 80 : 55,
+          height: isWeb ? 80 : 60,
+          decoration: BoxDecoration(
+            color: imageBackgroundColor,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                offset: const Offset(3, 3),
+                blurRadius: 6,
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Image.asset(
+              iconPath,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        const SizedBox(width: 15), // Increased gap between containers
+        // Text Container
+        Flexible(
+          child: Container(
             height: isWeb ? 80 : 60,
+            width: isWeb ? 400 : 306,
             decoration: BoxDecoration(
-              color: imageBackgroundColor,
-              borderRadius: BorderRadius.circular(10),
+              color: textBackgroundColor,
+              borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.3),
@@ -375,48 +398,27 @@ class MyProfileScreenState extends State<Teacherpfpage> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Image.asset(
-                iconPath,
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
-          const SizedBox(width: 15), // Increased gap between containers
-          // Text Container
-          Flexible(
-            child: Container(
-              height: isWeb ? 80 : max(60, containerHeight ?? 110),
-              width: isWeb ? 400 : 306,
-              decoration: BoxDecoration(
-                color: textBackgroundColor,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    offset: const Offset(3, 3),
-                    blurRadius: 6,
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    value.isNotEmpty ? value : 'Loading...',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: isWeb ? 20 : 16,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: ClipRect(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(
+                      value.isNotEmpty ? value : 'Loading...',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: isWeb ? 20 : 16,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
+        ),
+      ],
+    ),
+  );
+}}

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/student/editprofilescreen.dart';
@@ -356,23 +354,50 @@ class MyProfileScreenState extends State<MyProfileScreen> {
     );
   }
 
-  Widget buildInfoRow(
-    String iconPath,
-    String title,
-    String value,
-    bool isLargeScreen,
-    double? containerHeight,
-    Color backgroundColor,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 18.0, right: 22),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Icon container
-          Container(
-            width: isLargeScreen ? 100 : 60,
+
+
+Widget buildInfoRow(
+  String iconPath,
+  String title,
+  String value,
+  bool isLargeScreen,
+  double? containerHeight,
+  Color backgroundColor,
+) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 18.0, right: 22),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        // Icon container
+        Container(
+          width: isLargeScreen ? 100 : 60,
+          height: isLargeScreen ? 100 : 60,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 4,
+                offset: const Offset(3, 3),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Image.asset(
+              iconPath,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        const SizedBox(width: 15),
+        // Text container
+        Flexible(
+          child: Container(
             height: isLargeScreen ? 100 : 60,
+            width: isLargeScreen ? 400 : 306,
             decoration: BoxDecoration(
               color: backgroundColor,
               borderRadius: BorderRadius.circular(10),
@@ -385,49 +410,28 @@ class MyProfileScreenState extends State<MyProfileScreen> {
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Image.asset(
-                iconPath,
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
-          const SizedBox(width: 15),
-          // Text container
-          Flexible(
-            child: Container(
-              height: isLargeScreen ? 100 : max(60, containerHeight ?? 110),
-              width: isLargeScreen ? 400 : 306,
-              decoration: BoxDecoration(
-                color: backgroundColor,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 4,
-                    offset: const Offset(3, 3),
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 20, top: 10, bottom: 10, right: 20),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    value.isNotEmpty ? value : 'Loading...',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Poppins",
-                      fontSize: isLargeScreen ? 22 : 16,
+              padding: const EdgeInsets.only(left: 20, top: 10, bottom: 10, right: 20),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: ClipRect(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Text(
+                      value.isNotEmpty ? value : 'Loading...',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Poppins",
+                        fontSize: isLargeScreen ? 22 : 16,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 }

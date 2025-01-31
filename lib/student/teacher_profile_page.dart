@@ -264,11 +264,16 @@ class MyProfileScreenState extends State<TeacherProfilePage> {
                 ),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    value.isNotEmpty ? value : 'Loading...',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
+                  child: ClipRRect(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Text(
+                        value.isNotEmpty ? value : 'Loading...',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
                   ),
                 ),
