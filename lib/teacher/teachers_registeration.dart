@@ -612,7 +612,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                               _buildPhoneField('Phone Number'),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 16),
                           // Gender and DOB Row
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -1621,7 +1621,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Padding(
-                              padding: EdgeInsets.only(right: 60),
+                              padding: EdgeInsets.only(right: 58),
                               child: Text(
                                 'Profile Photo',
                                 style: TextStyle(
@@ -1929,7 +1929,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Padding(
-                              padding: EdgeInsets.only(right: 80),
+                              padding: EdgeInsets.only(right: 79),
                               child: Text(
                                 'Signature',
                                 style: TextStyle(
