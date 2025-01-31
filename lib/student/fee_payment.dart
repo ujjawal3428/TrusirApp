@@ -33,7 +33,7 @@ class Fees {
 
     // Format date and time
     final formattedDate =
-        dateTime != null ? DateFormat('yyyy-MM-dd').format(dateTime) : '';
+        dateTime != null ? DateFormat('dd-MM-yyyy').format(dateTime) : '';
     final formattedTime = dateTime != null
         ? DateFormat('h:mm a').format(dateTime) // 12-hour format with AM/PM
         : '';
