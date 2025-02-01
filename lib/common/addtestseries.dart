@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/image_uploading.dart';
+import 'package:trusir/common/test_series.dart';
 
 class Addtestseries extends StatefulWidget {
   final String userID;
@@ -143,6 +144,12 @@ class _AddtestseriesState extends State<Addtestseries> {
           const SnackBar(content: Text('Test uploaded successfully!')),
         );
         Navigator.pop(context);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TestSeriesScreen(
+                      userID: widget.userID,
+                    )));
         print(postData);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:trusir/common/addtestseries.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/delete.dart';
 import 'package:trusir/common/file_downloader.dart';
 
 class TestSeriesScreen extends StatefulWidget {
@@ -183,35 +184,55 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
           const EdgeInsets.only(top: 10.0, left: 15, right: 15, bottom: 10),
       child: Column(
         children: [
-          Row(
+          Column(
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      test['test_name'],
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.w500),
-                    ),
-                    Text(test['subject'],
+              Stack(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        test['test_name'],
                         style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w400)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(formatDate(test['created_at']),
-                            style: const TextStyle(
-                                color: Colors.black54,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400)),
-                        Text(formatTime(test['created_at']),
-                            style: const TextStyle(
-                                color: Colors.black54, fontSize: 14)),
-                      ],
-                    ),
-                  ],
-                ),
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      Text(test['subject'],
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w400)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(formatDate(test['created_at']),
+                              style: const TextStyle(
+                                  color: Colors.black54,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w400)),
+                          Text(formatTime(test['created_at']),
+                              style: const TextStyle(
+                                  color: Colors.black54, fontSize: 14)),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                      top: -10,
+                      right: -10,
+                      child: IconButton(
+                          onPressed: () {
+                            DeleteUtility.deleteItem('testserie', test['id']);
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TestSeriesScreen(
+                                          userID: widget.userID,
+                                        )));
+                          },
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.redAccent,
+                          )))
+                ],
               ),
             ],
           ),

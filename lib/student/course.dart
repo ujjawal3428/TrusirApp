@@ -69,10 +69,12 @@ class Transaction {
 }
 
 class MyCourseModel {
+  final int id;
   final String courseID;
   final String teacherID;
   final String type;
   MyCourseModel({
+    required this.id,
     required this.courseID,
     required this.teacherID,
     required this.type,
@@ -81,6 +83,7 @@ class MyCourseModel {
   // Factory method for creating an instance from JSON
   factory MyCourseModel.fromJson(Map<String, dynamic> json) {
     return MyCourseModel(
+        id: json['id'],
         courseID: json['courseID'],
         teacherID: json['teacherID'],
         type: json['type']);
@@ -99,6 +102,7 @@ class _CoursePageState extends State<CoursePage> {
   final GlobalKey<FilterSwitchState> _filterSwitchKey =
       GlobalKey<FilterSwitchState>();
   bool isLoading = true;
+  double balance = 0;
 
   Future<List<Course>> fetchAllCourses() async {
     final url = Uri.parse('$baseUrl/get-courses');
@@ -111,6 +115,31 @@ class _CoursePageState extends State<CoursePage> {
       return _courses;
     } else {
       throw Exception('Failed to fetch courses');
+    }
+  }
+
+  Future<double> fetchBalance() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getString('userID');
+    // Replace with your API URL
+    try {
+      final response =
+          await http.get(Uri.parse('$baseUrl/user/balance/$userID'));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print(double.parse(data['balance']));
+        setState(() {
+          balance = double.parse(data['balance']);
+          prefs.setString('wallet_balance', '$balance');
+        });
+        return balance; // Convert balance to an integer
+      } else {
+        throw Exception('Failed to load balance');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return 0; // Return 0 in case of an error
     }
   }
 
@@ -146,9 +175,11 @@ class _CoursePageState extends State<CoursePage> {
       for (int i = 0; i < data.length; i++) {
         String courseId = data[i].courseID;
         String teacherId = data[i].teacherID;
+        int slotID = data[i].id;
         Map<String, dynamic>? courseData = await fetchCourseById((courseId));
         if (courseData != null) {
           courseData['teacherID'] = teacherId;
+          courseData['slotID'] = slotID;
           setState(() {
             if (index == 0) {
               mycourses.add(courseData);
@@ -239,6 +270,7 @@ class _CoursePageState extends State<CoursePage> {
   void initState() {
     super.initState();
     initialize();
+    fetchBalance();
   }
 
   void initialize() async {

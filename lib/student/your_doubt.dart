@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/delete.dart';
 import 'package:trusir/student/student_doubt.dart';
 
 class YourDoubtPage extends StatefulWidget {
@@ -144,98 +145,122 @@ class _YourDoubtPageState extends State<YourDoubtPage> {
                             itemBuilder: (context, index) {
                               final gk = doubtsList[index];
 
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
-                                child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              YourDoubtDetailPage(gk: gk),
-                                        ),
-                                      );
-                                    },
-                                    child: Card(
-                                      elevation: 4,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: Image.network(
-                                                gk.image.split(',').first,
-                                                width: 75,
-                                                height: 75,
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (context, error,
-                                                    stackTrace) {
-                                                  return const Icon(
-                                                      Icons.broken_image,
-                                                      color: Colors.grey,
-                                                      size: 50);
-                                                },
-                                              ),
+                              return Stack(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  YourDoubtDetailPage(gk: gk),
                                             ),
+                                          );
+                                        },
+                                        child: Card(
+                                          elevation: 4,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                           ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10.0),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  const SizedBox(height: 10),
-                                                  Text(
-                                                    gk.title,
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 16,
-                                                      fontFamily: "Poppins",
-                                                    ),
-                                                    maxLines: 2,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Image.network(
+                                                    gk.image.split(',').first,
+                                                    width: 75,
+                                                    height: 75,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context,
+                                                        error, stackTrace) {
+                                                      return const Icon(
+                                                          Icons.broken_image,
+                                                          color: Colors.grey,
+                                                          size: 50);
+                                                    },
                                                   ),
-                                                  const SizedBox(height: 2),
-                                                  Text(
-                                                    'Description: ${gk.course}',
-                                                    style: const TextStyle(
-                                                      fontSize: 14,
-                                                      fontFamily: "Poppins",
-                                                    ),
-                                                    maxLines: 2,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                  const SizedBox(height: 5),
-                                                  Text(
-                                                    'Posted on: ${gk.createdAt}',
-                                                    style: TextStyle(
-                                                      fontFamily: "Poppins",
-                                                      fontSize: 12,
-                                                      color:
-                                                          Colors.grey.shade600,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                ],
+                                                ),
                                               ),
-                                            ),
+                                              Expanded(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      const SizedBox(
+                                                          height: 10),
+                                                      Text(
+                                                        gk.title,
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16,
+                                                          fontFamily: "Poppins",
+                                                        ),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      const SizedBox(height: 2),
+                                                      Text(
+                                                        'Description: ${gk.course}',
+                                                        style: const TextStyle(
+                                                          fontSize: 14,
+                                                          fontFamily: "Poppins",
+                                                        ),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                      const SizedBox(height: 5),
+                                                      Text(
+                                                        'Posted on: ${gk.createdAt}',
+                                                        style: TextStyle(
+                                                          fontFamily: "Poppins",
+                                                          fontSize: 12,
+                                                          color: Colors
+                                                              .grey.shade600,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                          height: 10),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    )),
+                                        )),
+                                  ),
+                                  Positioned(
+                                      top: 0,
+                                      right: 0,
+                                      child: IconButton(
+                                          onPressed: () {
+                                            DeleteUtility.deleteItem(
+                                                'doubt', gk.id);
+                                            Navigator.pop(context);
+                                          },
+                                          icon: const Icon(
+                                            Icons.close,
+                                            color: Colors.redAccent,
+                                          )))
+                                ],
                               );
                             },
                           ),

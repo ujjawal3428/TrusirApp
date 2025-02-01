@@ -138,54 +138,53 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
 
   Widget _buildSkipButton() {
     return Center(
-      child:ElevatedButton(
-  style: ButtonStyle(
-    
-    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-      (Set<MaterialState> states) {
-        if (states.contains(MaterialState.pressed)) {
-          return Colors.grey[100]!; // Color when pressed
-        } else if (states.contains(MaterialState.hovered)) {
-          return Colors.grey[200]!; // Color when hovered
-        }
-        return Colors.grey[50]!; // Default color
-      },
-    ),
-    elevation: MaterialStateProperty.all(0),
-    padding: MaterialStateProperty.all(
-      const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
-    ),
-    shape: MaterialStateProperty.all(
-      RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: const BorderSide(
-          color: Color.fromRGBO(72, 17, 106, 1),
-          width: 1,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            (Set<MaterialState> states) {
+              if (states.contains(MaterialState.pressed)) {
+                return Colors.grey[100]!; // Color when pressed
+              } else if (states.contains(MaterialState.hovered)) {
+                return Colors.grey[200]!; // Color when hovered
+              }
+              return Colors.grey[50]!; // Default color
+            },
+          ),
+          elevation: MaterialStateProperty.all(0),
+          padding: MaterialStateProperty.all(
+            const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+          ),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+              side: const BorderSide(
+                color: Color.fromRGBO(72, 17, 106, 1),
+                width: 1,
+              ),
+            ),
+          ),
+        ),
+        onPressed: () => showPopupDialog(context),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Skip',
+              style: TextStyle(
+                color: Color.fromRGBO(72, 17, 106, 1),
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(width: 3),
+            Icon(
+              Icons.fast_forward,
+              color: Color.fromRGBO(168, 0, 0, 1),
+              size: 23,
+            ),
+          ],
         ),
       ),
-    ),
-  ),
-  onPressed: () => showPopupDialog(context),
-  child: const Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Text(
-        'Skip',
-        style: TextStyle(
-          color: Color.fromRGBO(72, 17, 106, 1),
-          fontSize: 15,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      SizedBox(width: 3),
-      Icon(
-        Icons.fast_forward,
-        color: Color.fromRGBO(168, 0, 0, 1),
-        size: 23,
-      ),
-    ],
-  ),
-),
     );
   }
 

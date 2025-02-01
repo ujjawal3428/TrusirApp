@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/delete.dart';
 
 class ParentsDoubtsPage extends StatefulWidget {
   const ParentsDoubtsPage({super.key});
@@ -174,48 +175,67 @@ class _ParentsDoubtsPageState extends State<ParentsDoubtsPage> {
                                       ),
                                     ),
                                     Expanded(
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(height: 10),
-                                            Text(
-                                              gk.title,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                fontFamily: "Poppins",
-                                              ),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
+                                      child: Stack(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const SizedBox(height: 10),
+                                                Text(
+                                                  gk.title,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                    fontFamily: "Poppins",
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                const SizedBox(height: 2),
+                                                Text(
+                                                  'Description: ${gk.course}',
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontFamily: "Poppins",
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                const SizedBox(height: 5),
+                                                Text(
+                                                  'Posted on: ${gk.createdAt}',
+                                                  style: TextStyle(
+                                                    fontFamily: "Poppins",
+                                                    fontSize: 12,
+                                                    color: Colors.grey.shade600,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 10),
+                                              ],
                                             ),
-                                            const SizedBox(height: 2),
-                                            Text(
-                                              'Description: ${gk.course}',
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontFamily: "Poppins",
-                                              ),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            const SizedBox(height: 5),
-                                            Text(
-                                              'Posted on: ${gk.createdAt}',
-                                              style: TextStyle(
-                                                fontFamily: "Poppins",
-                                                fontSize: 12,
-                                                color: Colors.grey.shade600,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 10),
-                                          ],
-                                        ),
+                                          ),
+                                          Positioned(
+                                              top: 0,
+                                              right: 0,
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    DeleteUtility.deleteItem(
+                                                        'pdoubt', gk.id);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.close,
+                                                    color: Colors.redAccent,
+                                                  )))
+                                        ],
                                       ),
                                     ),
                                   ],

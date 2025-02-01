@@ -1,5 +1,7 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
+import 'package:trusir/common/delete.dart';
+import 'package:trusir/student/main_screen.dart';
 import 'package:trusir/student/teacher_profile_page.dart';
 
 class Mycourses extends StatelessWidget {
@@ -123,6 +125,23 @@ class _MyCourseCardState extends State<MyCourseCard> {
                     ),
                   ),
                 ),
+                Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                        onPressed: () {
+                          DeleteUtility.deleteItem(
+                              'individualSlot', widget.course['slotID']);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MainScreen(index: 1)));
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.redAccent,
+                        )))
               ],
             ),
             const SizedBox(height: 12),

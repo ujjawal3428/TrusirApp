@@ -4,14 +4,17 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/delete.dart';
 import 'package:trusir/teacher/add_notice.dart';
 
 class Notice {
+  final int id;
   final String noticetitle;
   final String date;
   final String notice;
 
   Notice({
+    required this.id,
     required this.noticetitle,
     required this.notice,
     required this.date,
@@ -19,6 +22,7 @@ class Notice {
 
   factory Notice.fromJson(Map<String, dynamic> json) {
     return Notice(
+      id: json['id'],
       noticetitle: json['title'],
       notice: json['description'],
       date: json['posted_on'],
@@ -176,74 +180,96 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                   Color cardColor =
                                       cardColors[index % cardColors.length];
 
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 7,
-                                      top: 10,
-                                      right: 7,
-                                    ),
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Container(
-                                          width: 386,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            color: cardColor,
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 55, top: 13, bottom: 10),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  notice.noticetitle,
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontFamily: 'Poppins',
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.black,
-                                                  ),
+                                  return Stack(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 7,
+                                          top: 10,
+                                          right: 7,
+                                        ),
+                                        child: Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Container(
+                                              width: 386,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: cardColor,
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 55,
+                                                    top: 13,
+                                                    bottom: 10),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      notice.noticetitle,
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontFamily: 'Poppins',
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 5),
+                                                    Text(
+                                                      'Posted on : ${formatDate(notice.date)} ${formatTime(notice.date)}',
+                                                      style: const TextStyle(
+                                                        fontSize: 13,
+                                                        fontFamily: 'Poppins',
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Color.fromARGB(
+                                                            255, 133, 133, 133),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 5),
+                                                    Text(
+                                                      notice.notice,
+                                                      style: const TextStyle(
+                                                        fontFamily: 'Poppins',
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        fontSize: 13,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                                const SizedBox(height: 5),
-                                                Text(
-                                                  'Posted on : ${formatDate(notice.date)} ${formatTime(notice.date)}',
-                                                  style: const TextStyle(
-                                                    fontSize: 13,
-                                                    fontFamily: 'Poppins',
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Color.fromARGB(
-                                                        255, 133, 133, 133),
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 5),
-                                                Text(
-                                                  notice.notice,
-                                                  style: const TextStyle(
-                                                    fontFamily: 'Poppins',
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 13,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
+                                            Positioned(
+                                              top: 15,
+                                              left: 10,
+                                              child: Image.asset(
+                                                'assets/bell.png',
+                                                width: 30,
+                                                height: 30,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        Positioned(
-                                          top: 15,
-                                          left: 10,
-                                          child: Image.asset(
-                                            'assets/bell.png',
-                                            width: 30,
-                                            height: 30,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                      Positioned(
+                                          top: 5,
+                                          right: 0,
+                                          child: IconButton(
+                                              onPressed: () {
+                                                DeleteUtility.deleteItem(
+                                                    'notice', notice.id);
+                                                Navigator.pop(context);
+                                              },
+                                              icon: const Icon(
+                                                Icons.close,
+                                                color: Colors.white,
+                                              )))
+                                    ],
                                   );
                                 }),
                                 hasMore

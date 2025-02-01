@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/delete.dart';
 import 'package:trusir/teacher/add_gk.dart';
 
 // New DetailPage to show GK details
@@ -236,120 +237,146 @@ class _StudentGKPageState extends State<StudentGKPage> {
                                   itemBuilder: (context, index) {
                                     final gk = gkList[index];
 
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  GKDetailPage(gk: gk),
-                                            ),
-                                          );
-                                        },
-                                        child: SizedBox(
-                                          width: double.infinity,
-                                          height:
-                                              130, // Set a fixed height for the card
-                                          child: Card(
-                                            elevation: 4,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      10.0),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    child: Image.network(
-                                                      gk.image,
-                                                      width: 75,
-                                                      height: 75,
-                                                      fit: BoxFit.cover,
-                                                      errorBuilder: (context,
-                                                          error, stackTrace) {
-                                                        return const Icon(
-                                                          Icons.broken_image,
-                                                          color: Colors.grey,
-                                                          size: 50,
-                                                        );
-                                                      },
-                                                    ),
-                                                  ),
+                                    return Stack(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      GKDetailPage(gk: gk),
                                                 ),
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 10.0),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        const SizedBox(
-                                                            height: 10),
-                                                        Text(
-                                                          gk.title,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                "Poppins",
-                                                          ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 2),
-                                                        Text(
-                                                          'Description: ${gk.course}',
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                "Poppins",
-                                                          ),
-                                                          maxLines: 2,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 5),
-                                                        Text(
-                                                          'Posted on: ${formatDate(gk.createdAt)}',
-                                                          style: TextStyle(
-                                                            fontFamily:
-                                                                "Poppins",
-                                                            fontSize: 12,
-                                                            color: Colors
-                                                                .grey.shade600,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            height: 10),
-                                                      ],
-                                                    ),
-                                                  ),
+                                              );
+                                            },
+                                            child: SizedBox(
+                                              width: double.infinity,
+                                              height:
+                                                  130, // Set a fixed height for the card
+                                              child: Card(
+                                                elevation: 4,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
                                                 ),
-                                              ],
+                                                child: Row(
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              10.0),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        child: Image.network(
+                                                          gk.image,
+                                                          width: 75,
+                                                          height: 75,
+                                                          fit: BoxFit.cover,
+                                                          errorBuilder:
+                                                              (context, error,
+                                                                  stackTrace) {
+                                                            return const Icon(
+                                                              Icons
+                                                                  .broken_image,
+                                                              color:
+                                                                  Colors.grey,
+                                                              size: 50,
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(
+                                                                left: 10.0),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            const SizedBox(
+                                                                height: 10),
+                                                            Text(
+                                                              gk.title,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    "Poppins",
+                                                              ),
+                                                              maxLines: 1,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 2),
+                                                            Text(
+                                                              'Description: ${gk.course}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 14,
+                                                                fontFamily:
+                                                                    "Poppins",
+                                                              ),
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 5),
+                                                            Text(
+                                                              'Posted on: ${formatDate(gk.createdAt)}',
+                                                              style: TextStyle(
+                                                                fontFamily:
+                                                                    "Poppins",
+                                                                fontSize: 12,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade600,
+                                                              ),
+                                                            ),
+                                                            const SizedBox(
+                                                                height: 10),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
+                                        Positioned(
+                                            top: 5,
+                                            right: 0,
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  DeleteUtility.deleteItem(
+                                                      'teacherGK', gk.id);
+                                                  Navigator.pop(context);
+                                                },
+                                                icon: const Icon(
+                                                  Icons.close,
+                                                  color: Colors.redAccent,
+                                                )))
+                                      ],
                                     );
                                   },
                                 ),

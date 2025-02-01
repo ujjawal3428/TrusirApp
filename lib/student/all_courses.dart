@@ -218,6 +218,7 @@ class _CourseCardState extends State<CourseCard> {
                             return PaymentMethod.buildDialog(
                                 amount: widget.course.newAmount,
                                 name: widget.course.name,
+                                balance: balance,
                                 onPhonePayment: () {
                                   merchantTransactionID =
                                       generateUniqueTransactionId(userID!);
@@ -294,6 +295,7 @@ class _CourseCardState extends State<CourseCard> {
   String? userID;
   bool paymentstatus = false;
   String transactionType = '';
+  String? balance;
 
   String? phone;
 
@@ -304,6 +306,7 @@ class _CourseCardState extends State<CourseCard> {
     setState(() {
       userID = prefs.getString('userID');
       phone = prefs.getString('phone_number');
+      balance = prefs.getString('wallet_balance');
     });
   }
 

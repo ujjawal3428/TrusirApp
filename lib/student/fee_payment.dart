@@ -62,9 +62,33 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
   bool isLoadingMore = false;
   int currentPage = 1;
   bool hasMore = true;
-  double totalAmount = 0;
+  double balance = 0;
 
   final apiBase = '$baseUrl/get-fee-payment-info/';
+
+  Future<double> fetchBalance() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getString('userID');
+    // Replace with your API URL
+    try {
+      final response =
+          await http.get(Uri.parse('$baseUrl/user/balance/$userID'));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print(double.parse(data['balance']));
+        setState(() {
+          balance = double.parse(data['balance']);
+        });
+        return balance; // Convert balance to an integer
+      } else {
+        throw Exception('Failed to load balance');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return 0; // Return 0 in case of an error
+    }
+  }
 
   Future<void> fetchFeeDetails({int page = 1}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -85,15 +109,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
         }
 
         // Calculate total amount while filtering out non-numeric values
-        totalAmount = feepayment.fold<double>(
-          0.0,
-          (sum, fee) {
-            final feeAmount = double.tryParse(fee.amount) ?? 0.0;
-            return sum + feeAmount;
-          },
-        );
 
-        print(totalAmount);
         print(response.body);
 
         isLoading = false;
@@ -117,6 +133,7 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
   void initState() {
     super.initState();
     fetchFeeDetails();
+    fetchBalance();
   }
 
   final List<Color> cardColors = [
@@ -172,12 +189,12 @@ class _FeePaymentScreenState extends State<FeePaymentScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(
-                  Icons.wallet_rounded,
+                  Icons.account_balance_wallet,
                   size: 20,
                   color: Color.fromARGB(255, 28, 37, 136),
                 ),
                 Text(
-                  '₹ $totalAmount',
+                  '₹ $balance',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,

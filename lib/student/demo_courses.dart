@@ -6,8 +6,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/delete.dart';
 import 'package:trusir/common/phonepe_payment.dart';
 import 'package:trusir/student/course.dart';
+import 'package:trusir/student/main_screen.dart';
 import 'package:trusir/student/payment__status_popup.dart';
 import 'package:trusir/student/payment_method.dart';
 import 'package:trusir/student/teacher_profile_page.dart';
@@ -136,6 +138,23 @@ class _DemoCourseCardState extends State<DemoCourseCard> {
                     ),
                   ),
                 ),
+                Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                        onPressed: () {
+                          DeleteUtility.deleteItem(
+                              'individualSlot', widget.course['slotID']);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MainScreen(index: 1)));
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.redAccent,
+                        )))
               ],
             ),
             const SizedBox(height: 12),
@@ -210,6 +229,7 @@ class _DemoCourseCardState extends State<DemoCourseCard> {
                             return PaymentMethod.buildDialog(
                                 amount: widget.course['new_amount'],
                                 name: widget.course['name'],
+                                balance: balance,
                                 onPhonePayment: () {
                                   merchantTransactionID =
                                       generateUniqueTransactionId(userID!);
@@ -295,6 +315,7 @@ class _DemoCourseCardState extends State<DemoCourseCard> {
   String checksum = "";
   // Obtain this from your backend
   String? userID;
+  String? balance;
 
   String? phone;
   String transactionType = '';
@@ -307,6 +328,7 @@ class _DemoCourseCardState extends State<DemoCourseCard> {
     setState(() {
       userID = prefs.getString('userID');
       phone = prefs.getString('phone_number');
+      balance = prefs.getString('wallet_balance');
     });
   }
 

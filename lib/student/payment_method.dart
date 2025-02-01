@@ -4,6 +4,7 @@ class PaymentMethod {
   static Widget buildDialog({
     required String amount,
     required String name,
+    required String? balance,
     required VoidCallback onPhonePayment,
     required VoidCallback onWalletPayment,
   }) {
@@ -148,7 +149,7 @@ class PaymentMethod {
                       }
                     });
                   },
-                  amount: "₹ 59.67",
+                  amount: "₹ $balance",
                   gradient: LinearGradient(
                     colors: [
                       Colors.purple.shade400,

@@ -1,7 +1,77 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:trusir/common/api.dart';
+import 'package:trusir/common/phonepe_payment.dart';
+import 'package:trusir/student/main_screen.dart';
 
-class WalletPage extends StatelessWidget {
+class WalletPage extends StatefulWidget {
   const WalletPage({super.key});
+
+  @override
+  State<WalletPage> createState() => _WalletPageState();
+}
+
+class _WalletPageState extends State<WalletPage> {
+  double balance = 0;
+  List<Map<String, dynamic>> walletTransactions = [];
+  PaymentService paymentService = PaymentService();
+  @override
+  void initState() {
+    super.initState();
+    fetchBalance();
+    fetchWalletTransactions();
+    paymentService.initPhonePeSdk();
+  }
+
+  Future<double> fetchBalance() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getString('userID');
+    // Replace with your API URL
+    try {
+      final response =
+          await http.get(Uri.parse('$baseUrl/user/balance/$userID'));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        print(double.parse(data['balance']));
+        setState(() {
+          balance = double.parse(data['balance']);
+          prefs.setString('wallet_balance', '$balance');
+        });
+        return balance; // Convert balance to an integer
+      } else {
+        throw Exception('Failed to load balance');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return 0; // Return 0 in case of an error
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchWalletTransactions() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userID = prefs.getString('userID');
+    final response =
+        await http.get(Uri.parse('$baseUrl/get-fee-payment-info/$userID'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+
+      // Filter transactions where transactionName is 'WALLET'
+      setState(() {
+        walletTransactions = data
+            .where((transaction) => transaction['transactionName'] == 'WALLET')
+            .map((transaction) => transaction as Map<String, dynamic>)
+            .toList();
+      });
+
+      return walletTransactions;
+    } else {
+      throw Exception('Failed to load transactions');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +87,10 @@ class WalletPage extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        actions: const [
-          Icon(Icons.help_outline, size: 24),
-          SizedBox(width: 16),
-        ],
+        // actions: const [
+        //   Icon(Icons.help_outline, size: 24),
+        //   SizedBox(width: 16),
+        // ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -62,9 +132,9 @@ class WalletPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  const Text(
-                    "₹2,499.00",
-                    style: TextStyle(
+                  Text(
+                    '₹ $balance',
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -77,7 +147,7 @@ class WalletPage extends StatelessWidget {
                     children: [
                       _buildActionButton(Icons.add, "Add Money"),
                       _buildActionButton(Icons.history, "History"),
-                      _buildActionButton(Icons.card_giftcard, "Rewards"),
+                      // _buildActionButton(Icons.card_giftcard, "Rewards"),
                     ],
                   ),
                 ],
@@ -114,10 +184,21 @@ class WalletPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildQuickAction(
-                          Icons.school, "Buy Course", Colors.blue),
-                      _buildQuickAction(
-                          Icons.card_giftcard, "Redeem", Colors.orange),
+                      GestureDetector(
+                        onTap: () => Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MainScreen(
+                              index: 1,
+                            ),
+                          ),
+                          (Route<dynamic> route) => false,
+                        ),
+                        child: _buildQuickAction(
+                            Icons.school, "Buy Course", Colors.blue),
+                      ),
+                      // _buildQuickAction(
+                      //     Icons.card_giftcard, "Redeem", Colors.orange),
                       _buildQuickAction(Icons.share, "Share", Colors.green),
                     ],
                   ),
@@ -140,35 +221,19 @@ class WalletPage extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Recent Transactions",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Poppins',
+              child: walletTransactions.isEmpty
+                  ? const Center(child: Text("No Wallet Transactions Found"))
+                  : Column(
+                      children: walletTransactions.map((transaction) {
+                        return _buildTransactionItem(
+                          transaction["transactionType"] ??
+                              "Unknown Transaction",
+                          double.tryParse(transaction["amount"] ?? "0.0") ??
+                              0.0,
+                          transaction["created_at"] ?? "Unknown Date",
+                        );
+                      }).toList(),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildTransactionItem(
-                    "Course Purchase - Flutter Masterclass",
-                    -999.00,
-                    "Today",
-                  ),
-                  _buildTransactionItem(
-                    "Wallet Recharge",
-                    2000.00,
-                    "Yesterday",
-                  ),
-                  _buildTransactionItem(
-                    "Course Purchase - Python Basics",
-                    -499.00,
-                    "22 Jan 2024",
-                  ),
-                ],
-              ),
             ),
           ],
         ),
