@@ -263,7 +263,7 @@ class _AddtestseriesState extends State<Addtestseries> {
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.4),
+                      color: Colors.black.withOpacity(0.4),
                       offset: const Offset(2, 2),
                       blurRadius: 4,
                     ),
@@ -272,14 +272,22 @@ class _AddtestseriesState extends State<Addtestseries> {
                 child: DropdownButtonFormField<String>(
                   iconSize: 25,
                   icon: const Icon(Icons.keyboard_arrow_down),
-                  value: selectedSubject,
+                  value: _courses.isNotEmpty ? selectedSubject : null,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  items: _courses.map((String subject) {
-                    return DropdownMenuItem<String>(
-                      value: subject,
-                      child: Text(subject),
-                    );
-                  }).toList(),
+                  items: _courses.isNotEmpty
+                      ? _courses.map((String subject) {
+                          return DropdownMenuItem<String>(
+                            value: subject,
+                            child: Text(subject),
+                          );
+                        }).toList()
+                      : [
+                          const DropdownMenuItem<String>(
+                            value: null,
+                            child: Text('No courses available',
+                                style: TextStyle(color: Colors.grey)),
+                          ),
+                        ],
                   decoration: InputDecoration(
                     labelText: 'Subject',
                     labelStyle: TextStyle(color: Colors.grey.shade500),
@@ -300,12 +308,17 @@ class _AddtestseriesState extends State<Addtestseries> {
                         horizontal: 16, vertical: 13),
                     isDense: true,
                   ),
-                  onChanged: (String? value) {
-                    setState(() {
-                      selectedSubject = value;
-                    });
-                  },
+                  onChanged: _courses.isNotEmpty
+                      ? (String? value) {
+                          setState(() {
+                            selectedSubject = value;
+                          });
+                        }
+                      : null, // Disable onChanged when no courses are available
                   validator: (value) {
+                    if (_courses.isEmpty) {
+                      return null; // No validation when no courses are available
+                    }
                     if (value == null) {
                       return 'Please select a subject';
                     }

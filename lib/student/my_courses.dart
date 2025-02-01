@@ -130,13 +130,36 @@ class _MyCourseCardState extends State<MyCourseCard> {
                     right: 0,
                     child: IconButton(
                         onPressed: () {
-                          DeleteUtility.deleteItem(
-                              'individualSlot', widget.course['slotID']);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MainScreen(index: 1)));
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text("Confirm Deletion"),
+                                content: const Text(
+                                    "Are you sure you want to delete?"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(
+                                        context), // Dismiss dialog
+                                    child: const Text("Cancel"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      DeleteUtility.deleteItem('individualSlot',
+                                          widget.course['slotID']);
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const MainScreen(index: 1)));
+                                    }, // Confirm deletion
+                                    child: const Text("OK"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                         icon: const Icon(
                           Icons.close,

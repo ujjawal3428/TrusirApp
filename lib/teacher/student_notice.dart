@@ -261,9 +261,41 @@ class _StudentNoticeScreenState extends State<StudentNoticeScreen> {
                                           right: 0,
                                           child: IconButton(
                                               onPressed: () {
-                                                DeleteUtility.deleteItem(
-                                                    'notice', notice.id);
-                                                Navigator.pop(context);
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          "Confirm Deletion"),
+                                                      content: const Text(
+                                                          "Are you sure you want to delete?"),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () =>
+                                                              Navigator.pop(
+                                                                  context), // Dismiss dialog
+                                                          child: const Text(
+                                                              "Cancel"),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            DeleteUtility
+                                                                .deleteItem(
+                                                                    'notice',
+                                                                    notice.id);
+                                                            Navigator.pop(
+                                                                context);
+                                                            Navigator.pop(
+                                                                context);
+                                                          }, // Confirm deletion
+                                                          child:
+                                                              const Text("OK"),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
                                               },
                                               icon: const Icon(
                                                 Icons.close,

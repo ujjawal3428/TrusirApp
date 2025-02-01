@@ -326,7 +326,7 @@ class _StudentGKPageState extends State<StudentGKPage> {
                                                             const SizedBox(
                                                                 height: 2),
                                                             Text(
-                                                              'Description: ${gk.course}',
+                                                              gk.course,
                                                               style:
                                                                   const TextStyle(
                                                                 fontSize: 14,
@@ -368,9 +368,41 @@ class _StudentGKPageState extends State<StudentGKPage> {
                                             right: 0,
                                             child: IconButton(
                                                 onPressed: () {
-                                                  DeleteUtility.deleteItem(
-                                                      'teacherGK', gk.id);
-                                                  Navigator.pop(context);
+                                                  showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            "Confirm Deletion"),
+                                                        content: const Text(
+                                                            "Are you sure you want to delete?"),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context), // Dismiss dialog
+                                                            child: const Text(
+                                                                "Cancel"),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              DeleteUtility
+                                                                  .deleteItem(
+                                                                      'teacherGK',
+                                                                      gk.id);
+                                                              Navigator.pop(
+                                                                  context);
+                                                              Navigator.pop(
+                                                                  context);
+                                                            }, // Confirm deletion
+                                                            child: const Text(
+                                                                "OK"),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
                                                 },
                                                 icon: const Icon(
                                                   Icons.close,
@@ -466,8 +498,8 @@ class GK {
   factory GK.fromJson(Map<String, dynamic> json) {
     return GK(
       id: json['id'],
-      title: json['title'],
-      course: json['description'],
+      title: json['title'] ?? 'No data',
+      course: json['description'] ?? 'No data',
       image: json['image'],
       createdAt: json['created_at'],
     );

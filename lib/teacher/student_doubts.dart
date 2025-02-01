@@ -810,7 +810,7 @@ class _StudentDoubtsPageState extends State<StudentDoubtsPage> {
                                             ),
                                             const SizedBox(height: 2),
                                             Text(
-                                              'Description: ${gk.course}',
+                                              gk.course,
                                               style: const TextStyle(
                                                 fontSize: 14,
                                                 fontFamily: "Poppins",
@@ -895,8 +895,8 @@ class Doubt {
   factory Doubt.fromJson(Map<String, dynamic> json) {
     return Doubt(
       id: json['id'],
-      title: json['title'],
-      course: json['course'],
+      title: json['title'] ?? 'No data',
+      course: json['course'] ?? 'No data',
       image: json['image'],
       teacheruserID: json['teacher_userID'] ?? 'N/A',
       createdAt: json['created_at'],
@@ -969,7 +969,7 @@ class StudentDoubtsDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                'Title: ${gk.title}',
+                gk.title,
                 style: const TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 20,
@@ -978,7 +978,7 @@ class StudentDoubtsDetailPage extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Course: ${gk.course}',
+                gk.course,
                 style: const TextStyle(
                   fontFamily: "Poppins",
                   fontSize: 16,

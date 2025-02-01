@@ -219,14 +219,39 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                       right: -10,
                       child: IconButton(
                           onPressed: () {
-                            DeleteUtility.deleteItem('testserie', test['id']);
-                            Navigator.pop(context);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TestSeriesScreen(
-                                          userID: widget.userID,
-                                        )));
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text("Confirm Deletion"),
+                                  content: const Text(
+                                      "Are you sure you want to delete?"),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(
+                                          context), // Dismiss dialog
+                                      child: const Text("Cancel"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        DeleteUtility.deleteItem(
+                                            'testserie', test['id']);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TestSeriesScreen(
+                                                      userID: widget.userID,
+                                                    )));
+                                      }, // Confirm deletion
+                                      child: const Text("OK"),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           },
                           icon: const Icon(
                             Icons.close,

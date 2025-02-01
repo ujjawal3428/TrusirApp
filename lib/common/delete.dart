@@ -4,6 +4,8 @@ import 'package:trusir/common/api.dart';
 
 class DeleteUtility {
   static Future<bool> deleteItem(String model, int id) async {
+    // If canceled, do nothing
+
     final String url = "$baseUrl/delete/$model/$id";
 
     try {
