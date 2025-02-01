@@ -564,7 +564,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       children: [
                         _buildPhoneField("Phone Number"),
                         const SizedBox(
-                          height: 20,
+                          height: 14,
                         ),
                         // Number of Students Dropdown
                         _buildDropdownField(
@@ -1265,25 +1265,24 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Divider(),
-                  const SizedBox(height: 10),
                   Text(
                     'Student ${index + 1}',
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 20),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   _buildTextField('Student Name', onChanged: (value) {
                     studentForms[index].studentName = value;
                   }),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   _buildTextField("Father's Name", onChanged: (value) {
                     studentForms[index].fathersName = value;
                   }),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   _buildTextField("Mother's Name", onChanged: (value) {
                     studentForms[index].mothersName = value;
                   }),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   Row(
                     children: [
                       Expanded(
@@ -1314,11 +1313,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   _buildTextField('School Name', onChanged: (value) {
                     studentForms[index].schoolName = value;
                   }),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   _buildDropdownField(
                     'Medium',
                     selectedValue: studentForms[index].medium,
@@ -1329,7 +1328,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     },
                     items: additionals['mediums'],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   _buildDropdownField(
                     'Class',
                     selectedValue: studentForms[index].studentClass,
@@ -1340,7 +1339,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     },
                     items: _classes,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   _buildDropdownField(
                     'Board',
                     selectedValue: studentForms[index].board,
@@ -1351,7 +1350,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     },
                     items: additionals['board'],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   _buildMultiSelectDropdownField('Subject',
                       selectedValues: selectedSubjectsPerForm[index],
                       onChanged: (List<String> values) {
@@ -1362,7 +1361,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                   },
                       items: _courses,
                       selectedText: studentForms[index].subject ?? 'Select'),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
 
                   _buildDropdownField(
                     'State',
@@ -1382,7 +1381,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     },
                     items: states,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   GestureDetector(
                     onTap: () {
                       if (studentForms[index].state == null) {
@@ -1412,11 +1411,11 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       items: studentForms[index].cities,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   _buildTextField('Mohalla/Area', onChanged: (value) {
                     studentForms[index].area = value;
                   }),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 14),
                   GestureDetector(
                     onTap: () {
                       if (studentForms[index].state == null) {
@@ -1446,7 +1445,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                       items: studentForms[index].pins,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
                   // Full address
                   _buildAddressField('Full Address', onChanged: (value) {
                     studentForms[index].address = value;
@@ -1735,12 +1734,12 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                               displayPath: studentForms[index].aadharBackPath),
                     ],
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   TimeSlotField(
                     formData: studentForms[index],
                     isWeb: isWeb,
                   ), // Pass index to handle each form's state
-                  const SizedBox(height: 10),
+                 
                   // Add more fields as needed
                 ],
               );
@@ -2229,7 +2228,7 @@ class TimeSlotFieldState extends State<TimeSlotField> {
     return GestureDetector(
       onTap: () => toggleSelection(slot),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4.0),
+        margin: const EdgeInsets.symmetric(horizontal: 5,),
         padding: const EdgeInsets.all(9.0),
         decoration: BoxDecoration(
           color: selectedSlots.contains(slot)

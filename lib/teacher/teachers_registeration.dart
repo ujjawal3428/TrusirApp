@@ -1422,15 +1422,15 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                         _buildTextField('Teacher Name', onChanged: (value) {
                           formData.teacherName = value;
                         }),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 14),
                         _buildTextField("Father's Name", onChanged: (value) {
                           formData.fathersName = value;
                         }),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 14),
                         _buildTextField("Mother's Name", onChanged: (value) {
                           formData.mothersName = value;
                         }),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 14),
                         // Gender and DOB Row
                         Row(
                           children: [
@@ -1460,9 +1460,9 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 14),
                         _buildPhoneField('Phone Number'),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 14),
                         _buildDropdownField(
                           'Qualification',
                           selectedValue: formData.qualification,
@@ -1473,7 +1473,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: additionals['qualification'],
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 14),
                         _buildDropdownField(
                           'Experience',
                           selectedValue: formData.experience,
@@ -1484,7 +1484,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: additionals['experience'],
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 14),
                         _buildMultiSelectDropdownField(
                           'Preferred Board',
                           selectedValues: selectedBoard,
@@ -1496,11 +1496,11 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: additionals['board'],
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 14),
                         _buildTextField('School Name', onChanged: (value) {
                           formData.school = value;
                         }),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 14),
                         // Dropdowns
                         _buildMultiSelectDropdownField(
                           'Preferred Class',
@@ -1513,7 +1513,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: _classes,
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 14),
                         _buildMultiSelectDropdownField(
                           'Preferred Medium',
                           selectedValues: selectedMedium,
@@ -1525,7 +1525,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: additionals['mediums'],
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 14),
                         _buildMultiSelectDropdownField(
                           'Subject',
                           selectedValues: selectedSubjects,
@@ -1537,7 +1537,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: _courses,
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 14),
                         _buildDropdownField(
                           'State',
                           selectedValue: selectedState,
@@ -1546,7 +1546,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                           },
                           items: states,
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 14),
                         GestureDetector(
                           onTap: () {
                             if (selectedState == null) {
@@ -1568,11 +1568,11 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                             items: cities,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 14),
                         _buildTextField('Mohalla/Area', onChanged: (value) {
                           formData.area = value;
                         }),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 14),
                         GestureDetector(
                           onTap: () {
                             if (selectedState == null) {
@@ -1603,13 +1603,13 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                             items: pincodes,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 14),
                         // Address fields
                         _buildAddressField('Current Full Address',
                             onChanged: (value) {
                           formData.caddress = value;
                         }),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 14),
                         _buildAddressField('Permanent Full Address',
                             onChanged: (value) {
                           formData.paddress = value;
@@ -2030,7 +2030,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                         ),
                         const SizedBox(height: 10),
                         TimeSlotField(formData: formData, isWeb: isWeb),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 5),
 
                         // Terms and Conditions Checkbox
                         Row(
@@ -2065,7 +2065,6 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
                         // Registration Fee
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -2475,7 +2474,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
             borderSide: const BorderSide(color: Colors.grey),
           ),
           contentPadding:
-              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 23),
+              EdgeInsets.symmetric(horizontal: 16, vertical: isWeb ? 21 : 0),
           suffixIcon: Icon(icon),
           isDense: true,
         ),
@@ -2592,7 +2591,7 @@ class TimeSlotFieldState extends State<TimeSlotField> {
     return GestureDetector(
       onTap: () => toggleSelection(slot),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4.0),
+        margin: const EdgeInsets.symmetric(horizontal: 5,),
         padding: const EdgeInsets.all(9.0),
         decoration: BoxDecoration(
           color: selectedSlots.contains(slot)
