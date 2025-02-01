@@ -293,7 +293,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                 course['class'] as String; // Adjust based on API response
 
             // Add unique combinations to the sets
-            uniqueCourses.add('$subject $courseClass');
+            uniqueCourses.add(subject);
             uniqueClasses.add(courseClass);
           }
 
@@ -1739,7 +1739,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                     formData: studentForms[index],
                     isWeb: isWeb,
                   ), // Pass index to handle each form's state
-                 
+
                   // Add more fields as needed
                 ],
               );
@@ -2228,7 +2228,9 @@ class TimeSlotFieldState extends State<TimeSlotField> {
     return GestureDetector(
       onTap: () => toggleSelection(slot),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5,),
+        margin: const EdgeInsets.symmetric(
+          horizontal: 5,
+        ),
         padding: const EdgeInsets.all(9.0),
         decoration: BoxDecoration(
           color: selectedSlots.contains(slot)

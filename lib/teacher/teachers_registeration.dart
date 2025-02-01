@@ -270,7 +270,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                 course['class'] as String; // Adjust based on API response
 
             // Add unique combinations to the sets
-            uniqueCourses.add('$subject $courseClass');
+            uniqueCourses.add(subject);
             uniqueClasses.add(courseClass);
           }
 
@@ -2591,7 +2591,9 @@ class TimeSlotFieldState extends State<TimeSlotField> {
     return GestureDetector(
       onTap: () => toggleSelection(slot),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 5,),
+        margin: const EdgeInsets.symmetric(
+          horizontal: 5,
+        ),
         padding: const EdgeInsets.all(9.0),
         decoration: BoxDecoration(
           color: selectedSlots.contains(slot)
