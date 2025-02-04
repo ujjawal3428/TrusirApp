@@ -224,67 +224,70 @@ class PaymentMethod {
     required bool isSelected,
     required ValueChanged<bool?> onChanged,
   }) {
-    return Container(
-      padding: const EdgeInsets.only(left: 12, right: 15, top: 16, bottom: 16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF323244).withOpacity(0.7),
-            Colors.white.withOpacity(0.1),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: Colors.white38,
-          width: 1,
-        ),
-      ),
-      child: Row(
-        children: [
-          Checkbox(
-            value: isSelected,
-            onChanged: onChanged,
-            fillColor: MaterialStateProperty.all(Colors.white),
-            checkColor: Colors.green,
+    return GestureDetector(
+       onTap: () => onChanged(!isSelected),
+      child: Container(
+        padding: const EdgeInsets.only(left: 12, right: 15, top: 16, bottom: 16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              const Color(0xFF323244).withOpacity(0.7),
+              Colors.white.withOpacity(0.1),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-                if (subtitle != null)
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+            color: Colors.white38,
+            width: 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Checkbox(
+              value: isSelected,
+              onChanged: onChanged,
+              fillColor: MaterialStateProperty.all(Colors.white),
+              checkColor: Colors.green,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    subtitle,
+                    title,
                     style: const TextStyle(
-                      color: Colors.white54,
-                      fontSize: 14,
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
                       fontFamily: 'Poppins',
                     ),
                   ),
-              ],
-            ),
-          ),
-          if (amount != null)
-            Text(
-              amount,
-              style: const TextStyle(
-                color: Colors.amberAccent,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Poppins',
+                  if (subtitle != null)
+                    Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                ],
               ),
             ),
-        ],
+            if (amount != null)
+              Text(
+                amount,
+                style: const TextStyle(
+                  color: Colors.amberAccent,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/phonepe_payment.dart';
+import 'package:trusir/student/addmoneypopup.dart';
 import 'package:trusir/student/main_screen.dart';
 
 class WalletPage extends StatefulWidget {
@@ -244,16 +245,24 @@ class _WalletPageState extends State<WalletPage> {
   Widget _buildActionButton(IconData icon, String label) {
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white24,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: 20,
+        GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => const AddMoneyPopup(),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white24,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              icon,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
         ),
         const SizedBox(height: 4),
