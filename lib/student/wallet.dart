@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
 import 'package:trusir/common/phonepe_payment.dart';
-import 'package:trusir/student/addmoneypopup.dart';
 import 'package:trusir/student/main_screen.dart';
+import 'package:trusir/student/payment__status_popup.dart';
 
 class WalletPage extends StatefulWidget {
   const WalletPage({super.key});
@@ -28,7 +29,7 @@ class _WalletPageState extends State<WalletPage> {
 
   Future<double> fetchBalance() async {
     final prefs = await SharedPreferences.getInstance();
-    final userID = prefs.getString('userID');
+    userID = prefs.getString('userID');
     // Replace with your API URL
     try {
       final response =
@@ -72,6 +73,149 @@ class _WalletPageState extends State<WalletPage> {
     } else {
       throw Exception('Failed to load transactions');
     }
+  }
+
+  String merchantTransactionID = '';
+  bool paymentstatus = false;
+  String? addMoneyamount;
+
+  String body = "";
+  // Transaction details
+  String checksum = "";
+  // Obtain this from your backend
+  String? userID;
+
+  String? phone;
+  TextEditingController amountController = TextEditingController();
+  String transactionType = '';
+
+  void checkStatus() async {
+    String url =
+        "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/$merchantId/$merchantTransactionID";
+
+    String concat = "/pg/v1/status/$merchantId/$merchantTransactionID$saltKey";
+
+    var bytes = utf8.encode(concat);
+
+    var digest = sha256.convert(bytes).toString();
+
+    String xVerify = "$digest###$saltIndex";
+
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      "X-VERIFY": xVerify,
+      "X-MERCHANT-ID": merchantId,
+    };
+
+    try {
+      // Wait for 30 seconds before making the request
+      await Future.delayed(const Duration(seconds: 5));
+
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = jsonDecode(response.body);
+        Navigator.pop(context);
+        if (responseData["success"] &&
+            responseData["code"] == "PAYMENT_SUCCESS" &&
+            responseData["data"]["state"] == "COMPLETED") {
+          // Payment Success
+          int adjustedAmount = (responseData["data"]['amount'] / 100).toInt();
+
+          // Show Success Dialog
+          setState(() {
+            transactionType =
+                responseData["data"]["paymentInstrument"]["type"] == 'CARD'
+                    ? responseData["data"]["paymentInstrument"]["cardType"]
+                    : responseData["data"]["paymentInstrument"]["type"];
+            paymentstatus = true;
+          });
+          if (paymentstatus) {
+            paymentService.updateWalletBalance(
+                context, addMoneyamount ?? '0', userID, '0');
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => PaymentPopUpPage(
+                      isWallet: true,
+                      adjustedAmount: double.parse('$adjustedAmount'),
+                      isSuccess: paymentstatus,
+                      transactionID: merchantTransactionID,
+                      transactionType: transactionType)),
+            );
+          }
+        } else {
+          setState(() {
+            paymentstatus = false;
+          });
+          // Payment Failed
+        }
+      } else {
+        setState(() {
+          paymentstatus = false;
+        });
+        throw Exception("Failed to fetch payment status");
+      }
+    } catch (e) {
+      // Show Error Dialog
+      setState(() {
+        paymentstatus = false;
+      });
+    }
+  }
+
+  void showLoadingDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissal by tapping outside
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => false, // Disable back navigation
+          child: const AlertDialog(
+            content: Row(
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 20),
+                Text(
+                    "Processing payment, \nplease wait...\nPlease don't press back"),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void paymentstatusnavigation() {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => PaymentPopUpPage(
+              isWallet: true,
+              adjustedAmount: double.parse(addMoneyamount ?? '0'),
+              isSuccess: paymentstatus,
+              transactionID: merchantTransactionID,
+              transactionType: transactionType)),
+    );
+  }
+
+  getChecksum(int am) {
+    final reqData = {
+      "merchantId": merchantId,
+      "merchantTransactionId": merchantTransactionID,
+      "merchantUserId": userID,
+      "amount": am,
+      "callbackUrl": callback,
+      "mobileNumber": "+91$phone",
+      "paymentInstrument": {"type": "PAY_PAGE"}
+    };
+    String base64body = base64.encode(utf8.encode(json.encode(reqData)));
+    checksum =
+        '${sha256.convert(utf8.encode(base64body + apiEndPoint + saltKey)).toString()}###$saltIndex';
+
+    return base64body;
   }
 
   @override
@@ -146,9 +290,119 @@ class _WalletPageState extends State<WalletPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildActionButton(Icons.add, "Add Money"),
+                      GestureDetector(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => Dialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(16)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(16),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              "Add Money",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontFamily: "Poppins"),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            TextField(
+                                              controller: amountController,
+                                              keyboardType:
+                                                  TextInputType.number,
+                                              decoration: InputDecoration(
+                                                hintText: "Enter amount",
+                                                prefixIcon: const Padding(
+                                                  padding: EdgeInsets.only(
+                                                      left: 25.0, top: 11),
+                                                  child: Text(
+                                                    "₹",
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                  ),
+                                                ),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 16),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 40.0, right: 40),
+                                              child: SizedBox(
+                                                width: double.infinity,
+                                                child: ElevatedButton(
+                                                  onPressed: () {
+                                                    // Pass the entered amount to the parent
+                                                    Navigator.pop(context);
+                                                    setState(() {
+                                                      addMoneyamount =
+                                                          amountController.text;
+                                                    });
+                                                    merchantTransactionID =
+                                                        paymentService
+                                                            .generateUniqueTransactionId(
+                                                                userID!);
+                                                    body = getChecksum(
+                                                      int.parse(
+                                                          '${addMoneyamount}00'),
+                                                    ).toString();
+                                                    paymentService.startTransaction(
+                                                        body,
+                                                        checksum,
+                                                        checkStatus,
+                                                        showLoadingDialog,
+                                                        paymentstatusnavigation); // Close dialog after confirming
+                                                  },
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        Colors.deepPurple,
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 10,
+                                                        vertical: 8),
+                                                    textStyle: const TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                    ),
+                                                    elevation: 6,
+                                                    shadowColor:
+                                                        Colors.deepPurpleAccent,
+                                                  ),
+                                                  child: const Text(
+                                                    "Confirm",
+                                                    style: TextStyle(
+                                                        fontFamily: "Poppins"),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ));
+                          },
+                          child: _buildActionButton(Icons.add, "Add Money")),
                       _buildActionButton(Icons.history, "History"),
-                      // _buildActionButton(Icons.card_giftcard, "Rewards"),
+                      _buildActionButton(Icons.card_giftcard, "Rewards"),
                     ],
                   ),
                 ],
@@ -245,24 +499,16 @@ class _WalletPageState extends State<WalletPage> {
   Widget _buildActionButton(IconData icon, String label) {
     return Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) => const AddMoneyPopup(),
-            );
-          },
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white24,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 20,
-            ),
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white24,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            icon,
+            color: Colors.white,
+            size: 20,
           ),
         ),
         const SizedBox(height: 4),

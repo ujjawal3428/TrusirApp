@@ -1471,7 +1471,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                               formData.qualification = value;
                             });
                           },
-                          items: additionals['qualification'],
+                          items: additionals['qualification'] ?? [],
                         ),
                         const SizedBox(height: 14),
                         _buildDropdownField(
@@ -1482,7 +1482,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                               formData.experience = value;
                             });
                           },
-                          items: additionals['experience'],
+                          items: additionals['experience'] ?? [],
                         ),
                         const SizedBox(height: 14),
                         _buildMultiSelectDropdownField(
@@ -1494,7 +1494,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                               formData.board = selectedBoard.join(',');
                             });
                           },
-                          items: additionals['board'],
+                          items: additionals['board'] ?? [],
                         ),
                         const SizedBox(height: 14),
                         _buildTextField('School Name', onChanged: (value) {
@@ -1523,7 +1523,7 @@ class TeacherRegistrationPageState extends State<TeacherRegistrationPage> {
                               formData.medium = selectedMedium.join(',');
                             });
                           },
-                          items: additionals['mediums'],
+                          items: additionals['mediums'] ?? [],
                         ),
                         const SizedBox(height: 14),
                         _buildMultiSelectDropdownField(

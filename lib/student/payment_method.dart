@@ -225,9 +225,10 @@ class PaymentMethod {
     required ValueChanged<bool?> onChanged,
   }) {
     return GestureDetector(
-       onTap: () => onChanged(!isSelected),
+      onTap: () => onChanged(!isSelected),
       child: Container(
-        padding: const EdgeInsets.only(left: 12, right: 15, top: 16, bottom: 16),
+        padding:
+            const EdgeInsets.only(left: 12, right: 15, top: 16, bottom: 16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [

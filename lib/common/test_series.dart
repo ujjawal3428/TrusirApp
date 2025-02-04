@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -147,11 +148,13 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                       width: MediaQuery.of(context).size.width * 1,
 
                       decoration: BoxDecoration(
-                        color: containerColors[index % containerColors.length],
+                        color: testSeriesList[index]['active'] == 1
+                            ? containerColors[index % containerColors.length]
+                            : Colors.grey,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: _buildTestCard(
-                          test, index), // Encapsulated card logic
+                      child: _buildTestCard(test, index,
+                          test['active'] == 1), // Encapsulated card logic
                     ),
                   );
                 }).toList(),
@@ -178,7 +181,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     );
   }
 
-  Widget _buildTestCard(dynamic test, int index) {
+  Widget _buildTestCard(dynamic test, int index, bool isactive) {
     return Padding(
       padding:
           const EdgeInsets.only(top: 10.0, left: 15, right: 15, bottom: 10),
@@ -218,41 +221,46 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                       top: -10,
                       right: -10,
                       child: IconButton(
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text("Confirm Deletion"),
-                                  content: const Text(
-                                      "Are you sure you want to delete?"),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(
-                                          context), // Dismiss dialog
-                                      child: const Text("Cancel"),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        DeleteUtility.deleteItem(
-                                            'testserie', test['id']);
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    TestSeriesScreen(
-                                                      userID: widget.userID,
-                                                    )));
-                                      }, // Confirm deletion
-                                      child: const Text("OK"),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
+                          onPressed: isactive
+                              ? () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text("Confirm Deletion"),
+                                        content: const Text(
+                                            "Are you sure you want to delete?"),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.pop(
+                                                context), // Dismiss dialog
+                                            child: const Text("Cancel"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              DeleteUtility.deleteItem(
+                                                  'testserie', test['id']);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          TestSeriesScreen(
+                                                            userID:
+                                                                widget.userID,
+                                                          )));
+                                            }, // Confirm deletion
+                                            child: const Text("OK"),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              : () {
+                                  Fluttertoast.showToast(msg: 'Test Inactive!');
+                                },
                           icon: const Icon(
                             Icons.close,
                             color: Colors.redAccent,
@@ -266,6 +274,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildDownloadButton(
+                  isactive: isactive,
                   testName: test['test_name'],
                   label: 'Question',
                   isQuestion: true,
@@ -273,6 +282,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
                   downloadFile: test['question']),
               const SizedBox(width: 27),
               _buildDownloadButton(
+                  isactive: isactive,
                   testName: test['test_name'],
                   label: 'Answer',
                   isQuestion: false,
@@ -286,6 +296,7 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
   }
 
   Widget _buildDownloadButton({
+    required bool isactive,
     required String label,
     required bool isQuestion,
     required String testName,
@@ -293,89 +304,96 @@ class _TestSeriesScreenState extends State<TestSeriesScreen> {
     required String downloadFile,
   }) {
     return InkWell(
-      onTap: () => showDialog(
-        context: context,
-        barrierColor: Colors.black.withOpacity(0.3),
-        builder: (BuildContext context) {
-          List<String> images = downloadFile.split(',');
-          return Dialog(
-            backgroundColor: Colors.transparent,
-            insetPadding: const EdgeInsets.all(16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "Images",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+      onTap: isactive
+          ? () {
+              showDialog(
+                context: context,
+                barrierColor: Colors.black.withOpacity(0.3),
+                builder: (BuildContext context) {
+                  List<String> images = downloadFile.split(',');
+                  return Dialog(
+                    backgroundColor: Colors.transparent,
+                    insetPadding: const EdgeInsets.all(16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
+                    child: Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "Images",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                            ),
+                            itemCount: images.length,
+                            itemBuilder: (context, index) {
+                              final image = images[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    if (isQuestion) {
+                                      questionFileName = '${fileName}_$index';
+                                    } else {
+                                      answerFileName = '${fileName}_$index';
+                                    }
+                                  });
+                                  FileDownloader.downloadedFiles
+                                          .containsKey('${fileName}_$index')
+                                      ? FileDownloader.openFile(
+                                          '${fileName}_$index')
+                                      : FileDownloader.downloadFile(
+                                          context, image, '${fileName}_$index');
+                                },
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: Image.network(
+                                        image,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      '${testName}_$index',
+                                      style: const TextStyle(
+                                        fontSize: 8,
+                                        color: Colors.blue,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                    itemCount: images.length,
-                    itemBuilder: (context, index) {
-                      final image = images[index];
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (isQuestion) {
-                              questionFileName = '${fileName}_$index';
-                            } else {
-                              answerFileName = '${fileName}_$index';
-                            }
-                          });
-                          FileDownloader.downloadedFiles
-                                  .containsKey('${fileName}_$index')
-                              ? FileDownloader.openFile('${fileName}_$index')
-                              : FileDownloader.downloadFile(
-                                  context, image, '${fileName}_$index');
-                        },
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Image.network(
-                                image,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              '${testName}_$index',
-                              style: const TextStyle(
-                                fontSize: 8,
-                                color: Colors.blue,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+                  );
+                },
+              );
+            }
+          : () {
+              Fluttertoast.showToast(msg: 'Test Inactive!');
+            },
       child: Container(
         width: 135,
         height: 32,

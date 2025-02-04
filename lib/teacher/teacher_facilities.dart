@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +16,7 @@ import 'package:trusir/common/wanna_logout.dart';
 class StudentProfile {
   final String name;
   final String image;
+  final int active;
   final String phone;
   final String subject;
   final String userID;
@@ -26,6 +28,7 @@ class StudentProfile {
   StudentProfile(
       {required this.name,
       required this.image,
+      required this.active,
       required this.phone,
       required this.subject,
       required this.userID,
@@ -39,6 +42,7 @@ class StudentProfile {
         name: json['name'],
         image: json['profile'],
         phone: json['phone'],
+        active: json['active'],
         subject: json['subject'],
         userID: json['userID'],
         studentClass: json['class'],
@@ -447,34 +451,48 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                                     .toColor();
 
                                             return GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        StudentProfileScreen(
-                                                      name: studentProfile.name,
-                                                      phone:
-                                                          studentProfile.phone,
-                                                      subject: studentProfile
-                                                          .subject,
-                                                      image:
-                                                          studentProfile.image,
-                                                      userID:
-                                                          studentProfile.userID,
-                                                      address: studentProfile
-                                                          .address,
-                                                      fatherName:
-                                                          studentProfile.dob,
-                                                      school:
-                                                          studentProfile.school,
-                                                      studentClass:
-                                                          studentProfile
-                                                              .studentClass,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
+                                              onTap: studentProfile.active == 1
+                                                  ? () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              StudentProfileScreen(
+                                                            name: studentProfile
+                                                                .name,
+                                                            phone:
+                                                                studentProfile
+                                                                    .phone,
+                                                            subject:
+                                                                studentProfile
+                                                                    .subject,
+                                                            image:
+                                                                studentProfile
+                                                                    .image,
+                                                            userID:
+                                                                studentProfile
+                                                                    .userID,
+                                                            address:
+                                                                studentProfile
+                                                                    .address,
+                                                            fatherName:
+                                                                studentProfile
+                                                                    .dob,
+                                                            school:
+                                                                studentProfile
+                                                                    .school,
+                                                            studentClass:
+                                                                studentProfile
+                                                                    .studentClass,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }
+                                                  : () {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              'Account Inactive');
+                                                    },
                                               child: Container(
                                                 width: 94,
                                                 height: 120,
@@ -830,26 +848,39 @@ class _TeacherFacilitiesState extends State<TeacherFacilities> {
                                               .toColor();
 
                                       return GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  StudentProfileScreen(
-                                                name: studentProfile.name,
-                                                phone: studentProfile.phone,
-                                                subject: studentProfile.subject,
-                                                image: studentProfile.image,
-                                                userID: studentProfile.userID,
-                                                address: studentProfile.address,
-                                                fatherName: studentProfile.dob,
-                                                school: studentProfile.school,
-                                                studentClass:
-                                                    studentProfile.studentClass,
-                                              ),
-                                            ),
-                                          );
-                                        },
+                                        onTap: studentProfile.active == 1
+                                            ? () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        StudentProfileScreen(
+                                                      name: studentProfile.name,
+                                                      phone:
+                                                          studentProfile.phone,
+                                                      subject: studentProfile
+                                                          .subject,
+                                                      image:
+                                                          studentProfile.image,
+                                                      userID:
+                                                          studentProfile.userID,
+                                                      address: studentProfile
+                                                          .address,
+                                                      fatherName:
+                                                          studentProfile.dob,
+                                                      school:
+                                                          studentProfile.school,
+                                                      studentClass:
+                                                          studentProfile
+                                                              .studentClass,
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            : () {
+                                                Fluttertoast.showToast(
+                                                    msg: 'Account Inactive');
+                                              },
                                         child: Container(
                                           width: 94,
                                           height: 120,

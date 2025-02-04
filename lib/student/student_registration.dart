@@ -791,7 +791,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                 studentForms[index].medium = value;
                               });
                             },
-                            items: additionals['mediums'] ?? ['-Select-'],
+                            items: additionals['mediums'] ?? [],
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -804,7 +804,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                                 studentForms[index].board = value;
                               });
                             },
-                            items: additionals['board'] ?? ['-Select-'],
+                            items: additionals['board'] ?? [],
                           ),
                         ),
                         const SizedBox(width: 20),
@@ -1326,7 +1326,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         studentForms[index].medium = value;
                       });
                     },
-                    items: additionals['mediums'],
+                    items: additionals['mediums'] ?? [],
                   ),
                   const SizedBox(height: 14),
                   _buildDropdownField(
@@ -1348,7 +1348,7 @@ class StudentRegistrationPageState extends State<StudentRegistrationPage> {
                         studentForms[index].board = value;
                       });
                     },
-                    items: additionals['board'],
+                    items: additionals['board'] ?? [],
                   ),
                   const SizedBox(height: 14),
                   _buildMultiSelectDropdownField('Subject',

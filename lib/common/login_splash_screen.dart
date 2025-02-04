@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trusir/common/api.dart';
+import 'package:trusir/common/inactive_page.dart';
 import 'package:trusir/student/main_screen.dart';
 import 'package:trusir/teacher/teacher_main_screen.dart';
 
@@ -94,26 +96,31 @@ class LoginSplashScreenState extends State<LoginSplashScreen> {
               'adhaar_back', responseData['adhaar_back'] ?? 'N/A');
           await prefs.setString('profile', responseData['profile'] ?? 'N/A');
         }
-
-        // Navigate to the next screen
-        if (responseData['role'] == 'student') {
+        if (responseData['active'] == 1) {
+          // Navigate to the next screen
+          if (responseData['role'] == 'student') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const MainScreen(
+                        index: 0,
+                      )),
+            );
+          } else if (responseData['role'] == 'teacher') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const TeacherMainScreen()),
+            );
+          }
+          Fluttertoast.showToast(msg: 'Login Successful!');
+        } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const MainScreen(index: 0)),
-          );
-        } else if (responseData['role'] == 'teacher') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const TeacherMainScreen()),
+            MaterialPageRoute(builder: (context) => const InactivePage()),
           );
         }
         print(responseData);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Login Successful!'),
-            duration: Duration(seconds: 1),
-          ),
-        );
       } else {
         // Handle API error
         print('Failed to fetch user data. Status code: ${response.statusCode}');

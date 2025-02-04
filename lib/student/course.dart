@@ -11,6 +11,7 @@ import 'package:trusir/student/my_courses.dart';
 
 class Course {
   final int id;
+  final int active;
   final String amount;
   final String name;
   final String courseClass;
@@ -22,6 +23,7 @@ class Course {
   Course({
     required this.id,
     required this.amount,
+    required this.active,
     required this.name,
     required this.subject,
     required this.pincode,
@@ -34,6 +36,7 @@ class Course {
     return Course(
       id: json['id'],
       amount: json['amount'],
+      active: json['active'],
       name: json['name'],
       subject: json['subject'],
       courseClass: json['class'],
@@ -200,7 +203,7 @@ class _CoursePageState extends State<CoursePage> {
           await http.get(Uri.parse("$baseUrl/get-course-by-id/$courseId"));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        if (data['success'] == true) {
+        if (data['success'] == true && data['active'] == 1) {
           return data['data'] as Map<String, dynamic>;
         }
       } else {
@@ -228,7 +231,8 @@ class _CoursePageState extends State<CoursePage> {
           final noMatchingDetail = !_courseDetails.any((detail) =>
               int.parse(detail.courseID) == course.id); // No match for courseID
           return noMatchingDetail &&
-              course.pincode == userPincode && // Match pincode
+              course.pincode == userPincode &&
+              course.active == 1 && // Match pincode
               course.courseClass == userClass; // Match class
         }).toList();
         if (index == 0) {

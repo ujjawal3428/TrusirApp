@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
 
@@ -25,6 +30,18 @@ class PaymentService {
     }
   }
 
+  String generateUniqueTransactionId(String userId) {
+    // Hash the user ID to a shorter fixed length
+    String userHash = sha256
+        .convert(utf8.encode(userId))
+        .toString()
+        .substring(0, 8); // 8 characters
+    int randomNum = Random().nextInt(10000); // Random 4-digit number
+    print("txn_${userHash}_$randomNum");
+    // Combine components to ensure <= 38 characters
+    return "txn_${userHash}_$randomNum";
+  }
+
   /// Generate checksum and return request body
 
   /// Start a transaction
@@ -50,5 +67,38 @@ class PaymentService {
     }).catchError((error) {
       print("Error during transaction: $error");
     });
+  }
+
+  Future<bool> updateWalletBalance(BuildContext context, String balance,
+      String? userID, String negativebalance) async {
+    final String url =
+        "https://admin.trusir.com/api/user/$userID/update-balance";
+
+    // Define the query parameters
+    final Map<String, String> queryParams = {
+      "balanceplus": balance,
+      "balancenegative": negativebalance
+    };
+
+    // Append query parameters to URL
+    final Uri uri = Uri.parse(url).replace(queryParameters: queryParams);
+
+    // Make PUT request
+    final response = await http.put(
+      uri,
+      headers: {
+        "Content-Type": "application/json" // Add authentication if required
+      },
+    );
+
+    // Handle response
+    if (response.statusCode == 200) {
+      print("Wallet balance updated successfully: ${response.body}");
+      return true;
+    } else {
+      print(
+          "Failed to update balance: ${response.statusCode} - ${response.body}");
+      return false;
+    }
   }
 }

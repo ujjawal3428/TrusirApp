@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:trusir/student/main_screen.dart';
+import 'package:trusir/student/wallet.dart';
 
 class PaymentPopUpPage extends StatefulWidget {
+  final bool isWallet;
   final bool isSuccess;
   final double adjustedAmount;
   final String transactionID;
@@ -11,6 +13,7 @@ class PaymentPopUpPage extends StatefulWidget {
 
   const PaymentPopUpPage({
     super.key,
+    required this.isWallet,
     required this.adjustedAmount,
     required this.isSuccess,
     required this.transactionID,
@@ -39,16 +42,21 @@ class _PaymentPopUpPageState extends State<PaymentPopUpPage> {
         });
       } else {
         _timer.cancel();
-        widget.isSuccess
-            ? Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const MainScreen(
-                          index: 1,
-                        )),
-                (Route<dynamic> route) => false,
+        widget.isWallet
+            ? Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const WalletPage()),
+                (route) => route.isFirst, // Removes only the last two pages
               )
-            : Navigator.pop(context);
+            : widget.isSuccess
+                ? Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const MainScreen(
+                              index: 1,
+                            )),
+                    (Route<dynamic> route) => false,
+                  )
+                : Navigator.pop(context);
       }
     });
   }
@@ -185,18 +193,29 @@ class _PaymentPopUpPageState extends State<PaymentPopUpPage> {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                      onPressed: () {
-                        widget.isSuccess
-                            ? Navigator.pushAndRemoveUntil(
+                      onPressed: widget.isWallet
+                          ? () {
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const MainScreen(
-                                          index: 1,
-                                        )),
-                                (Route<dynamic> route) => false,
-                              )
-                            : Navigator.pop(context);
-                      },
+                                    builder: (context) => const WalletPage()),
+                              );
+                            }
+                          : () {
+                              widget.isSuccess
+                                  ? Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MainScreen(
+                                                index: 1,
+                                              )),
+                                      (Route<dynamic> route) => false,
+                                    )
+                                  : Navigator.pop(context);
+                            },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: widget.isSuccess
                             ? Colors.green.shade700

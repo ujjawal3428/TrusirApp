@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +8,6 @@ import 'package:trusir/common/phonepe_payment.dart';
 import 'package:trusir/student/course.dart';
 import 'package:trusir/student/payment__status_popup.dart';
 import 'package:trusir/student/payment_method.dart';
-import 'package:trusir/student/wallet.dart';
 
 class AllCourses extends StatefulWidget {
   final List<Course> courses;
@@ -220,8 +218,8 @@ class _CourseCardState extends State<CourseCard> {
                                 name: widget.course.name,
                                 balance: balance,
                                 onPhonePayment: () {
-                                  merchantTransactionID =
-                                      generateUniqueTransactionId(userID!);
+                                  merchantTransactionID = paymentService
+                                      .generateUniqueTransactionId(userID!);
                                   body = getChecksum(
                                     int.parse('${widget.course.newAmount}00'),
                                   ).toString();
@@ -234,11 +232,8 @@ class _CourseCardState extends State<CourseCard> {
                                 },
                                 onWalletPayment: () {
                                   Navigator.pop(context);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const WalletPage()));
+                                  walletPayment(widget.course.newAmount,
+                                      widget.course.id);
                                 });
                           });
                     },
@@ -288,6 +283,37 @@ class _CourseCardState extends State<CourseCard> {
     );
   }
 
+  void walletPayment(String amount, int courseID) async {
+    bool success =
+        await paymentService.updateWalletBalance(context, '0', userID, amount);
+
+    if (success) {
+      await postTransaction('WALLET', int.parse(amount), 'Course Purchase',
+          'transactionID', courseID);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PaymentPopUpPage(
+                isWallet: false,
+                adjustedAmount: double.parse(amount),
+                isSuccess: true,
+                transactionID: 'transactionID',
+                transactionType: 'WALLET')),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PaymentPopUpPage(
+                isWallet: false,
+                adjustedAmount: double.parse(amount),
+                isSuccess: false,
+                transactionID: 'transactionID',
+                transactionType: 'WALLET')),
+      );
+    }
+  }
+
   String body = "";
   // Transaction details
   String checksum = "";
@@ -308,18 +334,6 @@ class _CourseCardState extends State<CourseCard> {
       phone = prefs.getString('phone_number');
       balance = prefs.getString('wallet_balance');
     });
-  }
-
-  String generateUniqueTransactionId(String userId) {
-    // Hash the user ID to a shorter fixed length
-    String userHash = sha256
-        .convert(utf8.encode(userId))
-        .toString()
-        .substring(0, 8); // 8 characters
-    int randomNum = Random().nextInt(10000); // Random 4-digit number
-    print("txn_${userHash}_$randomNum");
-    // Combine components to ensure <= 38 characters
-    return "txn_${userHash}_$randomNum";
   }
 
   getChecksum(int am) {
@@ -385,6 +399,7 @@ class _CourseCardState extends State<CourseCard> {
               context,
               MaterialPageRoute(
                   builder: (context) => PaymentPopUpPage(
+                      isWallet: false,
                       adjustedAmount: double.parse(widget.course.newAmount),
                       isSuccess: paymentstatus,
                       transactionID: merchantTransactionID,
@@ -424,6 +439,7 @@ class _CourseCardState extends State<CourseCard> {
       context,
       MaterialPageRoute(
           builder: (context) => PaymentPopUpPage(
+              isWallet: false,
               adjustedAmount: double.parse(widget.course.newAmount),
               isSuccess: paymentstatus,
               transactionID: merchantTransactionID,
