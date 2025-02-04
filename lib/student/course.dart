@@ -203,7 +203,7 @@ class _CoursePageState extends State<CoursePage> {
           await http.get(Uri.parse("$baseUrl/get-course-by-id/$courseId"));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        if (data['success'] == true && data['active'] == 1) {
+        if (data['success'] == true) {
           return data['data'] as Map<String, dynamic>;
         }
       } else {

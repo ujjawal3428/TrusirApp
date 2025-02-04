@@ -70,7 +70,7 @@ class _MyCourseCardState extends State<MyCourseCard> {
       margin: EdgeInsets.symmetric(
           horizontal: isWeb ? 30 : 16, vertical: isWeb ? 15 : 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: widget.course['active'] == 1 ? Colors.white : Colors.grey,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -95,11 +95,13 @@ class _MyCourseCardState extends State<MyCourseCard> {
                     height: isWeb ? 300 : 180,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return const Center(
+                      return Center(
                         child: Icon(
                           Icons.error,
                           size: 40,
-                          color: Colors.red,
+                          color: widget.course['active'] == 1
+                              ? Colors.red
+                              : Colors.grey,
                         ),
                       );
                     },
@@ -112,7 +114,9 @@ class _MyCourseCardState extends State<MyCourseCard> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.pink,
+                      color: widget.course['active'] == 1
+                          ? Colors.pink
+                          : Colors.grey,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -129,41 +133,51 @@ class _MyCourseCardState extends State<MyCourseCard> {
                     top: 0,
                     right: 0,
                     child: IconButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text("Confirm Deletion"),
-                                content: const Text(
-                                    "Are you sure you want to delete?"),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(
-                                        context), // Dismiss dialog
-                                    child: const Text("Cancel"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      DeleteUtility.deleteItem('individualSlot',
-                                          widget.course['slotID']);
-                                      Navigator.pop(context);
-                                      Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const MainScreen(index: 1)));
-                                    }, // Confirm deletion
-                                    child: const Text("OK"),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(
+                        onPressed: widget.course['active'] == 1
+                            ? () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text("Confirm Deletion"),
+                                      content: const Text(
+                                          "Are you sure you want to delete?"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () => Navigator.pop(
+                                              context), // Dismiss dialog
+                                          child: const Text("Cancel"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            DeleteUtility.deleteItem(
+                                                'individualSlot',
+                                                widget.course['slotID']);
+                                            Navigator.pop(context);
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const MainScreen(
+                                                            index: 1)));
+                                          }, // Confirm deletion
+                                          child: const Text("OK"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            : () {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        'Course Inactive, Please Contact Admin');
+                              },
+                        icon: Icon(
                           Icons.close,
-                          color: Colors.redAccent,
+                          color: widget.course['active'] == 1
+                              ? Colors.redAccent
+                              : Colors.grey,
                         )))
               ],
             ),
@@ -190,11 +204,13 @@ class _MyCourseCardState extends State<MyCourseCard> {
               children: [
                 Text(
                   '₹${widget.course['new_amount']}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.bold,
-                    color: Colors.deepPurple,
+                    color: widget.course['active'] == 1
+                        ? Colors.deepPurple
+                        : Colors.black,
                   ),
                 ),
                 const SizedBox(
@@ -215,10 +231,12 @@ class _MyCourseCardState extends State<MyCourseCard> {
                 ),
                 Text(
                   '$formattedDiscount% OFF', // Placeholder for original price
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontFamily: 'Poppins',
-                    color: Colors.green,
+                    color: widget.course['active'] == 1
+                        ? Colors.green
+                        : Colors.black,
                   ),
                 ),
               ],
@@ -229,19 +247,26 @@ class _MyCourseCardState extends State<MyCourseCard> {
                 width: isWeb ? 200 : 300,
                 height: isWeb ? 40 : null,
                 child: ElevatedButton(
-                  onPressed: () {
-                    widget.course['teacherID'] == 'N/A'
-                        ? Fluttertoast.showToast(
-                            msg: 'No Teachers Assigned Yet')
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TeacherProfilePage(
-                                    userID: widget.course['teacherID'])),
-                          );
-                  },
+                  onPressed: widget.course['active'] == 1
+                      ? () {
+                          widget.course['teacherID'] == 'N/A'
+                              ? Fluttertoast.showToast(
+                                  msg: 'No Teachers Assigned Yet')
+                              : Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => TeacherProfilePage(
+                                          userID: widget.course['teacherID'])),
+                                );
+                        }
+                      : () {
+                          Fluttertoast.showToast(
+                              msg: 'Course Inactive, Please Contact Admin');
+                        },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
+                    backgroundColor: widget.course['active'] == 1
+                        ? Colors.blueAccent
+                        : Colors.black54,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
