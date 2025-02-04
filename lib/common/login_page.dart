@@ -154,15 +154,6 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
           padding: MaterialStateProperty.all(
             const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
           ),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-              side: const BorderSide(
-                color: Color.fromRGBO(72, 17, 106, 1),
-                width: 1,
-              ),
-            ),
-          ),
         ),
         onPressed: () => showPopupDialog(context),
         child: const Row(
@@ -176,11 +167,11 @@ class TrusirLoginPageState extends State<TrusirLoginPage> {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(width: 3),
+            SizedBox(width: 2),
             Icon(
               Icons.fast_forward,
-              color: Color.fromRGBO(168, 0, 0, 1),
-              size: 23,
+              color: Color.from(alpha: 1, red: 0.659, green: 0, blue: 0),
+              size: 19,
             ),
           ],
         ),
